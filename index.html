@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="ru">
-
+<!-- Version 2.0.6 - Fixed table columns and Firebase data loading - 2025-10-08 -->
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -83,13 +83,280 @@
             color: #991b1b;
         }
 
+        /* ✨ Enhanced Animations */
+        
+        /* Page Transitions */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes fadeInScale {
+            from {
+                opacity: 0;
+                transform: scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+        
+        @keyframes shimmer {
+            0% {
+                background-position: -1000px 0;
+            }
+            100% {
+                background-position: 1000px 0;
+            }
+        }
+        
+        @keyframes slideInRight {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+        
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+        }
+        
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+        
+        /* Apply animations to page content */
+        .page-content {
+            animation: fadeInUp 0.4s ease-out;
+        }
+        
+        /* Enhanced stat cards */
+        .stat-card {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.15),
+                        0 10px 10px -5px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* Enhanced buttons */
+        .btn-primary {
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                90deg,
+                transparent,
+                rgba(255, 255, 255, 0.3),
+                transparent
+            );
+            transition: left 0.5s;
+        }
+        
+        .btn-primary:hover::before {
+            left: 100%;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(59, 130, 246, 0.4);
+        }
+        
+        .btn-primary:active {
+            transform: translateY(0);
+        }
+        
+        /* Skeleton Loader */
+        .skeleton {
+            background: linear-gradient(
+                90deg,
+                #f0f0f0 25%,
+                #e0e0e0 50%,
+                #f0f0f0 75%
+            );
+            background-size: 1000px 100%;
+            animation: shimmer 2s infinite;
+            border-radius: 4px;
+        }
+        
+        .skeleton-text {
+            height: 16px;
+            margin-bottom: 8px;
+        }
+        
+        .skeleton-title {
+            height: 24px;
+            width: 60%;
+            margin-bottom: 16px;
+        }
+        
+        .skeleton-card {
+            height: 120px;
+            border-radius: 1rem;
+        }
+        
+        /* Progress Bar Animation */
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background-color: #e5e7eb;
+            border-radius: 9999px;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+            border-radius: 9999px;
+            transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        /* Enhanced Toast */
+        .toast {
+            animation: slideInRight 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .toast.removing {
+            animation: slideInRight 0.3s cubic-bezier(0.4, 0, 0.2, 1) reverse;
+        }
+        
+        /* Enhanced Logo */
+        img[alt="ORDINA Logo"] {
+            background: transparent !important;
+            background-color: transparent !important;
+            mix-blend-mode: multiply;
+            filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.1));
+            transition: transform 0.3s ease;
+        }
+        
+        img[alt="ORDINA Logo"]:hover {
+            transform: scale(1.05) rotate(2deg);
+        }
+        
+        /* Card Gradient Enhancements */
+        .card-gradient-green {
+            background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+            border: 1px solid #6ee7b7;
+        }
+        
+        .card-gradient-yellow {
+            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+            border: 1px solid #fbbf24;
+        }
+        
+        .card-gradient-red {
+            background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+            border: 1px solid #f87171;
+        }
+        
+        .card-gradient-purple {
+            background: linear-gradient(135deg, #e9d5ff 0%, #d8b4fe 100%);
+            border: 1px solid #c084fc;
+        }
+        
+        /* Micro-interactions */
+        .clickable {
+            cursor: pointer;
+            user-select: none;
+        }
+        
+        .clickable:active {
+            animation: pulse 0.3s ease;
+        }
+        
+        /* Focus styles for accessibility */
+        *:focus-visible {
+            outline: 2px solid #3b82f6;
+            outline-offset: 2px;
+            border-radius: 4px;
+        }
+        
+        /* Screen reader only content */
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border-width: 0;
+        }
+        
+        /* Status indicators with icons for color-independent status */
+        .status-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+        
+        .status-icon {
+            width: 1rem;
+            height: 1rem;
+            flex-shrink: 0;
+        }
+        
+        /* Validation error styles */
+        input:invalid:not(:focus):not(:placeholder-shown),
+        textarea:invalid:not(:focus):not(:placeholder-shown),
+        select:invalid:not(:focus) {
+            border-color: #ef4444;
+        }
+        
+        input[aria-invalid="true"],
+        textarea[aria-invalid="true"],
+        select[aria-invalid="true"] {
+            border-color: #ef4444;
+        }
+        
         /* Modal Animation */
         dialog[open] {
-            animation: fadeIn 0.3s ease-out;
+            animation: fadeInScale 0.3s ease-out;
         }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: scale(0.95); }
-            to { opacity: 1; transform: scale(1); }
+
+        /* Required field indicators */
+        input[required]:not([type="hidden"]):not([value=""]):invalid,
+        textarea[required]:not([value=""]):invalid,
+        select[required]:invalid {
+            border-color: #ef4444;
+        }
+        
+        label:has(+ input[required])::after,
+        label:has(+ textarea[required])::after,
+        label:has(+ select[required])::after {
+            content: " *";
+            color: #ef4444;
+            font-weight: 600;
         }
 
         /* Responsive Tables (Card View on Mobile) */
@@ -190,14 +457,14 @@
     
     <div id="app" class="max-w-7xl mx-auto p-2 sm:p-4 md:p-6 relative opacity-0 transition-opacity duration-300 hidden">
         <div class="flex flex-wrap items-center justify-center gap-4 mb-4 md:absolute md:top-6 md:right-6 md:justify-end md:mb-0">
-             <div class="flex items-center border border-gray-300 rounded-lg p-1 text-sm">
-                <button id="currency-azn" class="px-3 py-1 rounded-md currency-btn-active">AZN</button>
-                <button id="currency-usd" class="px-3 py-1 rounded-md">USD</button>
+             <div class="flex items-center border border-gray-300 rounded-lg p-1 text-sm" role="group" aria-label="Currency selection">
+                <button id="currency-azn" class="px-3 py-1 rounded-md currency-btn-active" aria-label="Select AZN currency" aria-pressed="true">AZN</button>
+                <button id="currency-usd" class="px-3 py-1 rounded-md" aria-label="Select USD currency" aria-pressed="false">USD</button>
             </div>
-            <div class="flex items-center space-x-2">
-                <button id="lang-ru" title="Русский"><img src="https://placehold.co/32x24/d52b1e/ffffff?text=RU" alt="RU" class="rounded-sm cursor-pointer"></button>
-                <button id="lang-en" title="English"><img src="https://placehold.co/32x24/012169/ffffff?text=EN" alt="EN" class="rounded-sm cursor-pointer"></button>
-                <button id="lang-az" title="Azərbaycan"><img src="https://placehold.co/32x24/00a651/ffffff?text=AZ" alt="AZ" class="rounded-sm cursor-pointer"></button>
+            <div class="flex items-center space-x-2" role="group" aria-label="Language selection">
+                <button id="lang-ru" title="Русский" aria-label="Switch to Russian"><img src="https://placehold.co/32x24/d52b1e/ffffff?text=RU" alt="RU" class="rounded-sm cursor-pointer"></button>
+                <button id="lang-en" title="English" aria-label="Switch to English"><img src="https://placehold.co/32x24/012169/ffffff?text=EN" alt="EN" class="rounded-sm cursor-pointer"></button>
+                <button id="lang-az" title="Azərbaycan" aria-label="Switch to Azerbaijani"><img src="https://placehold.co/32x24/00a651/ffffff?text=AZ" alt="AZ" class="rounded-sm cursor-pointer"></button>
             </div>
             <!-- Radio Player -->
             <div class="bg-white p-3 rounded-lg shadow-md w-auto">
@@ -205,15 +472,15 @@
                     <p class="text-sm font-medium text-gray-800" data-i18n="radioTitle">Радио AzerbaiJazz</p>
                     <div class="flex items-center space-x-2">
                         <audio id="radio-player" src="https://stream.zeno.fm/tjqlpbsxi4ytv"></audio>
-                        <button id="radio-play-pause-btn" class="w-8 h-8 flex items-center justify-center rounded-full bg-blue-600 text-white hover:bg-blue-700 transition focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
-                            <svg id="play-icon" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z"></path></svg>
-                            <svg id="pause-icon" class="w-5 h-5 hidden" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zM7 8a1 1 0 012 0v4a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v4a1 1 0 102 0V8a1 1 0 00-1-1z"></path></svg>
+                        <button id="radio-play-pause-btn" class="w-8 h-8 flex items-center justify-center rounded-full bg-blue-600 text-white hover:bg-blue-700 transition focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2" aria-label="Play radio" aria-pressed="false">
+                            <svg id="play-icon" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z"></path></svg>
+                            <svg id="pause-icon" class="w-5 h-5 hidden" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zM7 8a1 1 0 012 0v4a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v4a1 1 0 102 0V8a1 1 0 00-1-1z"></path></svg>
                         </button>
                     </div>
                 </div>
                 <div class="flex items-center mt-2 space-x-2">
                     <svg class="w-5 h-5 text-gray-500" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M9.383 3.076A1 1 0 0110 4v12a1 1 0 01-1.707.707L4.586 13H2a1 1 0 01-1-1V8a1 1 0 011-1h2.586l3.707-3.707a1 1 0 011.09-.217zM14.657 2.929a1 1 0 011.414 0A9.953 9.953 0 0117 10a9.953 9.953 0 01-1.072 4.929 1 1 0 11-1.5-1.329A7.957 7.957 0 0015 10a7.957 7.957 0 00-.843-3.742 1 1 0 010-1.329z" clip-rule="evenodd"></path><path d="M12.293 5.293a1 1 0 011.414 0A5.963 5.963 0 0114 10a5.963 5.963 0 01-.707 2.707 1 1 0 11-1.5-1.329A3.964 3.964 0 0012 10a3.964 3.964 0 00-.586-2.032 1 1 0 010-1.386z"></path></svg>
-                    <input type="range" id="radio-volume-slider" min="0" max="1" step="0.01" value="1" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer styled-slider">
+                    <input type="range" id="radio-volume-slider" min="0" max="1" step="0.01" value="1" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer styled-slider" aria-label="Radio volume" aria-valuemin="0" aria-valuemax="1" aria-valuenow="1">
                 </div>
             </div>
              <button id="logout-btn" class="text-sm font-medium text-gray-600 hover:text-blue-600" data-i18n="logout">Выйти</button>
@@ -228,15 +495,15 @@
             </div>
         </header>
 
-        <nav class="bg-white rounded-2xl shadow-lg mb-8 sticky top-4 z-10">
-            <div class="flex border-b border-gray-100 overflow-x-auto">
-                <button data-tab="dashboard" class="tab-button px-4 sm:px-6 py-4 border-b-2 border-transparent tab-active whitespace-nowrap text-sm sm:text-base font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50 transition-all duration-200" data-i18n="tabDashboard">Сводка</button>
-                <button data-tab="debts" class="tab-button px-4 sm:px-6 py-4 border-b-2 border-transparent whitespace-nowrap text-sm sm:text-base font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50 transition-all duration-200" data-i18n="tabDebts">Долги</button>
-                <button data-tab="recurring-expenses" class="tab-button px-4 sm:px-6 py-4 border-b-2 border-transparent whitespace-nowrap text-sm sm:text-base font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50 transition-all duration-200" data-i18n="tabRecurringExpenses">Ежемесячные расходы</button>
-                <button data-tab="expenses" class="tab-button px-4 sm:px-6 py-4 border-b-2 border-transparent whitespace-nowrap text-sm sm:text-base font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50 transition-all duration-200" data-i18n="tabMonthlyExpenses">Расходы месяца</button>
-                <button data-tab="tasks" class="tab-button px-4 sm:px-6 py-4 border-b-2 border-transparent whitespace-nowrap text-sm sm:text-base font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50 transition-all duration-200" data-i18n="tabTasks">Список задач</button>
-                <button data-tab="calendar" class="tab-button px-4 sm:px-6 py-4 border-b-2 border-transparent whitespace-nowrap text-sm sm:text-base font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50 transition-all duration-200" data-i18n="tabCalendar">Календарь</button>
-                <button data-tab="payments" class="tab-button px-4 sm:px-6 py-4 border-b-2 border-transparent whitespace-nowrap text-sm sm:text-base font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50 transition-all duration-200" data-i18n="tabPayments">Оплата</button>
+        <nav class="bg-white rounded-2xl shadow-lg mb-8 sticky top-4 z-10" role="navigation" aria-label="Main navigation">
+            <div class="flex border-b border-gray-100 overflow-x-auto" role="tablist">
+                <button data-tab="dashboard" class="tab-button px-4 sm:px-6 py-4 border-b-2 border-transparent tab-active whitespace-nowrap text-sm sm:text-base font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50 transition-all duration-200" data-i18n="tabDashboard" role="tab" aria-selected="true" aria-controls="dashboard-page">Сводка</button>
+                <button data-tab="debts" class="tab-button px-4 sm:px-6 py-4 border-b-2 border-transparent whitespace-nowrap text-sm sm:text-base font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50 transition-all duration-200" data-i18n="tabDebts" role="tab" aria-selected="false" aria-controls="debts-page">Долги</button>
+                <button data-tab="recurring-expenses" class="tab-button px-4 sm:px-6 py-4 border-b-2 border-transparent whitespace-nowrap text-sm sm:text-base font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50 transition-all duration-200" data-i18n="tabRecurringExpenses" role="tab" aria-selected="false" aria-controls="recurring-expenses-page">Ежемесячные расходы</button>
+                <button data-tab="expenses" class="tab-button px-4 sm:px-6 py-4 border-b-2 border-transparent whitespace-nowrap text-sm sm:text-base font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50 transition-all duration-200" data-i18n="tabMonthlyExpenses" role="tab" aria-selected="false" aria-controls="expenses-page">Расходы месяца</button>
+                <button data-tab="tasks" class="tab-button px-4 sm:px-6 py-4 border-b-2 border-transparent whitespace-nowrap text-sm sm:text-base font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50 transition-all duration-200" data-i18n="tabTasks" role="tab" aria-selected="false" aria-controls="tasks-page">Список задач</button>
+                <button data-tab="calendar" class="tab-button px-4 sm:px-6 py-4 border-b-2 border-transparent whitespace-nowrap text-sm sm:text-base font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50 transition-all duration-200" data-i18n="tabCalendar" role="tab" aria-selected="false" aria-controls="calendar-page">Календарь</button>
+                <button data-tab="payments" class="tab-button px-4 sm:px-6 py-4 border-b-2 border-transparent whitespace-nowrap text-sm sm:text-base font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50 transition-all duration-200" data-i18n="tabPayments" role="tab" aria-selected="false" aria-controls="payments-page">Оплата</button>
             </div>
         </nav>
 
@@ -246,25 +513,27 @@
                     <div><h2 class="text-2xl sm:text-3xl font-bold text-gray-800" data-i18n="dashboardTitle">Сводка за месяц</h2></div>
                      <div class="w-full lg:w-auto">
                         <p id="current-datetime" class="font-semibold text-lg text-gray-700 mb-2 text-center lg:text-right"></p>
-                        <select id="month-selector" class="bg-white border border-gray-300 text-gray-900 text-sm rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent block w-full lg:w-48 p-3 shadow-sm hover:shadow-md transition-all duration-200"></select>
+                        <label for="month-selector" class="sr-only">Select month</label>
+                        <select id="month-selector" class="bg-white border border-gray-300 text-gray-900 text-sm rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent block w-full lg:w-48 p-3 shadow-sm hover:shadow-md transition-all duration-200" aria-label="Select month for dashboard"></select>
                     </div>
                 </div>
-                <div id="dashboard-loading" class="text-center p-8" data-i18n="loading">Загрузка данных...</div>
+                <div id="dashboard-loading"></div>
                 <div id="dashboard-content" class="hidden">
                     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-                        <div class="bg-gradient-to-br from-green-50 to-green-100 p-6 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 border border-green-200"><h3 class="text-lg font-semibold text-green-700 mb-3" data-i18n="dashRecurringPaid">Ежемесячные (оплачено)</h3><p id="total-recurring-paid" class="text-3xl sm:text-4xl font-bold text-green-600">0 AZN</p></div>
-                        <div class="bg-gradient-to-br from-yellow-50 to-yellow-100 p-6 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 border border-yellow-200"><h3 class="text-lg font-semibold text-yellow-700 mb-3" data-i18n="dashRecurringRemaining">Ежемесячные (осталось)</h3><p id="total-recurring-remaining" class="text-3xl sm:text-4xl font-bold text-yellow-600">0 AZN</p></div>
-                        <div class="bg-gradient-to-br from-red-50 to-red-100 p-6 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 border border-red-200"><h3 class="text-lg font-semibold text-red-700 mb-3" data-i18n="dashMonthlyExpenses">Расходы за месяц</h3><p id="total-monthly-outflow" class="text-3xl sm:text-4xl font-bold text-red-600">0 AZN</p></div>
-                        <div class="bg-gradient-to-br from-purple-50 to-purple-100 p-6 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 border border-purple-200"><h3 class="text-lg font-semibold text-purple-700 mb-3" data-i18n="dashTotalDebt">Остаток общего долга</h3><p id="total-debt-remaining" class="text-3xl font-bold mt-2 text-orange-600">0 AZN</p></div>
-                        <div class="bg-white p-6 rounded-lg shadow-sm"><h3 class="text-lg font-medium text-gray-500" data-i18n="dashTasksMonth">Осталось задач (месяц)</h3><p id="tasks-remaining-month" class="text-3xl font-bold mt-2 text-indigo-600">0</p></div>
-                        <div class="bg-white p-6 rounded-lg shadow-sm"><h3 class="text-lg font-medium text-gray-500" data-i18n="dashTasksYear">Осталось задач (год)</h3><p id="tasks-remaining-year" class="text-3xl font-bold mt-2 text-purple-600">0</p></div>
+                        <div class="stat-card card-gradient-green p-6 rounded-2xl shadow-lg"><h3 class="text-lg font-semibold text-green-700 mb-3" data-i18n="dashRecurringPaid">Ежемесячные (оплачено)</h3><p id="total-recurring-paid" class="text-3xl sm:text-4xl font-bold text-green-600">0 AZN</p></div>
+                        <div class="stat-card card-gradient-yellow p-6 rounded-2xl shadow-lg"><h3 class="text-lg font-semibold text-yellow-700 mb-3" data-i18n="dashRecurringRemaining">Ежемесячные (осталось)</h3><p id="total-recurring-remaining" class="text-3xl sm:text-4xl font-bold text-yellow-600">0 AZN</p></div>
+                        <div class="stat-card card-gradient-red p-6 rounded-2xl shadow-lg"><h3 class="text-lg font-semibold text-red-700 mb-3" data-i18n="dashMonthlyExpenses">Расходы за месяц</h3><p id="total-monthly-outflow" class="text-3xl sm:text-4xl font-bold text-red-600">0 AZN</p></div>
+                        <div class="stat-card card-gradient-purple p-6 rounded-2xl shadow-lg"><h3 class="text-lg font-semibold text-purple-700 mb-3" data-i18n="dashTotalDebt">Остаток общего долга</h3><p id="total-debt-remaining" class="text-3xl font-bold mt-2 text-orange-600">0 AZN</p></div>
+                        <div class="stat-card bg-white p-6 rounded-lg shadow-sm"><h3 class="text-lg font-medium text-gray-500" data-i18n="dashTasksMonth">Осталось задач (месяц)</h3><p id="tasks-remaining-month" class="text-3xl font-bold mt-2 text-indigo-600">0</p></div>
+                        <div class="stat-card bg-white p-6 rounded-lg shadow-sm"><h3 class="text-lg font-medium text-gray-500" data-i18n="dashTasksYear">Осталось задач (год)</h3><p id="tasks-remaining-year" class="text-3xl font-bold mt-2 text-purple-600">0</p></div>
                     </div>
                     <div class="bg-white p-6 rounded-lg shadow-sm"><h3 class="text-xl font-semibold mb-4" data-i18n="dashTopCategories">Топ категорий расходов</h3><div class="max-h-96"><canvas id="expenses-chart"></canvas></div></div>
                 </div>
             </div>
 
             <div id="debts-page" class="page-content hidden">
-                <div class="flex justify-between items-center mb-4"><h2 class="text-2xl font-semibold" data-i18n="debtsTitle">Общие долги</h2><button id="add-debt-btn" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition" data-i18n="addDebt">Добавить долг</button></div>
+                <div class="flex justify-between items-center mb-4"><h2 class="text-2xl font-semibold" data-i18n="debtsTitle">Общие долги</h2><button id="add-debt-btn" class="btn-primary bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition" data-i18n="addDebt">Добавить долг</button></div>
+                <div id="debts-loading" class="hidden"></div>
                 <div id="debts-table-wrapper" class="bg-white rounded-lg shadow-sm overflow-x-auto md:bg-transparent md:shadow-none">
                     <table class="w-full text-sm text-left responsive-table">
                         <thead class="bg-gray-50 text-xs text-gray-700 uppercase"><tr><th class="px-6 py-3" data-i18n="debtName">Долг (Имя)</th><th class="px-6 py-3" data-i18n="amount">Сумма</th><th class="px-6 py-3" data-i18n="paid">Оплачено</th><th class="px-6 py-3" data-i18n="remaining">Осталось</th><th class="px-6 py-3" data-i18n="lastPaymentDate">Дата последней оплаты</th><th class="px-6 py-3" data-i18n="comments">Комментарии</th><th class="px-6 py-3" data-i18n="actions">Действия</th></tr></thead>
@@ -275,7 +544,8 @@
             </div>
 
             <div id="recurring-expenses-page" class="page-content hidden">
-                <div class="flex justify-between items-center mb-4"><h2 class="text-2xl font-semibold"><span data-i18n="recurringTitle">Ежемесячные расходы</span> (<span id="recurring-month-name"></span>)</h2><button id="add-recurring-expense-btn" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition" data-i18n="addTemplate">Добавить шаблон</button></div>
+                <div class="flex justify-between items-center mb-4"><h2 class="text-2xl font-semibold"><span data-i18n="recurringTitle">Ежемесячные расходы</span> (<span id="recurring-month-name"></span>)</h2><button id="add-recurring-expense-btn" class="btn-primary bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition" data-i18n="addTemplate">Добавить шаблон</button></div>
+                <div id="recurring-expenses-loading" class="hidden"></div>
                 <div id="recurring-expenses-table-wrapper" class="bg-white rounded-lg shadow-sm overflow-x-auto md:bg-transparent md:shadow-none">
                     <table class="w-full text-sm text-left responsive-table">
                         <thead class="bg-gray-50 text-xs text-gray-700 uppercase"><tr><th class="px-6 py-3" data-i18n="name">Наименование</th><th class="px-6 py-3" data-i18n="amount">Сумма</th><th class="px-6 py-3" data-i18n="paymentDay">День оплаты</th><th class="px-6 py-3" data-i18n="status">Статус оплаты</th><th class="px-6 py-3" data-i18n="details">Детали</th><th class="px-6 py-3" data-i18n="templateActions">Действия с шаблоном</th></tr></thead>
@@ -286,7 +556,8 @@
             </div>
 
             <div id="expenses-page" class="page-content hidden">
-                 <div class="flex justify-between items-center mb-4"><h2 class="text-2xl font-semibold"><span data-i18n="expensesTitle">Все расходы за</span> <span class="current-month-name"></span></h2><div class="flex space-x-2"><button id="manage-categories-btn" class="bg-gray-200 text-gray-800 px-4 py-2 rounded-lg hover:bg-gray-300 transition" data-i18n="manageCategories">Управление категориями</button><button id="add-expense-btn" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition" data-i18n="addExpense">Добавить расход</button></div></div>
+                 <div class="flex justify-between items-center mb-4"><h2 class="text-2xl font-semibold"><span data-i18n="expensesTitle">Все расходы за</span> <span class="current-month-name"></span></h2><div class="flex space-x-2"><button id="manage-categories-btn" class="bg-gray-200 text-gray-800 px-4 py-2 rounded-lg hover:bg-gray-300 transition" data-i18n="manageCategories">Управление категориями</button><button id="add-expense-btn" class="btn-primary bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition" data-i18n="addExpense">Добавить расход</button></div></div>
+                <div id="expenses-loading" class="hidden"></div>
                 <div id="expenses-table-wrapper" class="bg-white rounded-lg shadow-sm overflow-x-auto md:bg-transparent md:shadow-none">
                     <table class="w-full text-sm text-left responsive-table">
                         <thead class="bg-gray-50 text-xs text-gray-700 uppercase"><tr><th class="px-6 py-3" data-i18n="name">Наименование</th><th class="px-6 py-3" data-i18n="category">Категория</th><th class="px-6 py-3" data-i18n="amount">Сумма</th><th class="px-6 py-3" data-i18n="date">Дата</th><th class="px-6 py-3" data-i18n="actions">Действия</th></tr></thead>
@@ -299,21 +570,21 @@
             <div id="tasks-page" class="page-content hidden">
                 <div class="mb-4 border-b border-gray-200"><nav class="flex -mb-px" aria-label="Tabs"><button class="task-tab-button task-tab-active" data-task-tab="today"><span data-i18n="taskToday">На сегодня</span> (<span id="today-date"></span>)</button><button class="task-tab-button" data-task-tab="month"><span data-i18n="taskMonth">На месяц</span></button><button class="task-tab-button" data-task-tab="year"><span data-i18n="taskYear">На год</span></button></nav></div>
                 <div id="task-tab-today" class="task-tab-content">
-                    <div class="flex justify-between items-center mb-4"><h3 class="text-xl font-semibold" data-i18n="taskTodayTitle">Задачи на сегодня</h3><button id="add-daily-task-btn" class="bg-blue-600 text-white px-4 py-2 rounded-lg" data-i18n="addTask">Добавить задачу</button></div>
+                    <div class="flex justify-between items-center mb-4"><h3 class="text-xl font-semibold" data-i18n="taskTodayTitle">Задачи на сегодня</h3><button id="add-daily-task-btn" class="btn-primary bg-blue-600 text-white px-4 py-2 rounded-lg" data-i18n="addTask">Добавить задачу</button></div>
                     <div id="daily-tasks-table-wrapper" class="bg-white rounded-lg shadow-sm overflow-x-auto md:bg-transparent md:shadow-none">
                         <table class="w-full text-sm text-left responsive-table"><thead class="bg-gray-50 text-xs text-gray-700 uppercase"><tr><th class="w-1/3 px-6 py-3" data-i18n="name">Имя</th><th class="px-6 py-3" data-i18n="status">Статус</th><th class="w-1/3 px-6 py-3" data-i18n="notes">Заметки</th><th class="px-6 py-3" data-i18n="actions">Действия</th></tr></thead><tbody id="daily-tasks-table"></tbody></table>
                     </div>
                     <div id="daily-tasks-empty" class="hidden"></div>
                 </div>
                 <div id="task-tab-month" class="task-tab-content hidden">
-                    <div class="flex justify-between items-center mb-4"><h3 class="text-xl font-semibold" data-i18n="taskMonthTitle">Задачи на месяц</h3><button id="add-monthly-task-btn" class="bg-blue-600 text-white px-4 py-2 rounded-lg" data-i18n="addTask">Добавить задачу</button></div>
+                    <div class="flex justify-between items-center mb-4"><h3 class="text-xl font-semibold" data-i18n="taskMonthTitle">Задачи на месяц</h3><button id="add-monthly-task-btn" class="btn-primary bg-blue-600 text-white px-4 py-2 rounded-lg" data-i18n="addTask">Добавить задачу</button></div>
                     <div id="monthly-tasks-table-wrapper" class="bg-white rounded-lg shadow-sm overflow-x-auto md:bg-transparent md:shadow-none">
                         <table class="w-full text-sm text-left responsive-table"><thead class="bg-gray-50 text-xs text-gray-700 uppercase"><tr><th class="px-6 py-3" data-i18n="name">Имя</th><th class="px-6 py-3" data-i18n="deadline">Дедлайн</th><th class="px-6 py-3" data-i18n="status">Статус</th><th class="px-6 py-3" data-i18n="actions">Действия</th></tr></thead><tbody id="monthly-tasks-table"></tbody></table>
                     </div>
                     <div id="monthly-tasks-empty" class="hidden"></div>
                 </div>
                 <div id="task-tab-year" class="task-tab-content hidden">
-                    <div class="flex justify-between items-center mb-4"><h3 class="text-xl font-semibold" data-i18n="taskYearTitle">Задачи на год</h3><button id="add-yearly-task-btn" class="bg-blue-600 text-white px-4 py-2 rounded-lg" data-i18n="addTask">Добавить задачу</button></div>
+                    <div class="flex justify-between items-center mb-4"><h3 class="text-xl font-semibold" data-i18n="taskYearTitle">Задачи на год</h3><button id="add-yearly-task-btn" class="btn-primary bg-blue-600 text-white px-4 py-2 rounded-lg" data-i18n="addTask">Добавить задачу</button></div>
                     <div id="yearly-tasks-table-wrapper" class="bg-white rounded-lg shadow-sm overflow-x-auto md:bg-transparent md:shadow-none">
                         <table class="w-full text-sm text-left responsive-table"><thead class="bg-gray-50 text-xs text-gray-700 uppercase"><tr><th class="w-1/3 px-6 py-3" data-i18n="name">Имя</th><th class="px-6 py-3" data-i18n="deadline">Дедлайн</th><th class="px-6 py-3" data-i18n="status">Статус</th><th class="w-1/3 px-6 py-3" data-i18n="notes">Заметки</th><th class="px-6 py-3" data-i18n="actions">Действия</th></tr></thead><tbody id="yearly-tasks-table"></tbody></table>
                     </div>
@@ -323,7 +594,7 @@
 
             <div id="calendar-page" class="page-content hidden">
                 <div class="bg-white rounded-lg shadow-sm p-4">
-                    <div class="flex justify-between items-center mb-4"><button id="prev-month-btn" class="p-2 rounded-full hover:bg-gray-100">&lt;</button><h2 id="calendar-month-year" class="text-xl font-semibold"></h2><button id="next-month-btn" class="p-2 rounded-full hover:bg-gray-100">&gt;</button></div>
+                    <div class="flex justify-between items-center mb-4"><button id="prev-month-btn" class="p-2 rounded-full hover:bg-gray-100" aria-label="Previous month">&lt;</button><h2 id="calendar-month-year" class="text-xl font-semibold"></h2><button id="next-month-btn" class="p-2 rounded-full hover:bg-gray-100" aria-label="Next month">&gt;</button></div>
                     <div id="calendar-weekdays" class="grid grid-cols-7 gap-1 text-center font-semibold text-gray-600 text-sm mb-2"></div>
                     <div id="calendar-grid" class="grid grid-cols-7 gap-1"></div>
                 </div>
@@ -337,13 +608,13 @@
     </div>
 
     <!-- Модальные окна -->
-    <dialog id="debt-modal" class="p-0 rounded-lg shadow-xl w-full max-w-md"><div class="p-6"><h3 id="debt-modal-title" class="text-xl font-semibold mb-4" data-i18n="addDebt"></h3><form id="debt-form" data-original-paid="0"><input type="hidden" id="debt-id"><div class="mb-4"><label for="debt-name" class="block mb-2 text-sm font-medium" data-i18n="debtorName">Имя должника/Название</label><input type="text" id="debt-name" class="bg-gray-50 border border-gray-300 rounded-lg w-full p-2.5" required></div><div class="mb-4"><label for="debt-total" class="block mb-2 text-sm font-medium"><span data-i18n="totalAmount"></span> (<span class="currency-symbol">AZN</span>)</label><input type="number" id="debt-total" step="0.01" class="bg-gray-50 border border-gray-300 rounded-lg w-full p-2.5" required></div><div class="mb-4"><label for="debt-paid" class="block mb-2 text-sm font-medium"><span data-i18n="paidAmount"></span> (<span class="currency-symbol">AZN</span>)</label><input type="number" id="debt-paid" step="0.01" class="bg-gray-50 border border-gray-300 rounded-lg w-full p-2.5" required value="0"></div><div class="mb-4"><label for="debt-comment" class="block mb-2 text-sm font-medium" data-i18n="comment">Комментарий</label><textarea id="debt-comment" rows="3" class="bg-gray-50 border border-gray-300 rounded-lg w-full p-2.5"></textarea></div><div class="flex justify-end gap-4 mt-6"><button type="button" class="cancel-btn text-gray-600 hover:text-gray-900" data-i18n="cancel">Отмена</button><button type="submit" class="bg-blue-600 text-white px-5 py-2.5 rounded-lg hover:bg-blue-700" data-i18n="save">Сохранить</button></div></form></div></dialog>
-    <dialog id="debt-payment-modal" class="p-0 rounded-lg shadow-xl w-full max-w-md"><div class="p-6"><h3 class="text-xl font-semibold mb-4" data-i18n="addDebtPayment">Добавить платеж по долгу</h3><form id="debt-payment-form"><input type="hidden" id="debt-payment-id"><div class="mb-4"><label for="debt-payment-amount" class="block mb-2 text-sm font-medium"><span data-i18n="paymentAmount"></span> (<span class="currency-symbol">AZN</span>)</label><input type="number" id="debt-payment-amount" step="0.01" class="bg-gray-50 border border-gray-300 rounded-lg w-full p-2.5" required></div><div class="flex justify-end gap-4 mt-6"><button type="button" class="cancel-btn text-gray-600 hover:text-gray-900" data-i18n="cancel">Отмена</button><button type="submit" class="bg-blue-600 text-white px-5 py-2.5 rounded-lg hover:bg-blue-700" data-i18n="add">Добавить</button></div></form></div></dialog>
-    <dialog id="recurring-expense-modal" class="p-0 rounded-lg shadow-xl w-full max-w-md"><div class="p-6"><h3 id="recurring-expense-modal-title" class="text-xl font-semibold mb-4" data-i18n="addTemplate"></h3><form id="recurring-expense-form"><input type="hidden" id="recurring-expense-id"><div class="mb-4"><label for="recurring-expense-name" class="block mb-2 text-sm font-medium" data-i18n="name">Наименование</label><input type="text" id="recurring-expense-name" class="bg-gray-50 border border-gray-300 rounded-lg w-full p-2.5" required></div><div class="mb-4"><label for="recurring-expense-amount" class="block mb-2 text-sm font-medium"><span data-i18n="amount"></span> (<span class="currency-symbol">AZN</span>)</label><input type="number" id="recurring-expense-amount" step="0.01" class="bg-gray-50 border border-gray-300 rounded-lg w-full p-2.5" required></div><div class="mb-4"><label for="recurring-expense-due-day" class="block mb-2 text-sm font-medium" data-i18n="paymentDayNum">День оплаты (1-31)</label><input type="number" id="recurring-expense-due-day" min="1" max="31" class="bg-gray-50 border border-gray-300 rounded-lg w-full p-2.5" required></div><div class="mb-4"><label for="recurring-expense-details" class="block mb-2 text-sm font-medium" data-i18n="details">Детали</label><textarea id="recurring-expense-details" rows="3" class="bg-gray-50 border border-gray-300 rounded-lg w-full p-2.5"></textarea></div><div class="flex justify-end gap-4 mt-6"><button type="button" class="cancel-btn text-gray-600 hover:text-gray-900" data-i18n="cancel">Отмена</button><button type="submit" class="bg-blue-600 text-white px-5 py-2.5 rounded-lg hover:bg-blue-700" data-i18n="save">Сохранить</button></div></form></div></dialog>
-    <dialog id="expense-modal" class="p-0 rounded-lg shadow-xl w-full max-w-md"><div class="p-6"><h3 id="expense-modal-title" class="text-xl font-semibold mb-4" data-i18n="addExpense"></h3><form id="expense-form"><input type="hidden" id="expense-id"><div class="mb-4"><label for="expense-name" class="block mb-2 text-sm font-medium" data-i18n="name">Наименование</label><input type="text" id="expense-name" class="bg-gray-50 border border-gray-300 rounded-lg w-full p-2.5" required></div><div class="mb-4"><label for="expense-category" class="block mb-2 text-sm font-medium" data-i18n="category">Категория</label><input type="text" id="expense-category" list="expense-categories-list" class="bg-gray-50 border border-gray-300 rounded-lg w-full p-2.5" required><datalist id="expense-categories-list"></datalist></div><div class="mb-4"><label for="expense-amount" class="block mb-2 text-sm font-medium"><span data-i18n="amount"></span> (<span class="currency-symbol">AZN</span>)</label><input type="number" id="expense-amount" step="0.01" class="bg-gray-50 border border-gray-300 rounded-lg w-full p-2.5" required></div><div class="mb-4"><label for="expense-date" class="block mb-2 text-sm font-medium" data-i18n="date">Дата</label><input type="date" id="expense-date" class="bg-gray-50 border border-gray-300 rounded-lg w-full p-2.5" required></div><div class="flex justify-end gap-4 mt-6"><button type="button" class="cancel-btn text-gray-600 hover:text-gray-900" data-i18n="cancel">Отмена</button><button type="submit" class="bg-blue-600 text-white px-5 py-2.5 rounded-lg hover:bg-blue-700" data-i18n="save">Сохранить</button></div></form></div></dialog>
-    <dialog id="daily-task-modal" class="p-0 rounded-lg shadow-xl w-full max-w-md"><div class="p-6"><h3 id="daily-task-modal-title" class="text-xl font-semibold mb-4"></h3><form id="daily-task-form"><input type="hidden" id="daily-task-id"><div class="mb-4"><label for="daily-task-name" class="block mb-2 text-sm font-medium" data-i18n="name">Имя</label><input type="text" id="daily-task-name" class="bg-gray-50 border border-gray-300 rounded-lg w-full p-2.5" required></div><div class="mb-4"><label for="daily-task-notes" class="block mb-2 text-sm font-medium" data-i18n="notes">Заметки</label><textarea id="daily-task-notes" rows="3" class="bg-gray-50 border border-gray-300 rounded-lg w-full p-2.5"></textarea></div><div class="flex justify-end gap-4 mt-6"><button type="button" class="cancel-btn text-gray-600 hover:text-gray-900" data-i18n="cancel">Отмена</button><button type="submit" class="bg-blue-600 text-white px-5 py-2.5 rounded-lg hover:bg-blue-700" data-i18n="save">Сохранить</button></div></form></div></dialog>
-    <dialog id="monthly-task-modal" class="p-0 rounded-lg shadow-xl w-full max-w-md"><div class="p-6"><h3 id="monthly-task-modal-title" class="text-xl font-semibold mb-4"></h3><form id="monthly-task-form"><input type="hidden" id="monthly-task-id"><div class="mb-4"><label for="monthly-task-name" class="block mb-2 text-sm font-medium" data-i18n="name">Имя</label><input type="text" id="monthly-task-name" class="bg-gray-50 border border-gray-300 rounded-lg w-full p-2.5" required></div><div class="mb-4"><label for="monthly-task-deadline" class="block mb-2 text-sm font-medium" data-i18n="deadline">Дедлайн</label><input type="date" id="monthly-task-deadline" class="bg-gray-50 border border-gray-300 rounded-lg w-full p-2.5" required></div><div class="flex justify-end gap-4 mt-6"><button type="button" class="cancel-btn text-gray-600 hover:text-gray-900" data-i18n="cancel">Отмена</button><button type="submit" class="bg-blue-600 text-white px-5 py-2.5 rounded-lg hover:bg-blue-700" data-i18n="save">Сохранить</button></div></form></div></dialog>
-    <dialog id="yearly-task-modal" class="p-0 rounded-lg shadow-xl w-full max-w-md"><div class="p-6"><h3 id="yearly-task-modal-title" class="text-xl font-semibold mb-4"></h3><form id="yearly-task-form"><input type="hidden" id="yearly-task-id"><div class="mb-4"><label for="yearly-task-name" class="block mb-2 text-sm font-medium" data-i18n="name">Имя</label><input type="text" id="yearly-task-name" class="bg-gray-50 border border-gray-300 rounded-lg w-full p-2.5" required></div><div class="mb-4"><label for="yearly-task-deadline" class="block mb-2 text-sm font-medium" data-i18n="deadline">Дедлайн</label><input type="date" id="yearly-task-deadline" class="bg-gray-50 border border-gray-300 rounded-lg w-full p-2.5" required></div><div class="mb-4"><label for="yearly-task-notes" class="block mb-2 text-sm font-medium" data-i18n="notes">Заметки</label><textarea id="yearly-task-notes" rows="3" class="bg-gray-50 border border-gray-300 rounded-lg w-full p-2.5"></textarea></div><div class="flex justify-end gap-4 mt-6"><button type="button" class="cancel-btn text-gray-600 hover:text-gray-900" data-i18n="cancel">Отмена</button><button type="submit" class="bg-blue-600 text-white px-5 py-2.5 rounded-lg hover:bg-blue-700" data-i18n="save">Сохранить</button></div></form></div></dialog>
+    <dialog id="debt-modal" class="p-0 rounded-lg shadow-xl w-full max-w-md" aria-modal="true" aria-labelledby="debt-modal-title"><div class="p-6"><h3 id="debt-modal-title" class="text-xl font-semibold mb-4" data-i18n="addDebt"></h3><form id="debt-form" data-original-paid="0" aria-label="Debt form"><input type="hidden" id="debt-id"><div class="mb-4"><label for="debt-name" class="block mb-2 text-sm font-medium" data-i18n="debtorName">Имя должника/Название</label><input type="text" id="debt-name" class="bg-gray-50 border border-gray-300 rounded-lg w-full p-2.5" required aria-required="true" aria-describedby="debt-name-error"><span id="debt-name-error" class="text-red-500 text-xs hidden" role="alert"></span></div><div class="mb-4"><label for="debt-total" class="block mb-2 text-sm font-medium"><span data-i18n="totalAmount"></span> (<span class="currency-symbol">AZN</span>)</label><input type="number" id="debt-total" step="0.01" min="0" class="bg-gray-50 border border-gray-300 rounded-lg w-full p-2.5" required aria-required="true" aria-describedby="debt-total-error"><span id="debt-total-error" class="text-red-500 text-xs hidden" role="alert"></span></div><div class="mb-4"><label for="debt-paid" class="block mb-2 text-sm font-medium"><span data-i18n="paidAmount"></span> (<span class="currency-symbol">AZN</span>)</label><input type="number" id="debt-paid" step="0.01" min="0" class="bg-gray-50 border border-gray-300 rounded-lg w-full p-2.5" required aria-required="true" value="0" aria-describedby="debt-paid-error"><span id="debt-paid-error" class="text-red-500 text-xs hidden" role="alert"></span></div><div class="mb-4"><label for="debt-comment" class="block mb-2 text-sm font-medium" data-i18n="comment">Комментарий</label><textarea id="debt-comment" rows="3" class="bg-gray-50 border border-gray-300 rounded-lg w-full p-2.5" aria-describedby="debt-comment-help"></textarea><span id="debt-comment-help" class="text-gray-500 text-xs sr-only">Optional comment about the debt</span></div><div class="flex justify-end gap-4 mt-6"><button type="button" class="cancel-btn text-gray-600 hover:text-gray-900" data-i18n="cancel" aria-label="Cancel and close dialog">Отмена</button><button type="submit" class="bg-blue-600 text-white px-5 py-2.5 rounded-lg hover:bg-blue-700" data-i18n="save">Сохранить</button></div></form></div></dialog>
+    <dialog id="debt-payment-modal" class="p-0 rounded-lg shadow-xl w-full max-w-md" aria-modal="true" aria-labelledby="debt-payment-modal-title"><div class="p-6"><h3 id="debt-payment-modal-title" class="text-xl font-semibold mb-4" data-i18n="addDebtPayment">Добавить платеж по долгу</h3><form id="debt-payment-form" aria-label="Debt payment form"><input type="hidden" id="debt-payment-id"><div class="mb-4"><label for="debt-payment-amount" class="block mb-2 text-sm font-medium"><span data-i18n="paymentAmount"></span> (<span class="currency-symbol">AZN</span>)</label><input type="number" id="debt-payment-amount" step="0.01" min="0.01" class="bg-gray-50 border border-gray-300 rounded-lg w-full p-2.5" required aria-required="true" aria-describedby="debt-payment-amount-error"><span id="debt-payment-amount-error" class="text-red-500 text-xs hidden" role="alert"></span></div><div class="flex justify-end gap-4 mt-6"><button type="button" class="cancel-btn text-gray-600 hover:text-gray-900" data-i18n="cancel" aria-label="Cancel and close dialog">Отмена</button><button type="submit" class="bg-blue-600 text-white px-5 py-2.5 rounded-lg hover:bg-blue-700" data-i18n="add">Добавить</button></div></form></div></dialog>
+    <dialog id="recurring-expense-modal" class="p-0 rounded-lg shadow-xl w-full max-w-md" aria-modal="true" aria-labelledby="recurring-expense-modal-title"><div class="p-6"><h3 id="recurring-expense-modal-title" class="text-xl font-semibold mb-4" data-i18n="addTemplate"></h3><form id="recurring-expense-form" aria-label="Recurring expense form"><input type="hidden" id="recurring-expense-id"><div class="mb-4"><label for="recurring-expense-name" class="block mb-2 text-sm font-medium" data-i18n="name">Наименование</label><input type="text" id="recurring-expense-name" class="bg-gray-50 border border-gray-300 rounded-lg w-full p-2.5" required aria-required="true" aria-describedby="recurring-expense-name-error"><span id="recurring-expense-name-error" class="text-red-500 text-xs hidden" role="alert"></span></div><div class="mb-4"><label for="recurring-expense-amount" class="block mb-2 text-sm font-medium"><span data-i18n="amount"></span> (<span class="currency-symbol">AZN</span>)</label><input type="number" id="recurring-expense-amount" step="0.01" min="0.01" class="bg-gray-50 border border-gray-300 rounded-lg w-full p-2.5" required aria-required="true" aria-describedby="recurring-expense-amount-error"><span id="recurring-expense-amount-error" class="text-red-500 text-xs hidden" role="alert"></span></div><div class="mb-4"><label for="recurring-expense-due-day" class="block mb-2 text-sm font-medium" data-i18n="paymentDayNum">День оплаты (1-31)</label><input type="number" id="recurring-expense-due-day" min="1" max="31" class="bg-gray-50 border border-gray-300 rounded-lg w-full p-2.5" required aria-required="true" aria-describedby="recurring-expense-due-day-error"><span id="recurring-expense-due-day-error" class="text-red-500 text-xs hidden" role="alert"></span></div><div class="mb-4"><label for="recurring-expense-details" class="block mb-2 text-sm font-medium" data-i18n="details">Детали</label><textarea id="recurring-expense-details" rows="3" class="bg-gray-50 border border-gray-300 rounded-lg w-full p-2.5" aria-describedby="recurring-expense-details-help"></textarea><span id="recurring-expense-details-help" class="text-gray-500 text-xs sr-only">Optional details about the recurring expense</span></div><div class="flex justify-end gap-4 mt-6"><button type="button" class="cancel-btn text-gray-600 hover:text-gray-900" data-i18n="cancel" aria-label="Cancel and close dialog">Отмена</button><button type="submit" class="bg-blue-600 text-white px-5 py-2.5 rounded-lg hover:bg-blue-700" data-i18n="save">Сохранить</button></div></form></div></dialog>
+    <dialog id="expense-modal" class="p-0 rounded-lg shadow-xl w-full max-w-md" aria-modal="true" aria-labelledby="expense-modal-title"><div class="p-6"><h3 id="expense-modal-title" class="text-xl font-semibold mb-4" data-i18n="addExpense"></h3><form id="expense-form" aria-label="Expense form"><input type="hidden" id="expense-id"><div class="mb-4"><label for="expense-name" class="block mb-2 text-sm font-medium" data-i18n="name">Наименование</label><input type="text" id="expense-name" class="bg-gray-50 border border-gray-300 rounded-lg w-full p-2.5" required aria-required="true" aria-describedby="expense-name-error"><span id="expense-name-error" class="text-red-500 text-xs hidden" role="alert"></span></div><div class="mb-4"><label for="expense-category" class="block mb-2 text-sm font-medium" data-i18n="category">Категория</label><input type="text" id="expense-category" list="expense-categories-list" class="bg-gray-50 border border-gray-300 rounded-lg w-full p-2.5" required aria-required="true" aria-describedby="expense-category-error"><datalist id="expense-categories-list"></datalist><span id="expense-category-error" class="text-red-500 text-xs hidden" role="alert"></span></div><div class="mb-4"><label for="expense-amount" class="block mb-2 text-sm font-medium"><span data-i18n="amount"></span> (<span class="currency-symbol">AZN</span>)</label><input type="number" id="expense-amount" step="0.01" min="0.01" class="bg-gray-50 border border-gray-300 rounded-lg w-full p-2.5" required aria-required="true" aria-describedby="expense-amount-error"><span id="expense-amount-error" class="text-red-500 text-xs hidden" role="alert"></span></div><div class="mb-4"><label for="expense-date" class="block mb-2 text-sm font-medium" data-i18n="date">Дата</label><input type="date" id="expense-date" class="bg-gray-50 border border-gray-300 rounded-lg w-full p-2.5" required aria-required="true" aria-describedby="expense-date-error"><span id="expense-date-error" class="text-red-500 text-xs hidden" role="alert"></span></div><div class="flex justify-end gap-4 mt-6"><button type="button" class="cancel-btn text-gray-600 hover:text-gray-900" data-i18n="cancel" aria-label="Cancel and close dialog">Отмена</button><button type="submit" class="bg-blue-600 text-white px-5 py-2.5 rounded-lg hover:bg-blue-700" data-i18n="save">Сохранить</button></div></form></div></dialog>
+    <dialog id="daily-task-modal" class="p-0 rounded-lg shadow-xl w-full max-w-md" aria-modal="true" aria-labelledby="daily-task-modal-title"><div class="p-6"><h3 id="daily-task-modal-title" class="text-xl font-semibold mb-4"></h3><form id="daily-task-form" aria-label="Daily task form"><input type="hidden" id="daily-task-id"><div class="mb-4"><label for="daily-task-name" class="block mb-2 text-sm font-medium" data-i18n="name">Имя</label><input type="text" id="daily-task-name" class="bg-gray-50 border border-gray-300 rounded-lg w-full p-2.5" required aria-required="true" aria-describedby="daily-task-name-error"><span id="daily-task-name-error" class="text-red-500 text-xs hidden" role="alert"></span></div><div class="mb-4"><label for="daily-task-notes" class="block mb-2 text-sm font-medium" data-i18n="notes">Заметки</label><textarea id="daily-task-notes" rows="3" class="bg-gray-50 border border-gray-300 rounded-lg w-full p-2.5" aria-describedby="daily-task-notes-help"></textarea><span id="daily-task-notes-help" class="text-gray-500 text-xs sr-only">Optional notes about the task</span></div><div class="flex justify-end gap-4 mt-6"><button type="button" class="cancel-btn text-gray-600 hover:text-gray-900" data-i18n="cancel" aria-label="Cancel and close dialog">Отмена</button><button type="submit" class="bg-blue-600 text-white px-5 py-2.5 rounded-lg hover:bg-blue-700" data-i18n="save">Сохранить</button></div></form></div></dialog>
+    <dialog id="monthly-task-modal" class="p-0 rounded-lg shadow-xl w-full max-w-md" aria-modal="true" aria-labelledby="monthly-task-modal-title"><div class="p-6"><h3 id="monthly-task-modal-title" class="text-xl font-semibold mb-4"></h3><form id="monthly-task-form" aria-label="Monthly task form"><input type="hidden" id="monthly-task-id"><div class="mb-4"><label for="monthly-task-name" class="block mb-2 text-sm font-medium" data-i18n="name">Имя</label><input type="text" id="monthly-task-name" class="bg-gray-50 border border-gray-300 rounded-lg w-full p-2.5" required aria-required="true" aria-describedby="monthly-task-name-error"><span id="monthly-task-name-error" class="text-red-500 text-xs hidden" role="alert"></span></div><div class="mb-4"><label for="monthly-task-deadline" class="block mb-2 text-sm font-medium" data-i18n="deadline">Дедлайн</label><input type="date" id="monthly-task-deadline" class="bg-gray-50 border border-gray-300 rounded-lg w-full p-2.5" required aria-required="true" aria-describedby="monthly-task-deadline-error"><span id="monthly-task-deadline-error" class="text-red-500 text-xs hidden" role="alert"></span></div><div class="flex justify-end gap-4 mt-6"><button type="button" class="cancel-btn text-gray-600 hover:text-gray-900" data-i18n="cancel" aria-label="Cancel and close dialog">Отмена</button><button type="submit" class="bg-blue-600 text-white px-5 py-2.5 rounded-lg hover:bg-blue-700" data-i18n="save">Сохранить</button></div></form></div></dialog>
+    <dialog id="yearly-task-modal" class="p-0 rounded-lg shadow-xl w-full max-w-md" aria-modal="true" aria-labelledby="yearly-task-modal-title"><div class="p-6"><h3 id="yearly-task-modal-title" class="text-xl font-semibold mb-4"></h3><form id="yearly-task-form" aria-label="Yearly task form"><input type="hidden" id="yearly-task-id"><div class="mb-4"><label for="yearly-task-name" class="block mb-2 text-sm font-medium" data-i18n="name">Имя</label><input type="text" id="yearly-task-name" class="bg-gray-50 border border-gray-300 rounded-lg w-full p-2.5" required aria-required="true" aria-describedby="yearly-task-name-error"><span id="yearly-task-name-error" class="text-red-500 text-xs hidden" role="alert"></span></div><div class="mb-4"><label for="yearly-task-deadline" class="block mb-2 text-sm font-medium" data-i18n="deadline">Дедлайн</label><input type="date" id="yearly-task-deadline" class="bg-gray-50 border border-gray-300 rounded-lg w-full p-2.5" required aria-required="true" aria-describedby="yearly-task-deadline-error"><span id="yearly-task-deadline-error" class="text-red-500 text-xs hidden" role="alert"></span></div><div class="mb-4"><label for="yearly-task-notes" class="block mb-2 text-sm font-medium" data-i18n="notes">Заметки</label><textarea id="yearly-task-notes" rows="3" class="bg-gray-50 border border-gray-300 rounded-lg w-full p-2.5" aria-describedby="yearly-task-notes-help"></textarea><span id="yearly-task-notes-help" class="text-gray-500 text-xs sr-only">Optional notes about the task</span></div><div class="flex justify-end gap-4 mt-6"><button type="button" class="cancel-btn text-gray-600 hover:text-gray-900" data-i18n="cancel" aria-label="Cancel and close dialog">Отмена</button><button type="submit" class="bg-blue-600 text-white px-5 py-2.5 rounded-lg hover:bg-blue-700" data-i18n="save">Сохранить</button></div></form></div></dialog>
     <dialog id="event-modal" class="p-0 rounded-lg shadow-xl w-full max-w-md"><div class="p-6"><h3 id="event-modal-title" class="text-xl font-semibold mb-4"></h3><form id="event-form"><input type="hidden" id="event-id"><div class="mb-4"><label for="event-category" class="block mb-2 text-sm font-medium" data-i18n="category">Категория</label><select id="event-category" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"><option value="event" data-i18n="categoryEvent">Событие</option><option value="birthday" data-i18n="categoryBirthday">День рождения</option><option value="meeting" data-i18n="categoryMeeting">Встреча</option><option value="wedding" data-i18n="categoryWedding">Свадьба</option></select></div><div id="event-fields-event" class="event-category-fields"><div class="mb-4"><label for="event-name-generic" class="block mb-2 text-sm font-medium" data-i18n="eventName">Название события</label><input type="text" id="event-name-generic" class="bg-gray-50 border border-gray-300 rounded-lg w-full p-2.5"></div></div><div id="event-fields-birthday" class="event-category-fields hidden"><div class="mb-4"><label for="event-birthday-name" class="block mb-2 text-sm font-medium" data-i18n="birthdayName">Имя именинника</label><input type="text" id="event-birthday-name" class="bg-gray-50 border border-gray-300 rounded-lg w-full p-2.5"></div><div class="mb-4"><label for="event-birthday-year" class="block mb-2 text-sm font-medium" data-i18n="birthYear">Год рождения (опционально)</label><input type="number" id="event-birthday-year" placeholder="1990" class="bg-gray-50 border border-gray-300 rounded-lg w-full p-2.5"></div></div><div id="event-fields-meeting" class="event-category-fields hidden"><div class="mb-4"><label for="event-meeting-with" class="block mb-2 text-sm font-medium" data-i18n="meetingWith">С кем</label><input type="text" id="event-meeting-with" class="bg-gray-50 border border-gray-300 rounded-lg w-full p-2.5"></div><div class="grid grid-cols-2 gap-4"><div><label for="event-meeting-time" class="block mb-2 text-sm font-medium" data-i18n="time">Время (опц.)</label><input type="time" id="event-meeting-time" class="bg-gray-50 border border-gray-300 rounded-lg w-full p-2.5"></div><div><label for="event-meeting-place" class="block mb-2 text-sm font-medium" data-i18n="place">Место (опц.)</label><input type="text" id="event-meeting-place" class="bg-gray-50 border border-gray-300 rounded-lg w-full p-2.5"></div></div></div><div id="event-fields-wedding" class="event-category-fields hidden"><div class="mb-4"><label for="event-wedding-names" class="block mb-2 text-sm font-medium" data-i18n="weddingNames">Имена пары</label><input type="text" id="event-wedding-names" class="bg-gray-50 border border-gray-300 rounded-lg w-full p-2.5"></div></div><div class="mb-4"><label for="event-date" class="block mb-2 text-sm font-medium" data-i18n="date">Дата</label><input type="date" id="event-date" class="bg-gray-50 border border-gray-300 rounded-lg w-full p-2.5" required></div><div class="flex items-center mb-4"><input id="event-create-task" type="checkbox" checked class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"><label for="event-create-task" class="ml-2 text-sm font-medium text-gray-900" data-i18n="createTaskForEvent">Создать задачу для этого события</label></div><div class="flex justify-between items-center mt-6"><button type="button" id="delete-event-btn" class="text-red-600 hover:text-red-800 hidden" data-i18n="delete">Удалить</button><div class="flex justify-end gap-4"><button type="button" class="cancel-btn text-gray-600 hover:text-gray-900" data-i18n="cancel">Отмена</button><button type="submit" class="bg-blue-600 text-white px-5 py-2.5 rounded-lg hover:bg-blue-700" data-i18n="save">Сохранить</button></div></div></form></div></dialog>
     <dialog id="category-modal" class="p-0 rounded-lg shadow-xl w-full max-w-md"><div class="p-6"><h3 class="text-xl font-semibold mb-4" data-i18n="manageCategoriesTitle">Управление категориями</h3><form id="category-form" class="mb-4"><div class="flex gap-2"><input type="text" id="category-name" placeholder="Новая категория" class="flex-grow bg-gray-50 border border-gray-300 rounded-lg w-full p-2.5" required><button type="submit" class="bg-blue-600 text-white px-5 py-2.5 rounded-lg hover:bg-blue-700" data-i18n="add">Добавить</button></div></form><div id="category-list" class="space-y-2 max-h-60 overflow-y-auto"></div><div class="flex justify-end mt-6"><button type="button" class="cancel-btn text-gray-600 hover:text-gray-900" data-i18n="close">Закрыть</button></div></div></dialog>
 
@@ -390,12 +661,14 @@
             app = initializeApp(firebaseConfig);
             db = getFirestore(app);
             auth = getAuth(app);
+            console.log("✅ Firebase initialized successfully");
         } catch (e) {
-            console.error("Firebase initialization error:", e);
+            console.error("❌ Firebase initialization error:", e);
             document.getElementById('loading-overlay').classList.add('hidden');
             document.getElementById('app').innerHTML = `<div class="p-4 text-center text-red-500">
                 <h1 class="text-2xl font-bold">Ошибка конфигурации Firebase</h1>
                 <p>Пожалуйста, убедитесь, что вы правильно вставили ваш <b>firebaseConfig</b> в HTML-файл.</p>
+                <p class="mt-2 text-sm">${e.message}</p>
             </div>`;
         }
 
@@ -417,6 +690,41 @@
         let unsubscribes = [];
         let expensesChart = null;
         let dateTimeInterval = null;
+        
+        // ✅ Listener Registry System to prevent duplicate listeners
+        const listenerRegistry = new Map();
+        
+        /**
+         * Register a listener with a unique key to prevent duplicates
+         * @param {string} key - Unique identifier for the listener
+         * @param {Function} listenerFn - Function that returns an unsubscribe function
+         * @returns {Function} The unsubscribe function
+         */
+        function registerListener(key, listenerFn) {
+            // Unsubscribe existing listener if present
+            if (listenerRegistry.has(key)) {
+                const existingUnsub = listenerRegistry.get(key);
+                existingUnsub();
+                console.log(`♻️ Replaced existing listener: ${key}`);
+            }
+            
+            // Register new listener
+            const unsubscribe = listenerFn();
+            listenerRegistry.set(key, unsubscribe);
+            
+            return unsubscribe;
+        }
+        
+        /**
+         * Clean up all registered listeners
+         */
+        function cleanupListeners() {
+            listenerRegistry.forEach((unsub, key) => {
+                unsub();
+                console.log(`🧹 Cleaned up listener: ${key}`);
+            });
+            listenerRegistry.clear();
+        }
         
         const translations = {
             ru: {
@@ -453,8 +761,18 @@
                 authGenericError: "Произошла ошибка. Попробуйте снова.",
                 manageCategories: "Управление категориями", manageCategoriesTitle: "Управление категориями",
                 toastSuccess: "Успешно сохранено!", toastError: "Ошибка сохранения!", toastDeleted: "Запись удалена.",
+                tasksCarriedOver: "задач перенесено", carriedFrom: "Перенесено с",
                 radioTitle: "AzerbaiJazz Radio",
                 tabPayments: "Ödənişlər",
+                errorPermissionDenied: "Доступ запрещен. Проверьте права доступа.",
+                errorNotFound: "Данные не найдены.",
+                errorAlreadyExists: "Запись уже существует.",
+                errorUnavailable: "Сервис временно недоступен. Попробуйте позже.",
+                errorNegativeAmount: "Сумма не может быть отрицательной.",
+                errorPositiveAmount: "Сумма должна быть больше нуля.",
+                errorPaidExceedsTotal: "Оплаченная сумма не может превышать общую сумму.",
+                errorInvalidDate: "Неверный формат даты.",
+                errorRequiredField: "Это поле обязательно для заполнения.",
             },
             en: {
                 appTitle: "ORDINA", appSubtitle: "Manage your finances with ease.",
@@ -490,6 +808,16 @@
                 authGenericError: "An error occurred. Please try again.",
                 manageCategories: "Manage Categories", manageCategoriesTitle: "Manage Categories",
                 toastSuccess: "Saved successfully!", toastError: "Error saving!", toastDeleted: "Entry deleted.",
+                tasksCarriedOver: "tasks carried over", carriedFrom: "Carried from",
+                errorPermissionDenied: "Permission denied. Check your access rights.",
+                errorNotFound: "Data not found.",
+                errorAlreadyExists: "Entry already exists.",
+                errorUnavailable: "Service temporarily unavailable. Please try again later.",
+                errorNegativeAmount: "Amount cannot be negative.",
+                errorPositiveAmount: "Amount must be greater than zero.",
+                errorPaidExceedsTotal: "Paid amount cannot exceed total amount.",
+                errorInvalidDate: "Invalid date format.",
+                errorRequiredField: "This field is required.",
             },
             az: {
                 appTitle: "ORDINA", appSubtitle: "Maliyyələrinizi asanlıqla idarə edin.",
@@ -525,28 +853,371 @@
                 authGenericError: "Xəta baş verdi. Yenidən cəhd edin.",
                 manageCategories: "Kateqoriyaları idarə et", manageCategoriesTitle: "Kateqoriyaları idarə et",
                 toastSuccess: "Uğurla yadda saxlanıldı!", toastError: "Yaddaş xətası!", toastDeleted: "Yazı silindi.",
+                tasksCarriedOver: "tapşırıq köçürüldü", carriedFrom: "Köçürüldü",
+                errorPermissionDenied: "İcazə rədd edildi. Giriş hüquqlarınızı yoxlayın.",
+                errorNotFound: "Məlumat tapılmadı.",
+                errorAlreadyExists: "Qeyd artıq mövcuddur.",
+                errorUnavailable: "Xidmət müvəqqəti əlçatan deyil. Sonra yenidən cəhd edin.",
+                errorNegativeAmount: "Məbləğ mənfi ola bilməz.",
+                errorPositiveAmount: "Məbləğ sıfırdan böyük olmalıdır.",
+                errorPaidExceedsTotal: "Ödənilmiş məbləğ ümumi məbləği keçə bilməz.",
+                errorInvalidDate: "Yanlış tarix formatı.",
+                errorRequiredField: "Bu sahə mütləqdir.",
             }
         };
+
+        // ✅ Task Status Enum System (Language-Independent)
+        const TASK_STATUS = {
+            NOT_DONE: 'not_done',
+            IN_PROGRESS: 'in_progress',
+            DONE: 'done',
+            SKIPPED: 'skipped'
+        };
+
+        // Helper function to get display text for status
+        function getStatusDisplay(statusEnum) {
+            const statusMap = {
+                'not_done': 'statusNotDone',
+                'in_progress': 'statusInProgress',
+                'done': 'statusDone',
+                'skipped': 'statusSkipped'
+            };
+            const key = statusMap[statusEnum] || 'statusNotDone';
+            return translations[currentLang][key];
+        }
+
+        // Helper function to get all "not done" values (for backward compatibility with old data)
+        function getNotDoneValues() {
+            return [
+                TASK_STATUS.NOT_DONE,
+                translations.ru.statusNotDone,
+                translations.en.statusNotDone,
+                translations.az.statusNotDone
+            ];
+        }
+
+        // Helper function to normalize status (convert old translated status to enum)
+        function normalizeStatus(status) {
+            // If already enum, return as is
+            if (Object.values(TASK_STATUS).includes(status)) {
+                return status;
+            }
+            // Convert old translated status to enum
+            if (status === translations.ru.statusNotDone || 
+                status === translations.en.statusNotDone || 
+                status === translations.az.statusNotDone) {
+                return TASK_STATUS.NOT_DONE;
+            }
+            if (status === translations.ru.statusDone || 
+                status === translations.en.statusDone || 
+                status === translations.az.statusDone) {
+                return TASK_STATUS.DONE;
+            }
+            if (status === translations.ru.statusSkipped || 
+                status === translations.en.statusSkipped || 
+                status === translations.az.statusSkipped) {
+                return TASK_STATUS.SKIPPED;
+            }
+            // Default to not done
+            return TASK_STATUS.NOT_DONE;
+        }
+
+        // ✅ Debounce utility function for performance optimization
+        function debounce(func, delay) {
+            let timeoutId;
+            return function(...args) {
+                clearTimeout(timeoutId);
+                timeoutId = setTimeout(() => {
+                    func.apply(this, args);
+                }, delay);
+            };
+        }
+
+        // ✅ Date validation helper function
+        function isValidDate(dateString) {
+            if (!dateString) return false;
+            
+            // Check format YYYY-MM-DD
+            const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
+            if (!dateRegex.test(dateString)) return false;
+            
+            // Check if it's a valid date
+            const date = new Date(dateString);
+            if (isNaN(date.getTime())) return false;
+            
+            // Check if the date components match (prevents invalid dates like 2024-02-30)
+            const [year, month, day] = dateString.split('-').map(Number);
+            return date.getFullYear() === year && 
+                   date.getMonth() === month - 1 && 
+                   date.getDate() === day;
+        }
+
         let currentLang = localStorage.getItem('appLanguage') || 'ru';
+        
+        // ✅ Unified Error Handler
+        const ErrorHandler = {
+            log(context, error, showToUser = false) {
+                // Log to console with context
+                console.error(`❌ Error in ${context}:`, {
+                    message: error.message,
+                    code: error.code,
+                    stack: error.stack,
+                    timestamp: new Date().toISOString()
+                });
+                
+                // Optionally show to user
+                if (showToUser) {
+                    const userMessage = this.getUserFriendlyMessage(error);
+                    showToast(userMessage, 'error');
+                }
+            },
+            
+            getUserFriendlyMessage(error) {
+                const t = translations[currentLang];
+                
+                // Firebase-specific errors
+                if (error.code) {
+                    const errorMessages = {
+                        'permission-denied': t.errorPermissionDenied || 'Permission denied',
+                        'not-found': t.errorNotFound || 'Data not found',
+                        'already-exists': t.errorAlreadyExists || 'Already exists',
+                        'unavailable': t.errorUnavailable || 'Service unavailable',
+                        'unauthenticated': t.errorPermissionDenied || 'Permission denied'
+                    };
+                    return errorMessages[error.code] || t.toastError;
+                }
+                
+                return t.toastError;
+            },
+            
+            async withErrorHandling(fn, context, showToUser = true) {
+                try {
+                    return await fn();
+                } catch (error) {
+                    this.log(context, error, showToUser);
+                    throw error;
+                }
+            }
+        };
+        
+        // ✅ Accessibility Helper Functions
+        const AccessibilityHelper = {
+            // Store the element that had focus before modal opened
+            lastFocusedElement: null,
+            
+            /**
+             * Trap focus within a modal dialog
+             * @param {HTMLElement} modal - The modal element
+             */
+            trapFocus(modal) {
+                const focusableElements = modal.querySelectorAll(
+                    'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+                );
+                const firstFocusable = focusableElements[0];
+                const lastFocusable = focusableElements[focusableElements.length - 1];
+                
+                const handleTabKey = (e) => {
+                    if (e.key !== 'Tab') return;
+                    
+                    if (e.shiftKey) {
+                        if (document.activeElement === firstFocusable) {
+                            lastFocusable.focus();
+                            e.preventDefault();
+                        }
+                    } else {
+                        if (document.activeElement === lastFocusable) {
+                            firstFocusable.focus();
+                            e.preventDefault();
+                        }
+                    }
+                };
+                
+                modal.addEventListener('keydown', handleTabKey);
+                
+                // Return cleanup function
+                return () => modal.removeEventListener('keydown', handleTabKey);
+            },
+            
+            /**
+             * Open modal with proper focus management
+             * @param {HTMLElement} modal - The modal element
+             */
+            openModal(modal) {
+                // Store current focus
+                this.lastFocusedElement = document.activeElement;
+                
+                // Open modal
+                modal.showModal();
+                
+                // Move focus to first focusable element or modal itself
+                const firstInput = modal.querySelector('input:not([type="hidden"]), textarea, select');
+                if (firstInput) {
+                    setTimeout(() => firstInput.focus(), 100);
+                } else {
+                    modal.focus();
+                }
+                
+                // Setup focus trap
+                const cleanupFocusTrap = this.trapFocus(modal);
+                
+                // Cleanup on close
+                const handleClose = () => {
+                    cleanupFocusTrap();
+                    this.returnFocus();
+                    modal.removeEventListener('close', handleClose);
+                };
+                modal.addEventListener('close', handleClose);
+            },
+            
+            /**
+             * Return focus to the element that had focus before modal opened
+             */
+            returnFocus() {
+                if (this.lastFocusedElement && typeof this.lastFocusedElement.focus === 'function') {
+                    this.lastFocusedElement.focus();
+                    this.lastFocusedElement = null;
+                }
+            },
+            
+            /**
+             * Validate form field and show error message
+             * @param {HTMLInputElement} field - The form field
+             * @param {string} errorMessage - The error message to display
+             * @returns {boolean} - Whether the field is valid
+             */
+            validateField(field, errorMessage = null) {
+                const t = translations[currentLang];
+                const errorId = field.id + '-error';
+                const errorElement = document.getElementById(errorId);
+                
+                if (!field.checkValidity()) {
+                    field.setAttribute('aria-invalid', 'true');
+                    if (errorElement) {
+                        errorElement.textContent = errorMessage || field.validationMessage || t.errorRequiredField;
+                        errorElement.classList.remove('hidden');
+                    }
+                    return false;
+                } else {
+                    field.setAttribute('aria-invalid', 'false');
+                    if (errorElement) {
+                        errorElement.textContent = '';
+                        errorElement.classList.add('hidden');
+                    }
+                    return true;
+                }
+            },
+            
+            /**
+             * Validate entire form
+             * @param {HTMLFormElement} form - The form element
+             * @returns {boolean} - Whether the form is valid
+             */
+            validateForm(form) {
+                const fields = form.querySelectorAll('input[required], textarea[required], select[required]');
+                let isValid = true;
+                
+                fields.forEach(field => {
+                    if (!this.validateField(field)) {
+                        isValid = false;
+                    }
+                });
+                
+                return isValid;
+            },
+            
+            /**
+             * Update tab aria-selected attributes
+             * @param {HTMLElement} activeTab - The active tab button
+             * @param {NodeList} allTabs - All tab buttons
+             */
+            updateTabAria(activeTab, allTabs) {
+                allTabs.forEach(tab => {
+                    tab.setAttribute('aria-selected', tab === activeTab ? 'true' : 'false');
+                });
+            },
+            
+            /**
+             * Update button aria-pressed attribute
+             * @param {HTMLElement} button - The button element
+             * @param {boolean} pressed - Whether the button is pressed
+             */
+            updateButtonPressed(button, pressed) {
+                button.setAttribute('aria-pressed', pressed ? 'true' : 'false');
+            },
+            
+            /**
+             * Announce message to screen readers
+             * @param {string} message - The message to announce
+             * @param {string} priority - 'polite' or 'assertive'
+             */
+            announce(message, priority = 'polite') {
+                const announcer = document.getElementById('aria-live-announcer') || this.createAnnouncer();
+                announcer.setAttribute('aria-live', priority);
+                announcer.textContent = message;
+                
+                // Clear after announcement
+                setTimeout(() => {
+                    announcer.textContent = '';
+                }, 1000);
+            },
+            
+            /**
+             * Create aria-live announcer element
+             * @returns {HTMLElement} - The announcer element
+             */
+            createAnnouncer() {
+                const announcer = document.createElement('div');
+                announcer.id = 'aria-live-announcer';
+                announcer.className = 'sr-only';
+                announcer.setAttribute('aria-live', 'polite');
+                announcer.setAttribute('aria-atomic', 'true');
+                document.body.appendChild(announcer);
+                return announcer;
+            }
+        };
         
         function getTodayISOString() {
             const today = new Date();
             const options = { year: 'numeric', month: '2-digit', day: '2-digit', timeZone: 'Asia/Baku' };
             return new Intl.DateTimeFormat('en-CA', options).format(today);
         }
+        // ✅ Locale-aware date formatting using Intl.DateTimeFormat
         function formatISODateForDisplay(isoString, options = {}) {
             if (!isoString || typeof isoString !== 'string' || !isoString.includes('-')) return '—';
             const [year, month, day] = isoString.split('-').map(Number);
             const date = new Date(year, month - 1, day);
             const defaultOptions = { day: 'numeric', month: 'long' };
             if (options.year) defaultOptions.year = 'numeric';
-            return date.toLocaleDateString(currentLang === 'ru' ? 'ru-RU' : 'en-US', { ...defaultOptions, ...options });
+            
+            // Map language to proper locale
+            const localeMap = {
+                'ru': 'ru-RU',
+                'en': 'en-US',
+                'az': 'az-AZ'
+            };
+            const locale = localeMap[currentLang] || 'en-US';
+            
+            return new Intl.DateTimeFormat(locale, { ...defaultOptions, ...options }).format(date);
         }
+        
         function formatMonthId(monthId) {
             if (!monthId) return '';
             const [year, month] = monthId.split('-');
             const date = new Date(year, month - 1);
-             return date.toLocaleString(currentLang === 'ru' ? 'ru-RU' : 'en-US', { month: 'long', year: 'numeric', timeZone: 'Asia/Baku' });
+            
+            // Map language to proper locale
+            const localeMap = {
+                'ru': 'ru-RU',
+                'en': 'en-US',
+                'az': 'az-AZ'
+            };
+            const locale = localeMap[currentLang] || 'en-US';
+            
+            return new Intl.DateTimeFormat(locale, { 
+                month: 'long', 
+                year: 'numeric', 
+                timeZone: 'Asia/Baku' 
+            }).format(date);
         }
         
         function setLanguage(lang) {
@@ -585,7 +1256,12 @@
         const authContainer = document.getElementById('auth-container');
         const appContainer = document.getElementById('app');
         function showLoginScreen() { loadingOverlay.classList.add('hidden'); authContainer.classList.remove('hidden'); appContainer.classList.add('hidden'); }
-        function showApp() { authContainer.classList.add('hidden'); appContainer.classList.remove('hidden'); }
+        function showApp() { 
+            authContainer.classList.add('hidden'); 
+            appContainer.classList.remove('hidden'); 
+            // Initialize dashboard with skeleton loader
+            document.getElementById('dashboard-loading').innerHTML = createSkeletonLoader('dashboard');
+        }
 
         async function setupDefaultData(user) {
             const categoriesRef = collection(db, `users/${user.uid}/categories`);
@@ -640,7 +1316,11 @@
         }
         
         function setupCollections(todayId = getTodayISOString()) {
-            if (!userId) return;
+            if (!userId) {
+                console.warn("⚠️ setupCollections called without userId");
+                return;
+            }
+            console.log("🔧 Setting up collections for user:", userId, "month:", selectedMonthId, "today:", todayId);
             debtsCol = collection(db, `users/${userId}/debts`);
             recurringExpensesCol = collection(db, `users/${userId}/recurringExpenses`);
             monthlyDataCol = collection(db, `users/${userId}/monthlyData`);
@@ -652,6 +1332,7 @@
             yearlyTasksCol = collection(db, `users/${userId}/yearlyTasks`);
             calendarEventsCol = collection(db, `users/${userId}/calendarEvents`);
             categoriesCol = collection(db, `users/${userId}/categories`);
+            console.log("✅ Collections setup complete");
         }
 
         async function checkAndCarryOverDailyTasks(todayId) {
@@ -664,19 +1345,45 @@
             if (lastCheck && lastCheck < todayId) {
                 try {
                     const yesterdayTasksCol = collection(db, `users/${userId}/dailyTasks/${yesterdayId}/tasks`);
-                    const q = query(yesterdayTasksCol, where("status", "==", translations.ru.statusNotDone));
+                    // ✅ FIX: Query for incomplete tasks in ALL languages
+                    const q = query(yesterdayTasksCol, where("status", "in", getNotDoneValues()));
                     const tasksToCarryOverSnapshot = await getDocs(q);
                     if (!tasksToCarryOverSnapshot.empty) {
                         const batch = writeBatch(db);
                         const todayTasksColRef = collection(db, `users/${userId}/dailyTasks/${todayId}/tasks`);
+                        let carriedCount = 0;
                         tasksToCarryOverSnapshot.forEach(docSnap => {
                             const taskData = docSnap.data();
                             const newTaskRef = doc(todayTasksColRef);
-                            batch.set(newTaskRef, { ...taskData, notes: `(Перенесено с ${formatISODateForDisplay(yesterdayId)}) ${taskData.notes || ''}`.trim(), carriedOver: true });
+                            // ✅ FIX: Normalize status to enum and add metadata
+                            batch.set(newTaskRef, { 
+                                ...taskData, 
+                                status: TASK_STATUS.NOT_DONE,  // Normalize to enum
+                                notes: `(${translations[currentLang].carriedFrom || 'Перенесено с'} ${formatISODateForDisplay(yesterdayId)}) ${taskData.notes || ''}`.trim(), 
+                                carriedOver: true,
+                                carriedFrom: yesterdayId,
+                                carriedAt: Timestamp.now()
+                            });
+                            carriedCount++;
                         });
                         await batch.commit();
+                        console.log(`✅ Carried over ${carriedCount} tasks from ${yesterdayId} to ${todayId}`);
+                        // Optional: Show notification to user
+                        if (carriedCount > 0) {
+                            showToast(`${carriedCount} ${translations[currentLang].tasksCarriedOver || 'задач перенесено'}`, 'success');
+                        }
                     }
-                } catch (error) { showToast(translations[currentLang].toastError, 'error'); }
+                } catch (error) { 
+                    // ✅ FIX: Detailed error logging with context
+                    ErrorHandler.log('checkAndCarryOverDailyTasks', error, false);
+                    console.error("❌ Daily task carryover error details:", {
+                        yesterdayId,
+                        todayId,
+                        userId,
+                        timestamp: new Date().toISOString()
+                    });
+                    // Don't show toast to avoid annoying user on every login
+                }
             }
             localStorage.setItem(lastCheckKey, todayId);
         }
@@ -685,18 +1392,40 @@
             const lastCheckKey = `taskCarryOverMonth_${userId}`;
             const lastCheck = localStorage.getItem(lastCheckKey);
             if (lastCheck !== currentMonthId) {
-                const prevMonthDate = new Date(currentMonthId + '-01T00:00:00');
-                prevMonthDate.setMonth(prevMonthDate.getMonth() - 1);
-                const prevMonthId = prevMonthDate.toISOString().slice(0, 7);
-                const q = query(monthlyTasksCol, where("month", "==", prevMonthId), where("status", "==", translations.ru.statusNotDone));
-                const tasksSnapshot = await getDocs(q);
-                const batch = writeBatch(db);
-                tasksSnapshot.forEach(doc => {
-                    const task = doc.data();
-                    if (!task.fromCalendar) batch.update(doc.ref, { month: currentMonthId, carriedOver: true });
-                });
-                await batch.commit();
-                localStorage.setItem(lastCheckKey, currentMonthId);
+                try {
+                    const prevMonthDate = new Date(currentMonthId + '-01T00:00:00');
+                    prevMonthDate.setMonth(prevMonthDate.getMonth() - 1);
+                    const prevMonthId = prevMonthDate.toISOString().slice(0, 7);
+                    // ✅ FIX: Query for incomplete tasks in ALL languages
+                    const q = query(monthlyTasksCol, where("month", "==", prevMonthId), where("status", "in", getNotDoneValues()));
+                    const tasksSnapshot = await getDocs(q);
+                    const batch = writeBatch(db);
+                    let carriedCount = 0;
+                    tasksSnapshot.forEach(doc => {
+                        const task = doc.data();
+                        if (!task.fromCalendar) {
+                            // ✅ FIX: Normalize status to enum
+                            batch.update(doc.ref, { 
+                                month: currentMonthId, 
+                                status: TASK_STATUS.NOT_DONE,  // Normalize to enum
+                                carriedOver: true 
+                            });
+                            carriedCount++;
+                        }
+                    });
+                    await batch.commit();
+                    console.log(`✅ Carried over ${carriedCount} monthly tasks from ${prevMonthId} to ${currentMonthId}`);
+                    localStorage.setItem(lastCheckKey, currentMonthId);
+                } catch (error) {
+                    // ✅ FIX: Detailed error logging with context
+                    ErrorHandler.log('checkAndCarryOverTasks', error, false);
+                    console.error("❌ Monthly task carryover error details:", {
+                        prevMonthId: prevMonthDate.toISOString().slice(0, 7),
+                        currentMonthId,
+                        userId,
+                        timestamp: new Date().toISOString()
+                    });
+                }
             }
         }
 
@@ -716,48 +1445,268 @@
                         let taskName = `${t.taskCongratulate} ${event.birthdayName}`;
                         if (event.birthYear) { const age = parseInt(year) - parseInt(event.birthYear); if (age >= 0) taskName += ` (${t.taskTurning} ${age} ${t.taskYearsOld})`; }
                         const deadline = `${monthId}-${event.date.substring(8)}`;
-                        batch.set(doc(monthlyTasksCol), { name: taskName, deadline, status: translations.ru.statusNotDone, month: monthId, year: parseInt(year), fromCalendar: eventDoc.id });
+                        batch.set(doc(monthlyTasksCol), { name: taskName, deadline, status: TASK_STATUS.NOT_DONE, month: monthId, year: parseInt(year), fromCalendar: eventDoc.id });
                     }
                 }
             }
             await batch.commit();
         }
         
-        function updateDateTime() { const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit', timeZone: 'Asia/Baku' }; document.getElementById('current-datetime').textContent = new Date().toLocaleString(currentLang === 'ru' ? 'ru-RU' : 'en-US', options); }
+        function updateDateTime() { 
+            const options = { 
+                weekday: 'long', 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric', 
+                hour: '2-digit', 
+                minute: '2-digit', 
+                timeZone: 'Asia/Baku' 
+            }; 
+            
+            // Map language to proper locale
+            const localeMap = {
+                'ru': 'ru-RU',
+                'en': 'en-US',
+                'az': 'az-AZ'
+            };
+            const locale = localeMap[currentLang] || 'en-US';
+            
+            document.getElementById('current-datetime').textContent = new Date().toLocaleString(locale, options); 
+        }
         function updateMonthDisplay() { const formattedDate = formatMonthId(selectedMonthId); document.querySelectorAll('.current-month-name').forEach(el => el.textContent = formattedDate); document.getElementById('recurring-month-name').textContent = formattedDate; document.getElementById('today-date').textContent = formatISODateForDisplay(getTodayISOString(), { year: undefined }); }
         
         const tabs = document.querySelectorAll('.tab-button');
         const taskTabs = document.querySelectorAll('.task-tab-button');
-        tabs.forEach(tab => tab.addEventListener('click', () => { tabs.forEach(t => t.classList.remove('tab-active')); tab.classList.add('tab-active'); document.querySelectorAll('.page-content').forEach(p => p.classList.add('hidden')); document.getElementById(`${tab.dataset.tab}-page`).classList.remove('hidden'); }));
+        tabs.forEach(tab => tab.addEventListener('click', () => { 
+            tabs.forEach(t => t.classList.remove('tab-active')); 
+            tab.classList.add('tab-active'); 
+            
+            // Update ARIA attributes for accessibility
+            AccessibilityHelper.updateTabAria(tab, tabs);
+            
+            document.querySelectorAll('.page-content').forEach(p => p.classList.add('hidden')); 
+            document.getElementById(`${tab.dataset.tab}-page`).classList.remove('hidden'); 
+            
+            // Show skeleton loader for dashboard when switching to it
+            if (tab.dataset.tab === 'dashboard') {
+                const dashboardLoading = document.getElementById('dashboard-loading');
+                const dashboardContent = document.getElementById('dashboard-content');
+                if (dashboardContent.classList.contains('hidden')) {
+                    dashboardLoading.innerHTML = createSkeletonLoader('dashboard');
+                }
+            }
+            
+            // Show skeleton loaders for table pages when switching to them
+            const tablePages = ['debts', 'recurring-expenses', 'expenses'];
+            if (tablePages.includes(tab.dataset.tab)) {
+                const loadingDiv = document.getElementById(`${tab.dataset.tab}-loading`);
+                const tableWrapper = document.getElementById(`${tab.dataset.tab}-table-wrapper`);
+                if (loadingDiv && tableWrapper && tableWrapper.querySelector('tbody').children.length === 0) {
+                    loadingDiv.innerHTML = createSkeletonLoader('table');
+                    loadingDiv.classList.remove('hidden');
+                    tableWrapper.classList.add('hidden');
+                }
+            }
+        }));
         taskTabs.forEach(tab => tab.addEventListener('click', () => { taskTabs.forEach(t => t.classList.remove('task-tab-active')); tab.classList.add('task-tab-active'); document.querySelectorAll('.task-tab-content').forEach(p => p.classList.add('hidden')); document.getElementById(`task-tab-${tab.dataset.taskTab}`).classList.remove('hidden'); }));
         
         function attachListeners() {
-            if (!userId) return;
+            if (!userId) {
+                console.warn("⚠️ attachListeners called without userId");
+                return;
+            }
+            console.log("🔄 Attaching listeners for user:", userId, "month:", selectedMonthId);
             detachListeners();
             setupCollections();
-            unsubscribes.push(onSnapshot(query(debtsCol), s => { allDebts = s.docs; renderDebts(allDebts); updateDashboard(); }));
-            unsubscribes.push(onSnapshot(query(expensesCol), s => { allExpenses = s.docs; renderExpenses(allExpenses); updateDashboard(); }));
-            unsubscribes.push(onSnapshot(query(recurringExpensesCol), s => { allRecurringTemplates = s.docs.map(d => ({ id: d.id, ...d.data() })); renderRecurringExpenses(); updateDashboard(); }));
-            unsubscribes.push(onSnapshot(query(recurringExpenseStatusesCol), s => { currentMonthStatuses = {}; s.docs.forEach(d => { currentMonthStatuses[d.id] = d.data().status; }); renderRecurringExpenses(); updateDashboard(); }));
-            unsubscribes.push(onSnapshot(query(monthlyDataCol), s => { const m = s.docs.map(d => d.id); if(!m.includes(currentMonthId)) m.push(currentMonthId); m.sort().reverse(); renderMonthSelector(m); }));
-            unsubscribes.push(onSnapshot(query(categoriesCol), s => { const categories = s.docs.map(d => ({id: d.id, ...d.data()})); renderCategoryDatalist(s.docs); renderCategories(categories); }));
-            unsubscribes.push(onSnapshot(query(dailyTasksCol), s => { dailyTasks = s.docs.map(d => ({id: d.id, ...d.data()})); renderDailyTasks(dailyTasks); }));
-            unsubscribes.push(onSnapshot(query(monthlyTasksCol, where("month", "==", selectedMonthId)), s => { monthlyTasks = s.docs.map(d=> ({id: d.id, ...d.data()})); renderMonthlyTasks(monthlyTasks); updateDashboard(); }));
-            unsubscribes.push(onSnapshot(query(yearlyTasksCol, where("year", "==", calendarDate.getFullYear())), s => { yearlyTasks = s.docs.map(d=> ({id: d.id, ...d.data()})); renderYearlyTasks(yearlyTasks); updateDashboard(); }));
-            unsubscribes.push(onSnapshot(query(calendarEventsCol), s => { calendarEvents = s.docs.map(d => ({id: d.id, ...d.data()})); renderCalendar(); }));
+            
+            // ✅ Use registerListener to prevent duplicate listeners
+            registerListener('debts', () => 
+                onSnapshot(query(debtsCol), s => { 
+                    console.log("📊 Debts loaded:", s.docs.length);
+                    allDebts = s.docs; 
+                    renderDebts(allDebts); 
+                    updateDashboard(); 
+                }, error => {
+                    console.error("❌ Error loading debts:", error);
+                })
+            );
+            
+            registerListener('expenses', () => 
+                onSnapshot(query(expensesCol), s => { 
+                    console.log("📊 Expenses loaded:", s.docs.length);
+                    allExpenses = s.docs; 
+                    renderExpenses(allExpenses); 
+                    updateDashboard(); 
+                }, error => {
+                    console.error("❌ Error loading expenses:", error);
+                })
+            );
+            
+            registerListener('recurringExpenses', () => 
+                onSnapshot(query(recurringExpensesCol), s => { 
+                    console.log("📊 Recurring expenses loaded:", s.docs.length);
+                    allRecurringTemplates = s.docs.map(d => ({ id: d.id, ...d.data() })); 
+                    renderRecurringExpenses(); 
+                    updateDashboard(); 
+                }, error => {
+                    console.error("❌ Error loading recurring expenses:", error);
+                })
+            );
+            
+            registerListener('recurringExpenseStatuses', () => 
+                onSnapshot(query(recurringExpenseStatusesCol), s => { 
+                    currentMonthStatuses = {}; 
+                    s.docs.forEach(d => { currentMonthStatuses[d.id] = d.data().status; }); 
+                    renderRecurringExpenses(); 
+                    updateDashboard(); 
+                })
+            );
+            
+            registerListener('monthlyData', () => 
+                onSnapshot(query(monthlyDataCol), s => { 
+                    const m = s.docs.map(d => d.id); 
+                    if(!m.includes(currentMonthId)) m.push(currentMonthId); 
+                    m.sort().reverse(); 
+                    renderMonthSelector(m); 
+                })
+            );
+            
+            registerListener('categories', () => 
+                onSnapshot(query(categoriesCol), s => { 
+                    const categories = s.docs.map(d => ({id: d.id, ...d.data()})); 
+                    renderCategoryDatalist(s.docs); 
+                    renderCategories(categories); 
+                })
+            );
+            
+            // ✅ Single registration for daily tasks (prevents duplicates)
+            registerListener('dailyTasks', () => 
+                onSnapshot(query(dailyTasksCol), s => { 
+                    dailyTasks = s.docs.map(d => ({id: d.id, ...d.data()})); 
+                    renderDailyTasks(dailyTasks); 
+                })
+            );
+            
+            registerListener('monthlyTasks', () => 
+                onSnapshot(query(monthlyTasksCol, where("month", "==", selectedMonthId)), s => { 
+                    monthlyTasks = s.docs.map(d=> ({id: d.id, ...d.data()})); 
+                    renderMonthlyTasks(monthlyTasks); 
+                    updateDashboard(); 
+                })
+            );
+            
+            registerListener('yearlyTasks', () => 
+                onSnapshot(query(yearlyTasksCol, where("year", "==", calendarDate.getFullYear())), s => { 
+                    yearlyTasks = s.docs.map(d=> ({id: d.id, ...d.data()})); 
+                    renderYearlyTasks(yearlyTasks); 
+                    updateDashboard(); 
+                })
+            );
+            
+            registerListener('calendarEvents', () => 
+                onSnapshot(query(calendarEventsCol), s => { 
+                    calendarEvents = s.docs.map(d => ({id: d.id, ...d.data()})); 
+                    renderCalendar(); 
+                })
+            );
         }
 
-        function detachListeners() { unsubscribes.forEach(unsub => unsub()); unsubscribes = []; }
-        function formatCurrency(amount) { if (typeof amount !== 'number') amount = 0; const value = currentCurrency === 'USD' ? amount / exchangeRate : amount; const symbol = currentCurrency === 'USD' ? '$' : 'AZN'; return `${value.toFixed(2)} ${symbol}`; }
+        function detachListeners() { 
+            // Clean up old unsubscribes array (for backward compatibility)
+            unsubscribes.forEach(unsub => unsub()); 
+            unsubscribes = []; 
+            // Clean up new listener registry
+            cleanupListeners();
+        }
+        // ✅ Locale-aware currency formatting using Intl.NumberFormat
+        function formatCurrency(amount) { 
+            if (typeof amount !== 'number') amount = 0; 
+            const value = currentCurrency === 'USD' ? amount / exchangeRate : amount; 
+            
+            // Map language to proper locale
+            const localeMap = {
+                'ru': 'ru-RU',
+                'en': 'en-US',
+                'az': 'az-AZ'
+            };
+            const locale = localeMap[currentLang] || 'en-US';
+            
+            // Format number with locale-specific decimal separator
+            const formattedNumber = new Intl.NumberFormat(locale, {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            }).format(value);
+            
+            const symbol = currentCurrency === 'USD' ? '$' : 'AZN'; 
+            return `${formattedNumber} ${symbol}`; 
+        }
+        
+        // ✅ Helper function for formatting numbers without currency
+        function formatNumber(number, decimals = 2) {
+            if (typeof number !== 'number') number = 0;
+            
+            // Map language to proper locale
+            const localeMap = {
+                'ru': 'ru-RU',
+                'en': 'en-US',
+                'az': 'az-AZ'
+            };
+            const locale = localeMap[currentLang] || 'en-US';
+            
+            return new Intl.NumberFormat(locale, {
+                minimumFractionDigits: decimals,
+                maximumFractionDigits: decimals
+            }).format(number);
+        }
         function renderCategoryDatalist(docs) { const datalist = document.getElementById('expense-categories-list'); datalist.innerHTML = docs.filter(doc => doc.data().lang === currentLang).map(doc => `<option value="${doc.data().name}"></option>`).join(''); }
         function renderCategories(categories) { const list = document.getElementById('category-list'); if (!list) return; const langCategories = categories.filter(c => c.lang === currentLang); list.innerHTML = langCategories.map(cat => `<div class="flex justify-between items-center p-2 bg-gray-100 rounded-lg"><span>${cat.name}</span><button data-id="${cat.id}" class="delete-category-btn text-red-500 hover:text-red-700">🗑️</button></div>`).join(''); }
 
         const createEmptyState = (messageKey) => `<div class="flex flex-col items-center justify-center p-12 bg-gray-50 rounded-lg"><svg class="w-16 h-16 text-gray-300 mb-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M21 7.5l-9-5.25L3 7.5m18 0l-9 5.25m9-5.25v9l-9 5.25M3 7.5l9 5.25M3 7.5v9l9 5.25m0-9v9" /></svg><p class="text-gray-500 font-medium">${translations[currentLang][messageKey]}</p></div>`;
 
+        // Skeleton loader generator function
+        function createSkeletonLoader(type = 'dashboard') {
+            const skeletons = {
+                dashboard: `
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+                        ${Array(6).fill().map(() => `
+                            <div class="bg-white p-6 rounded-2xl shadow-lg">
+                                <div class="skeleton skeleton-title"></div>
+                                <div class="skeleton skeleton-text"></div>
+                                <div class="skeleton skeleton-text" style="width: 80%"></div>
+                            </div>
+                        `).join('')}
+                    </div>
+                    <div class="bg-white p-6 rounded-lg shadow-sm">
+                        <div class="skeleton skeleton-title" style="width: 40%"></div>
+                        <div class="skeleton skeleton-card mt-4"></div>
+                    </div>
+                `,
+                table: `
+                    <div class="space-y-4">
+                        ${Array(5).fill().map(() => `
+                            <div class="bg-white p-4 rounded-lg shadow-sm">
+                                <div class="skeleton skeleton-text"></div>
+                                <div class="skeleton skeleton-text" style="width: 70%"></div>
+                                <div class="skeleton skeleton-text" style="width: 50%"></div>
+                            </div>
+                        `).join('')}
+                    </div>
+                `
+            };
+            return skeletons[type] || skeletons.dashboard;
+        }
+
+        // ✅ Optimized render function using document fragment for batch updates
         function renderDebts(docs) {
+            const loadingDiv = document.getElementById('debts-loading');
             const tableWrapper = document.getElementById('debts-table-wrapper');
             const tableBody = document.getElementById('debts-table'); 
-            const emptyState = document.getElementById('debts-empty'); 
+            const emptyState = document.getElementById('debts-empty');
+            
+            // Hide loading skeleton
+            loadingDiv.classList.add('hidden');
+            loadingDiv.innerHTML = '';
+            
             if (docs.length === 0) { 
                 tableWrapper.classList.add('hidden');
                 emptyState.innerHTML = createEmptyState('emptyDebts'); 
@@ -766,18 +1715,41 @@
             } 
             tableWrapper.classList.remove('hidden');
             emptyState.classList.add('hidden');
-            tableBody.innerHTML = docs.map(doc => {
-                const debt = doc.data(), id = doc.id; const remaining = (debt.totalAmount || 0) - (debt.paidAmount || 0);
+            
+            // ✅ Use document fragment for efficient batch DOM updates
+            const fragment = document.createDocumentFragment();
+            
+            docs.forEach(doc => {
+                const debt = doc.data(), id = doc.id; 
+                const remaining = (debt.totalAmount || 0) - (debt.paidAmount || 0);
                 let colorClass = remaining <= 0 ? 'text-green-600' : (debt.paidAmount > 0 ? 'text-yellow-600' : 'text-red-600');
-                const lastPaymentDate = debt.lastPaymentDate ? debt.lastPaymentDate.toDate().toLocaleDateString(currentLang === 'ru' ? 'ru-RU' : 'en-US') : '—';
-                return `<tr class="border-b hover:bg-gray-50 md:border-b-0"><td data-label="${translations[currentLang].debtName}" class="font-medium">${debt.name}</td><td data-label="${translations[currentLang].amount}">${formatCurrency(debt.totalAmount)}</td><td data-label="${translations[currentLang].paid}">${formatCurrency(debt.paidAmount)}</td><td data-label="${translations[currentLang].remaining}" class="font-bold ${colorClass}">${formatCurrency(remaining)}</td><td data-label="${translations[currentLang].lastPaymentDate}">${lastPaymentDate}</td><td data-label="${translations[currentLang].comments}"><input type="text" class="editable-debt-comment bg-transparent w-full p-1" data-id="${id}" value="${debt.comment || ''}" placeholder="${translations[currentLang].placeholderComment}"></td><td data-label="${translations[currentLang].actions}" class="flex gap-2"><button data-id="${id}" class="add-debt-payment-btn text-green-600 hover:text-green-800" title="${translations[currentLang].addDebtPayment}">➕</button><button data-id="${id}" class="edit-debt-btn text-blue-600 hover:text-blue-800" title="${translations[currentLang].editDebt}">✏️</button><button data-id="${id}" class="delete-debt-btn text-red-600 hover:text-red-800" title="${translations[currentLang].delete}">🗑️</button></td></tr>`;
-            }).join('');
+                // ✅ Use locale-aware date formatting
+                const localeMap = { 'ru': 'ru-RU', 'en': 'en-US', 'az': 'az-AZ' };
+                const locale = localeMap[currentLang] || 'en-US';
+                const lastPaymentDate = debt.lastPaymentDate ? debt.lastPaymentDate.toDate().toLocaleDateString(locale) : '—';
+                
+                const tr = document.createElement('tr');
+                tr.className = 'border-b hover:bg-gray-50 md:border-b-0';
+                tr.innerHTML = `<td data-label="${translations[currentLang].debtName}" class="px-6 py-4 font-medium">${debt.name}</td><td data-label="${translations[currentLang].amount}" class="px-6 py-4">${formatCurrency(debt.totalAmount)}</td><td data-label="${translations[currentLang].paid}" class="px-6 py-4">${formatCurrency(debt.paidAmount)}</td><td data-label="${translations[currentLang].remaining}" class="px-6 py-4 font-bold ${colorClass}"><span class="status-indicator"><span class="status-icon" aria-hidden="true">${remaining <= 0 ? '✓' : '⚠'}</span>${formatCurrency(remaining)}</span></td><td data-label="${translations[currentLang].lastPaymentDate}" class="px-6 py-4">${lastPaymentDate}</td><td data-label="${translations[currentLang].comments}" class="px-6 py-4"><input type="text" class="editable-debt-comment bg-transparent w-full p-1 border-b border-gray-300 focus:border-blue-500 focus:outline-none" data-id="${id}" value="${debt.comment || ''}" placeholder="${translations[currentLang].placeholderComment}" aria-label="Comment for ${debt.name}"></td><td data-label="${translations[currentLang].actions}" class="px-6 py-4"><div class="flex gap-2"><button data-id="${id}" class="add-debt-payment-btn text-green-600 hover:text-green-800" title="${translations[currentLang].addDebtPayment}" aria-label="Add payment for ${debt.name}">➕</button><button data-id="${id}" class="edit-debt-btn text-blue-600 hover:text-blue-800" title="${translations[currentLang].editDebt}" aria-label="Edit ${debt.name}">✏️</button><button data-id="${id}" class="delete-debt-btn text-red-600 hover:text-red-800" title="${translations[currentLang].delete}" aria-label="Delete ${debt.name}">🗑️</button></div></td>`;
+                fragment.appendChild(tr);
+            });
+            
+            // Single DOM update
+            tableBody.innerHTML = '';
+            tableBody.appendChild(fragment);
         }
 
+        // ✅ Optimized render function using document fragment
         function renderRecurringExpenses() {
+            const loadingDiv = document.getElementById('recurring-expenses-loading');
             const tableWrapper = document.getElementById('recurring-expenses-table-wrapper');
             const tableBody = document.getElementById('recurring-expenses-table'); 
             const emptyState = document.getElementById('recurring-expenses-empty');
+            
+            // Hide loading skeleton
+            loadingDiv.classList.add('hidden');
+            loadingDiv.innerHTML = '';
+            
             if (allRecurringTemplates.length === 0) {
                 tableWrapper.classList.add('hidden');
                 emptyState.innerHTML = createEmptyState('emptyRecurring');
@@ -788,31 +1760,53 @@
             emptyState.classList.add('hidden');
 
             const todayDay = new Date(getTodayISOString() + 'T00:00:00').getDate();
-            tableBody.innerHTML = allRecurringTemplates.map(template => {
+            
+            // ✅ Use document fragment for efficient batch DOM updates
+            const fragment = document.createDocumentFragment();
+            
+            allRecurringTemplates.forEach(template => {
                 const status = currentMonthStatuses[template.id] || translations.ru.unpaidStatus;
                 const isOverdue = status === translations.ru.unpaidStatus && template.dueDay < todayDay && selectedMonthId === currentMonthId;
                 const isPaid = status === translations.ru.paidStatus;
-                return `<tr class="border-b hover:bg-gray-50 ${isOverdue ? 'bg-red-50' : ''} md:border-b-0">
-                        <td data-label="${translations[currentLang].name}" class="font-medium">${template.name}</td>
-                        <td data-label="${translations[currentLang].amount}">${formatCurrency(template.amount)}</td>
-                        <td data-label="${translations[currentLang].paymentDay}">${template.dueDay || '—'}</td>
-                        <td data-label="${translations[currentLang].status}">
-                            <select data-id="${template.id}" class="recurring-status-select p-1 rounded-md border-0 ring-1 ring-inset ring-gray-300 ${isPaid ? 'bg-green-100' : 'bg-red-100'}">
-                                <option value="${translations.ru.unpaidStatus}" ${!isPaid ? 'selected' : ''}>${translations[currentLang].unpaidStatus}</option>
-                                <option value="${translations.ru.paidStatus}" ${isPaid ? 'selected' : ''}>${translations[currentLang].paidStatus}</option>
-                            </select></td>
-                        <td data-label="${translations[currentLang].details}">${template.details || '—'}</td>
-                        <td data-label="${translations[currentLang].templateActions}" class="flex gap-2">
-                            <button data-id="${template.id}" class="edit-recurring-expense-btn text-blue-600 hover:text-blue-800">✏️</button>
-                            <button data-id="${template.id}" class="delete-recurring-expense-btn text-red-600 hover:text-red-800">🗑️</button>
-                        </td></tr>`;
-            }).join('');
+                
+                const tr = document.createElement('tr');
+                tr.className = `border-b hover:bg-gray-50 ${isOverdue ? 'bg-red-50' : ''} md:border-b-0`;
+                tr.innerHTML = `<td data-label="${translations[currentLang].name}" class="px-6 py-4 font-medium">${template.name}</td>
+                        <td data-label="${translations[currentLang].amount}" class="px-6 py-4">${formatCurrency(template.amount)}</td>
+                        <td data-label="${translations[currentLang].paymentDay}" class="px-6 py-4">${template.dueDay || '—'}</td>
+                        <td data-label="${translations[currentLang].status}" class="px-6 py-4">
+                            <div class="status-indicator">
+                                <span class="status-icon" aria-hidden="true">${isPaid ? '✓' : '✗'}</span>
+                                <select data-id="${template.id}" class="recurring-status-select p-1 rounded-md border-0 ring-1 ring-inset ring-gray-300 ${isPaid ? 'bg-green-100' : 'bg-red-100'}" aria-label="Payment status">
+                                    <option value="${translations.ru.unpaidStatus}" ${!isPaid ? 'selected' : ''}>${isPaid ? '' : '✗ '}${translations[currentLang].unpaidStatus}</option>
+                                    <option value="${translations.ru.paidStatus}" ${isPaid ? 'selected' : ''}>${isPaid ? '✓ ' : ''}${translations[currentLang].paidStatus}</option>
+                                </select>
+                            </div>
+                        </td>
+                        <td data-label="${translations[currentLang].details}" class="px-6 py-4">${template.details || '—'}</td>
+                        <td data-label="${translations[currentLang].templateActions}" class="px-6 py-4"><div class="flex gap-2">
+                            <button data-id="${template.id}" class="edit-recurring-expense-btn text-blue-600 hover:text-blue-800" aria-label="Edit ${template.name}">✏️</button>
+                            <button data-id="${template.id}" class="delete-recurring-expense-btn text-red-600 hover:text-red-800" aria-label="Delete ${template.name}">🗑️</button>
+                        </div></td>`;
+                fragment.appendChild(tr);
+            });
+            
+            // Single DOM update
+            tableBody.innerHTML = '';
+            tableBody.appendChild(fragment);
         }
         
+        // ✅ Optimized render function using document fragment
         function renderExpenses(docs) {
+            const loadingDiv = document.getElementById('expenses-loading');
             const tableWrapper = document.getElementById('expenses-table-wrapper');
             const tableBody = document.getElementById('expenses-table');
             const emptyState = document.getElementById('expenses-empty');
+            
+            // Hide loading skeleton
+            loadingDiv.classList.add('hidden');
+            loadingDiv.innerHTML = '';
+            
             if (docs.length === 0) {
                 tableWrapper.classList.add('hidden');
                 emptyState.innerHTML = createEmptyState('emptyExpenses');
@@ -828,27 +1822,64 @@
                 return dateB.localeCompare ? dateB.localeCompare(dateA) : dateB > dateA ? -1 : 1;
             });
 
-            tableBody.innerHTML = sortedDocs.map(doc => {
+            // ✅ Use document fragment for efficient batch DOM updates
+            const fragment = document.createDocumentFragment();
+            
+            sortedDocs.forEach(doc => {
                 const expense = doc.data(), id = doc.id;
-                let actionsHtml = (!expense.recurringExpenseId && !expense.debtPaymentId) ? `<button data-id="${id}" class="edit-expense-btn text-blue-600 hover:text-blue-800" title="${translations[currentLang].editExpense}">✏️</button><button data-id="${id}" class="delete-expense-btn text-red-600 hover:text-red-800" title="${translations[currentLang].delete}">🗑️</button>` : '';
-                return `<tr class="border-b hover:bg-gray-50 md:border-b-0">
-                        <td data-label="${translations[currentLang].name}" class="font-medium">${expense.name}</td>
-                        <td data-label="${translations[currentLang].category}">${expense.category}</td>
-                        <td data-label="${translations[currentLang].amount}">${formatCurrency(expense.amount)}</td>
-                        <td data-label="${translations[currentLang].date}">${formatISODateForDisplay(expense.date)}</td>
-                        <td data-label="${translations[currentLang].actions}" class="flex gap-2">${actionsHtml}</td></tr>`;
-            }).join('');
+                let actionsHtml = (!expense.recurringExpenseId && !expense.debtPaymentId) ? `<button data-id="${id}" class="edit-expense-btn text-blue-600 hover:text-blue-800" title="${translations[currentLang].editExpense}" aria-label="Edit ${expense.name}">✏️</button><button data-id="${id}" class="delete-expense-btn text-red-600 hover:text-red-800" title="${translations[currentLang].delete}" aria-label="Delete ${expense.name}">🗑️</button>` : '';
+                
+                const tr = document.createElement('tr');
+                tr.className = 'border-b hover:bg-gray-50 md:border-b-0';
+                tr.innerHTML = `<td data-label="${translations[currentLang].name}" class="px-6 py-4 font-medium">${expense.name}</td>
+                        <td data-label="${translations[currentLang].category}" class="px-6 py-4">${expense.category}</td>
+                        <td data-label="${translations[currentLang].amount}" class="px-6 py-4">${formatCurrency(expense.amount)}</td>
+                        <td data-label="${translations[currentLang].date}" class="px-6 py-4">${formatISODateForDisplay(expense.date)}</td>
+                        <td data-label="${translations[currentLang].actions}" class="px-6 py-4"><div class="flex gap-2">${actionsHtml}</div></td>`;
+                fragment.appendChild(tr);
+            });
+            
+            // Single DOM update
+            tableBody.innerHTML = '';
+            tableBody.appendChild(fragment);
         }
 
         function createTaskStatusDropdown(id, status, colName) {
-            const t = translations[currentLang]; const ruT = translations.ru;
-            const options = { [ruT.statusNotDone]: { text: t.statusNotDone, class: 'bg-yellow-100 text-yellow-800' }, [ruT.statusDone]: { text: t.statusDone, class: 'bg-green-100 text-green-800' }, [ruT.statusSkipped]: { text: t.statusSkipped, class: 'bg-gray-100 text-gray-800' } };
-            const currentStatus = status || ruT.statusNotDone;
-            let selectHTML = `<select data-id="${id}" data-col="${colName}" class="task-status-select p-1 rounded-md border-0 ring-1 ring-inset ring-gray-300 ${options[currentStatus]?.class}">`;
-            for (const [value, { text }] of Object.entries(options)) { selectHTML += `<option value="${value}" ${currentStatus === value ? 'selected' : ''}>${text}</option>`; }
-            selectHTML += `</select>`; return selectHTML;
+            const t = translations[currentLang];
+            // ✅ FIX: Use enum values instead of translated strings with icons for accessibility
+            const options = { 
+                [TASK_STATUS.NOT_DONE]: { 
+                    text: t.statusNotDone, 
+                    class: 'bg-yellow-100 text-yellow-800',
+                    icon: '⏳'
+                }, 
+                [TASK_STATUS.DONE]: { 
+                    text: t.statusDone, 
+                    class: 'bg-green-100 text-green-800',
+                    icon: '✓'
+                }, 
+                [TASK_STATUS.SKIPPED]: { 
+                    text: t.statusSkipped, 
+                    class: 'bg-gray-100 text-gray-800',
+                    icon: '⊘'
+                } 
+            };
+            // ✅ FIX: Normalize old status values to enum
+            const currentStatus = normalizeStatus(status || TASK_STATUS.NOT_DONE);
+            const currentOption = options[currentStatus];
+            
+            // Create wrapper with icon for color-independent status indication
+            let html = `<div class="status-indicator">`;
+            html += `<span class="status-icon" aria-hidden="true">${currentOption?.icon || '⏳'}</span>`;
+            html += `<select data-id="${id}" data-col="${colName}" class="task-status-select p-1 rounded-md border-0 ring-1 ring-inset ring-gray-300 ${currentOption?.class}" aria-label="Task status">`;
+            for (const [value, { text, icon }] of Object.entries(options)) { 
+                html += `<option value="${value}" ${currentStatus === value ? 'selected' : ''}>${icon} ${text}</option>`; 
+            }
+            html += `</select></div>`;
+            return html;
         }
 
+        // ✅ Optimized render function using document fragment
         function renderDailyTasks(docs) { 
             const tableWrapper = document.getElementById('daily-tasks-table-wrapper');
             const tableBody = document.getElementById('daily-tasks-table');
@@ -861,8 +1892,24 @@
             } 
             tableWrapper.classList.remove('hidden');
             emptyState.classList.add('hidden');
-            tableBody.innerHTML = docs.map(d => { const t = d; const s = t.status; return `<tr class="md:border-b-0 ${t.carriedOver ? 'bg-blue-50' : ''}"><td data-label="${translations[currentLang].name}" class="${s === translations.ru.statusDone ? 'line-through text-gray-500' : ''}">${t.name}</td><td data-label="${translations[currentLang].status}">${createTaskStatusDropdown(t.id, s, 'dailyTasks')}</td><td data-label="${translations[currentLang].notes}"><input type="text" class="editable-task-notes bg-transparent w-full p-1" data-id="${t.id}" data-col="dailyTasks" value="${t.notes||''}" placeholder="${translations[currentLang].placeholderComment}"></td><td data-label="${translations[currentLang].actions}" class="flex gap-2"><button data-id="${t.id}" class="edit-daily-task-btn text-blue-600">✏️</button><button data-id="${t.id}" class="delete-daily-task-btn text-red-600">🗑️</button></td></tr>`; }).join(''); 
+            
+            // ✅ Use document fragment for efficient batch DOM updates
+            const fragment = document.createDocumentFragment();
+            
+            docs.forEach(d => { 
+                const t = d; 
+                const s = normalizeStatus(t.status); 
+                const tr = document.createElement('tr');
+                tr.className = `border-b hover:bg-gray-50 ${t.carriedOver ? 'bg-blue-50' : ''}`;
+                tr.innerHTML = `<td class="px-6 py-4 ${s === TASK_STATUS.DONE ? 'line-through text-gray-500' : ''}" data-label="${translations[currentLang].name}">${t.name}</td><td class="px-6 py-4" data-label="${translations[currentLang].status}">${createTaskStatusDropdown(t.id, s, 'dailyTasks')}</td><td class="px-6 py-4" data-label="${translations[currentLang].notes}"><input type="text" class="editable-task-notes bg-transparent w-full p-1 border-b border-gray-300 focus:border-blue-500 focus:outline-none" data-id="${t.id}" data-col="dailyTasks" value="${t.notes||''}" placeholder="${translations[currentLang].placeholderComment}" aria-label="Notes for ${t.name}"></td><td class="px-6 py-4" data-label="${translations[currentLang].actions}"><div class="flex gap-2"><button data-id="${t.id}" class="edit-daily-task-btn text-blue-600 hover:text-blue-800" aria-label="Edit ${t.name}">✏️</button><button data-id="${t.id}" class="delete-daily-task-btn text-red-600 hover:text-red-800" aria-label="Delete ${t.name}">🗑️</button></div></td>`;
+                fragment.appendChild(tr);
+            });
+            
+            // Single DOM update
+            tableBody.innerHTML = '';
+            tableBody.appendChild(fragment);
         }
+        // ✅ Optimized render function using document fragment
         function renderMonthlyTasks(docs) {
             const tableWrapper = document.getElementById('monthly-tasks-table-wrapper');
             const tableBody = document.getElementById('monthly-tasks-table');
@@ -882,8 +1929,24 @@
                 return deadlineA.localeCompare ? deadlineA.localeCompare(deadlineB) : deadlineA > deadlineB ? 1 : -1;
             });
 
-            tableBody.innerHTML = sortedDocs.map(d => { const t = d, id = d.id; const s = t.status; return `<tr class="md:border-b-0 ${t.carriedOver?'bg-yellow-50':''}"><td data-label="${translations[currentLang].name}" class="${s === translations.ru.statusDone ? 'line-through text-gray-500' : ''}">${t.name}</td><td data-label="${translations[currentLang].deadline}">${formatISODateForDisplay(t.deadline)}</td><td data-label="${translations[currentLang].status}">${createTaskStatusDropdown(id, s, 'monthlyTasks')}</td><td data-label="${translations[currentLang].actions}" class="flex gap-2">${!t.recurringExpenseId && !t.fromCalendar?`<button data-id="${id}" class="edit-monthly-task-btn text-blue-600">✏️</button><button data-id="${id}" class="delete-monthly-task-btn text-red-600">🗑️</button>`:''}</td></tr>`; }).join(''); 
+            // ✅ Use document fragment for efficient batch DOM updates
+            const fragment = document.createDocumentFragment();
+            const tempDiv = document.createElement('div');
+            
+            sortedDocs.forEach(d => { 
+                const t = d, id = d.id; 
+                const s = normalizeStatus(t.status); 
+                const tr = document.createElement('tr');
+                tr.className = `border-b hover:bg-gray-50 ${t.carriedOver?'bg-yellow-50':''}`;
+                tr.innerHTML = `<td class="px-6 py-4 ${s === TASK_STATUS.DONE ? 'line-through text-gray-500' : ''}" data-label="${translations[currentLang].name}">${t.name}</td><td class="px-6 py-4" data-label="${translations[currentLang].deadline}">${formatISODateForDisplay(t.deadline)}</td><td class="px-6 py-4" data-label="${translations[currentLang].status}">${createTaskStatusDropdown(id, s, 'monthlyTasks')}</td><td class="px-6 py-4" data-label="${translations[currentLang].actions}"><div class="flex gap-2">${!t.recurringExpenseId && !t.fromCalendar?`<button data-id="${id}" class="edit-monthly-task-btn text-blue-600 hover:text-blue-800">✏️</button><button data-id="${id}" class="delete-monthly-task-btn text-red-600 hover:text-red-800">🗑️</button>`:''}</div></td>`;
+                fragment.appendChild(tr);
+            });
+            
+            // Single DOM update
+            tableBody.innerHTML = '';
+            tableBody.appendChild(fragment);
         }
+        // ✅ Optimized render function using document fragment
         function renderYearlyTasks(docs) { 
             const tableWrapper = document.getElementById('yearly-tasks-table-wrapper');
             const tableBody = document.getElementById('yearly-tasks-table');
@@ -896,7 +1959,23 @@
             } 
             tableWrapper.classList.remove('hidden');
             emptyState.classList.add('hidden');
-            tableBody.innerHTML = docs.map(d => { const t = d, id = d.id; const s = t.status; return `<tr class="md:border-b-0"><td data-label="${translations[currentLang].name}" class="${s === translations.ru.statusDone ? 'line-through text-gray-500' : ''}">${t.name}</td><td data-label="${translations[currentLang].deadline}">${formatISODateForDisplay(t.deadline, {year: 'numeric'})}</td><td data-label="${translations[currentLang].status}">${createTaskStatusDropdown(id, s, 'yearlyTasks')}</td><td data-label="${translations[currentLang].notes}"><input type="text" class="editable-task-notes bg-transparent w-full p-1" data-id="${id}" data-col="yearlyTasks" value="${t.notes||''}" placeholder="${translations[currentLang].placeholderComment}"></td><td data-label="${translations[currentLang].actions}" class="flex gap-2"><button data-id="${id}" class="edit-yearly-task-btn text-blue-600">✏️</button><button data-id="${id}" class="delete-yearly-task-btn text-red-600">🗑️</button></td></tr>`; }).join(''); 
+            
+            // ✅ Use document fragment for efficient batch DOM updates
+            const fragment = document.createDocumentFragment();
+            const tempDiv = document.createElement('div');
+            
+            docs.forEach(d => { 
+                const t = d, id = d.id; 
+                const s = normalizeStatus(t.status); 
+                const tr = document.createElement('tr');
+                tr.className = 'border-b hover:bg-gray-50';
+                tr.innerHTML = `<td class="px-6 py-4 ${s === TASK_STATUS.DONE ? 'line-through text-gray-500' : ''}" data-label="${translations[currentLang].name}">${t.name}</td><td class="px-6 py-4" data-label="${translations[currentLang].deadline}">${formatISODateForDisplay(t.deadline, {year: 'numeric'})}</td><td class="px-6 py-4" data-label="${translations[currentLang].status}">${createTaskStatusDropdown(id, s, 'yearlyTasks')}</td><td class="px-6 py-4" data-label="${translations[currentLang].notes}"><input type="text" class="editable-task-notes bg-transparent w-full p-1 border-b border-gray-300 focus:border-blue-500 focus:outline-none" data-id="${id}" data-col="yearlyTasks" value="${t.notes||''}" placeholder="${translations[currentLang].placeholderComment}"></td><td class="px-6 py-4" data-label="${translations[currentLang].actions}"><div class="flex gap-2"><button data-id="${id}" class="edit-yearly-task-btn text-blue-600 hover:text-blue-800">✏️</button><button data-id="${id}" class="delete-yearly-task-btn text-red-600 hover:text-red-800">🗑️</button></div></td>`;
+                fragment.appendChild(tr);
+            });
+            
+            // Single DOM update
+            tableBody.innerHTML = '';
+            tableBody.appendChild(fragment);
         }
 
         function renderMonthSelector(months) { const s=document.getElementById('month-selector'); s.innerHTML = months.map(m => `<option value="${m}" ${m===selectedMonthId?'selected':''}>${formatMonthId(m)}</option>`).join(''); }
@@ -930,36 +2009,72 @@
             updateMonthDisplay(); 
             attachListeners(); 
         });
+        // ✅ Debounced update functions for editable inputs (500ms delay)
+        const debouncedUpdateDebtComment = debounce(async (id, value) => {
+            try {
+                await updateDoc(doc(debtsCol, id), { comment: value });
+            } catch (error) {
+                ErrorHandler.log('updateDebtComment', error, true);
+            }
+        }, 500);
+
+        const debouncedUpdateTaskNotes = debounce(async (id, colName, value) => {
+            try {
+                const colRef = colName === 'dailyTasks' ? dailyTasksCol : yearlyTasksCol;
+                await updateDoc(doc(colRef, id), { notes: value });
+            } catch (error) {
+                ErrorHandler.log('updateTaskNotes', error, true);
+            }
+        }, 500);
+
+        // Handle input events with debouncing for text inputs
+        document.getElementById('app').addEventListener('input', (e) => {
+            const id = e.target.dataset.id;
+            if (!id) return;
+            
+            // ✅ Apply debouncing to editable inputs
+            if (e.target.classList.contains('editable-debt-comment')) {
+                debouncedUpdateDebtComment(id, e.target.value);
+            }
+            if (e.target.classList.contains('editable-task-notes')) {
+                const colName = e.target.dataset.col;
+                debouncedUpdateTaskNotes(id, colName, e.target.value);
+            }
+        });
+
+        // Handle change events for dropdowns (no debouncing needed)
         document.getElementById('app').addEventListener('change', async (e) => {
             const id = e.target.dataset.id;
-            if (e.target.classList.contains('task-status-select')) {
-                const newStatus = e.target.value; const colName = e.target.dataset.col; let colRef;
-                if(colName === 'dailyTasks') colRef = dailyTasksCol; else if (colName === 'monthlyTasks') colRef = monthlyTasksCol; else if (colName === 'yearlyTasks') colRef = yearlyTasksCol;
-                if(colRef && id) await updateDoc(doc(colRef, id), { status: newStatus });
-            }
-            if (!id) return;
-            if (e.target.classList.contains('editable-debt-comment')) await updateDoc(doc(debtsCol, id), { comment: e.target.value });
-            if (e.target.classList.contains('editable-task-notes')) { const colName = e.target.dataset.col; const colRef = colName === 'dailyTasks' ? dailyTasksCol : yearlyTasksCol; await updateDoc(doc(colRef, id), { notes: e.target.value }); }
-            if (e.target.classList.contains('recurring-status-select')) {
-                const newStatus = e.target.value;
-                const targetRecurringStatusesCol = collection(db, `users/${userId}/monthlyData/${selectedMonthId}/recurringExpenseStatuses`);
-                await setDoc(doc(targetRecurringStatusesCol, id), { status: newStatus });
-                
-                const taskQuery = query(monthlyTasksCol, where("recurringExpenseId", "==", id), where("month", "==", selectedMonthId));
-                const targetExpensesCol = collection(db, `users/${userId}/monthlyData/${selectedMonthId}/expenses`);
-
-                if (newStatus === translations.ru.paidStatus) {
-                     const template = allRecurringTemplates.find(t => t.id === id);
-                     if(template) await addDoc(targetExpensesCol, { name: template.name, category: translations[currentLang].recurringPayments, amount: template.amount, date: getTodayISOString(), recurringExpenseId: id });
-                     const tasks = await getDocs(taskQuery);
-                     if (!tasks.empty) await updateDoc(tasks.docs[0].ref, {status: translations.ru.statusDone});
-                } else {
-                    const q = query(targetExpensesCol, where("recurringExpenseId", "==", id));
-                    const snapshot = await getDocs(q);
-                    const batch = writeBatch(db); snapshot.docs.forEach(d => batch.delete(d.ref)); await batch.commit();
-                    const tasks = await getDocs(taskQuery);
-                    if (!tasks.empty) await updateDoc(tasks.docs[0].ref, {status: translations.ru.statusNotDone});
+            try {
+                if (e.target.classList.contains('task-status-select')) {
+                    const newStatus = e.target.value; const colName = e.target.dataset.col; let colRef;
+                    if(colName === 'dailyTasks') colRef = dailyTasksCol; else if (colName === 'monthlyTasks') colRef = monthlyTasksCol; else if (colName === 'yearlyTasks') colRef = yearlyTasksCol;
+                    if(colRef && id) await updateDoc(doc(colRef, id), { status: newStatus });
                 }
+                if (!id) return;
+                if (e.target.classList.contains('recurring-status-select')) {
+                    const newStatus = e.target.value;
+                    const targetRecurringStatusesCol = collection(db, `users/${userId}/monthlyData/${selectedMonthId}/recurringExpenseStatuses`);
+                    await setDoc(doc(targetRecurringStatusesCol, id), { status: newStatus });
+                    
+                    const taskQuery = query(monthlyTasksCol, where("recurringExpenseId", "==", id), where("month", "==", selectedMonthId));
+                    const targetExpensesCol = collection(db, `users/${userId}/monthlyData/${selectedMonthId}/expenses`);
+
+                    if (newStatus === translations.ru.paidStatus) {
+                         const template = allRecurringTemplates.find(t => t.id === id);
+                         if(template) await addDoc(targetExpensesCol, { name: template.name, category: translations[currentLang].recurringPayments, amount: template.amount, date: getTodayISOString(), recurringExpenseId: id });
+                         const tasks = await getDocs(taskQuery);
+                         if (!tasks.empty) await updateDoc(tasks.docs[0].ref, {status: TASK_STATUS.DONE});
+                    } else {
+                        const q = query(targetExpensesCol, where("recurringExpenseId", "==", id));
+                        const snapshot = await getDocs(q);
+                        const batch = writeBatch(db); snapshot.docs.forEach(d => batch.delete(d.ref)); await batch.commit();
+                        const tasks = await getDocs(taskQuery);
+                        if (!tasks.empty) await updateDoc(tasks.docs[0].ref, {status: TASK_STATUS.NOT_DONE});
+                    }
+                }
+            } catch (error) {
+                ErrorHandler.log('changeEventListener', error, true);
             }
         });
 
@@ -992,7 +2107,12 @@
 
         async function updateDashboard() {
             if (!userId) return;
-            document.getElementById('app').classList.remove('opacity-0'); document.getElementById('loading-overlay').classList.add('hidden'); document.getElementById('dashboard-loading').classList.add('hidden'); document.getElementById('dashboard-content').classList.remove('hidden');
+            document.getElementById('app').classList.remove('opacity-0'); 
+            document.getElementById('loading-overlay').classList.add('hidden'); 
+            // Clear skeleton loader and show content
+            document.getElementById('dashboard-loading').innerHTML = '';
+            document.getElementById('dashboard-loading').classList.add('hidden'); 
+            document.getElementById('dashboard-content').classList.remove('hidden');
             const totalRecurringPaid = allRecurringTemplates.filter(t => currentMonthStatuses[t.id] === translations.ru.paidStatus).reduce((s, t) => s + (t.amount || 0), 0);
             document.getElementById('total-recurring-paid').textContent = formatCurrency(totalRecurringPaid);
             const totalRecurringRemaining = allRecurringTemplates.filter(t => (currentMonthStatuses[t.id] || translations.ru.unpaidStatus) === translations.ru.unpaidStatus).reduce((s, t) => s + (t.amount || 0), 0);
@@ -1001,14 +2121,157 @@
             document.getElementById('total-monthly-outflow').textContent = formatCurrency(allMonthlyExpensesTotal);
             const totalDebtRemaining = allDebts.reduce((s, d) => s + ((d.data().totalAmount || 0) - (d.data().paidAmount || 0)), 0);
             document.getElementById('total-debt-remaining').textContent = formatCurrency(totalDebtRemaining);
-            document.getElementById('tasks-remaining-month').textContent = monthlyTasks.filter(t => t.status === translations.ru.statusNotDone).length;
-            document.getElementById('tasks-remaining-year').textContent = yearlyTasks.filter(t => t.status === translations.ru.statusNotDone).length;
+            document.getElementById('tasks-remaining-month').textContent = monthlyTasks.filter(t => normalizeStatus(t.status) === TASK_STATUS.NOT_DONE).length;
+            document.getElementById('tasks-remaining-year').textContent = yearlyTasks.filter(t => normalizeStatus(t.status) === TASK_STATUS.NOT_DONE).length;
             const expensesByCategory = {}; allExpenses.forEach(doc => { const e = doc.data(); expensesByCategory[e.category] = (expensesByCategory[e.category] || 0) + e.amount; });
             const sortedCategories = Object.entries(expensesByCategory).sort(([, a], [, b]) => b - a).slice(0, 7);
             const chartLabels = sortedCategories.map(item => item[0]);
-            const chartData = sortedCategories.map(item => item[1]);
-            if (expensesChart) expensesChart.destroy();
-            expensesChart = new Chart(document.getElementById('expenses-chart').getContext('2d'), { type: 'bar', data: { labels: chartLabels, datasets: [{ label: `${translations[currentLang].chartLabel}`, data: chartData.map(amount => currentCurrency === 'USD' ? amount / exchangeRate : amount), backgroundColor: ['rgba(59,130,246,0.7)','rgba(239,68,68,0.7)','rgba(245,158,11,0.7)','rgba(16,185,129,0.7)','rgba(139,92,246,0.7)','rgba(236,72,153,0.7)','rgba(107,114,128,0.7)'], borderWidth: 1 }] }, options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true } }, plugins: { legend: { display: false } } } });
+            const chartData = sortedCategories.map(amount => currentCurrency === 'USD' ? amount / exchangeRate : amount);
+            
+            // Create gradient colors for better visual appeal
+            const ctx = document.getElementById('expenses-chart').getContext('2d');
+            const gradientColors = [
+                { start: 'rgba(59, 130, 246, 0.9)', end: 'rgba(59, 130, 246, 0.3)' },   // Blue
+                { start: 'rgba(239, 68, 68, 0.9)', end: 'rgba(239, 68, 68, 0.3)' },     // Red
+                { start: 'rgba(245, 158, 11, 0.9)', end: 'rgba(245, 158, 11, 0.3)' },   // Orange
+                { start: 'rgba(16, 185, 129, 0.9)', end: 'rgba(16, 185, 129, 0.3)' },   // Green
+                { start: 'rgba(139, 92, 246, 0.9)', end: 'rgba(139, 92, 246, 0.3)' },   // Purple
+                { start: 'rgba(236, 72, 153, 0.9)', end: 'rgba(236, 72, 153, 0.3)' },   // Pink
+                { start: 'rgba(20, 184, 166, 0.9)', end: 'rgba(20, 184, 166, 0.3)' }    // Teal
+            ];
+            
+            const backgroundColors = sortedCategories.map((_, index) => {
+                const gradient = ctx.createLinearGradient(0, 0, 0, 400);
+                const colorPair = gradientColors[index % gradientColors.length];
+                gradient.addColorStop(0, colorPair.start);
+                gradient.addColorStop(1, colorPair.end);
+                return gradient;
+            });
+            
+            const borderColors = [
+                'rgb(59, 130, 246)',   // Blue
+                'rgb(239, 68, 68)',    // Red
+                'rgb(245, 158, 11)',   // Orange
+                'rgb(16, 185, 129)',   // Green
+                'rgb(139, 92, 246)',   // Purple
+                'rgb(236, 72, 153)',   // Pink
+                'rgb(20, 184, 166)'    // Teal
+            ];
+            
+            // Optimize chart rendering - update instead of recreate
+            if (expensesChart) {
+                // Update existing chart data
+                expensesChart.data.labels = chartLabels;
+                expensesChart.data.datasets[0].label = `${translations[currentLang].chartLabel}`;
+                expensesChart.data.datasets[0].data = sortedCategories.map(item => {
+                    const amount = item[1];
+                    return currentCurrency === 'USD' ? amount / exchangeRate : amount;
+                });
+                expensesChart.data.datasets[0].backgroundColor = backgroundColors;
+                expensesChart.data.datasets[0].borderColor = borderColors.slice(0, sortedCategories.length);
+                expensesChart.update('active'); // Use 'active' mode for smooth animation
+            } else {
+                // Create new chart with smooth animations
+                expensesChart = new Chart(ctx, { 
+                    type: 'bar', 
+                    data: { 
+                        labels: chartLabels, 
+                        datasets: [{ 
+                            label: `${translations[currentLang].chartLabel}`, 
+                            data: sortedCategories.map(item => {
+                                const amount = item[1];
+                                return currentCurrency === 'USD' ? amount / exchangeRate : amount;
+                            }), 
+                            backgroundColor: backgroundColors,
+                            borderColor: borderColors.slice(0, sortedCategories.length),
+                            borderWidth: 2,
+                            borderRadius: 8,
+                            borderSkipped: false
+                        }] 
+                    }, 
+                    options: { 
+                        responsive: true, 
+                        maintainAspectRatio: false,
+                        animation: {
+                            duration: 1000,
+                            easing: 'easeInOutQuart',
+                            animateRotate: true,
+                            animateScale: true
+                        },
+                        interaction: {
+                            intersect: false,
+                            mode: 'index'
+                        },
+                        scales: { 
+                            y: { 
+                                beginAtZero: true,
+                                grid: {
+                                    color: 'rgba(0, 0, 0, 0.05)',
+                                    drawBorder: false
+                                },
+                                ticks: {
+                                    font: {
+                                        size: 12,
+                                        family: 'Inter'
+                                    },
+                                    color: '#6b7280'
+                                }
+                            },
+                            x: {
+                                grid: {
+                                    display: false
+                                },
+                                ticks: {
+                                    font: {
+                                        size: 12,
+                                        family: 'Inter'
+                                    },
+                                    color: '#6b7280'
+                                }
+                            }
+                        }, 
+                        plugins: { 
+                            legend: { 
+                                display: false 
+                            },
+                            tooltip: {
+                                enabled: true,
+                                backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                                titleColor: '#ffffff',
+                                bodyColor: '#ffffff',
+                                titleFont: {
+                                    size: 14,
+                                    weight: 'bold',
+                                    family: 'Inter'
+                                },
+                                bodyFont: {
+                                    size: 13,
+                                    family: 'Inter'
+                                },
+                                padding: 12,
+                                cornerRadius: 8,
+                                displayColors: true,
+                                borderColor: 'rgba(255, 255, 255, 0.1)',
+                                borderWidth: 1,
+                                callbacks: {
+                                    label: function(context) {
+                                        const label = context.label || '';
+                                        const value = context.parsed.y || 0;
+                                        const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                        const percentage = total > 0 ? ((value / total) * 100).toFixed(1) : 0;
+                                        // ✅ Use locale-aware number formatting
+                                        const formattedValue = formatNumber(value, 2);
+                                        return `${label}: ${formattedValue} ${currentCurrency} (${percentage}%)`;
+                                    },
+                                    title: function(context) {
+                                        return context[0].label || '';
+                                    }
+                                }
+                            }
+                        }
+                    } 
+                });
+            }
         }
         
         function showToast(message, type = 'success') {
@@ -1016,7 +2279,10 @@
             toast.className = `toast toast-${type}`; toast.textContent = message;
             container.appendChild(toast);
             setTimeout(() => toast.classList.add('show'), 10);
-            setTimeout(() => { toast.classList.remove('show'); setTimeout(() => toast.remove(), 300); }, 3000);
+            setTimeout(() => { 
+                toast.classList.add('removing');
+                setTimeout(() => toast.remove(), 300); 
+            }, 3000);
         }
 
         function showConfirmModal(text) {
@@ -1045,32 +2311,99 @@
         function setupModal(modalId, openBtnId, resetFn) {
             const modal = document.getElementById(modalId); if (!modal) return;
             const openBtn = document.getElementById(openBtnId);
-            if (openBtn) openBtn.addEventListener('click', () => { if (resetFn) resetFn(); modal.showModal(); });
+            if (openBtn) openBtn.addEventListener('click', () => { 
+                if (resetFn) resetFn(); 
+                AccessibilityHelper.openModal(modal);
+            });
             modal.querySelector('.cancel-btn')?.addEventListener('click', () => modal.close());
             modal.querySelector('form')?.addEventListener('submit', (e) => {
                 e.preventDefault();
+                
+                // Validate form before submission
+                if (!AccessibilityHelper.validateForm(e.target)) {
+                    return;
+                }
+                
                 const handler = { 'debt-form': handleDebtFormSubmit, 'debt-payment-form': handleDebtPaymentFormSubmit, 'recurring-expense-form': handleRecurringExpenseFormSubmit, 'expense-form': handleExpenseFormSubmit, 'daily-task-form': handleDailyTaskFormSubmit, 'monthly-task-form': handleMonthlyTaskFormSubmit, 'yearly-task-form': handleYearlyTaskFormSubmit, 'event-form': handleEventFormSubmit }[e.target.id];
                 if (handler) handler(e.target);
                 modal.close();
             });
+            
+            // Add real-time validation on blur
+            const form = modal.querySelector('form');
+            if (form) {
+                const requiredFields = form.querySelectorAll('input[required], textarea[required], select[required]');
+                requiredFields.forEach(field => {
+                    field.addEventListener('blur', () => {
+                        AccessibilityHelper.validateField(field);
+                    });
+                    field.addEventListener('input', () => {
+                        if (field.getAttribute('aria-invalid') === 'true') {
+                            AccessibilityHelper.validateField(field);
+                        }
+                    });
+                });
+            }
         }
         
         async function handleDebtFormSubmit(form) {
              try {
-                const id = form.querySelector('#debt-id').value; const originalPaid = parseFloat(form.dataset.originalPaid || 0); const newPaidAmount = parseFloat(form.querySelector('#debt-paid').value); const name = form.querySelector('#debt-name').value;
-                const debtData = { name, totalAmount: parseFloat(form.querySelector('#debt-total').value), paidAmount: newPaidAmount, comment: form.querySelector('#debt-comment').value };
+                const id = form.querySelector('#debt-id').value; const originalPaid = parseFloat(form.dataset.originalPaid || 0); const newPaidAmount = parseFloat(form.querySelector('#debt-paid').value); const name = form.querySelector('#debt-name').value.trim();
+                const totalAmount = parseFloat(form.querySelector('#debt-total').value);
+                
+                // Validate required fields
+                if (!name) {
+                    showToast(translations[currentLang].errorRequiredField || 'This field is required', 'error');
+                    form.querySelector('#debt-name').focus();
+                    return;
+                }
+                if (isNaN(totalAmount)) {
+                    showToast(translations[currentLang].errorRequiredField || 'This field is required', 'error');
+                    form.querySelector('#debt-total').focus();
+                    return;
+                }
+                if (isNaN(newPaidAmount)) {
+                    showToast(translations[currentLang].errorRequiredField || 'This field is required', 'error');
+                    form.querySelector('#debt-paid').focus();
+                    return;
+                }
+                
+                // Validate amounts
+                if (totalAmount < 0) {
+                    showToast(translations[currentLang].errorNegativeAmount || 'Amount cannot be negative', 'error');
+                    return;
+                }
+                if (newPaidAmount < 0) {
+                    showToast(translations[currentLang].errorNegativeAmount || 'Amount cannot be negative', 'error');
+                    return;
+                }
+                if (newPaidAmount > totalAmount) {
+                    showToast(translations[currentLang].errorPaidExceedsTotal || 'Paid amount cannot exceed total amount', 'error');
+                    return;
+                }
+                
+                const debtData = { name, totalAmount, paidAmount: newPaidAmount, comment: form.querySelector('#debt-comment').value };
                 if (id && newPaidAmount > originalPaid) { debtData.lastPaymentDate = Timestamp.now(); await addDoc(collection(db, `users/${userId}/monthlyData/${currentMonthId}/expenses`), { name: `${translations[currentLang].addDebtPayment}: ${name}`, category: translations[currentLang].debtRepayments, amount: newPaidAmount - originalPaid, date: getTodayISOString(), debtPaymentId: id }); }
                 if (!id) {
                     debtData.createdAt = Timestamp.now(); const newDocRef = await addDoc(debtsCol, debtData);
                      if (debtData.paidAmount > 0) { await updateDoc(newDocRef, { lastPaymentDate: Timestamp.now() }); await addDoc(collection(db, `users/${userId}/monthlyData/${currentMonthId}/expenses`), { name: `${translations[currentLang].addDebtPayment}: ${name}`, category: translations[currentLang].debtRepayments, amount: debtData.paidAmount, date: getTodayISOString(), debtPaymentId: newDocRef.id }); }
                 } else { await updateDoc(doc(debtsCol, id), debtData); }
                 form.dataset.originalPaid = "0"; showToast(translations[currentLang].toastSuccess);
-            } catch (error) { console.error("Error saving debt:", error); showToast(translations[currentLang].toastError, 'error'); }
+            } catch (error) { 
+                ErrorHandler.log('handleDebtFormSubmit', error, true);
+            }
         }
         async function handleDebtPaymentFormSubmit(form) {
             try {
                 const id = form.querySelector('#debt-payment-id').value;
                 const amount = parseFloat(form.querySelector('#debt-payment-amount').value);
+                
+                // Validate amount
+                if (amount <= 0) {
+                    showToast(translations[currentLang].errorPositiveAmount || 'Amount must be positive', 'error');
+                    return;
+                }
+                
                 showToast(`ID: ${id}, Amount: ${amount}`); // Отладка
                 const debtRef = doc(debtsCol, id);
                 const debtDoc = await getDoc(debtRef);
@@ -1084,29 +2417,92 @@
                     showToast(`Долг с ID ${id} не найден`, 'error'); // Отладка
                 }
             } catch (error) {
-                console.error("Error adding debt payment:", error);
-                showToast(`Ошибка: ${error.message}`, 'error'); // Отладка
+                ErrorHandler.log('handleDebtPaymentFormSubmit', error, true);
             }
         }
         async function handleRecurringExpenseFormSubmit(form) {
             try {
-                const id = form.querySelector('#recurring-expense-id').value; const data = { name: form.querySelector('#recurring-expense-name').value, amount: parseFloat(form.querySelector('#recurring-expense-amount').value), dueDay: parseInt(form.querySelector('#recurring-expense-due-day').value), details: form.querySelector('#recurring-expense-details').value, }; let docRef;
+                const id = form.querySelector('#recurring-expense-id').value;
+                const name = form.querySelector('#recurring-expense-name').value.trim();
+                const amount = parseFloat(form.querySelector('#recurring-expense-amount').value);
+                const dueDay = parseInt(form.querySelector('#recurring-expense-due-day').value);
+                
+                // Validate required fields
+                if (!name) {
+                    showToast(translations[currentLang].errorRequiredField || 'This field is required', 'error');
+                    form.querySelector('#recurring-expense-name').focus();
+                    return;
+                }
+                if (isNaN(amount)) {
+                    showToast(translations[currentLang].errorRequiredField || 'This field is required', 'error');
+                    form.querySelector('#recurring-expense-amount').focus();
+                    return;
+                }
+                if (isNaN(dueDay)) {
+                    showToast(translations[currentLang].errorRequiredField || 'This field is required', 'error');
+                    form.querySelector('#recurring-expense-due-day').focus();
+                    return;
+                }
+                
+                // Validate amount
+                if (amount <= 0) {
+                    showToast(translations[currentLang].errorPositiveAmount || 'Amount must be positive', 'error');
+                    return;
+                }
+                
+                const data = { name, amount, dueDay, details: form.querySelector('#recurring-expense-details').value, }; let docRef;
                 if (!id) { data.createdAt = Timestamp.now(); docRef = await addDoc(recurringExpensesCol, data); } else { docRef = doc(recurringExpensesCol, id); await updateDoc(docRef, data); }
                 const taskQuery = query(monthlyTasksCol, where("recurringExpenseId", "==", docRef.id), where("month", "==", selectedMonthId));
                 const existingTasks = await getDocs(taskQuery); const [year, month] = selectedMonthId.split('-').map(Number); const deadline = `${selectedMonthId}-${String(data.dueDay).padStart(2, '0')}`;
-                const taskData = { name: `${data.name}`, deadline, status: translations.ru.statusNotDone, recurringExpenseId: docRef.id, month: selectedMonthId, year: year, };
+                const taskData = { name: `${data.name}`, deadline, status: TASK_STATUS.NOT_DONE, recurringExpenseId: docRef.id, month: selectedMonthId, year: year, };
                 if(existingTasks.empty) await addDoc(monthlyTasksCol, taskData); else await updateDoc(existingTasks.docs[0].ref, taskData);
                 showToast(translations[currentLang].toastSuccess);
-            } catch (error) { console.error("Error saving recurring expense:", error); showToast(translations[currentLang].toastError, 'error'); }
+            } catch (error) { 
+                ErrorHandler.log('handleRecurringExpenseFormSubmit', error, true);
+            }
         }
         async function handleExpenseFormSubmit(form) {
             try {
                 const id = form.querySelector('#expense-id').value;
+                const name = form.querySelector('#expense-name').value.trim();
+                const category = form.querySelector('#expense-category').value.trim();
+                const amount = parseFloat(form.querySelector('#expense-amount').value);
+                const dateValue = form.querySelector('#expense-date').value;
+                
+                // Validate required fields
+                if (!name) {
+                    showToast(translations[currentLang].errorRequiredField || 'This field is required', 'error');
+                    form.querySelector('#expense-name').focus();
+                    return;
+                }
+                if (!category) {
+                    showToast(translations[currentLang].errorRequiredField || 'This field is required', 'error');
+                    form.querySelector('#expense-category').focus();
+                    return;
+                }
+                if (isNaN(amount)) {
+                    showToast(translations[currentLang].errorRequiredField || 'This field is required', 'error');
+                    form.querySelector('#expense-amount').focus();
+                    return;
+                }
+                
+                // Validate amount
+                if (amount <= 0) {
+                    showToast(translations[currentLang].errorPositiveAmount || 'Amount must be positive', 'error');
+                    return;
+                }
+                
+                // Validate date
+                if (!dateValue || !isValidDate(dateValue)) {
+                    showToast(translations[currentLang].errorInvalidDate || 'Invalid date format', 'error');
+                    return;
+                }
+                
                 const expenseData = {
-                    name: form.querySelector('#expense-name').value,
-                    category: form.querySelector('#expense-category').value,
-                    amount: parseFloat(form.querySelector('#expense-amount').value),
-                    date: form.querySelector('#expense-date').value,
+                    name,
+                    category,
+                    amount,
+                    date: dateValue,
                 };
                 const newMonthId = expenseData.date.slice(0, 7);
 
@@ -1148,21 +2544,83 @@
                 }
                 showToast(translations[currentLang].toastSuccess);
             } catch (error) {
-                console.error("Error saving expense:", error);
-                showToast(translations[currentLang].toastError, 'error');
+                ErrorHandler.log('handleExpenseFormSubmit', error, true);
             }
         }
         const handleTaskSubmit = async (col, id, data) => {
-             try { if (!id) await addDoc(col, {...data, createdAt: Timestamp.now(), status: translations.ru.statusNotDone}); else await updateDoc(doc(col, id), data); showToast(translations[currentLang].toastSuccess); } 
-             catch (error) { console.error("Error saving task:", error); showToast(translations[currentLang].toastError, 'error'); }
+             try { 
+                 if (!id) {
+                     // ✅ FIX: Use enum status instead of translated string
+                     await addDoc(col, {
+                         ...data, 
+                         createdAt: Timestamp.now(), 
+                         status: TASK_STATUS.NOT_DONE,  // Use enum, not translation
+                         language: currentLang  // Track which language was used
+                     });
+                 } else {
+                     await updateDoc(doc(col, id), data);
+                 }
+                 showToast(translations[currentLang].toastSuccess); 
+             } 
+             catch (error) { 
+                ErrorHandler.log('handleTaskSubmit', error, true);
+             }
         };
-        const handleDailyTaskFormSubmit = (form) => handleTaskSubmit(dailyTasksCol, form.querySelector('#daily-task-id').value, { name: form.querySelector('#daily-task-name').value, notes: form.querySelector('#daily-task-notes').value });
-        const handleMonthlyTaskFormSubmit = (form) => handleTaskSubmit(monthlyTasksCol, form.querySelector('#monthly-task-id').value, { name: form.querySelector('#monthly-task-name').value, deadline: form.querySelector('#monthly-task-deadline').value, month: form.querySelector('#monthly-task-deadline').value.slice(0,7), year: new Date(form.querySelector('#monthly-task-deadline').value).getFullYear()});
-        const handleYearlyTaskFormSubmit = (form) => handleTaskSubmit(yearlyTasksCol, form.querySelector('#yearly-task-id').value, { name: form.querySelector('#yearly-task-name').value, deadline: form.querySelector('#yearly-task-deadline').value, notes: form.querySelector('#yearly-task-notes').value, year: new Date(form.querySelector('#yearly-task-deadline').value).getFullYear()});
+        const handleDailyTaskFormSubmit = (form) => {
+            const name = form.querySelector('#daily-task-name').value.trim();
+            if (!name) {
+                showToast(translations[currentLang].errorRequiredField || 'This field is required', 'error');
+                form.querySelector('#daily-task-name').focus();
+                return;
+            }
+            return handleTaskSubmit(dailyTasksCol, form.querySelector('#daily-task-id').value, { name, notes: form.querySelector('#daily-task-notes').value });
+        };
+        const handleMonthlyTaskFormSubmit = (form) => {
+            const name = form.querySelector('#monthly-task-name').value.trim();
+            const deadline = form.querySelector('#monthly-task-deadline').value;
+            
+            if (!name) {
+                showToast(translations[currentLang].errorRequiredField || 'This field is required', 'error');
+                form.querySelector('#monthly-task-name').focus();
+                return;
+            }
+            if (!isValidDate(deadline)) {
+                showToast(translations[currentLang].errorInvalidDate || 'Invalid date format', 'error');
+                return;
+            }
+            return handleTaskSubmit(monthlyTasksCol, form.querySelector('#monthly-task-id').value, { name, deadline, month: deadline.slice(0,7), year: new Date(deadline).getFullYear()});
+        };
+        const handleYearlyTaskFormSubmit = (form) => {
+            const name = form.querySelector('#yearly-task-name').value.trim();
+            const deadline = form.querySelector('#yearly-task-deadline').value;
+            
+            if (!name) {
+                showToast(translations[currentLang].errorRequiredField || 'This field is required', 'error');
+                form.querySelector('#yearly-task-name').focus();
+                return;
+            }
+            if (!isValidDate(deadline)) {
+                showToast(translations[currentLang].errorInvalidDate || 'Invalid date format', 'error');
+                return;
+            }
+            return handleTaskSubmit(yearlyTasksCol, form.querySelector('#yearly-task-id').value, { name, deadline, notes: form.querySelector('#yearly-task-notes').value, year: new Date(deadline).getFullYear()});
+        };
         
         async function handleEventFormSubmit(form) {
             try {
-                const id = form.querySelector('#event-id').value; const category = form.querySelector('#event-category').value; const t = translations[currentLang]; const data = { category, date: form.querySelector('#event-date').value }; let taskName = '';
+                const id = form.querySelector('#event-id').value; 
+                const category = form.querySelector('#event-category').value; 
+                const eventDate = form.querySelector('#event-date').value;
+                const t = translations[currentLang]; 
+                
+                // Validate date
+                if (!isValidDate(eventDate)) {
+                    showToast(t.errorInvalidDate || 'Invalid date format', 'error');
+                    return;
+                }
+                
+                const data = { category, date: eventDate }; 
+                let taskName = '';
                 switch (category) {
                     case 'birthday': const birthdayName = form.querySelector('#event-birthday-name').value; const birthYear = form.querySelector('#event-birthday-year').value; data.birthdayName = birthdayName; data.birthYear = birthYear; data.name = `${t.categoryBirthday}: ${birthdayName}`; taskName = `${t.taskCongratulate} ${birthdayName}`; if (birthYear) { const age = new Date(data.date).getFullYear() - parseInt(birthYear); if (age >= 0) taskName += ` (${t.taskTurning} ${age} ${t.taskYearsOld})`; } break;
                     case 'meeting': const meetingWith = form.querySelector('#event-meeting-with').value; const meetingTime = form.querySelector('#event-meeting-time').value; const meetingPlace = form.querySelector('#event-meeting-place').value; data.meetingWith = meetingWith; data.meetingTime = meetingTime; data.meetingPlace = meetingPlace; data.name = `${t.categoryMeeting}: ${meetingWith}`; taskName = `${t.taskMeetWith} ${meetingWith}`; if (meetingTime) taskName += ` в ${meetingTime}`; if (meetingPlace) taskName += ` в ${meetingPlace}`; break;
@@ -1173,7 +2631,7 @@
                 if (!eventId) return;
                 const shouldCreateTask = form.querySelector('#event-create-task').checked;
                 const taskQuery = query(monthlyTasksCol, where("fromCalendar", "==", eventId)); const existingTasksSnapshot = await getDocs(taskQuery); const existingTaskDoc = existingTasksSnapshot.docs[0];
-                const taskData = { name: taskName, deadline: data.date, status: translations.ru.statusNotDone, month: data.date.slice(0, 7), year: parseInt(data.date.slice(0, 4)), fromCalendar: eventId };
+                const taskData = { name: taskName, deadline: data.date, status: TASK_STATUS.NOT_DONE, month: data.date.slice(0, 7), year: parseInt(data.date.slice(0, 4)), fromCalendar: eventId };
                 if (shouldCreateTask) { 
                     if (existingTaskDoc) await updateDoc(existingTaskDoc.ref, taskData); 
                     else await addDoc(monthlyTasksCol, taskData); 
@@ -1189,9 +2647,23 @@
                 } 
                 else { if (existingTaskDoc) await deleteDoc(existingTaskDoc.ref); }
                 showToast(translations[currentLang].toastSuccess);
-            } catch (error) { console.error("Error saving event:", error); showToast(translations[currentLang].toastError, 'error'); }
+            } catch (error) { 
+                ErrorHandler.log('handleEventFormSubmit', error, true);
+            }
         };
-        async function handleCategoryFormSubmit(form) { const nameInput = form.querySelector('#category-name'); const name = nameInput.value.trim(); if (name) { await addDoc(categoriesCol, { name: name, lang: currentLang }); nameInput.value = ''; showToast(translations[currentLang].toastSuccess); } }
+        async function handleCategoryFormSubmit(form) { 
+            try {
+                const nameInput = form.querySelector('#category-name'); 
+                const name = nameInput.value.trim(); 
+                if (name) { 
+                    await addDoc(categoriesCol, { name: name, lang: currentLang }); 
+                    nameInput.value = ''; 
+                    showToast(translations[currentLang].toastSuccess); 
+                }
+            } catch (error) {
+                ErrorHandler.log('handleCategoryFormSubmit', error, true);
+            }
+        }
 
         setupModal('debt-modal', 'add-debt-btn', () => { document.getElementById('debt-form').reset(); document.getElementById('debt-id').value = ''; document.getElementById('debt-modal-title').textContent = translations[currentLang].addDebt; });
         setupModal('recurring-expense-modal', 'add-recurring-expense-btn', () => { document.getElementById('recurring-expense-form').reset(); document.getElementById('recurring-expense-id').value = ''; document.getElementById('recurring-expense-modal-title').textContent = translations[currentLang].addTemplate; });
@@ -1210,8 +2682,16 @@
 
         function setCurrency(currency) {
             currentCurrency = currency; localStorage.setItem('currency', currency);
-            document.getElementById('currency-azn').classList.toggle('currency-btn-active', currency === 'AZN');
-            document.getElementById('currency-usd').classList.toggle('currency-btn-active', currency === 'USD');
+            const aznBtn = document.getElementById('currency-azn');
+            const usdBtn = document.getElementById('currency-usd');
+            
+            aznBtn.classList.toggle('currency-btn-active', currency === 'AZN');
+            usdBtn.classList.toggle('currency-btn-active', currency === 'USD');
+            
+            // Update ARIA attributes for accessibility
+            AccessibilityHelper.updateButtonPressed(aznBtn, currency === 'AZN');
+            AccessibilityHelper.updateButtonPressed(usdBtn, currency === 'USD');
+            
             document.querySelectorAll('.currency-symbol').forEach(el => el.textContent = currentCurrency);
             if (userId) { renderDebts(allDebts); renderRecurringExpenses(); renderExpenses(allExpenses); updateDashboard(); }
         }
@@ -1231,28 +2711,104 @@
             catch (error) { const t=translations[currentLang]; authError.textContent = {'auth/invalid-email':t.authInvalidEmail,'auth/email-already-in-use':t.authEmailInUse,'auth/weak-password':t.authWeakPassword}[error.code]||t.authGenericError; }
         });
         document.getElementById('google-signin-btn')?.addEventListener('click', async () => { try { await signInWithPopup(auth, new GoogleAuthProvider()); } catch (error) { authError.textContent = translations[currentLang].authGenericError; } });
-        document.getElementById('logout-btn')?.addEventListener('click', async () => await signOut(auth));
+        document.getElementById('logout-btn')?.addEventListener('click', async () => {
+            // ✅ Ensure proper cleanup on logout
+            detachListeners();
+            await signOut(auth);
+        });
         
         document.getElementById('app').addEventListener('click', async (e) => {
             const target = e.target; const id = target.dataset.id || target.closest('[data-id]')?.dataset.id; if (!id) return;
             const t = translations[currentLang];
             const confirm = () => showConfirmModal(t.deleteConfirm);
 
-            if (target.closest('.delete-category-btn')) { if (await confirm()) { await deleteDoc(doc(categoriesCol, id)); showToast(t.toastDeleted); }}
+            if (target.closest('.delete-category-btn')) { 
+                if (await confirm()) { 
+                    try {
+                        await deleteDoc(doc(categoriesCol, id)); 
+                        showToast(t.toastDeleted);
+                    } catch (error) {
+                        ErrorHandler.log('deleteCategory', error, true);
+                    }
+                }
+            }
             else if (target.classList.contains('edit-debt-btn')) { const debt = (await getDoc(doc(debtsCol, id))).data(); const form = document.getElementById('debt-form'); form.dataset.originalPaid = debt.paidAmount || 0; form.querySelector('#debt-id').value = id; form.querySelector('#debt-name').value = debt.name; form.querySelector('#debt-total').value = debt.totalAmount; form.querySelector('#debt-paid').value = debt.paidAmount; form.querySelector('#debt-comment').value = debt.comment; document.getElementById('debt-modal-title').textContent = t.editDebt; document.getElementById('debt-modal').showModal(); } 
-            else if (target.classList.contains('delete-debt-btn') && await confirm()) { await deleteDoc(doc(debtsCol, id)); showToast(t.toastDeleted); } 
+            else if (target.classList.contains('delete-debt-btn') && await confirm()) { 
+                try {
+                    await deleteDoc(doc(debtsCol, id)); 
+                    showToast(t.toastDeleted);
+                } catch (error) {
+                    ErrorHandler.log('deleteDebt', error, true);
+                }
+            } 
             else if (target.classList.contains('add-debt-payment-btn')) { document.getElementById('debt-payment-id').value = id; document.getElementById('debt-payment-form').reset(); document.getElementById('debt-payment-modal').showModal(); } 
             else if (target.classList.contains('edit-recurring-expense-btn')) { const expense = (await getDoc(doc(recurringExpensesCol, id))).data(); const form = document.getElementById('recurring-expense-form'); form.querySelector('#recurring-expense-id').value = id; form.querySelector('#recurring-expense-name').value = expense.name; form.querySelector('#recurring-expense-amount').value = expense.amount; form.querySelector('#recurring-expense-due-day').value = expense.dueDay; form.querySelector('#recurring-expense-details').value = expense.details; document.getElementById('recurring-expense-modal-title').textContent = t.editTemplate; document.getElementById('recurring-expense-modal').showModal(); } 
-            else if (target.classList.contains('delete-recurring-expense-btn') && await confirm()) { await deleteDoc(doc(recurringExpensesCol, id)); const q = query(monthlyTasksCol, where("recurringExpenseId", "==", id)); const tasksToDelete = await getDocs(q); const batch = writeBatch(db); tasksToDelete.forEach(d => batch.delete(d.ref)); await batch.commit(); showToast(t.toastDeleted); } 
+            else if (target.classList.contains('delete-recurring-expense-btn') && await confirm()) { 
+                try {
+                    await deleteDoc(doc(recurringExpensesCol, id)); 
+                    const q = query(monthlyTasksCol, where("recurringExpenseId", "==", id)); 
+                    const tasksToDelete = await getDocs(q); 
+                    const batch = writeBatch(db); 
+                    tasksToDelete.forEach(d => batch.delete(d.ref)); 
+                    await batch.commit(); 
+                    showToast(t.toastDeleted);
+                } catch (error) {
+                    ErrorHandler.log('deleteRecurringExpense', error, true);
+                }
+            } 
             else if (target.classList.contains('edit-expense-btn')) { const expenseDoc = await getDoc(doc(expensesCol, id)); if (!expenseDoc.exists()) return; const expense = expenseDoc.data(); const form = document.getElementById('expense-form'); form.querySelector('#expense-id').value = id; form.querySelector('#expense-name').value = expense.name; form.querySelector('#expense-category').value = expense.category; form.querySelector('#expense-amount').value = expense.amount; form.querySelector('#expense-date').value = expense.date; document.getElementById('expense-modal-title').textContent = t.editExpense; document.getElementById('expense-modal').showModal(); } 
-            else if (target.classList.contains('delete-expense-btn') && await confirm()) { await deleteDoc(doc(expensesCol, id)); showToast(t.toastDeleted); }
+            else if (target.classList.contains('delete-expense-btn') && await confirm()) { 
+                try {
+                    await deleteDoc(doc(expensesCol, id)); 
+                    showToast(t.toastDeleted);
+                } catch (error) {
+                    ErrorHandler.log('deleteExpense', error, true);
+                }
+            }
             else if (target.classList.contains('edit-daily-task-btn')) { const task = (await getDoc(doc(dailyTasksCol, id))).data(); const form = document.getElementById('daily-task-form'); form.querySelector('#daily-task-id').value = id; form.querySelector('#daily-task-name').value = task.name; form.querySelector('#daily-task-notes').value = task.notes; document.getElementById('daily-task-modal-title').textContent = t.editTask; document.getElementById('daily-task-modal').showModal(); } 
-            else if (target.classList.contains('delete-daily-task-btn') && await confirm()) { await deleteDoc(doc(dailyTasksCol, id)); showToast(t.toastDeleted); }
+            else if (target.classList.contains('delete-daily-task-btn') && await confirm()) { 
+                try {
+                    await deleteDoc(doc(dailyTasksCol, id)); 
+                    showToast(t.toastDeleted);
+                } catch (error) {
+                    ErrorHandler.log('deleteDailyTask', error, true);
+                }
+            }
             else if (target.classList.contains('edit-monthly-task-btn')) { const task = (await getDoc(doc(monthlyTasksCol, id))).data(); const form = document.getElementById('monthly-task-form'); form.querySelector('#monthly-task-id').value = id; form.querySelector('#monthly-task-name').value = task.name; form.querySelector('#monthly-task-deadline').value = task.deadline; document.getElementById('monthly-task-modal-title').textContent = t.editTask; document.getElementById('monthly-task-modal').showModal(); } 
-            else if (target.classList.contains('delete-monthly-task-btn') && await confirm()) { await deleteDoc(doc(monthlyTasksCol, id)); showToast(t.toastDeleted); }
+            else if (target.classList.contains('delete-monthly-task-btn') && await confirm()) { 
+                try {
+                    await deleteDoc(doc(monthlyTasksCol, id)); 
+                    showToast(t.toastDeleted);
+                } catch (error) {
+                    ErrorHandler.log('deleteMonthlyTask', error, true);
+                }
+            }
             else if (target.classList.contains('edit-yearly-task-btn')) { const task = (await getDoc(doc(yearlyTasksCol, id))).data(); const form = document.getElementById('yearly-task-form'); form.querySelector('#yearly-task-id').value = id; form.querySelector('#yearly-task-name').value = task.name; form.querySelector('#yearly-task-deadline').value = task.deadline; form.querySelector('#yearly-task-notes').value = task.notes; document.getElementById('yearly-task-modal-title').textContent = t.editTask; document.getElementById('yearly-task-modal').showModal(); } 
-            else if (target.classList.contains('delete-yearly-task-btn') && await confirm()) { await deleteDoc(doc(yearlyTasksCol, id)); showToast(t.toastDeleted); }
-            else if (target.id === 'delete-event-btn') { const eventId = document.getElementById('event-id').value; if(eventId && await confirm()) { await deleteDoc(doc(calendarEventsCol, eventId)); const taskQuery = query(monthlyTasksCol, where("fromCalendar", "==", eventId)); const tasksSnapshot = await getDocs(taskQuery); const batch = writeBatch(db); tasksSnapshot.forEach(d => batch.delete(d.ref)); await batch.commit(); document.getElementById('event-modal').close(); showToast(t.toastDeleted); } }
+            else if (target.classList.contains('delete-yearly-task-btn') && await confirm()) { 
+                try {
+                    await deleteDoc(doc(yearlyTasksCol, id)); 
+                    showToast(t.toastDeleted);
+                } catch (error) {
+                    ErrorHandler.log('deleteYearlyTask', error, true);
+                }
+            }
+            else if (target.id === 'delete-event-btn') { 
+                const eventId = document.getElementById('event-id').value; 
+                if(eventId && await confirm()) { 
+                    try {
+                        await deleteDoc(doc(calendarEventsCol, eventId)); 
+                        const taskQuery = query(monthlyTasksCol, where("fromCalendar", "==", eventId)); 
+                        const tasksSnapshot = await getDocs(taskQuery); 
+                        const batch = writeBatch(db); 
+                        tasksSnapshot.forEach(d => batch.delete(d.ref)); 
+                        await batch.commit(); 
+                        document.getElementById('event-modal').close(); 
+                        showToast(t.toastDeleted);
+                    } catch (error) {
+                        ErrorHandler.log('deleteEvent', error, true);
+                    }
+                } 
+            }
         });
 
         // Radio Player Logic
@@ -1267,15 +2823,20 @@
                 radioPlayer.play().catch(e => console.error("Radio play error:", e));
                 playIcon.classList.add('hidden');
                 pauseIcon.classList.remove('hidden');
+                playPauseBtn.setAttribute('aria-label', 'Pause radio');
+                AccessibilityHelper.updateButtonPressed(playPauseBtn, true);
             } else {
                 radioPlayer.pause();
                 playIcon.classList.remove('hidden');
                 pauseIcon.classList.add('hidden');
+                playPauseBtn.setAttribute('aria-label', 'Play radio');
+                AccessibilityHelper.updateButtonPressed(playPauseBtn, false);
             }
         });
 
         volumeSlider.addEventListener('input', (e) => {
             radioPlayer.volume = e.target.value;
+            volumeSlider.setAttribute('aria-valuenow', e.target.value);
         });
 
     </script>
