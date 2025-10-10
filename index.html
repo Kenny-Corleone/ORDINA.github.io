@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="ru">
-<!-- Version 2.1.0 - Added weather, Spotify, improved mobile, month navigation - 2025-10-08 -->
+<!-- Version 2.2.0 - Improved design, fixed mobile date, better UX - 2025-10-08 -->
 
 <head>
     <meta charset="UTF-8">
@@ -426,6 +426,208 @@
                 margin-right: 1rem;
             }
         }
+
+        /* ✨ УЛУЧШЕННЫЙ ДИЗАЙН v2.2.0 */
+
+        /* Градиентный фон */
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background-attachment: fixed;
+        }
+
+        /* Glassmorphism для основного контейнера */
+        #app {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 1rem;
+        }
+
+        /* Улучшенные stat-card с анимацией */
+        .stat-card {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.85) 100%);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-12px) scale(1.03);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Анимированные градиенты */
+        @keyframes gradientShift {
+
+            0%,
+            100% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+        }
+
+        .card-gradient-green {
+            background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 50%, #6ee7b7 100%);
+            background-size: 200% 200%;
+            animation: gradientShift 3s ease infinite;
+        }
+
+        .card-gradient-yellow {
+            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 50%, #fbbf24 100%);
+            background-size: 200% 200%;
+            animation: gradientShift 3s ease infinite;
+        }
+
+        .card-gradient-red {
+            background: linear-gradient(135deg, #fee2e2 0%, #fecaca 50%, #f87171 100%);
+            background-size: 200% 200%;
+            animation: gradientShift 3s ease infinite;
+        }
+
+        .card-gradient-purple {
+            background: linear-gradient(135deg, #e9d5ff 0%, #d8b4fe 50%, #c084fc 100%);
+            background-size: 200% 200%;
+            animation: gradientShift 3s ease infinite;
+        }
+
+        /* Улучшенная навигация */
+        nav {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .tab-button {
+            transition: all 0.3s ease;
+        }
+
+        .tab-button:hover {
+            background: rgba(59, 130, 246, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .tab-active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+            color: white !important;
+            border-bottom-color: transparent !important;
+        }
+
+        /* Улучшенные модальные окна */
+        dialog {
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        dialog::backdrop {
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(5px);
+        }
+
+        /* Улучшенный виджет погоды */
+        #weather-widget {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.95) 0%, rgba(147, 51, 234, 0.95) 100%);
+            color: white;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        /* Улучшенные кнопки */
+        button:not(.cancel-btn) {
+            transition: all 0.3s ease;
+        }
+
+        button:not(.cancel-btn):hover {
+            transform: translateY(-2px);
+        }
+
+        /* Плавные переходы */
+        * {
+            transition-property: background-color, border-color, color, fill, stroke, opacity, box-shadow, transform;
+            transition-duration: 0.3s;
+            transition-timing-function: ease;
+        }
+
+        /* Улучшенные тени */
+        .shadow-sm {
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .shadow-md {
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+        }
+
+        .shadow-lg {
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+        }
+
+        .shadow-xl {
+            box-shadow: 0 12px 32px rgba(0, 0, 0, 0.25);
+        }
+
+        .shadow-2xl {
+            box-shadow: 0 16px 48px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Скроллбар */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 5px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+        }
+
+        /* Мобильная версия - улучшения */
+        @media (max-width: 768px) {
+            body {
+                font-size: 16px;
+                /* Предотвращает зум на iOS */
+            }
+
+            .max-w-7xl {
+                padding-left: 1rem;
+                padding-right: 1rem;
+            }
+
+            /* Больше отступы для мобильных */
+            .p-2 {
+                padding: 1rem;
+            }
+
+            .p-4 {
+                padding: 1.5rem;
+            }
+
+            /* Таблицы-карточки с glassmorphism */
+            .responsive-table tr {
+                background: rgba(255, 255, 255, 0.95);
+                backdrop-filter: blur(10px);
+                border: 1px solid rgba(255, 255, 255, 0.3);
+                box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+            }
+
+            /* Увеличенные области нажатия */
+            button,
+            a,
+            input,
+            select {
+                min-height: 44px;
+                min-width: 44px;
+            }
+        }
     </style>
 </head>
 
@@ -545,433 +747,427 @@
                         class="rounded-sm cursor-pointer"></button>
             </div>
             <!-- Weather Widget -->
-            <div id="weather-widget" class="bg-white p-3 rounded-lg shadow-md w-auto min-w-[200px]">
-                <div class="flex items-center justify-between">
-                    <div class="flex items-center space-x-2">
-                        <svg class="w-6 h-6 text-yellow-500" fill="currentColor" viewBox="0 0 20 20">
-                            <path fill-rule="evenodd"
-                                d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z"
-                                clip-rule="evenodd"></path>
-                        </svg>
-                        <div>
-                            <p id="weather-location" class="text-xs font-medium text-gray-600">Загрузка...</p>
-                            <p id="weather-temp" class="text-lg font-bold text-gray-800">--°</p>
-                        </div>
+            <div id="weather-widget" class="bg-white p-3 rounded-lg shadow-md w-auto min-w-[200px] hidden"></div>
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-2">
+                    <svg class="w-6 h-6 text-yellow-500" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd"
+                            d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z"
+                            clip-rule="evenodd"></path>
+                    </svg>
+                    <div>
+                        <p id="weather-location" class="text-xs font-medium text-gray-600">Загрузка...</p>
+                        <p id="weather-temp" class="text-lg font-bold text-gray-800">--°</p>
                     </div>
-                    <div id="weather-icon" class="text-2xl">🌤️</div>
                 </div>
+                <div id="weather-icon" class="text-2xl">🌤️</div>
             </div>
-
-            <!-- Music Player -->
-            <div class="bg-white p-3 rounded-lg shadow-md w-auto">
-                <div class="flex items-center space-x-2 mb-2">
-                    <button id="music-tab-radio"
-                        class="px-3 py-1 text-xs font-medium rounded-lg bg-blue-600 text-white">Радио</button>
-                    <button id="music-tab-spotify"
-                        class="px-3 py-1 text-xs font-medium rounded-lg bg-gray-200 text-gray-700 hover:bg-gray-300">Spotify</button>
-                </div>
-
-                <!-- Radio Player -->
-                <div id="radio-player-container">
-                    <div class="flex items-center justify-between">
-                        <p class="text-sm font-medium text-gray-800" data-i18n="radioTitle">Радио AzerbaiJazz</p>
-                        <div class="flex items-center space-x-2">
-                            <audio id="radio-player" src="https://stream.zeno.fm/tjqlpbsxi4ytv"></audio>
-                            <button id="radio-play-pause-btn"
-                                class="w-8 h-8 flex items-center justify-center rounded-full bg-blue-600 text-white hover:bg-blue-700 transition focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-                                aria-label="Play radio" aria-pressed="false">
-                                <svg id="play-icon" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                                    <path
-                                        d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z">
-                                    </path>
-                                </svg>
-                                <svg id="pause-icon" class="w-5 h-5 hidden" fill="currentColor" viewBox="0 0 20 20">
-                                    <path
-                                        d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zM7 8a1 1 0 012 0v4a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v4a1 1 0 102 0V8a1 1 0 00-1-1z">
-                                    </path>
-                                </svg>
-                            </button>
-                        </div>
-                    </div>
-                    <div class="flex items-center mt-2 space-x-2">
-                        <svg class="w-5 h-5 text-gray-500" fill="currentColor" viewBox="0 0 20 20">
-                            <path fill-rule="evenodd"
-                                d="M9.383 3.076A1 1 0 0110 4v12a1 1 0 01-1.707.707L4.586 13H2a1 1 0 01-1-1V8a1 1 0 011-1h2.586l3.707-3.707a1 1 0 011.09-.217zM14.657 2.929a1 1 0 011.414 0A9.953 9.953 0 0117 10a9.953 9.953 0 01-1.072 4.929 1 1 0 11-1.5-1.329A7.957 7.957 0 0015 10a7.957 7.957 0 00-.843-3.742 1 1 0 010-1.329z"
-                                clip-rule="evenodd"></path>
-                            <path
-                                d="M12.293 5.293a1 1 0 011.414 0A5.963 5.963 0 0114 10a5.963 5.963 0 01-.707 2.707 1 1 0 11-1.5-1.329A3.964 3.964 0 0012 10a3.964 3.964 0 00-.586-2.032 1 1 0 010-1.386z">
-                            </path>
-                        </svg>
-                        <input type="range" id="radio-volume-slider" min="0" max="1" step="0.01" value="1"
-                            class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer styled-slider"
-                            aria-label="Radio volume" aria-valuemin="0" aria-valuemax="1" aria-valuenow="1">
-                    </div>
-                </div>
-
-                <!-- Spotify Player -->
-                <div id="spotify-player-container" class="hidden">
-                    <div id="spotify-not-connected" class="text-center py-2">
-                        <p class="text-xs text-gray-600 mb-2">Подключите Spotify</p>
-                        <button id="spotify-login-btn"
-                            class="px-4 py-2 bg-green-600 text-white text-xs font-medium rounded-lg hover:bg-green-700 transition">
-                            <svg class="w-4 h-4 inline mr-1" fill="currentColor" viewBox="0 0 24 24">
-                                <path
-                                    d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z" />
-                            </svg>
-                            Войти в Spotify
-                        </button>
-                    </div>
-                    <div id="spotify-connected" class="hidden">
-                        <div class="flex items-center justify-between mb-2">
-                            <div class="flex-1 min-w-0">
-                                <p id="spotify-track-name" class="text-xs font-medium text-gray-800 truncate">Не играет
-                                </p>
-                                <p id="spotify-artist-name" class="text-xs text-gray-600 truncate">--</p>
-                            </div>
-                            <img id="spotify-album-art" class="w-10 h-10 rounded ml-2" src="" alt="Album"
-                                style="display:none;">
-                        </div>
-                        <div class="flex items-center justify-center space-x-3">
-                            <button id="spotify-prev-btn"
-                                class="w-7 h-7 flex items-center justify-center rounded-full hover:bg-gray-100 transition">
-                                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                                    <path
-                                        d="M8.445 14.832A1 1 0 0010 14v-2.798l5.445 3.63A1 1 0 0017 14V6a1 1 0 00-1.555-.832L10 8.798V6a1 1 0 00-1.555-.832l-6 4a1 1 0 000 1.664l6 4z">
-                                    </path>
-                                </svg>
-                            </button>
-                            <button id="spotify-play-pause-btn"
-                                class="w-9 h-9 flex items-center justify-center rounded-full bg-green-600 text-white hover:bg-green-700 transition">
-                                <svg id="spotify-play-icon" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                                    <path
-                                        d="M6.3 2.841A1.5 1.5 0 004 4.11V15.89a1.5 1.5 0 002.3 1.269l9.344-5.89a1.5 1.5 0 000-2.538L6.3 2.84z">
-                                    </path>
-                                </svg>
-                                <svg id="spotify-pause-icon" class="w-5 h-5 hidden" fill="currentColor"
-                                    viewBox="0 0 20 20">
-                                    <path
-                                        d="M5.75 3a.75.75 0 00-.75.75v12.5c0 .414.336.75.75.75h1.5a.75.75 0 00.75-.75V3.75A.75.75 0 007.25 3h-1.5zM12.75 3a.75.75 0 00-.75.75v12.5c0 .414.336.75.75.75h1.5a.75.75 0 00.75-.75V3.75a.75.75 0 00-.75-.75h-1.5z">
-                                    </path>
-                                </svg>
-                            </button>
-                            <button id="spotify-next-btn"
-                                class="w-7 h-7 flex items-center justify-center rounded-full hover:bg-gray-100 transition">
-                                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                                    <path
-                                        d="M4.555 5.168A1 1 0 003 6v8a1 1 0 001.555.832L10 11.202V14a1 1 0 001.555.832l6-4a1 1 0 000-1.664l-6-4A1 1 0 0010 6v2.798l-5.445-3.63z">
-                                    </path>
-                                </svg>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <button id="logout-btn" class="text-sm font-medium text-gray-600 hover:text-blue-600"
-                data-i18n="logout">Выйти</button>
         </div>
 
-        <header class="mb-6 md:mb-8">
-            <div class="flex flex-col sm:flex-row items-center sm:items-start gap-4 sm:gap-6 md:gap-8">
-                <img src="https://raw.githubusercontent.com/Kenny-Corleone/ORDINA.github.io/main/logo%20ORDINA.png"
-                    alt="ORDINA Logo" class="h-48 sm:h-56 md:h-64 lg:h-72 w-auto drop-shadow-2xl">
-                <div class="text-center sm:text-left flex-1">
-                    <p class="text-gray-600 text-lg sm:text-xl md:text-2xl font-medium" data-i18n="appSubtitle">
-                        Управляйте своими
-                        финансами с легкостью</p>
-                </div>
+        <!-- Music Player -->
+        <div class="bg-white p-3 rounded-lg shadow-md w-auto">
+            <div class="flex items-center space-x-2 mb-2">
+                <button id="music-tab-radio"
+                    class="px-3 py-1 text-xs font-medium rounded-lg bg-blue-600 text-white">Радио</button>
+                <button id="music-tab-spotify"
+                    class="px-3 py-1 text-xs font-medium rounded-lg bg-gray-200 text-gray-700 hover:bg-gray-300">Spotify</button>
             </div>
-        </header>
 
-        <nav class="bg-white rounded-2xl shadow-lg mb-8 sticky top-4 z-10" role="navigation"
-            aria-label="Main navigation">
-            <div class="flex border-b border-gray-100 overflow-x-auto" role="tablist">
-                <button data-tab="dashboard"
-                    class="tab-button px-4 sm:px-6 py-4 border-b-2 border-transparent tab-active whitespace-nowrap text-sm sm:text-base font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50 transition-all duration-200"
-                    data-i18n="tabDashboard" role="tab" aria-selected="true"
-                    aria-controls="dashboard-page">Сводка</button>
-                <button data-tab="debts"
-                    class="tab-button px-4 sm:px-6 py-4 border-b-2 border-transparent whitespace-nowrap text-sm sm:text-base font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50 transition-all duration-200"
-                    data-i18n="tabDebts" role="tab" aria-selected="false" aria-controls="debts-page">Долги</button>
-                <button data-tab="recurring-expenses"
-                    class="tab-button px-4 sm:px-6 py-4 border-b-2 border-transparent whitespace-nowrap text-sm sm:text-base font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50 transition-all duration-200"
-                    data-i18n="tabRecurringExpenses" role="tab" aria-selected="false"
-                    aria-controls="recurring-expenses-page">Ежемесячные расходы</button>
-                <button data-tab="expenses"
-                    class="tab-button px-4 sm:px-6 py-4 border-b-2 border-transparent whitespace-nowrap text-sm sm:text-base font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50 transition-all duration-200"
-                    data-i18n="tabMonthlyExpenses" role="tab" aria-selected="false"
-                    aria-controls="expenses-page">Расходы месяца</button>
-                <button data-tab="tasks"
-                    class="tab-button px-4 sm:px-6 py-4 border-b-2 border-transparent whitespace-nowrap text-sm sm:text-base font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50 transition-all duration-200"
-                    data-i18n="tabTasks" role="tab" aria-selected="false" aria-controls="tasks-page">Список
-                    задач</button>
-                <button data-tab="calendar"
-                    class="tab-button px-4 sm:px-6 py-4 border-b-2 border-transparent whitespace-nowrap text-sm sm:text-base font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50 transition-all duration-200"
-                    data-i18n="tabCalendar" role="tab" aria-selected="false"
-                    aria-controls="calendar-page">Календарь</button>
-                <button data-tab="payments"
-                    class="tab-button px-4 sm:px-6 py-4 border-b-2 border-transparent whitespace-nowrap text-sm sm:text-base font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50 transition-all duration-200"
-                    data-i18n="tabPayments" role="tab" aria-selected="false"
-                    aria-controls="payments-page">Оплата</button>
-            </div>
-        </nav>
-
-        <main>
-            <div id="dashboard-page" class="page-content">
-                <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center mb-8 gap-6">
-                    <div>
-                        <h2 class="text-2xl sm:text-3xl font-bold text-gray-800" data-i18n="dashboardTitle">Сводка за
-                            месяц</h2>
-                    </div>
-                    <div class="w-full lg:w-auto">
-                        <p id="current-datetime"
-                            class="font-semibold text-lg text-gray-700 mb-2 text-center lg:text-right"></p>
-                        <div class="flex items-center gap-2">
-                            <button id="prev-month-btn"
-                                class="p-2 rounded-lg bg-white border border-gray-300 hover:bg-gray-50 transition"
-                                title="Предыдущий месяц">
-                                <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor"
-                                    viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M15 19l-7-7 7-7"></path>
-                                </svg>
-                            </button>
-                            <label for="month-selector" class="sr-only">Select month</label>
-                            <select id="month-selector"
-                                class="bg-white border border-gray-300 text-gray-900 text-sm rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent block w-full lg:w-48 p-3 shadow-sm hover:shadow-md transition-all duration-200"
-                                aria-label="Select month for dashboard"></select>
-                            <button id="next-month-btn"
-                                class="p-2 rounded-lg bg-white border border-gray-300 hover:bg-gray-50 transition"
-                                title="Следующий месяц">
-                                <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor"
-                                    viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M9 5l7 7-7 7"></path>
-                                </svg>
-                            </button>
-                        </div>
+            <!-- Radio Player -->
+            <div id="radio-player-container">
+                <div class="flex items-center justify-between">
+                    <p class="text-sm font-medium text-gray-800" data-i18n="radioTitle">Радио AzerbaiJazz</p>
+                    <div class="flex items-center space-x-2">
+                        <audio id="radio-player" src="https://stream.zeno.fm/tjqlpbsxi4ytv"></audio>
+                        <button id="radio-play-pause-btn"
+                            class="w-8 h-8 flex items-center justify-center rounded-full bg-blue-600 text-white hover:bg-blue-700 transition focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                            aria-label="Play radio" aria-pressed="false">
+                            <svg id="play-icon" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                <path
+                                    d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z">
+                                </path>
+                            </svg>
+                            <svg id="pause-icon" class="w-5 h-5 hidden" fill="currentColor" viewBox="0 0 20 20">
+                                <path
+                                    d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zM7 8a1 1 0 012 0v4a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v4a1 1 0 102 0V8a1 1 0 00-1-1z">
+                                </path>
+                            </svg>
+                        </button>
                     </div>
                 </div>
-                <div id="dashboard-loading"></div>
-                <div id="dashboard-content" class="hidden">
-                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-                        <div class="stat-card card-gradient-green p-6 rounded-2xl shadow-lg">
-                            <h3 class="text-lg font-semibold text-green-700 mb-3" data-i18n="dashRecurringPaid">
-                                Ежемесячные (оплачено)</h3>
-                            <p id="total-recurring-paid" class="text-3xl sm:text-4xl font-bold text-green-600">0 AZN</p>
-                        </div>
-                        <div class="stat-card card-gradient-yellow p-6 rounded-2xl shadow-lg">
-                            <h3 class="text-lg font-semibold text-yellow-700 mb-3" data-i18n="dashRecurringRemaining">
-                                Ежемесячные (осталось)</h3>
-                            <p id="total-recurring-remaining" class="text-3xl sm:text-4xl font-bold text-yellow-600">0
-                                AZN</p>
-                        </div>
-                        <div class="stat-card card-gradient-red p-6 rounded-2xl shadow-lg">
-                            <h3 class="text-lg font-semibold text-red-700 mb-3" data-i18n="dashMonthlyExpenses">Расходы
-                                за месяц</h3>
-                            <p id="total-monthly-outflow" class="text-3xl sm:text-4xl font-bold text-red-600">0 AZN</p>
-                        </div>
-                        <div class="stat-card card-gradient-purple p-6 rounded-2xl shadow-lg">
-                            <h3 class="text-lg font-semibold text-purple-700 mb-3" data-i18n="dashTotalDebt">Остаток
-                                общего долга</h3>
-                            <p id="total-debt-remaining" class="text-3xl font-bold mt-2 text-orange-600">0 AZN</p>
-                        </div>
-                        <div class="stat-card bg-white p-6 rounded-lg shadow-sm">
-                            <h3 class="text-lg font-medium text-gray-500" data-i18n="dashTasksMonth">Осталось задач
-                                (месяц)</h3>
-                            <p id="tasks-remaining-month" class="text-3xl font-bold mt-2 text-indigo-600">0</p>
-                        </div>
-                        <div class="stat-card bg-white p-6 rounded-lg shadow-sm">
-                            <h3 class="text-lg font-medium text-gray-500" data-i18n="dashTasksYear">Осталось задач (год)
-                            </h3>
-                            <p id="tasks-remaining-year" class="text-3xl font-bold mt-2 text-purple-600">0</p>
-                        </div>
-                    </div>
-                    <div class="bg-white p-6 rounded-lg shadow-sm">
-                        <h3 class="text-xl font-semibold mb-4" data-i18n="dashTopCategories">Топ категорий расходов</h3>
-                        <div class="max-h-96"><canvas id="expenses-chart"></canvas></div>
-                    </div>
+                <div class="flex items-center mt-2 space-x-2">
+                    <svg class="w-5 h-5 text-gray-500" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd"
+                            d="M9.383 3.076A1 1 0 0110 4v12a1 1 0 01-1.707.707L4.586 13H2a1 1 0 01-1-1V8a1 1 0 011-1h2.586l3.707-3.707a1 1 0 011.09-.217zM14.657 2.929a1 1 0 011.414 0A9.953 9.953 0 0117 10a9.953 9.953 0 01-1.072 4.929 1 1 0 11-1.5-1.329A7.957 7.957 0 0015 10a7.957 7.957 0 00-.843-3.742 1 1 0 010-1.329z"
+                            clip-rule="evenodd"></path>
+                        <path
+                            d="M12.293 5.293a1 1 0 011.414 0A5.963 5.963 0 0114 10a5.963 5.963 0 01-.707 2.707 1 1 0 11-1.5-1.329A3.964 3.964 0 0012 10a3.964 3.964 0 00-.586-2.032 1 1 0 010-1.386z">
+                        </path>
+                    </svg>
+                    <input type="range" id="radio-volume-slider" min="0" max="1" step="0.01" value="1"
+                        class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer styled-slider"
+                        aria-label="Radio volume" aria-valuemin="0" aria-valuemax="1" aria-valuenow="1">
                 </div>
             </div>
 
-            <div id="debts-page" class="page-content hidden">
-                <div class="flex justify-between items-center mb-4">
-                    <h2 class="text-2xl font-semibold" data-i18n="debtsTitle">Общие долги</h2><button id="add-debt-btn"
+            <!-- Spotify Player -->
+            <div id="spotify-player-container" class="hidden">
+                <div id="spotify-not-connected" class="text-center py-2">
+                    <p class="text-xs text-gray-600 mb-2">Подключите Spotify</p>
+                    <button id="spotify-login-btn"
+                        class="px-4 py-2 bg-green-600 text-white text-xs font-medium rounded-lg hover:bg-green-700 transition">
+                        <svg class="w-4 h-4 inline mr-1" fill="currentColor" viewBox="0 0 24 24">
+                            <path
+                                d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z" />
+                        </svg>
+                        Войти в Spotify
+                    </button>
+                </div>
+                <div id="spotify-connected" class="hidden">
+                    <div class="flex items-center justify-between mb-2">
+                        <div class="flex-1 min-w-0">
+                            <p id="spotify-track-name" class="text-xs font-medium text-gray-800 truncate">Не играет
+                            </p>
+                            <p id="spotify-artist-name" class="text-xs text-gray-600 truncate">--</p>
+                        </div>
+                        <img id="spotify-album-art" class="w-10 h-10 rounded ml-2" src="" alt="Album"
+                            style="display:none;">
+                    </div>
+                    <div class="flex items-center justify-center space-x-3">
+                        <button id="spotify-prev-btn"
+                            class="w-7 h-7 flex items-center justify-center rounded-full hover:bg-gray-100 transition">
+                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                <path
+                                    d="M8.445 14.832A1 1 0 0010 14v-2.798l5.445 3.63A1 1 0 0017 14V6a1 1 0 00-1.555-.832L10 8.798V6a1 1 0 00-1.555-.832l-6 4a1 1 0 000 1.664l6 4z">
+                                </path>
+                            </svg>
+                        </button>
+                        <button id="spotify-play-pause-btn"
+                            class="w-9 h-9 flex items-center justify-center rounded-full bg-green-600 text-white hover:bg-green-700 transition">
+                            <svg id="spotify-play-icon" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                <path
+                                    d="M6.3 2.841A1.5 1.5 0 004 4.11V15.89a1.5 1.5 0 002.3 1.269l9.344-5.89a1.5 1.5 0 000-2.538L6.3 2.84z">
+                                </path>
+                            </svg>
+                            <svg id="spotify-pause-icon" class="w-5 h-5 hidden" fill="currentColor" viewBox="0 0 20 20">
+                                <path
+                                    d="M5.75 3a.75.75 0 00-.75.75v12.5c0 .414.336.75.75.75h1.5a.75.75 0 00.75-.75V3.75A.75.75 0 007.25 3h-1.5zM12.75 3a.75.75 0 00-.75.75v12.5c0 .414.336.75.75.75h1.5a.75.75 0 00.75-.75V3.75a.75.75 0 00-.75-.75h-1.5z">
+                                </path>
+                            </svg>
+                        </button>
+                        <button id="spotify-next-btn"
+                            class="w-7 h-7 flex items-center justify-center rounded-full hover:bg-gray-100 transition">
+                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                <path
+                                    d="M4.555 5.168A1 1 0 003 6v8a1 1 0 001.555.832L10 11.202V14a1 1 0 001.555.832l6-4a1 1 0 000-1.664l-6-4A1 1 0 0010 6v2.798l-5.445-3.63z">
+                                </path>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <button id="logout-btn" class="text-sm font-medium text-gray-600 hover:text-blue-600"
+            data-i18n="logout">Выйти</button>
+    </div>
+
+    <header class="mb-6 md:mb-8">
+        <div class="flex flex-col sm:flex-row items-center sm:items-start gap-4 sm:gap-6 md:gap-8">
+            <img src="https://raw.githubusercontent.com/Kenny-Corleone/ORDINA.github.io/main/logo%20ORDINA.png"
+                alt="ORDINA Logo" class="h-48 sm:h-56 md:h-64 lg:h-72 w-auto drop-shadow-2xl">
+            <div class="text-center sm:text-left flex-1">
+                <p class="text-gray-600 text-lg sm:text-xl md:text-2xl font-medium" data-i18n="appSubtitle">
+                    Управляйте своими
+                    финансами с легкостью</p>
+            </div>
+        </div>
+    </header>
+
+    <nav class="bg-white rounded-2xl shadow-lg mb-8 sticky top-4 z-10" role="navigation" aria-label="Main navigation">
+        <div class="flex border-b border-gray-100 overflow-x-auto" role="tablist">
+            <button data-tab="dashboard"
+                class="tab-button px-4 sm:px-6 py-4 border-b-2 border-transparent tab-active whitespace-nowrap text-sm sm:text-base font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50 transition-all duration-200"
+                data-i18n="tabDashboard" role="tab" aria-selected="true" aria-controls="dashboard-page">Сводка</button>
+            <button data-tab="debts"
+                class="tab-button px-4 sm:px-6 py-4 border-b-2 border-transparent whitespace-nowrap text-sm sm:text-base font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50 transition-all duration-200"
+                data-i18n="tabDebts" role="tab" aria-selected="false" aria-controls="debts-page">Долги</button>
+            <button data-tab="recurring-expenses"
+                class="tab-button px-4 sm:px-6 py-4 border-b-2 border-transparent whitespace-nowrap text-sm sm:text-base font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50 transition-all duration-200"
+                data-i18n="tabRecurringExpenses" role="tab" aria-selected="false"
+                aria-controls="recurring-expenses-page">Ежемесячные расходы</button>
+            <button data-tab="expenses"
+                class="tab-button px-4 sm:px-6 py-4 border-b-2 border-transparent whitespace-nowrap text-sm sm:text-base font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50 transition-all duration-200"
+                data-i18n="tabMonthlyExpenses" role="tab" aria-selected="false" aria-controls="expenses-page">Расходы
+                месяца</button>
+            <button data-tab="tasks"
+                class="tab-button px-4 sm:px-6 py-4 border-b-2 border-transparent whitespace-nowrap text-sm sm:text-base font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50 transition-all duration-200"
+                data-i18n="tabTasks" role="tab" aria-selected="false" aria-controls="tasks-page">Список
+                задач</button>
+            <button data-tab="calendar"
+                class="tab-button px-4 sm:px-6 py-4 border-b-2 border-transparent whitespace-nowrap text-sm sm:text-base font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50 transition-all duration-200"
+                data-i18n="tabCalendar" role="tab" aria-selected="false"
+                aria-controls="calendar-page">Календарь</button>
+            <button data-tab="payments"
+                class="tab-button px-4 sm:px-6 py-4 border-b-2 border-transparent whitespace-nowrap text-sm sm:text-base font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50 transition-all duration-200"
+                data-i18n="tabPayments" role="tab" aria-selected="false" aria-controls="payments-page">Оплата</button>
+        </div>
+    </nav>
+
+    <main>
+        <div id="dashboard-page" class="page-content">
+            <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center mb-8 gap-6">
+                <div>
+                    <h2 class="text-2xl sm:text-3xl font-bold text-gray-800" data-i18n="dashboardTitle">Сводка за
+                        месяц</h2>
+                </div>
+                <div class="w-full lg:w-auto">
+                    <p id="current-datetime" class="font-semibold text-lg text-gray-700 mb-2 text-center lg:text-right">
+                    </p>
+                    <div class="flex items-center gap-2">
+                        <button id="prev-month-btn"
+                            class="p-2 rounded-lg bg-white border border-gray-300 hover:bg-gray-50 transition"
+                            title="Предыдущий месяц">
+                            <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M15 19l-7-7 7-7"></path>
+                            </svg>
+                        </button>
+                        <label for="month-selector" class="sr-only">Select month</label>
+                        <select id="month-selector"
+                            class="bg-white border border-gray-300 text-gray-900 text-sm rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent block w-full lg:w-48 p-3 shadow-sm hover:shadow-md transition-all duration-200"
+                            aria-label="Select month for dashboard"></select>
+                        <button id="next-month-btn"
+                            class="p-2 rounded-lg bg-white border border-gray-300 hover:bg-gray-50 transition"
+                            title="Следующий месяц">
+                            <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7">
+                                </path>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div id="dashboard-loading"></div>
+            <div id="dashboard-content" class="hidden">
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+                    <div class="stat-card card-gradient-green p-6 rounded-2xl shadow-lg">
+                        <h3 class="text-lg font-semibold text-green-700 mb-3" data-i18n="dashRecurringPaid">
+                            Ежемесячные (оплачено)</h3>
+                        <p id="total-recurring-paid" class="text-3xl sm:text-4xl font-bold text-green-600">0 AZN</p>
+                    </div>
+                    <div class="stat-card card-gradient-yellow p-6 rounded-2xl shadow-lg">
+                        <h3 class="text-lg font-semibold text-yellow-700 mb-3" data-i18n="dashRecurringRemaining">
+                            Ежемесячные (осталось)</h3>
+                        <p id="total-recurring-remaining" class="text-3xl sm:text-4xl font-bold text-yellow-600">0
+                            AZN</p>
+                    </div>
+                    <div class="stat-card card-gradient-red p-6 rounded-2xl shadow-lg">
+                        <h3 class="text-lg font-semibold text-red-700 mb-3" data-i18n="dashMonthlyExpenses">Расходы
+                            за месяц</h3>
+                        <p id="total-monthly-outflow" class="text-3xl sm:text-4xl font-bold text-red-600">0 AZN</p>
+                    </div>
+                    <div class="stat-card card-gradient-purple p-6 rounded-2xl shadow-lg">
+                        <h3 class="text-lg font-semibold text-purple-700 mb-3" data-i18n="dashTotalDebt">Остаток
+                            общего долга</h3>
+                        <p id="total-debt-remaining" class="text-3xl font-bold mt-2 text-orange-600">0 AZN</p>
+                    </div>
+                    <div class="stat-card bg-white p-6 rounded-lg shadow-sm">
+                        <h3 class="text-lg font-medium text-gray-500" data-i18n="dashTasksMonth">Осталось задач
+                            (месяц)</h3>
+                        <p id="tasks-remaining-month" class="text-3xl font-bold mt-2 text-indigo-600">0</p>
+                    </div>
+                    <div class="stat-card bg-white p-6 rounded-lg shadow-sm">
+                        <h3 class="text-lg font-medium text-gray-500" data-i18n="dashTasksYear">Осталось задач (год)
+                        </h3>
+                        <p id="tasks-remaining-year" class="text-3xl font-bold mt-2 text-purple-600">0</p>
+                    </div>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-sm">
+                    <h3 class="text-xl font-semibold mb-4" data-i18n="dashTopCategories">Топ категорий расходов</h3>
+                    <div class="max-h-96"><canvas id="expenses-chart"></canvas></div>
+                </div>
+            </div>
+        </div>
+
+        <div id="debts-page" class="page-content hidden">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-2xl font-semibold" data-i18n="debtsTitle">Общие долги</h2><button id="add-debt-btn"
+                    class="btn-primary bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition"
+                    data-i18n="addDebt">Добавить долг</button>
+            </div>
+            <div id="debts-loading" class="hidden"></div>
+            <div id="debts-table-wrapper"
+                class="bg-white rounded-lg shadow-sm overflow-x-auto md:bg-transparent md:shadow-none">
+                <table class="w-full text-sm text-left responsive-table">
+                    <thead class="bg-gray-50 text-xs text-gray-700 uppercase">
+                        <tr>
+                            <th class="px-6 py-3" data-i18n="debtName">Долг (Имя)</th>
+                            <th class="px-6 py-3" data-i18n="amount">Сумма</th>
+                            <th class="px-6 py-3" data-i18n="paid">Оплачено</th>
+                            <th class="px-6 py-3" data-i18n="remaining">Осталось</th>
+                            <th class="px-6 py-3" data-i18n="lastPaymentDate">Дата последней оплаты</th>
+                            <th class="px-6 py-3" data-i18n="comments">Комментарии</th>
+                            <th class="px-6 py-3" data-i18n="actions">Действия</th>
+                        </tr>
+                    </thead>
+                    <tbody id="debts-table"></tbody>
+                </table>
+            </div>
+            <div id="debts-empty" class="hidden"></div>
+        </div>
+
+        <div id="recurring-expenses-page" class="page-content hidden">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-2xl font-semibold"><span data-i18n="recurringTitle">Ежемесячные расходы</span>
+                    (<span id="recurring-month-name"></span>)</h2><button id="add-recurring-expense-btn"
+                    class="btn-primary bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition"
+                    data-i18n="addTemplate">Добавить шаблон</button>
+            </div>
+            <div id="recurring-expenses-loading" class="hidden"></div>
+            <div id="recurring-expenses-table-wrapper"
+                class="bg-white rounded-lg shadow-sm overflow-x-auto md:bg-transparent md:shadow-none">
+                <table class="w-full text-sm text-left responsive-table">
+                    <thead class="bg-gray-50 text-xs text-gray-700 uppercase">
+                        <tr>
+                            <th class="px-6 py-3" data-i18n="name">Наименование</th>
+                            <th class="px-6 py-3" data-i18n="amount">Сумма</th>
+                            <th class="px-6 py-3" data-i18n="paymentDay">День оплаты</th>
+                            <th class="px-6 py-3" data-i18n="status">Статус оплаты</th>
+                            <th class="px-6 py-3" data-i18n="details">Детали</th>
+                            <th class="px-6 py-3" data-i18n="templateActions">Действия с шаблоном</th>
+                        </tr>
+                    </thead>
+                    <tbody id="recurring-expenses-table"></tbody>
+                </table>
+            </div>
+            <div id="recurring-expenses-empty" class="hidden"></div>
+        </div>
+
+        <div id="expenses-page" class="page-content hidden">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-2xl font-semibold"><span data-i18n="expensesTitle">Все расходы за</span> <span
+                        class="current-month-name"></span></h2>
+                <div class="flex space-x-2"><button id="manage-categories-btn"
+                        class="bg-gray-200 text-gray-800 px-4 py-2 rounded-lg hover:bg-gray-300 transition"
+                        data-i18n="manageCategories">Управление категориями</button><button id="add-expense-btn"
                         class="btn-primary bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition"
-                        data-i18n="addDebt">Добавить долг</button>
+                        data-i18n="addExpense">Добавить расход</button></div>
+            </div>
+            <div id="expenses-loading" class="hidden"></div>
+            <div id="expenses-table-wrapper"
+                class="bg-white rounded-lg shadow-sm overflow-x-auto md:bg-transparent md:shadow-none">
+                <table class="w-full text-sm text-left responsive-table">
+                    <thead class="bg-gray-50 text-xs text-gray-700 uppercase">
+                        <tr>
+                            <th class="px-6 py-3" data-i18n="name">Наименование</th>
+                            <th class="px-6 py-3" data-i18n="category">Категория</th>
+                            <th class="px-6 py-3" data-i18n="amount">Сумма</th>
+                            <th class="px-6 py-3" data-i18n="date">Дата</th>
+                            <th class="px-6 py-3" data-i18n="actions">Действия</th>
+                        </tr>
+                    </thead>
+                    <tbody id="expenses-table"></tbody>
+                </table>
+            </div>
+            <div id="expenses-empty" class="hidden"></div>
+        </div>
+
+        <div id="tasks-page" class="page-content hidden">
+            <div class="mb-4 border-b border-gray-200">
+                <nav class="flex -mb-px" aria-label="Tabs"><button class="task-tab-button task-tab-active"
+                        data-task-tab="today"><span data-i18n="taskToday">На сегодня</span> (<span
+                            id="today-date"></span>)</button><button class="task-tab-button" data-task-tab="month"><span
+                            data-i18n="taskMonth">На месяц</span></button><button class="task-tab-button"
+                        data-task-tab="year"><span data-i18n="taskYear">На
+                            год</span></button></nav>
+            </div>
+            <div id="task-tab-today" class="task-tab-content">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-xl font-semibold" data-i18n="taskTodayTitle">Задачи на сегодня</h3><button
+                        id="add-daily-task-btn" class="btn-primary bg-blue-600 text-white px-4 py-2 rounded-lg"
+                        data-i18n="addTask">Добавить задачу</button>
                 </div>
-                <div id="debts-loading" class="hidden"></div>
-                <div id="debts-table-wrapper"
+                <div id="daily-tasks-table-wrapper"
                     class="bg-white rounded-lg shadow-sm overflow-x-auto md:bg-transparent md:shadow-none">
                     <table class="w-full text-sm text-left responsive-table">
                         <thead class="bg-gray-50 text-xs text-gray-700 uppercase">
                             <tr>
-                                <th class="px-6 py-3" data-i18n="debtName">Долг (Имя)</th>
-                                <th class="px-6 py-3" data-i18n="amount">Сумма</th>
-                                <th class="px-6 py-3" data-i18n="paid">Оплачено</th>
-                                <th class="px-6 py-3" data-i18n="remaining">Осталось</th>
-                                <th class="px-6 py-3" data-i18n="lastPaymentDate">Дата последней оплаты</th>
-                                <th class="px-6 py-3" data-i18n="comments">Комментарии</th>
+                                <th class="w-1/3 px-6 py-3" data-i18n="name">Имя</th>
+                                <th class="px-6 py-3" data-i18n="status">Статус</th>
+                                <th class="w-1/3 px-6 py-3" data-i18n="notes">Заметки</th>
                                 <th class="px-6 py-3" data-i18n="actions">Действия</th>
                             </tr>
                         </thead>
-                        <tbody id="debts-table"></tbody>
+                        <tbody id="daily-tasks-table"></tbody>
                     </table>
                 </div>
-                <div id="debts-empty" class="hidden"></div>
+                <div id="daily-tasks-empty" class="hidden"></div>
             </div>
-
-            <div id="recurring-expenses-page" class="page-content hidden">
+            <div id="task-tab-month" class="task-tab-content hidden">
                 <div class="flex justify-between items-center mb-4">
-                    <h2 class="text-2xl font-semibold"><span data-i18n="recurringTitle">Ежемесячные расходы</span>
-                        (<span id="recurring-month-name"></span>)</h2><button id="add-recurring-expense-btn"
-                        class="btn-primary bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition"
-                        data-i18n="addTemplate">Добавить шаблон</button>
+                    <h3 class="text-xl font-semibold" data-i18n="taskMonthTitle">Задачи на месяц</h3><button
+                        id="add-monthly-task-btn" class="btn-primary bg-blue-600 text-white px-4 py-2 rounded-lg"
+                        data-i18n="addTask">Добавить задачу</button>
                 </div>
-                <div id="recurring-expenses-loading" class="hidden"></div>
-                <div id="recurring-expenses-table-wrapper"
+                <div id="monthly-tasks-table-wrapper"
                     class="bg-white rounded-lg shadow-sm overflow-x-auto md:bg-transparent md:shadow-none">
                     <table class="w-full text-sm text-left responsive-table">
                         <thead class="bg-gray-50 text-xs text-gray-700 uppercase">
                             <tr>
-                                <th class="px-6 py-3" data-i18n="name">Наименование</th>
-                                <th class="px-6 py-3" data-i18n="amount">Сумма</th>
-                                <th class="px-6 py-3" data-i18n="paymentDay">День оплаты</th>
-                                <th class="px-6 py-3" data-i18n="status">Статус оплаты</th>
-                                <th class="px-6 py-3" data-i18n="details">Детали</th>
-                                <th class="px-6 py-3" data-i18n="templateActions">Действия с шаблоном</th>
-                            </tr>
-                        </thead>
-                        <tbody id="recurring-expenses-table"></tbody>
-                    </table>
-                </div>
-                <div id="recurring-expenses-empty" class="hidden"></div>
-            </div>
-
-            <div id="expenses-page" class="page-content hidden">
-                <div class="flex justify-between items-center mb-4">
-                    <h2 class="text-2xl font-semibold"><span data-i18n="expensesTitle">Все расходы за</span> <span
-                            class="current-month-name"></span></h2>
-                    <div class="flex space-x-2"><button id="manage-categories-btn"
-                            class="bg-gray-200 text-gray-800 px-4 py-2 rounded-lg hover:bg-gray-300 transition"
-                            data-i18n="manageCategories">Управление категориями</button><button id="add-expense-btn"
-                            class="btn-primary bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition"
-                            data-i18n="addExpense">Добавить расход</button></div>
-                </div>
-                <div id="expenses-loading" class="hidden"></div>
-                <div id="expenses-table-wrapper"
-                    class="bg-white rounded-lg shadow-sm overflow-x-auto md:bg-transparent md:shadow-none">
-                    <table class="w-full text-sm text-left responsive-table">
-                        <thead class="bg-gray-50 text-xs text-gray-700 uppercase">
-                            <tr>
-                                <th class="px-6 py-3" data-i18n="name">Наименование</th>
-                                <th class="px-6 py-3" data-i18n="category">Категория</th>
-                                <th class="px-6 py-3" data-i18n="amount">Сумма</th>
-                                <th class="px-6 py-3" data-i18n="date">Дата</th>
+                                <th class="px-6 py-3" data-i18n="name">Имя</th>
+                                <th class="px-6 py-3" data-i18n="deadline">Дедлайн</th>
+                                <th class="px-6 py-3" data-i18n="status">Статус</th>
                                 <th class="px-6 py-3" data-i18n="actions">Действия</th>
                             </tr>
                         </thead>
-                        <tbody id="expenses-table"></tbody>
+                        <tbody id="monthly-tasks-table"></tbody>
                     </table>
                 </div>
-                <div id="expenses-empty" class="hidden"></div>
+                <div id="monthly-tasks-empty" class="hidden"></div>
             </div>
-
-            <div id="tasks-page" class="page-content hidden">
-                <div class="mb-4 border-b border-gray-200">
-                    <nav class="flex -mb-px" aria-label="Tabs"><button class="task-tab-button task-tab-active"
-                            data-task-tab="today"><span data-i18n="taskToday">На сегодня</span> (<span
-                                id="today-date"></span>)</button><button class="task-tab-button"
-                            data-task-tab="month"><span data-i18n="taskMonth">На месяц</span></button><button
-                            class="task-tab-button" data-task-tab="year"><span data-i18n="taskYear">На
-                                год</span></button></nav>
+            <div id="task-tab-year" class="task-tab-content hidden">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-xl font-semibold" data-i18n="taskYearTitle">Задачи на год</h3><button
+                        id="add-yearly-task-btn" class="btn-primary bg-blue-600 text-white px-4 py-2 rounded-lg"
+                        data-i18n="addTask">Добавить задачу</button>
                 </div>
-                <div id="task-tab-today" class="task-tab-content">
-                    <div class="flex justify-between items-center mb-4">
-                        <h3 class="text-xl font-semibold" data-i18n="taskTodayTitle">Задачи на сегодня</h3><button
-                            id="add-daily-task-btn" class="btn-primary bg-blue-600 text-white px-4 py-2 rounded-lg"
-                            data-i18n="addTask">Добавить задачу</button>
-                    </div>
-                    <div id="daily-tasks-table-wrapper"
-                        class="bg-white rounded-lg shadow-sm overflow-x-auto md:bg-transparent md:shadow-none">
-                        <table class="w-full text-sm text-left responsive-table">
-                            <thead class="bg-gray-50 text-xs text-gray-700 uppercase">
-                                <tr>
-                                    <th class="w-1/3 px-6 py-3" data-i18n="name">Имя</th>
-                                    <th class="px-6 py-3" data-i18n="status">Статус</th>
-                                    <th class="w-1/3 px-6 py-3" data-i18n="notes">Заметки</th>
-                                    <th class="px-6 py-3" data-i18n="actions">Действия</th>
-                                </tr>
-                            </thead>
-                            <tbody id="daily-tasks-table"></tbody>
-                        </table>
-                    </div>
-                    <div id="daily-tasks-empty" class="hidden"></div>
+                <div id="yearly-tasks-table-wrapper"
+                    class="bg-white rounded-lg shadow-sm overflow-x-auto md:bg-transparent md:shadow-none">
+                    <table class="w-full text-sm text-left responsive-table">
+                        <thead class="bg-gray-50 text-xs text-gray-700 uppercase">
+                            <tr>
+                                <th class="w-1/3 px-6 py-3" data-i18n="name">Имя</th>
+                                <th class="px-6 py-3" data-i18n="deadline">Дедлайн</th>
+                                <th class="px-6 py-3" data-i18n="status">Статус</th>
+                                <th class="w-1/3 px-6 py-3" data-i18n="notes">Заметки</th>
+                                <th class="px-6 py-3" data-i18n="actions">Действия</th>
+                            </tr>
+                        </thead>
+                        <tbody id="yearly-tasks-table"></tbody>
+                    </table>
                 </div>
-                <div id="task-tab-month" class="task-tab-content hidden">
-                    <div class="flex justify-between items-center mb-4">
-                        <h3 class="text-xl font-semibold" data-i18n="taskMonthTitle">Задачи на месяц</h3><button
-                            id="add-monthly-task-btn" class="btn-primary bg-blue-600 text-white px-4 py-2 rounded-lg"
-                            data-i18n="addTask">Добавить задачу</button>
-                    </div>
-                    <div id="monthly-tasks-table-wrapper"
-                        class="bg-white rounded-lg shadow-sm overflow-x-auto md:bg-transparent md:shadow-none">
-                        <table class="w-full text-sm text-left responsive-table">
-                            <thead class="bg-gray-50 text-xs text-gray-700 uppercase">
-                                <tr>
-                                    <th class="px-6 py-3" data-i18n="name">Имя</th>
-                                    <th class="px-6 py-3" data-i18n="deadline">Дедлайн</th>
-                                    <th class="px-6 py-3" data-i18n="status">Статус</th>
-                                    <th class="px-6 py-3" data-i18n="actions">Действия</th>
-                                </tr>
-                            </thead>
-                            <tbody id="monthly-tasks-table"></tbody>
-                        </table>
-                    </div>
-                    <div id="monthly-tasks-empty" class="hidden"></div>
-                </div>
-                <div id="task-tab-year" class="task-tab-content hidden">
-                    <div class="flex justify-between items-center mb-4">
-                        <h3 class="text-xl font-semibold" data-i18n="taskYearTitle">Задачи на год</h3><button
-                            id="add-yearly-task-btn" class="btn-primary bg-blue-600 text-white px-4 py-2 rounded-lg"
-                            data-i18n="addTask">Добавить задачу</button>
-                    </div>
-                    <div id="yearly-tasks-table-wrapper"
-                        class="bg-white rounded-lg shadow-sm overflow-x-auto md:bg-transparent md:shadow-none">
-                        <table class="w-full text-sm text-left responsive-table">
-                            <thead class="bg-gray-50 text-xs text-gray-700 uppercase">
-                                <tr>
-                                    <th class="w-1/3 px-6 py-3" data-i18n="name">Имя</th>
-                                    <th class="px-6 py-3" data-i18n="deadline">Дедлайн</th>
-                                    <th class="px-6 py-3" data-i18n="status">Статус</th>
-                                    <th class="w-1/3 px-6 py-3" data-i18n="notes">Заметки</th>
-                                    <th class="px-6 py-3" data-i18n="actions">Действия</th>
-                                </tr>
-                            </thead>
-                            <tbody id="yearly-tasks-table"></tbody>
-                        </table>
-                    </div>
-                    <div id="yearly-tasks-empty" class="hidden"></div>
-                </div>
+                <div id="yearly-tasks-empty" class="hidden"></div>
             </div>
+        </div>
 
-            <div id="calendar-page" class="page-content hidden">
-                <div class="bg-white rounded-lg shadow-sm p-4">
-                    <div class="flex justify-between items-center mb-4"><button id="prev-month-btn"
-                            class="p-2 rounded-full hover:bg-gray-100" aria-label="Previous month">&lt;</button>
-                        <h2 id="calendar-month-year" class="text-xl font-semibold"></h2><button id="next-month-btn"
-                            class="p-2 rounded-full hover:bg-gray-100" aria-label="Next month">&gt;</button>
-                    </div>
-                    <div id="calendar-weekdays"
-                        class="grid grid-cols-7 gap-1 text-center font-semibold text-gray-600 text-sm mb-2"></div>
-                    <div id="calendar-grid" class="grid grid-cols-7 gap-1"></div>
+        <div id="calendar-page" class="page-content hidden">
+            <div class="bg-white rounded-lg shadow-sm p-4">
+                <div class="flex justify-between items-center mb-4"><button id="prev-month-btn"
+                        class="p-2 rounded-full hover:bg-gray-100" aria-label="Previous month">&lt;</button>
+                    <h2 id="calendar-month-year" class="text-xl font-semibold"></h2><button id="next-month-btn"
+                        class="p-2 rounded-full hover:bg-gray-100" aria-label="Next month">&gt;</button>
                 </div>
+                <div id="calendar-weekdays"
+                    class="grid grid-cols-7 gap-1 text-center font-semibold text-gray-600 text-sm mb-2"></div>
+                <div id="calendar-grid" class="grid grid-cols-7 gap-1"></div>
             </div>
+        </div>
 
-            <div id="payments-page" class="page-content hidden">
-                <iframe src="https://hesab.az/" class="w-full h-screen border-0"></iframe>
-            </div>
+        <div id="payments-page" class="page-content hidden">
+            <iframe src="https://hesab.az/" class="w-full h-screen border-0"></iframe>
+        </div>
 
-        </main>
+    </main>
     </div>
 
     <!-- Модальные окна -->
@@ -1576,19 +1772,50 @@
         function isValidDate(dateString) {
             if (!dateString) return false;
 
-            // Check format YYYY-MM-DD
-            const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
-            if (!dateRegex.test(dateString)) return false;
+            // Try to parse the date - be more flexible for mobile browsers
+            try {
+                // Check format YYYY-MM-DD
+                const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
+                if (!dateRegex.test(dateString)) {
+                    console.warn('Date format mismatch:', dateString);
+                    // Try to convert if it's in another format
+                    const date = new Date(dateString);
+                    if (!isNaN(date.getTime())) {
+                        // Date is valid, just in different format
+                        return true;
+                    }
+                    return false;
+                }
 
-            // Check if it's a valid date
-            const date = new Date(dateString);
-            if (isNaN(date.getTime())) return false;
+                // Check if it's a valid date
+                const date = new Date(dateString + 'T00:00:00');
+                if (isNaN(date.getTime())) return false;
 
-            // Check if the date components match (prevents invalid dates like 2024-02-30)
-            const [year, month, day] = dateString.split('-').map(Number);
-            return date.getFullYear() === year &&
-                date.getMonth() === month - 1 &&
-                date.getDate() === day;
+                // Check if the date components match (prevents invalid dates like 2024-02-30)
+                const [year, month, day] = dateString.split('-').map(Number);
+                return date.getFullYear() === year &&
+                    date.getMonth() === month - 1 &&
+                    date.getDate() === day;
+            } catch (error) {
+                console.error('Date validation error:', error);
+                return false;
+            }
+        }
+
+        // Helper function to normalize date to YYYY-MM-DD format
+        function normalizeDateString(dateString) {
+            if (!dateString) return null;
+            try {
+                const date = new Date(dateString);
+                if (isNaN(date.getTime())) return null;
+                const year = date.getFullYear();
+                const month = String(date.getMonth() + 1).padStart(2, '0');
+                const day = String(date.getDate()).padStart(2, '0');
+                return `${year}-${month}-${day}`;
+            } catch (error) {
+                console.error('Date normalization error:', error);
+                return null;
+            }
         }
 
         let currentLang = localStorage.getItem('appLanguage') || 'ru';
@@ -1950,6 +2177,8 @@
                     updateDateTime();
                     if (dateTimeInterval) clearInterval(dateTimeInterval);
                     dateTimeInterval = setInterval(updateDateTime, 60000);
+                    // Load weather after authentication
+                    loadWeather();
                 } else { showLoginScreen(); }
             });
         }
@@ -3157,9 +3386,17 @@
                     return;
                 }
 
-                // Validate date
-                if (!dateValue || !isValidDate(dateValue)) {
+                // Validate and normalize date
+                if (!dateValue) {
+                    showToast(translations[currentLang].errorRequiredField || 'This field is required', 'error');
+                    form.querySelector('#expense-date').focus();
+                    return;
+                }
+
+                const normalizedDate = normalizeDateString(dateValue);
+                if (!normalizedDate || !isValidDate(normalizedDate)) {
                     showToast(translations[currentLang].errorInvalidDate || 'Invalid date format', 'error');
+                    console.error('Date validation failed:', { dateValue, normalizedDate });
                     return;
                 }
 
@@ -3167,7 +3404,7 @@
                     name,
                     category,
                     amount,
-                    date: dateValue,
+                    date: normalizedDate,
                 };
                 const newMonthId = expenseData.date.slice(0, 7);
 
@@ -3506,41 +3743,67 @@
 
         // Weather Widget Logic
         async function loadWeather() {
+            console.log('🌤️ Loading weather...');
             try {
                 // Get user's location
                 if ('geolocation' in navigator) {
+                    console.log('📍 Requesting geolocation...');
                     navigator.geolocation.getCurrentPosition(async (position) => {
+                        console.log('✅ Geolocation received:', position.coords);
                         const { latitude, longitude } = position.coords;
 
-                        // Use Open-Meteo API (free, no API key needed)
-                        const weatherResponse = await fetch(
-                            `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current_weather=true`
-                        );
-                        const weatherData = await weatherResponse.json();
+                        try {
+                            // Use Open-Meteo API (free, no API key needed)
+                            console.log('🌡️ Fetching weather data...');
+                            const weatherResponse = await fetch(
+                                `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current_weather=true`
+                            );
+                            const weatherData = await weatherResponse.json();
+                            console.log('✅ Weather data received:', weatherData);
 
-                        // Get location name using reverse geocoding
-                        const locationResponse = await fetch(
-                            `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`
-                        );
-                        const locationData = await locationResponse.json();
+                            // Get location name using reverse geocoding
+                            console.log('📍 Fetching location name...');
+                            const locationResponse = await fetch(
+                                `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`
+                            );
+                            const locationData = await locationResponse.json();
+                            console.log('✅ Location data received:', locationData);
 
-                        // Update UI
-                        const temp = Math.round(weatherData.current_weather.temperature);
-                        const weatherCode = weatherData.current_weather.weathercode;
-                        const city = locationData.address.city || locationData.address.town || locationData.address.village || 'Unknown';
+                            // Update UI
+                            const temp = Math.round(weatherData.current_weather.temperature);
+                            const weatherCode = weatherData.current_weather.weathercode;
+                            const city = locationData.address.city || locationData.address.town || locationData.address.village || 'Unknown';
 
-                        document.getElementById('weather-temp').textContent = `${temp}°C`;
-                        document.getElementById('weather-location').textContent = city;
-                        document.getElementById('weather-icon').textContent = getWeatherEmoji(weatherCode);
-                        document.getElementById('weather-widget').classList.remove('hidden');
+                            document.getElementById('weather-temp').textContent = `${temp}°C`;
+                            document.getElementById('weather-location').textContent = city;
+                            document.getElementById('weather-icon').textContent = getWeatherEmoji(weatherCode);
+                            document.getElementById('weather-widget').classList.remove('hidden');
+                            console.log('✅ Weather widget displayed');
+                        } catch (fetchError) {
+                            console.error('❌ Error fetching weather data:', fetchError);
+                            document.getElementById('weather-location').textContent = 'Ошибка загрузки';
+                            document.getElementById('weather-widget').classList.remove('hidden');
+                        }
                     }, (error) => {
-                        console.log('Geolocation error:', error);
-                        document.getElementById('weather-location').textContent = 'Местоположение недоступно';
+                        console.error('❌ Geolocation error:', error);
+                        console.log('ℹ️ Error code:', error.code, 'Message:', error.message);
+                        if (error.code === 1) {
+                            console.log('⚠️ User denied geolocation permission');
+                            document.getElementById('weather-location').textContent = 'Доступ запрещен';
+                        } else {
+                            document.getElementById('weather-location').textContent = 'Местоположение недоступно';
+                        }
+                        document.getElementById('weather-widget').classList.remove('hidden');
                     });
+                } else {
+                    console.warn('⚠️ Geolocation not supported');
+                    document.getElementById('weather-location').textContent = 'Не поддерживается';
+                    document.getElementById('weather-widget').classList.remove('hidden');
                 }
             } catch (error) {
-                console.error('Weather error:', error);
+                console.error('❌ Weather error:', error);
                 document.getElementById('weather-location').textContent = 'Ошибка загрузки';
+                document.getElementById('weather-widget').classList.remove('hidden');
             }
         }
 
@@ -3557,10 +3820,8 @@
             return '🌤️';
         }
 
-        // Load weather on app start
-        if (userId) {
-            loadWeather();
-        }
+        // Load weather on app start - call after user is authenticated
+        // This will be called in onAuthStateChanged
 
         // Music Player Tabs Logic
         const musicTabRadio = document.getElementById('music-tab-radio');
@@ -3587,19 +3848,24 @@
         });
 
         // Spotify Web Player Logic
-        const SPOTIFY_CLIENT_ID = 'YOUR_SPOTIFY_CLIENT_ID'; // User needs to create Spotify app
+        const SPOTIFY_CLIENT_ID = ''; // Leave empty - user needs to create Spotify app and add Client ID here
         const SPOTIFY_REDIRECT_URI = window.location.origin + window.location.pathname;
         let spotifyAccessToken = localStorage.getItem('spotify_access_token');
         let spotifyPlayer = null;
 
         document.getElementById('spotify-login-btn').addEventListener('click', () => {
+            if (!SPOTIFY_CLIENT_ID || SPOTIFY_CLIENT_ID === 'YOUR_SPOTIFY_CLIENT_ID') {
+                showToast('Spotify не настроен. Откройте НОВЫЕ_ФУНКЦИИ_v2.1.0.md для инструкций.', 'error');
+                console.log('📖 Инструкция по настройке Spotify: откройте файл НОВЫЕ_ФУНКЦИИ_v2.1.0.md');
+                return;
+            }
             const scopes = 'streaming user-read-email user-read-private user-read-playback-state user-modify-playback-state';
             const authUrl = `https://accounts.spotify.com/authorize?client_id=${SPOTIFY_CLIENT_ID}&response_type=token&redirect_uri=${encodeURIComponent(SPOTIFY_REDIRECT_URI)}&scope=${encodeURIComponent(scopes)}`;
             window.location.href = authUrl;
         });
 
         // Check for Spotify token in URL
-        if (window.location.hash) {
+        if (window.location.hash && SPOTIFY_CLIENT_ID && SPOTIFY_CLIENT_ID !== 'YOUR_SPOTIFY_CLIENT_ID') {
             const params = new URLSearchParams(window.location.hash.substring(1));
             const token = params.get('access_token');
             if (token) {
@@ -3610,7 +3876,7 @@
             }
         }
 
-        if (spotifyAccessToken) {
+        if (spotifyAccessToken && SPOTIFY_CLIENT_ID && SPOTIFY_CLIENT_ID !== 'YOUR_SPOTIFY_CLIENT_ID') {
             initSpotifyPlayer();
         }
 
