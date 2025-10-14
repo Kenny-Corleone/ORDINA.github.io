@@ -2513,6 +2513,14 @@
                     updateDateTime();
                     if (dateTimeInterval) clearInterval(dateTimeInterval);
                     dateTimeInterval = setInterval(updateDateTime, 60000);
+                    
+                    // Принудительно загружаем все данные
+                    console.log('[ORDINA] Loading all data...');
+                    updateDashboard();
+                    renderCalendar();
+                    loadWeather();
+                    loadNews();
+                    console.log('[ORDINA] All data loaded successfully');
                 } else { showLoginScreen(); }
             });
         }
@@ -3259,25 +3267,14 @@
 
         // Обработчики кнопок Spotify (компактные)
         Utils.safeAddEventListener('spotify-compact-connect-btn', 'click', () => {
-            // Spotify требует настройки Client ID
-            const clientId = 'YOUR_CLIENT_ID'; // Замените на реальный Client ID
+            // Открываем Spotify Web Player в новой вкладке
+            // Каждый пользователь может войти в свой аккаунт
+            window.open('https://open.spotify.com/', '_blank');
             
-            if (clientId === 'YOUR_CLIENT_ID') {
-                // Показываем уведомление что нужна настройка
-                if (window.notificationSystem) {
-                    window.notificationSystem.show('Spotify требует настройки Client ID. См. документацию.', 'info');
-                } else {
-                    alert('Spotify требует настройки Client ID.\n\nИнструкция:\n1. Зарегистрируйтесь на https://developer.spotify.com\n2. Создайте приложение\n3. Замените YOUR_CLIENT_ID в коде');
-                }
-                return;
+            // Показываем уведомление
+            if (window.notificationSystem) {
+                window.notificationSystem.show('Spotify открыт в новой вкладке. Войдите в свой аккаунт.', 'success');
             }
-            
-            const redirectUri = window.location.origin + window.location.pathname;
-            const scopes = 'streaming user-read-email user-read-private user-read-playback-state user-modify-playback-state';
-            
-            const authUrl = `https://accounts.spotify.com/authorize?client_id=${clientId}&response_type=token&redirect_uri=${encodeURIComponent(redirectUri)}&scope=${encodeURIComponent(scopes)}`;
-            
-            window.location.href = authUrl;
         });
 
         Utils.safeAddEventListener('spotify-compact-play-pause', 'click', () => {

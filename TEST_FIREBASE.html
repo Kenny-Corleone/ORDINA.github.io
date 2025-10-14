@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Тест Firebase</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #f3f4f6;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .status {
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 8px;
+            border-left: 4px solid;
+        }
+        .success { background: #d1fae5; border-color: #10b981; color: #065f46; }
+        .error { background: #fee2e2; border-color: #ef4444; color: #991b1b; }
+        .info { background: #dbeafe; border-color: #3b82f6; color: #1e40af; }
+        button {
+            background: #3b82f6;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover { background: #2563eb; }
+        .code {
+            background: #1f2937;
+            color: #f3f4f6;
+            padding: 15px;
+            border-radius: 8px;
+            overflow-x: auto;
+            font-family: monospace;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔥 Тест Firebase</h1>
+        <p>Проверка подключения к Firebase</p>
+        
+        <button onclick="testFirebase()">▶️ Тестировать Firebase</button>
+        <button onclick="testAuth()">🔐 Тестировать Auth</button>
+        <button onclick="location.href='./index.html'">🏠 Вернуться</button>
+        
+        <div id="results"></div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDi0cFirxRJ9eC6mvy1WEDpB9MPzDDac3g",
+            authDomain: "life-order-assistant.firebaseapp.com",
+            projectId: "life-order-assistant",
+            storageBucket: "life-order-assistant.firebasestorage.app",
+            messagingSenderId: "1027088088088",
+            appId: "1:1027088088088:web:e0e0e0e0e0e0e0e0e0e0e0"
+        };
+
+        let app, db, auth;
+
+        window.testFirebase = async function() {
+            const results = document.getElementById('results');
+            results.innerHTML = '<h2>Результаты теста Firebase:</h2>';
+            
+            try {
+                // 1. Инициализация
+                addResult('Инициализация Firebase', 'Попытка...', 'info');
+                app = initializeApp(firebaseConfig);
+                addResult('Инициализация Firebase', '✅ Успешно', 'success');
+                
+                // 2. Firestore
+                addResult('Подключение Firestore', 'Попытка...', 'info');
+                db = getFirestore(app);
+                addResult('Подключение Firestore', '✅ Успешно', 'success');
+                
+                // 3. Auth
+                addResult('Подключение Auth', 'Попытка...', 'info');
+                auth = getAuth(app);
+                addResult('Подключение Auth', '✅ Успешно', 'success');
+                
+                addResult('Итог', '✅ Firebase работает!', 'success');
+                
+            } catch (e) {
+                addResult('Ошибка', e.message, 'error');
+                console.error('Firebase error:', e);
+            }
+        };
+
+        window.testAuth = function() {
+            if (!auth) {
+                addResult('Auth', 'Сначала запустите тест Firebase', 'error');
+                return;
+            }
+            
+            const results = document.getElementById('results');
+            results.innerHTML = '<h2>Результаты теста Auth:</h2>';
+            
+            onAuthStateChanged(auth, (user) => {
+                if (user) {
+                    addResult('Пользователь', `✅ Вошел: ${user.email}`, 'success');
+                    addResult('User ID', user.uid, 'info');
+                    
+                    // Тест чтения данных
+                    testReadData(user.uid);
+                } else {
+                    addResult('Пользователь', '❌ Не вошел', 'error');
+                    addResult('Решение', 'Войдите через главную страницу', 'info');
+                }
+            });
+        };
+
+        async function testReadData(userId) {
+            try {
+                addResult('Чтение данных', 'Попытка...', 'info');
+                
+                const debtsCol = collection(db, `users/${userId}/debts`);
+                const snapshot = await getDocs(debtsCol);
+                
+                addResult('Долги', `Найдено: ${snapshot.size} записей`, 'success');
+                
+                if (snapshot.size > 0) {
+                    snapshot.forEach(doc => {
+                        addResult(`Долг: ${doc.id}`, JSON.stringify(doc.data()), 'info');
+                    });
+                }
+                
+            } catch (e) {
+                addResult('Ошибка чтения', e.message, 'error');
+                console.error('Read error:', e);
+            }
+        }
+
+        function addResult(title, message, type) {
+            const results = document.getElementById('results');
+            const div = document.createElement('div');
+            div.className = `status ${type}`;
+            div.innerHTML = `<strong>${title}:</strong> ${message}`;
+            results.appendChild(div);
+        }
+
+        // Автотест при загрузке
+        window.addEventListener('load', () => {
+            testFirebase();
+        });
+    </script>
+</body>
+</html>
