@@ -2311,7 +2311,12 @@
         const authContainer = document.getElementById('auth-container');
         const appContainer = document.getElementById('app');
         function showLoginScreen() { loadingOverlay.classList.add('hidden'); authContainer.classList.remove('hidden'); appContainer.classList.add('hidden'); }
-        function showApp() { authContainer.classList.add('hidden'); appContainer.classList.remove('hidden'); }
+        function showApp() { 
+            loadingOverlay.classList.add('hidden'); 
+            authContainer.classList.add('hidden'); 
+            appContainer.classList.remove('hidden'); 
+            appContainer.classList.remove('opacity-0');
+        }
 
         async function setupDefaultData(user) {
             const categoriesRef = collection(db, `users/${user.uid}/categories`);
@@ -2619,6 +2624,15 @@
 
         const tabs = document.querySelectorAll('.tab-button');
         const taskTabs = document.querySelectorAll('.task-tab-button');
+        
+        // Глобальная функция переключения вкладок
+        window.switchTab = function(tabName) {
+            const tab = document.querySelector(`.tab-button[data-tab="${tabName}"]`);
+            if (tab) {
+                tab.click();
+            }
+        };
+        
         tabs.forEach(tab => tab.addEventListener('click', () => {
             // Обновляем классы
             tabs.forEach(t => t.classList.remove('tab-active'));
@@ -2640,10 +2654,15 @@
             if (!userId) return;
             detachListeners();
             setupCollections();
-            unsubscribes.push(onSnapshot(query(debtsCol), s => { allDebts = s.docs; renderDebts(allDebts); updateDashboard(); }));
-            unsubscribes.push(onSnapshot(query(expensesCol), s => { allExpenses = s.docs; renderExpenses(allExpenses); updateDashboard(); }));
-            unsubscribes.push(onSnapshot(query(recurringExpensesCol), s => { allRecurringTemplates = s.docs.map(d => ({ id: d.id, ...d.data() })); renderRecurringExpenses(); updateDashboard(); }));
-            unsubscribes.push(onSnapshot(query(recurringExpenseStatusesCol), s => { currentMonthStatuses = {}; s.docs.forEach(d => { currentMonthStatuses[d.id] = d.data().status; }); renderRecurringExpenses(); updateDashboard(); }));
+            
+            // Сначала загружаем данные один раз
+            loadInitialData();
+            
+            // Потом подписываемся на обновления
+            unsubscribes.push(onSnapshot(query(debtsCol), s => { allDebts = s.docs; renderDebts(allDebts); updateDashboard(); }, err => console.error('Debts snapshot error:', err)));
+            unsubscribes.push(onSnapshot(query(expensesCol), s => { allExpenses = s.docs; renderExpenses(allExpenses); updateDashboard(); }, err => console.error('Expenses snapshot error:', err)));
+            unsubscribes.push(onSnapshot(query(recurringExpensesCol), s => { allRecurringTemplates = s.docs.map(d => ({ id: d.id, ...d.data() })); renderRecurringExpenses(); updateDashboard(); }, err => console.error('Recurring snapshot error:', err)));
+            unsubscribes.push(onSnapshot(query(recurringExpenseStatusesCol), s => { currentMonthStatuses = {}; s.docs.forEach(d => { currentMonthStatuses[d.id] = d.data().status; }); renderRecurringExpenses(); updateDashboard(); }, err => console.error('Statuses snapshot error:', err)));
             unsubscribes.push(onSnapshot(query(monthlyDataCol), s => { const m = s.docs.map(d => d.id); if (!m.includes(currentMonthId)) m.push(currentMonthId); m.sort().reverse(); renderMonthSelector(m); }));
             unsubscribes.push(onSnapshot(query(categoriesCol), s => { const categories = s.docs.map(d => ({ id: d.id, ...d.data() })); renderCategoryDatalist(s.docs); renderCategories(categories); }));
             unsubscribes.push(onSnapshot(query(dailyTasksCol), s => { dailyTasks = s.docs.map(d => ({ id: d.id, ...d.data() })); renderDailyTasks(dailyTasks); }));
@@ -2653,6 +2672,64 @@
         }
 
         function detachListeners() { unsubscribes.forEach(unsub => unsub()); unsubscribes = []; }
+        
+        async function loadInitialData() {
+            try {
+                console.log('[ORDINA] Loading initial data...');
+                
+                // Загружаем долги
+                const debtsSnapshot = await getDocs(query(debtsCol));
+                allDebts = debtsSnapshot.docs;
+                renderDebts(allDebts);
+                
+                // Загружаем расходы
+                const expensesSnapshot = await getDocs(query(expensesCol));
+                allExpenses = expensesSnapshot.docs;
+                renderExpenses(allExpenses);
+                
+                // Загружаем шаблоны
+                const recurringSnapshot = await getDocs(query(recurringExpensesCol));
+                allRecurringTemplates = recurringSnapshot.docs.map(d => ({ id: d.id, ...d.data() }));
+                
+                // Загружаем статусы
+                const statusesSnapshot = await getDocs(query(recurringExpenseStatusesCol));
+                currentMonthStatuses = {};
+                statusesSnapshot.docs.forEach(d => { currentMonthStatuses[d.id] = d.data().status; });
+                renderRecurringExpenses();
+                
+                // Загружаем задачи
+                const dailySnapshot = await getDocs(query(dailyTasksCol));
+                dailyTasks = dailySnapshot.docs.map(d => ({ id: d.id, ...d.data() }));
+                renderDailyTasks(dailyTasks);
+                
+                const monthlySnapshot = await getDocs(query(monthlyTasksCol, where("month", "==", selectedMonthId)));
+                monthlyTasks = monthlySnapshot.docs.map(d => ({ id: d.id, ...d.data() }));
+                renderMonthlyTasks(monthlyTasks);
+                
+                const yearlySnapshot = await getDocs(query(yearlyTasksCol, where("year", "==", calendarDate.getFullYear())));
+                yearlyTasks = yearlySnapshot.docs.map(d => ({ id: d.id, ...d.data() }));
+                renderYearlyTasks(yearlyTasks);
+                
+                // Загружаем события календаря
+                const eventsSnapshot = await getDocs(query(calendarEventsCol));
+                calendarEvents = eventsSnapshot.docs.map(d => ({ id: d.id, ...d.data() }));
+                renderCalendar();
+                
+                // Загружаем категории
+                const categoriesSnapshot = await getDocs(query(categoriesCol));
+                const categories = categoriesSnapshot.docs.map(d => ({ id: d.id, ...d.data() }));
+                renderCategoryDatalist(categoriesSnapshot.docs);
+                renderCategories(categories);
+                
+                // Обновляем дашборд
+                updateDashboard();
+                
+                console.log('[ORDINA] Initial data loaded successfully');
+            } catch (error) {
+                console.error('[ORDINA] Error loading initial data:', error);
+                alert('Ошибка загрузки данных. Проверьте подключение к интернету и отключите блокировщик рекламы для этого сайта.');
+            }
+        }
         function formatCurrency(amount) { if (typeof amount !== 'number') amount = 0; const value = currentCurrency === 'USD' ? amount / exchangeRate : amount; const symbol = currentCurrency === 'USD' ? '$' : 'AZN'; return `${value.toFixed(2)} ${symbol}`; }
         function renderCategoryDatalist(docs) { const datalist = document.getElementById('expense-categories-list'); datalist.innerHTML = docs.filter(doc => doc.data().lang === currentLang).map(doc => `<option value="${doc.data().name}"></option>`).join(''); }
         function renderCategories(categories) { const list = document.getElementById('category-list'); if (!list) return; const langCategories = categories.filter(c => c.lang === currentLang); list.innerHTML = langCategories.map(cat => `<div class="flex justify-between items-center p-2 bg-gray-100 rounded-lg"><span>${cat.name}</span><button data-id="${cat.id}" class="delete-category-btn text-red-500 hover:text-red-700">🗑️</button></div>`).join(''); }
