@@ -1,15 +1,12 @@
 // Service Worker для ORDINA PWA
-// Версия: 2.3.2
+// Версия: 2.3.4
 
-const CACHE_NAME = 'ordina-v2.3.2';
+const CACHE_NAME = 'ordina-v2.3.4';
 const urlsToCache = [
     './',
     './index.html',
-    './manifest.json',
-    'https://cdn.tailwindcss.com',
-    'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap',
-    'https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.1/chart.min.js',
-    'https://raw.githubusercontent.com/Kenny-Corleone/ORDINA.github.io/main/logo%20ORDINA.png'
+    './manifest.json'
+    // CDN ресурсы не кэшируем из-за CORS
 ];
 
 // Установка Service Worker
@@ -46,38 +43,48 @@ self.addEventListener('activate', event => {
     self.clients.claim();
 });
 
-// Fetch - стратегия Network First, fallback to Cache
+// Fetch - минимальная стратегия, только для офлайн
 self.addEventListener('fetch', event => {
+    const url = new URL(event.request.url);
+    
+    // Игнорируем все кроме GET запросов
+    if (event.request.method !== 'GET') {
+        return;
+    }
+    
+    // Игнорируем сторонние домены полностью
+    const blockedDomains = ['hesab.az', 'facebook.net', 'adroll.com', 'hotjar.com', 'cdn.tailwindcss.com'];
+    if (blockedDomains.some(domain => url.hostname.includes(domain))) {
+        return;
+    }
+    
+    // Игнорируем все внешние ресурсы (CDN и т.д.)
+    if (url.origin !== self.location.origin) {
+        return;
+    }
+    
+    // Обрабатываем только свои ресурсы
     event.respondWith(
         fetch(event.request)
             .then(response => {
-                // Клонируем ответ
-                const responseToCache = response.clone();
-                
-                // Кэшируем успешные ответы
-                if (response.status === 200) {
-                    caches.open(CACHE_NAME)
-                        .then(cache => {
-                            cache.put(event.request, responseToCache);
-                        });
-                }
-                
+                // Просто возвращаем ответ, не кэшируем
                 return response;
             })
             .catch(() => {
-                // Если сеть недоступна, пробуем кэш
+                // Офлайн - пробуем кэш
                 return caches.match(event.request)
                     .then(response => {
                         if (response) {
                             return response;
                         }
                         
-                        // Если в кэше нет, возвращаем базовую страницу
+                        // Для навигации возвращаем index.html
                         if (event.request.mode === 'navigate') {
                             return caches.match('./index.html');
                         }
                         
-                        return new Response('Offline - resource not available', {
+                        // Для остального - 503
+                        return new Response('Offline', {
                             status: 503,
                             statusText: 'Service Unavailable'
                         });

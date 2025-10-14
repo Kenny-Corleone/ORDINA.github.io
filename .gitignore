@@ -1,0 +1,39 @@
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Logs
+*.log
+npm-debug.log*
+
+# Temporary files
+*.tmp
+*.temp
+.cache/
+
+# Backup files
+*.backup
+*.bak
+*~
+
+# Node (если будет использоваться)
+node_modules/
+package-lock.json
+yarn.lock
+
+# Environment variables (если будут)
+.env
+.env.local
+.env.production
+
+# Build (если будет сборка)
+dist/
+build/
