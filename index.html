@@ -3259,8 +3259,19 @@
 
         // Обработчики кнопок Spotify (компактные)
         Utils.safeAddEventListener('spotify-compact-connect-btn', 'click', () => {
-            // Редирект на Spotify OAuth
+            // Spotify требует настройки Client ID
             const clientId = 'YOUR_CLIENT_ID'; // Замените на реальный Client ID
+            
+            if (clientId === 'YOUR_CLIENT_ID') {
+                // Показываем уведомление что нужна настройка
+                if (window.notificationSystem) {
+                    window.notificationSystem.show('Spotify требует настройки Client ID. См. документацию.', 'info');
+                } else {
+                    alert('Spotify требует настройки Client ID.\n\nИнструкция:\n1. Зарегистрируйтесь на https://developer.spotify.com\n2. Создайте приложение\n3. Замените YOUR_CLIENT_ID в коде');
+                }
+                return;
+            }
+            
             const redirectUri = window.location.origin + window.location.pathname;
             const scopes = 'streaming user-read-email user-read-private user-read-playback-state user-modify-playback-state';
             
