@@ -1437,7 +1437,16 @@
             </div>
 
             <div id="payments-page" class="page-content hidden">
-                <iframe src="https://hesab.az/" class="w-full h-screen border-0"></iframe>
+                <div class="bg-white rounded-2xl shadow-lg p-8 text-center">
+                    <svg class="w-24 h-24 mx-auto text-blue-600 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path>
+                    </svg>
+                    <h2 class="text-2xl font-bold text-gray-800 mb-2" data-i18n="paymentsTitle">Платежи</h2>
+                    <p class="text-gray-600 mb-6" data-i18n="paymentsDescription">Функция платежей будет доступна в следующей версии</p>
+                    <button onclick="switchTab('dashboard')" class="px-6 py-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition">
+                        <span data-i18n="backToDashboard">Вернуться на главную</span>
+                    </button>
+                </div>
             </div>
 
         </main>
@@ -2147,6 +2156,9 @@
                 toastSuccess: "Успешно сохранено!", toastError: "Ошибка сохранения!", toastDeleted: "Запись удалена.",
                 radioTitle: "AzerbaiJazz Radio",
                 tabPayments: "Ödənişlər",
+                paymentsTitle: "Платежи",
+                paymentsDescription: "Функция платежей будет доступна в следующей версии",
+                backToDashboard: "Вернуться на главную",
             },
             en: {
                 appTitle: "ORDINA", appSubtitle: "Manage your finances with ease.",
@@ -2182,6 +2194,11 @@
                 authGenericError: "An error occurred. Please try again.",
                 manageCategories: "Manage Categories", manageCategoriesTitle: "Manage Categories",
                 toastSuccess: "Saved successfully!", toastError: "Error saving!", toastDeleted: "Entry deleted.",
+                radioTitle: "AzerbaiJazz Radio",
+                tabPayments: "Payments",
+                paymentsTitle: "Payments",
+                paymentsDescription: "Payment feature will be available in the next version",
+                backToDashboard: "Back to Dashboard",
             },
             az: {
                 appTitle: "ORDINA", appSubtitle: "Maliyyələrinizi asanlıqla idarə edin.",
@@ -2217,6 +2234,11 @@
                 authGenericError: "Xəta baş verdi. Yenidən cəhd edin.",
                 manageCategories: "Kateqoriyaları idarə et", manageCategoriesTitle: "Kateqoriyaları idarə et",
                 toastSuccess: "Uğurla yadda saxlanıldı!", toastError: "Yaddaş xətası!", toastDeleted: "Yazı silindi.",
+                radioTitle: "AzerbaiJazz Radio",
+                tabPayments: "Ödənişlər",
+                paymentsTitle: "Ödənişlər",
+                paymentsDescription: "Ödəniş funksiyası növbəti versiyada əlçatan olacaq",
+                backToDashboard: "Əsas səhifəyə qayıt",
             }
         };
         let currentLang = localStorage.getItem('appLanguage') || 'ru';
@@ -3150,35 +3172,37 @@
         }
 
         function showSpotifyConnected() {
-            document.getElementById('spotify-not-connected').classList.add('hidden');
-            document.getElementById('spotify-connected').classList.remove('hidden');
+            const connectBtn = document.getElementById('spotify-compact-connect-btn');
+            const player = document.getElementById('spotify-compact-player');
+            
+            if (connectBtn) connectBtn.classList.add('hidden');
+            if (player) player.classList.remove('hidden');
         }
 
         function updateSpotifyUI(state) {
             const track = state.track_window.current_track;
             
-            document.getElementById('spotify-track-name').textContent = track.name;
-            document.getElementById('spotify-artist-name').textContent = track.artists.map(a => a.name).join(', ');
-            document.getElementById('spotify-album-art').src = track.album.images[0].url;
-
-            // Обновляем кнопку play/pause
-            const playIcon = document.getElementById('spotify-play-icon');
-            const pauseIcon = document.getElementById('spotify-pause-icon');
-            
-            if (state.paused) {
-                playIcon.classList.remove('hidden');
-                pauseIcon.classList.add('hidden');
-            } else {
-                playIcon.classList.add('hidden');
-                pauseIcon.classList.remove('hidden');
+            // Обновляем компактный плеер
+            const trackInfo = `${track.name} - ${track.artists.map(a => a.name).join(', ')}`;
+            const compactTrack = document.getElementById('spotify-compact-track');
+            if (compactTrack) {
+                compactTrack.textContent = trackInfo;
+                compactTrack.title = trackInfo;
             }
 
-            // Обновляем прогресс
-            const progress = (state.position / state.duration) * 100;
-            document.getElementById('spotify-progress').style.width = `${progress}%`;
+            // Обновляем кнопку play/pause
+            const playIcon = document.getElementById('spotify-compact-play-icon');
+            const pauseIcon = document.getElementById('spotify-compact-pause-icon');
             
-            document.getElementById('spotify-current-time').textContent = formatTime(state.position);
-            document.getElementById('spotify-duration').textContent = formatTime(state.duration);
+            if (playIcon && pauseIcon) {
+                if (state.paused) {
+                    playIcon.classList.remove('hidden');
+                    pauseIcon.classList.add('hidden');
+                } else {
+                    playIcon.classList.add('hidden');
+                    pauseIcon.classList.remove('hidden');
+                }
+            }
         }
 
         function formatTime(ms) {
@@ -3188,11 +3212,52 @@
             return `${mins}:${secs.toString().padStart(2, '0')}`;
         }
 
-        // Обработчики кнопок Spotify
-        Utils.safeAddEventListener('spotify-connect-btn', 'click', () => {
+        // ═══════════════════════════════════════════════════════════════
+        // ПЕРЕКЛЮЧАТЕЛЬ РАДИО / SPOTIFY
+        // ═══════════════════════════════════════════════════════════════
+        
+        let currentMusicSource = 'radio'; // 'radio' или 'spotify'
+
+        Utils.safeAddEventListener('music-radio-btn', 'click', () => {
+            currentMusicSource = 'radio';
+            document.getElementById('music-radio-btn').classList.add('bg-blue-600', 'text-white');
+            document.getElementById('music-radio-btn').classList.remove('text-gray-600');
+            document.getElementById('music-spotify-btn').classList.remove('bg-blue-600', 'text-white');
+            document.getElementById('music-spotify-btn').classList.add('text-gray-600');
+            
+            document.getElementById('radio-controls').classList.remove('hidden');
+            document.getElementById('spotify-controls').classList.add('hidden');
+            
+            // Останавливаем Spotify если играет
+            if (spotifyPlayer) {
+                spotifyPlayer.pause();
+            }
+        });
+
+        Utils.safeAddEventListener('music-spotify-btn', 'click', () => {
+            currentMusicSource = 'spotify';
+            document.getElementById('music-spotify-btn').classList.add('bg-blue-600', 'text-white');
+            document.getElementById('music-spotify-btn').classList.remove('text-gray-600');
+            document.getElementById('music-radio-btn').classList.remove('bg-blue-600', 'text-white');
+            document.getElementById('music-radio-btn').classList.add('text-gray-600');
+            
+            document.getElementById('spotify-controls').classList.remove('hidden');
+            document.getElementById('radio-controls').classList.add('hidden');
+            
+            // Останавливаем радио
+            const radioPlayer = document.getElementById('radio-player');
+            if (radioPlayer) {
+                radioPlayer.pause();
+                document.getElementById('radio-play-icon').classList.remove('hidden');
+                document.getElementById('radio-pause-icon').classList.add('hidden');
+            }
+        });
+
+        // Обработчики кнопок Spotify (компактные)
+        Utils.safeAddEventListener('spotify-compact-connect-btn', 'click', () => {
             // Редирект на Spotify OAuth
-            const clientId = 'YOUR_CLIENT_ID'; // Замените на реальный
-            const redirectUri = window.location.origin;
+            const clientId = 'YOUR_CLIENT_ID'; // Замените на реальный Client ID
+            const redirectUri = window.location.origin + window.location.pathname;
             const scopes = 'streaming user-read-email user-read-private user-read-playback-state user-modify-playback-state';
             
             const authUrl = `https://accounts.spotify.com/authorize?client_id=${clientId}&response_type=token&redirect_uri=${encodeURIComponent(redirectUri)}&scope=${encodeURIComponent(scopes)}`;
@@ -3200,19 +3265,19 @@
             window.location.href = authUrl;
         });
 
-        Utils.safeAddEventListener('spotify-play-pause-btn', 'click', () => {
+        Utils.safeAddEventListener('spotify-compact-play-pause', 'click', () => {
             if (spotifyPlayer) {
                 spotifyPlayer.togglePlay();
             }
         });
 
-        Utils.safeAddEventListener('spotify-prev-btn', 'click', () => {
+        Utils.safeAddEventListener('spotify-compact-prev', 'click', () => {
             if (spotifyPlayer) {
                 spotifyPlayer.previousTrack();
             }
         });
 
-        Utils.safeAddEventListener('spotify-next-btn', 'click', () => {
+        Utils.safeAddEventListener('spotify-compact-next', 'click', () => {
             if (spotifyPlayer) {
                 spotifyPlayer.nextTrack();
             }
