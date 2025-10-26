@@ -15,113 +15,170 @@
             box-sizing: border-box;
         }
         
+        :root {
+            --primary-color: #0f172a;
+            --secondary-color: #334155;
+            --accent-color: #06b6d4;
+            --text-primary: #0f172a;
+            --text-secondary: #64748b;
+            --bg-primary: #ffffff;
+            --bg-secondary: #f1f5f9;
+            --border-color: #e2e8f0;
+            --shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        
+        .dark {
+            --primary-color: #f8fafc;
+            --secondary-color: #cbd5e1;
+            --accent-color: #06b6d4;
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --bg-primary: #0f172a;
+            --bg-secondary: #1e293b;
+            --border-color: #334155;
+            --shadow: 0 1px 3px rgba(0,0,0,0.3);
+        }
+        
+        /* Theme Toggle Button Styles */
+        .theme-toggle-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--bg-primary);
+            border: 2px solid var(--border-color);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .theme-toggle-btn:hover {
+            transform: scale(1.05);
+            border-color: var(--accent-color);
+            box-shadow: 0 4px 12px rgba(6, 182, 212, 0.2);
+        }
+        
+        .theme-icon {
+            width: 20px;
+            height: 20px;
+            color: var(--accent-color);
+            transition: all 0.3s ease;
+        }
+        
+        .dark .theme-icon {
+            color: var(--accent-color);
+        }
+        
+        /* Compact Design */
+        .stat-card {
+            padding: 1rem;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            background: var(--bg-primary);
+            transition: all 0.2s ease;
+        }
+        
+        .stat-card:hover {
+            border-color: var(--accent-color);
+        }
+        
+        /* Mobile Optimization */
+        @media (max-width: 640px) {
+            body {
+                font-size: 14px;
+            }
+            .premium-card {
+                padding: 0.75rem;
+                border-radius: 8px;
+            }
+            .stat-card {
+                padding: 0.75rem;
+            }
+        }
+        
         body {
-            font-family: 'Inter', sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-secondary);
+            color: var(--text-primary);
             min-height: 100vh;
-            position: relative;
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        /* Premium Components */
+        .premium-card {
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            box-shadow: none;
+            transition: all 0.2s ease;
         }
         
-        body.light-theme {
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        .premium-card:hover {
+            border-color: var(--accent-color);
         }
         
-        body.dark-theme {
-            background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
+        .premium-btn {
+            background: var(--accent-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 10px 20px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 0.875rem;
         }
+        
+        .premium-btn:hover {
+            opacity: 0.9;
+            transform: scale(1.02);
+        }
+        
+        .premium-input {
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 10px 14px;
+            color: var(--text-primary);
+            transition: all 0.2s ease;
+            font-size: 0.875rem;
+        }
+        
+        .premium-input:focus {
+            outline: none;
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 2px rgba(6, 182, 212, 0.1);
+        }
+        
         .tab-active {
-            border-bottom-color: #3b82f6;
-            color: #3b82f6;
+            border-bottom-color: var(--accent-color) !important;
+            color: var(--accent-color) !important;
             font-weight: 600;
         }
+        
         dialog::backdrop {
-            background: rgba(0, 0, 0, 0.7);
+            background: rgba(0, 0, 0, 0.5);
             backdrop-filter: blur(4px);
         }
         
-        /* Modern Card Styles */
-        .modern-card {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            border-radius: 20px;
-            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
-            border: 1px solid rgba(255, 255, 255, 0.18);
-            transition: all 0.3s ease;
-        }
-        
-        .dark .modern-card {
-            background: rgba(17, 24, 39, 0.95);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-        
-        .modern-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 12px 40px 0 rgba(31, 38, 135, 0.5);
-        }
-        
-        /* Button Styles */
-        .modern-btn {
-            border-radius: 12px;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 14px 0 rgba(0, 0, 0, 0.1);
-        }
-        
-        .modern-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px 0 rgba(0, 0, 0, 0.15);
-        }
-        
-        /* Input Styles */
-        .modern-input {
-            border-radius: 12px;
-            border: 2px solid rgba(203, 213, 225, 0.5);
-            transition: all 0.3s ease;
-        }
-        
-        .modern-input:focus {
-            border-color: #3b82f6;
-            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-        }
-        
-        .dark .modern-input {
-            border-color: rgba(75, 85, 99, 0.5);
-        }
-        
-        /* Navigation Styles */
-        .nav-button {
-            border-radius: 12px;
-            transition: all 0.3s ease;
-        }
-        
-        .nav-button:hover {
-            background: rgba(59, 130, 246, 0.1);
-            transform: translateX(4px);
-        }
-        
-        /* Table Styles */
-        .modern-table {
-            border-radius: 16px;
-            overflow: hidden;
-        }
-        
-        /* Scrollbar Styles */
         ::-webkit-scrollbar {
-            width: 8px;
+            width: 6px;
         }
         
         ::-webkit-scrollbar-track {
-            background: rgba(0, 0, 0, 0.05);
-            border-radius: 10px;
+            background: transparent;
         }
         
         ::-webkit-scrollbar-thumb {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border-radius: 10px;
+            background: var(--accent-color);
+            border-radius: 3px;
         }
         
         ::-webkit-scrollbar-thumb:hover {
-            background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+            background: #b8941f;
         }
         .task-tab-active {
             /* Highlight active task tab */
@@ -484,14 +541,14 @@
     
     <div id="app" class="max-w-7xl mx-auto p-2 sm:p-4 md:p-6 relative opacity-0 transition-opacity duration-300 hidden">
         <!-- Fixed header wrapper to keep top bar, logo, and navigation static on scroll -->
-        <div id="fixed-header" class="sticky top-0 z-30 modern-card shadow-2xl border-b-2 border-blue-500 dark:border-blue-700">
+        <div id="fixed-header" class="sticky top-0 z-30 premium-card">
             <!-- Compact top bar for logo and controls -->
-            <div class="flex items-center justify-between px-3 sm:px-4 md:px-6 py-3 md:py-4">
+            <div class="flex items-center justify-between px-3 sm:px-4 md:px-5 py-2 sm:py-3">
                 <!-- Logo and motto -->
                 <div class="flex items-center gap-2 md:gap-3">
-                    <img src="https://raw.githubusercontent.com/Kenny-Corleone/ORDINA.github.io/main/logo%20ORDINA.png" alt="ORDINA Logo" class="h-24 sm:h-32 md:h-36 lg:h-40 w-auto drop-shadow-xl">
+                    <img src="https://raw.githubusercontent.com/Kenny-Corleone/ORDINA.github.io/main/logo%20ORDINA.png" alt="ORDINA Logo" class="h-16 sm:h-20 md:h-24 w-auto drop-shadow-xl">
                     <!-- Show motto on medium and larger screens -->
-                    <span class="hidden lg:inline-block text-gray-600 dark:text-gray-200 text-sm font-semibold" data-i18n="appSubtitle">Управляй своей жизнью с легкостью</span>
+                    <span class="hidden xl:inline-block text-xs md:text-sm font-semibold" style="color: var(--text-secondary);" data-i18n="appSubtitle">Управляй своей жизнью с легкостью</span>
                 </div>
                 <!-- Controls: currency, languages, theme toggle, radio, logout -->
                 <div class="flex items-center gap-1.5 sm:gap-2 flex-wrap justify-end">
@@ -506,22 +563,29 @@
                         <button id="lang-en" title="English"><img src="https://placehold.co/28x20/012169/ffffff?text=EN" alt="EN" class="rounded-sm cursor-pointer"></button>
                         <button id="lang-az" title="Azərbaycan"><img src="https://placehold.co/28x20/00a651/ffffff?text=AZ" alt="AZ" class="rounded-sm cursor-pointer"></button>
                     </div>
-                    <!-- Theme Toggle -->
-                    <button id="theme-toggle" title="Toggle theme" class="p-1 rounded-md bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
-                        <!-- Elegant moon icon for light mode -->
-                        <svg id="theme-icon-light" class="w-6 h-6 block dark:hidden transition-all duration-300" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    <!-- Premium Theme Toggle Button -->
+                    <button id="theme-toggle" title="Toggle theme" class="theme-toggle-btn">
+                        <!-- Sun icon - shown in dark mode to switch to light -->
+                        <svg id="theme-icon-sun" class="theme-icon hidden dark:block" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="12" cy="12" r="5" stroke="currentColor" stroke-width="2" fill="currentColor"/>
+                            <line x1="12" y1="1" x2="12" y2="3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                            <line x1="12" y1="21" x2="12" y2="23" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                            <line x1="1" y1="12" x2="3" y2="12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                            <line x1="21" y1="12" x2="23" y2="12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
                         </svg>
-                        <!-- Elegant sun icon for dark mode -->
-                        <svg id="theme-icon-dark" class="w-6 h-6 hidden dark:block transition-all duration-300" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <circle cx="12" cy="12" r="4" fill="currentColor"/>
-                            <path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                        <!-- Moon icon - shown in light mode to switch to dark -->
+                        <svg id="theme-icon-moon" class="theme-icon block dark:hidden" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                         </svg>
                     </button>
-                    <!-- Modern Radio Player -->
-                    <div class="hidden md:flex items-center bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 dark:from-indigo-600 dark:via-purple-600 dark:to-pink-600 px-6 py-4 rounded-3xl shadow-2xl backdrop-blur-sm border border-white/20 space-x-4">
+                    <!-- Premium Radio Player -->
+                    <div class="hidden md:flex items-center premium-card px-6 py-4 space-x-4">
                         <!-- Play/Pause Button -->
-                        <button id="radio-play-pause-btn" class="w-12 h-12 flex items-center justify-center rounded-full bg-white/25 backdrop-blur-sm text-white hover:bg-white/35 transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-white/30 shadow-lg hover:shadow-xl transform hover:scale-105">
+                        <button id="radio-play-pause-btn" class="w-12 h-12 flex items-center justify-center rounded-full bg-gradient-to-br from-[var(--accent-color)] to-[#b8941f] hover:from-[#b8941f] hover:to-[var(--accent-color)] transition-all duration-300 transform hover:scale-105 shadow-lg">
                             <svg id="play-icon" class="w-6 h-6 ml-0.5" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M8 5v14l11-7z"/>
                             </svg>
@@ -534,17 +598,17 @@
                         <div class="flex flex-col justify-center flex-grow min-w-0">
                             <div class="flex items-center space-x-2">
                                 <div class="w-2 h-2 bg-red-500 rounded-full animate-pulse"></div>
-                                <span class="text-sm font-bold text-white truncate" data-i18n="radioTitle">AzerbaiJazz Radio</span>
+                                <span class="text-sm font-bold truncate" style="color: var(--text-primary);" data-i18n="radioTitle">AzerbaiJazz Radio</span>
                             </div>
                             <div class="flex items-center space-x-2 mt-1">
                                 <div id="equalizer" class="equalizer paused flex space-x-1">
-                                    <span class="w-1 bg-white/70 rounded-full animate-pulse"></span>
-                                    <span class="w-1 bg-white/70 rounded-full animate-pulse"></span>
-                                    <span class="w-1 bg-white/70 rounded-full animate-pulse"></span>
-                                    <span class="w-1 bg-white/70 rounded-full animate-pulse"></span>
-                                    <span class="w-1 bg-white/70 rounded-full animate-pulse"></span>
+                                    <span class="w-1 rounded-full animate-pulse" style="background-color: var(--accent-color);"></span>
+                                    <span class="w-1 rounded-full animate-pulse" style="background-color: var(--accent-color);"></span>
+                                    <span class="w-1 rounded-full animate-pulse" style="background-color: var(--accent-color);"></span>
+                                    <span class="w-1 rounded-full animate-pulse" style="background-color: var(--accent-color);"></span>
+                                    <span class="w-1 rounded-full animate-pulse" style="background-color: var(--accent-color);"></span>
                                 </div>
-                                <span class="text-xs text-white/80">LIVE</span>
+                                <span class="text-xs" style="color: var(--text-secondary);">LIVE</span>
                             </div>
                         </div>
                         
@@ -571,19 +635,19 @@
                         </svg>
                     </button>
                     <!-- Logout -->
-                    <button id="logout-btn" class="text-xs sm:text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-blue-600 px-2" data-i18n="logout">Выйти</button>
+                    <button id="logout-btn" class="text-xs font-medium px-2 hover:opacity-70 transition" style="color: var(--text-secondary);" data-i18n="logout">Выйти</button>
                 </div>
             </div>
             <!-- Navigation -->
-            <nav class="bg-gradient-to-r from-blue-50 via-purple-50 to-pink-50 dark:from-gray-800 dark:via-gray-800 dark:to-gray-800 border-t-2 border-blue-200 dark:border-gray-700">
+            <nav class="border-t" style="background: var(--bg-primary); border-color: var(--border-color);">
                 <div class="flex overflow-x-auto pb-1">
-                    <button data-tab="dashboard" class="tab-button px-3 sm:px-4 md:px-5 py-2 border-b-2 border-transparent tab-active whitespace-nowrap text-xs sm:text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-700 transition" data-i18n="tabDashboard">Сводка</button>
-                    <button data-tab="debts" class="tab-button px-3 sm:px-4 md:px-5 py-2 border-b-2 border-transparent whitespace-nowrap text-xs sm:text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-700 transition" data-i18n="tabDebts">Долги</button>
-                    <button data-tab="recurring-expenses" class="tab-button px-3 sm:px-4 md:px-5 py-2 border-b-2 border-transparent whitespace-nowrap text-xs sm:text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-700 transition" data-i18n="tabRecurringExpenses">Ежемесячные</button>
-                    <button data-tab="expenses" class="tab-button px-3 sm:px-4 md:px-5 py-2 border-b-2 border-transparent whitespace-nowrap text-xs sm:text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-700 transition" data-i18n="tabMonthlyExpenses">Расходы</button>
-                    <button data-tab="tasks" class="tab-button px-3 sm:px-4 md:px-5 py-2 border-b-2 border-transparent whitespace-nowrap text-xs sm:text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-700 transition" data-i18n="tabTasks">Задачи</button>
-                    <button data-tab="calendar" class="tab-button px-3 sm:px-4 md:px-5 py-2 border-b-2 border-transparent whitespace-nowrap text-xs sm:text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-700 transition" data-i18n="tabCalendar">Календарь</button>
-                    <button data-tab="payments" class="tab-button px-3 sm:px-4 md:px-5 py-2 border-b-2 border-transparent whitespace-nowrap text-xs sm:text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-700 transition" data-i18n="tabPayments">Оплата</button>
+                    <button data-tab="dashboard" class="tab-button px-3 sm:px-4 md:px-5 py-2 border-b-2 border-transparent tab-active whitespace-nowrap text-xs sm:text-sm font-medium" style="color: var(--text-secondary);" onmouseover="this.style.color='var(--text-primary)'" onmouseout="this.style.color='var(--text-secondary)'" data-i18n="tabDashboard">Сводка</button>
+                    <button data-tab="debts" class="tab-button px-3 sm:px-4 md:px-5 py-2 border-b-2 border-transparent whitespace-nowrap text-xs sm:text-sm font-medium" style="color: var(--text-secondary);" onmouseover="this.style.color='var(--text-primary)'" onmouseout="this.style.color='var(--text-secondary)'" data-i18n="tabDebts">Долги</button>
+                    <button data-tab="recurring-expenses" class="tab-button px-3 sm:px-4 md:px-5 py-2 border-b-2 border-transparent whitespace-nowrap text-xs sm:text-sm font-medium" style="color: var(--text-secondary);" onmouseover="this.style.color='var(--text-primary)'" onmouseout="this.style.color='var(--text-secondary)'" data-i18n="tabRecurringExpenses">Ежемесячные</button>
+                    <button data-tab="expenses" class="tab-button px-3 sm:px-4 md:px-5 py-2 border-b-2 border-transparent whitespace-nowrap text-xs sm:text-sm font-medium" style="color: var(--text-secondary);" onmouseover="this.style.color='var(--text-primary)'" onmouseout="this.style.color='var(--text-secondary)'" data-i18n="tabMonthlyExpenses">Расходы</button>
+                    <button data-tab="tasks" class="tab-button px-3 sm:px-4 md:px-5 py-2 border-b-2 border-transparent whitespace-nowrap text-xs sm:text-sm font-medium" style="color: var(--text-secondary);" onmouseover="this.style.color='var(--text-primary)'" onmouseout="this.style.color='var(--text-secondary)'" data-i18n="tabTasks">Задачи</button>
+                    <button data-tab="calendar" class="tab-button px-3 sm:px-4 md:px-5 py-2 border-b-2 border-transparent whitespace-nowrap text-xs sm:text-sm font-medium" style="color: var(--text-secondary);" onmouseover="this.style.color='var(--text-primary)'" onmouseout="this.style.color='var(--text-secondary)'" data-i18n="tabCalendar">Календарь</button>
+                    <button data-tab="payments" class="tab-button px-3 sm:px-4 md:px-5 py-2 border-b-2 border-transparent whitespace-nowrap text-xs sm:text-sm font-medium" style="color: var(--text-secondary);" onmouseover="this.style.color='var(--text-primary)'" onmouseout="this.style.color='var(--text-secondary)'" data-i18n="tabPayments">Оплата</button>
                 </div>
             </nav>
         </div><!-- end of fixed-header -->
@@ -599,15 +663,15 @@
                 </div>
                 <div id="dashboard-loading" class="text-center p-8" data-i18n="loading">Загрузка данных...</div>
                 <div id="dashboard-content" class="hidden">
-                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 mb-6 md:mb-8">
-                        <div class="modern-card bg-gradient-to-br from-green-500 to-green-600 dark:from-green-600 dark:to-green-700 p-4 md:p-6 rounded-2xl shadow-2xl border-0"><h3 class="text-base md:text-lg font-semibold text-white mb-2 md:mb-3" data-i18n="dashRecurringPaid">Ежемесячные (оплачено)</h3><p id="total-recurring-paid" class="text-2xl md:text-3xl lg:text-4xl font-bold text-white">0 AZN</p></div>
-                        <div class="modern-card bg-gradient-to-br from-amber-500 to-orange-600 dark:from-amber-600 dark:to-orange-700 p-4 md:p-6 rounded-2xl shadow-2xl border-0"><h3 class="text-base md:text-lg font-semibold text-white mb-2 md:mb-3" data-i18n="dashRecurringRemaining">Ежемесячные (осталось)</h3><p id="total-recurring-remaining" class="text-2xl md:text-3xl lg:text-4xl font-bold text-white">0 AZN</p></div>
-                        <div class="modern-card bg-gradient-to-br from-red-500 to-pink-600 dark:from-red-600 dark:to-pink-700 p-4 md:p-6 rounded-2xl shadow-2xl border-0"><h3 class="text-base md:text-lg font-semibold text-white mb-2 md:mb-3" data-i18n="dashMonthlyExpenses">Расходы за месяц</h3><p id="total-monthly-outflow" class="text-2xl md:text-3xl lg:text-4xl font-bold text-white">0 AZN</p></div>
-                        <div class="modern-card bg-gradient-to-br from-purple-500 to-indigo-600 dark:from-purple-600 dark:to-indigo-700 p-4 md:p-6 rounded-2xl shadow-2xl border-0"><h3 class="text-base md:text-lg font-semibold text-white mb-2 md:mb-3" data-i18n="dashTotalDebt">Остаток общего долга</h3><p id="total-debt-remaining" class="text-2xl md:text-3xl font-bold mt-2 text-white">0 AZN</p></div>
-                        <div class="modern-card bg-gradient-to-br from-blue-500 to-cyan-600 dark:from-blue-600 dark:to-cyan-700 p-4 md:p-6 rounded-2xl shadow-2xl border-0"><h3 class="text-base md:text-lg font-medium text-white mb-2" data-i18n="dashTasksMonth">Осталось задач (месяц)</h3><p id="tasks-remaining-month" class="text-2xl md:text-3xl font-bold text-white">0</p></div>
-                        <div class="modern-card bg-gradient-to-br from-violet-500 to-purple-600 dark:from-violet-600 dark:to-purple-700 p-4 md:p-6 rounded-2xl shadow-2xl border-0"><h3 class="text-base md:text-lg font-medium text-white mb-2" data-i18n="dashTasksYear">Осталось задач (год)</h3><p id="tasks-remaining-year" class="text-2xl md:text-3xl font-bold text-white">0</p></div>
+                    <div class="flex flex-wrap gap-2 mb-6">
+                        <div class="stat-card flex-1 min-w-[120px]"><h3 class="text-xs font-medium mb-1 text-gray-500 dark:text-gray-400" data-i18n="dashRecurringPaid">Ежемесячные (оплачено)</h3><p id="total-recurring-paid" class="text-lg font-bold" style="color: var(--accent-color);">0 AZN</p></div>
+                        <div class="stat-card flex-1 min-w-[120px]"><h3 class="text-xs font-medium mb-1 text-gray-500 dark:text-gray-400" data-i18n="dashRecurringRemaining">Ежемесячные (осталось)</h3><p id="total-recurring-remaining" class="text-lg font-bold" style="color: var(--accent-color);">0 AZN</p></div>
+                        <div class="stat-card flex-1 min-w-[120px]"><h3 class="text-xs font-medium mb-1 text-gray-500 dark:text-gray-400" data-i18n="dashMonthlyExpenses">Расходы за месяц</h3><p id="total-monthly-outflow" class="text-lg font-bold" style="color: var(--accent-color);">0 AZN</p></div>
+                        <div class="stat-card flex-1 min-w-[120px]"><h3 class="text-xs font-medium mb-1 text-gray-500 dark:text-gray-400" data-i18n="dashTotalDebt">Остаток общего долга</h3><p id="total-debt-remaining" class="text-lg font-bold" style="color: var(--accent-color);">0 AZN</p></div>
+                        <div class="stat-card flex-1 min-w-[120px]"><h3 class="text-xs font-medium mb-1 text-gray-500 dark:text-gray-400" data-i18n="dashTasksMonth">Осталось задач (месяц)</h3><p id="tasks-remaining-month" class="text-lg font-bold" style="color: var(--accent-color);">0</p></div>
+                        <div class="stat-card flex-1 min-w-[120px]"><h3 class="text-xs font-medium mb-1 text-gray-500 dark:text-gray-400" data-i18n="dashTasksYear">Осталось задач (год)</h3><p id="tasks-remaining-year" class="text-lg font-bold" style="color: var(--accent-color);">0</p></div>
                     </div>
-                    <div class="modern-card p-6 shadow-2xl"><h3 class="text-xl font-semibold mb-4 text-gray-800 dark:text-gray-200" data-i18n="dashTopCategories">Топ категорий расходов</h3><div class="max-h-96"><canvas id="expenses-chart"></canvas></div></div>
+                    <div class="premium-card p-4"><h3 class="text-lg font-semibold mb-3" style="color: var(--text-primary);" data-i18n="dashTopCategories">Топ категорий расходов</h3><div class="max-h-96"><canvas id="expenses-chart"></canvas></div></div>
                 </div>
             </div>
 
@@ -807,7 +871,7 @@
         
         const translations = {
             ru: {
-                appTitle: "ORDINA", appSubtitle: "Управляй своей жизнью с легкостью.",
+                appTitle: "ORDINA", appSubtitle: "Управляй своей жизнью с легкостью",
                 tabDashboard: "Сводка", tabDebts: "Долги", tabRecurringExpenses: "Ежемесячные расходы", tabMonthlyExpenses: "Расходы месяца", tabTasks: "Список задач", tabCalendar: "Календарь",
                 dashboardTitle: "Сводка за месяц", loading: "Загрузка данных...",
                 dashRecurringPaid: "Ежемесячные (оплачено)", dashRecurringRemaining: "Ежемесячные (осталось)", dashMonthlyExpenses: "Расходы за месяц", dashTotalDebt: "Остаток общего долга", dashTopCategories: "Топ категорий расходов",
@@ -842,9 +906,24 @@
                 toastSuccess: "Успешно сохранено!", toastError: "Ошибка сохранения!", toastDeleted: "Запись удалена.",
                 radioTitle: "AzerbaiJazz Radio",
                 tabPayments: "Оплата",
+                shoppingListTitle: "Список покупок",
+                shoppingListCopy: "Копировать",
+                shoppingListQuantity: "Кол-во",
+                shoppingListProduct: "Название товара",
+                shoppingListPrice: "Цена (AZN)",
+                shoppingListAdd: "Добавить",
+                shoppingListTotal: "Итого",
+                shoppingListQuantityColumn: "Кол-во",
+                shoppingListProductColumn: "Товар",
+                shoppingListPriceColumn: "Цена",
+                shoppingListSumColumn: "Сумма",
+                shoppingListActionsColumn: "Действия",
+                toPurchase: "К ПРИОБРЕТЕНИЮ",
+                purchased: "КУПЛЕНО",
+                generalTotal: "ОБЩАЯ СУММА",
             },
             en: {
-                appTitle: "ORDINA", appSubtitle: "Manage your life with ease.",
+                appTitle: "ORDINA", appSubtitle: "Manage your life with ease",
                 tabDashboard: "Dashboard", tabDebts: "Debts", tabRecurringExpenses: "Recurring Expenses", tabMonthlyExpenses: "Monthly Expenses", tabTasks: "Task List", tabCalendar: "Calendar",
                 dashboardTitle: "Monthly Dashboard", loading: "Loading data...",
                 dashRecurringPaid: "Recurring (Paid)", dashRecurringRemaining: "Recurring (Remaining)", dashMonthlyExpenses: "Monthly Expenses", dashTotalDebt: "Total Debt Remaining", dashTopCategories: "Top Expense Categories",
@@ -877,9 +956,24 @@
                 authGenericError: "An error occurred. Please try again.",
                 manageCategories: "Manage Categories", manageCategoriesTitle: "Manage Categories",
                 toastSuccess: "Saved successfully!", toastError: "Error saving!", toastDeleted: "Entry deleted.",
+                shoppingListTitle: "Shopping List",
+                shoppingListCopy: "Copy",
+                shoppingListQuantity: "Qty",
+                shoppingListProduct: "Product Name",
+                shoppingListPrice: "Price (AZN)",
+                shoppingListAdd: "Add",
+                shoppingListTotal: "Total",
+                shoppingListQuantityColumn: "Qty",
+                shoppingListProductColumn: "Product",
+                shoppingListPriceColumn: "Price",
+                shoppingListSumColumn: "Sum",
+                shoppingListActionsColumn: "Actions",
+                toPurchase: "TO PURCHASE",
+                purchased: "PURCHASED",
+                generalTotal: "GRAND TOTAL",
             },
             az: {
-                appTitle: "ORDINA", appSubtitle: "Həyatını asanlıqla idarə et.",
+                appTitle: "ORDINA", appSubtitle: "Həyatını asanlıqla idarə et",
                 tabDashboard: "Ümumi", tabDebts: "Borclar", tabRecurringExpenses: "Aylıq xərclər", tabMonthlyExpenses: "Aylıq xərclər", tabTasks: "Tapşırıqlar", tabCalendar: "Təqvim",
                 dashboardTitle: "Aylıq ümumi", loading: "Məlumatlar yüklənir...",
                 dashRecurringPaid: "Aylıq (ödənilmiş)", dashRecurringRemaining: "Aylıq (qalan)", dashMonthlyExpenses: "Aylıq xərclər", dashTotalDebt: "Ümumi borc qalığı", dashTopCategories: "Əsas xərc kateqoriyaları",
@@ -912,6 +1006,21 @@
                 authGenericError: "Xəta baş verdi. Yenidən cəhd edin.",
                 manageCategories: "Kateqoriyaları idarə et", manageCategoriesTitle: "Kateqoriyaları idarə et",
                 toastSuccess: "Uğurla yadda saxlanıldı!", toastError: "Yaddaş xətası!", toastDeleted: "Yazı silindi.",
+                shoppingListTitle: "Alış-veriş siyahısı",
+                shoppingListCopy: "Kopyala",
+                shoppingListQuantity: "Miqdar",
+                shoppingListProduct: "Məhsul adı",
+                shoppingListPrice: "Qiymət (AZN)",
+                shoppingListAdd: "Əlavə et",
+                shoppingListTotal: "Cəmi",
+                shoppingListQuantityColumn: "Miqdar",
+                shoppingListProductColumn: "Məhsul",
+                shoppingListPriceColumn: "Qiymət",
+                shoppingListSumColumn: "Məbləğ",
+                shoppingListActionsColumn: "Əməliyyatlar",
+                toPurchase: "ALINMALI",
+                purchased: "ALINMIŞ",
+                generalTotal: "ÜMUMİ CƏMİ",
             }
         };
         let currentLang = localStorage.getItem('appLanguage') || 'ru';
@@ -1671,17 +1780,21 @@
         // Theme toggle logic
         document.addEventListener('DOMContentLoaded', () => {
             const themeToggleBtn = document.getElementById('theme-toggle');
-            const lightIcon = document.getElementById('theme-icon-light');
-            const darkIcon = document.getElementById('theme-icon-dark');
+            const moonIcon = document.getElementById('theme-icon-moon');
+            const sunIcon = document.getElementById('theme-icon-sun');
+            
             function updateIcons() {
                 if (document.documentElement.classList.contains('dark')) {
-                    if (lightIcon) lightIcon.style.display = 'none';
-                    if (darkIcon) darkIcon.style.display = '';
+                    // Show sun icon in dark mode (to switch to light)
+                    if (moonIcon) moonIcon.classList.add('hidden');
+                    if (sunIcon) sunIcon.classList.remove('hidden');
                 } else {
-                    if (lightIcon) lightIcon.style.display = '';
-                    if (darkIcon) darkIcon.style.display = 'none';
+                    // Show moon icon in light mode (to switch to dark)
+                    if (moonIcon) moonIcon.classList.remove('hidden');
+                    if (sunIcon) sunIcon.classList.add('hidden');
                 }
             }
+            
             const savedTheme = localStorage.getItem('theme');
             if (savedTheme) {
                 if (savedTheme === 'dark') document.documentElement.classList.add('dark');
@@ -1692,6 +1805,7 @@
                 }
             }
             updateIcons();
+            
             if (themeToggleBtn) {
                 themeToggleBtn.addEventListener('click', () => {
                     document.documentElement.classList.toggle('dark');
@@ -1706,13 +1820,13 @@
 
     <!-- Calculator Modal -->
     <dialog id="calculator-modal" class="rounded-2xl p-0 backdrop:bg-black/50">
-        <div class="bg-white dark:bg-gray-800 p-4 md:p-6 rounded-2xl min-w-[280px] sm:min-w-[320px]">
+        <div class="p-4 md:p-6 rounded-2xl min-w-[280px] sm:min-w-[320px]" style="background: var(--bg-primary);">
             <div class="flex justify-between items-center mb-4">
-                <h2 class="text-lg md:text-xl font-bold text-gray-800 dark:text-gray-200">Калькулятор</h2>
-                <button id="close-calculator" class="text-gray-500 hover:text-gray-700 dark:hover:text-gray-300">✕</button>
+                <h2 class="text-lg md:text-xl font-bold" style="color: var(--text-primary);">Калькулятор</h2>
+                <button id="close-calculator" class="hover:opacity-70 transition" style="color: var(--text-secondary);">✕</button>
             </div>
             <div class="space-y-3">
-                <input type="text" id="calc-display" class="w-full p-3 md:p-4 text-xl md:text-2xl font-bold text-right bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" readonly value="0">
+                <input type="text" id="calc-display" class="w-full p-3 md:p-4 text-xl md:text-2xl font-bold text-right rounded-lg focus:outline-none focus:ring-2" style="background: var(--bg-secondary); color: var(--text-primary); border: 1px solid var(--border-color);" readonly value="0">
                 <div class="grid grid-cols-4 gap-2">
                     <button class="calc-btn" data-value="clear">C</button>
                     <button class="calc-btn" data-value="clearEntry">CE</button>
@@ -1744,54 +1858,54 @@
 
     <!-- Shopping List Modal -->
     <dialog id="shopping-list-modal" class="rounded-2xl p-0 backdrop:bg-black/50">
-        <div class="bg-white dark:bg-gray-800 p-4 md:p-6 rounded-2xl min-w-[90vw] sm:min-w-[400px] md:min-w-[500px] max-w-[95vw] md:max-w-[600px]">
+        <div class="p-4 md:p-6 rounded-2xl min-w-[90vw] sm:min-w-[400px] md:min-w-[500px] max-w-[95vw] md:max-w-[600px]" style="background: var(--bg-primary);">
             <div class="flex justify-between items-center mb-4">
-                <h2 class="text-lg md:text-2xl font-bold text-gray-800 dark:text-gray-200">Список покупок</h2>
+                <h2 class="text-lg md:text-2xl font-bold" style="color: var(--text-primary);" data-i18n="shoppingListTitle">Список покупок</h2>
                 <div class="flex gap-2">
-                    <button id="copy-shopping-list" class="px-3 md:px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 font-medium text-xs md:text-sm">📋 Копировать</button>
-                    <button id="close-shopping-list" class="text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 px-2">✕</button>
+                    <button id="copy-shopping-list" class="px-3 md:px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 font-medium text-xs md:text-sm" data-i18n="shoppingListCopy">📋 Копировать</button>
+                    <button id="close-shopping-list" class="hover:opacity-70 transition px-2" style="color: var(--text-secondary);">✕</button>
                 </div>
             </div>
             
             <!-- Add Item Form -->
-            <div class="bg-gray-50 dark:bg-gray-700 p-4 rounded-xl mb-4">
+            <div class="p-4 rounded-xl mb-4" style="background: var(--bg-secondary);">
                 <div class="grid grid-cols-12 gap-2">
                     <div class="col-span-2">
-                        <input type="number" id="item-quantity" placeholder="Кол-во" min="1" class="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" value="1">
+                        <input type="number" id="item-quantity" placeholder="" min="1" data-i18n="shoppingListQuantity" class="w-full p-2 rounded-lg text-sm focus:outline-none focus:ring-2" style="background: var(--bg-primary); color: var(--text-primary); border: 1px solid var(--border-color);" value="1">
                     </div>
                     <div class="col-span-5">
-                        <input type="text" id="item-name" placeholder="Название товара" class="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <input type="text" id="item-name" placeholder="" data-i18n="shoppingListProduct" class="w-full p-2 rounded-lg focus:outline-none focus:ring-2" style="background: var(--bg-primary); color: var(--text-primary); border: 1px solid var(--border-color);">
                     </div>
                     <div class="col-span-3">
-                        <input type="number" id="item-price" placeholder="Цена (AZN)" step="0.01" min="0" class="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <input type="number" id="item-price" placeholder="" data-i18n="shoppingListPrice" step="0.01" min="0" class="w-full p-2 rounded-lg focus:outline-none focus:ring-2" style="background: var(--bg-primary); color: var(--text-primary); border: 1px solid var(--border-color);">
                     </div>
                     <div class="col-span-2">
-                        <button id="add-shopping-item" class="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-medium">+ Добавить</button>
+                        <button id="add-shopping-item" class="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-medium" data-i18n="shoppingListAdd">+ Добавить</button>
                     </div>
                 </div>
             </div>
 
             <!-- Shopping List Table -->
-            <div class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 overflow-hidden">
+            <div class="rounded-xl overflow-hidden" style="background: var(--bg-primary); border: 1px solid var(--border-color);">
                 <div class="overflow-x-auto max-h-96 overflow-y-auto">
                     <table class="w-full">
-                        <thead class="bg-gray-50 dark:bg-gray-700 sticky top-0">
+                        <thead class="sticky top-0" style="background: var(--bg-secondary);">
                             <tr>
-                                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase">№</th>
-                                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase">Кол-во</th>
-                                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase">Товар</th>
-                                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase">Цена</th>
-                                <th class="px-4 py-3 text-right text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase">Сумма</th>
-                                <th class="px-4 py-3 text-center text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase">Действия</th>
+                                <th class="px-4 py-3 text-left text-xs font-semibold uppercase" style="color: var(--text-secondary);">№</th>
+                                <th class="px-4 py-3 text-left text-xs font-semibold uppercase" style="color: var(--text-secondary);" data-i18n="shoppingListQuantityColumn">Кол-во</th>
+                                <th class="px-4 py-3 text-left text-xs font-semibold uppercase" style="color: var(--text-secondary);" data-i18n="shoppingListProductColumn">Товар</th>
+                                <th class="px-4 py-3 text-left text-xs font-semibold uppercase" style="color: var(--text-secondary);" data-i18n="shoppingListPriceColumn">Цена</th>
+                                <th class="px-4 py-3 text-right text-xs font-semibold uppercase" style="color: var(--text-secondary);" data-i18n="shoppingListSumColumn">Сумма</th>
+                                <th class="px-4 py-3 text-center text-xs font-semibold uppercase" style="color: var(--text-secondary);" data-i18n="shoppingListActionsColumn">Действия</th>
                             </tr>
                         </thead>
-                        <tbody id="shopping-list-items" class="divide-y divide-gray-200 dark:divide-gray-700 text-sm"></tbody>
+                        <tbody id="shopping-list-items" class="text-sm" style="color: var(--text-primary);"></tbody>
                     </table>
                 </div>
-                <div class="px-4 py-3 bg-gray-50 dark:bg-gray-700 border-t border-gray-200 dark:border-gray-600">
+                <div class="px-4 py-3 border-t" style="background: var(--bg-secondary); border-color: var(--border-color);">
                     <div class="flex justify-between items-center">
-                        <span class="font-semibold text-gray-800 dark:text-gray-200">Итого:</span>
-                        <span id="shopping-total" class="text-xl font-bold text-blue-600 dark:text-blue-400">0 AZN</span>
+                        <span class="font-semibold" style="color: var(--text-primary);" data-i18n="shoppingListTotal">Итого:</span>
+                        <span id="shopping-total" class="text-xl font-bold" style="color: var(--accent-color);">0 AZN</span>
                     </div>
                 </div>
             </div>
@@ -1827,6 +1941,10 @@
         .dark #shopping-list-items tr:hover {
             background-color: rgb(55, 65, 81);
         }
+        #shopping-list-items tr {
+            color: var(--text-primary) !important;
+        }
+        
         #shopping-list-items tr.completed {
             opacity: 0.6;
         }
@@ -1835,6 +1953,35 @@
         }
         input[type="checkbox"] {
             cursor: pointer;
+        }
+        
+        
+        /* Mobile Optimizations for Samsung S23 Plus (360px) */
+        @media (max-width: 400px) {
+            #app {
+                padding-left: 0.5rem !important;
+                padding-right: 0.5rem !important;
+            }
+            
+            .premium-card {
+                border-radius: 12px;
+                padding: 0.75rem;
+            }
+            
+            /* Table responsive */
+            .responsive-table {
+                font-size: 0.75rem;
+            }
+            
+            .responsive-table th,
+            .responsive-table td {
+                padding: 0.5rem;
+            }
+            
+            /* Adjust grid columns for small screens */
+            .grid {
+                gap: 0.75rem;
+            }
         }
     </style>
 
@@ -2032,11 +2179,12 @@
             const notCompleted = shoppingList.filter(item => !item.completed);
             const completed = shoppingList.filter(item => item.completed);
             
-            let text = '📋 СПИСОК ПОКУПОК\n';
+            const t = translations[currentLang];
+            let text = `📋 ${t.shoppingListTitle.toUpperCase()}\n`;
             text += '═'.repeat(40) + '\n\n';
             
             if (notCompleted.length > 0) {
-                text += 'К ПРИОБРЕТЕНИЮ:\n';
+                text += `${t.toPurchase}:\n`;
                 text += '─'.repeat(40) + '\n';
                 notCompleted.forEach((item, idx) => {
                     const total = (item.price || 0) * (item.quantity || 1);
@@ -2046,11 +2194,11 @@
                 
                 const notCompletedTotal = notCompleted.reduce((sum, item) => 
                     sum + (item.price || 0) * (item.quantity || 1), 0);
-                text += `ИТОГО: ${notCompletedTotal.toFixed(2)} AZN\n\n`;
+                text += `${t.shoppingListTotal}: ${notCompletedTotal.toFixed(2)} AZN\n\n`;
             }
             
             if (completed.length > 0) {
-                text += '✅ КУПЛЕНО:\n';
+                text += `✅ ${t.purchased}:\n`;
                 text += '─'.repeat(40) + '\n';
                 completed.forEach((item, idx) => {
                     const total = (item.price || 0) * (item.quantity || 1);
@@ -2060,13 +2208,13 @@
                 
                 const completedTotal = completed.reduce((sum, item) => 
                     sum + (item.price || 0) * (item.quantity || 1), 0);
-                text += `ИТОГО: ${completedTotal.toFixed(2)} AZN\n\n`;
+                text += `${t.shoppingListTotal}: ${completedTotal.toFixed(2)} AZN\n\n`;
             }
             
             const grandTotal = shoppingList.reduce((sum, item) => 
                 sum + (item.price || 0) * (item.quantity || 1), 0);
             text += '═'.repeat(40) + '\n';
-            text += `ОБЩАЯ СУММА: ${grandTotal.toFixed(2)} AZN\n`;
+            text += `${t.generalTotal}: ${grandTotal.toFixed(2)} AZN\n`;
             text += '═'.repeat(40);
             
             navigator.clipboard.writeText(text).then(() => {
