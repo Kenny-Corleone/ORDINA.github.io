@@ -623,14 +623,14 @@
                         <audio id="radio-player" src="https://stream.zeno.fm/tjqlpbsxi4ytv"></audio>
                     </div>
                     <!-- Calculator Button -->
-                    <button id="calculator-btn" class="hidden md:flex items-center justify-center w-12 h-12 rounded-full bg-gradient-to-br from-blue-500 to-cyan-500 text-white hover:from-blue-600 hover:to-cyan-600 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105" title="Калькулятор">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <button id="calculator-btn" class="flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-gradient-to-br from-blue-500 to-cyan-500 text-white hover:from-blue-600 hover:to-cyan-600 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105" title="Калькулятор">
+                        <svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"/>
                         </svg>
                     </button>
                     <!-- Shopping List Button -->
-                    <button id="shopping-list-btn" class="hidden md:flex items-center justify-center w-12 h-12 rounded-full bg-gradient-to-br from-green-500 to-emerald-500 text-white hover:from-green-600 hover:to-emerald-600 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105" title="Список покупок">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <button id="shopping-list-btn" class="flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-gradient-to-br from-green-500 to-emerald-500 text-white hover:from-green-600 hover:to-emerald-600 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105" title="Список покупок">
+                        <svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"/>
                         </svg>
                     </button>
@@ -1820,7 +1820,7 @@
 
     <!-- Calculator Modal -->
     <dialog id="calculator-modal" class="rounded-2xl p-0 backdrop:bg-black/50">
-        <div class="p-4 md:p-6 rounded-2xl min-w-[280px] sm:min-w-[320px]" style="background: var(--bg-primary);">
+        <div class="p-3 sm:p-4 md:p-6 rounded-2xl w-[90vw] max-w-[400px]" style="background: var(--bg-primary);">
             <div class="flex justify-between items-center mb-4">
                 <h2 class="text-lg md:text-xl font-bold" style="color: var(--text-primary);">Калькулятор</h2>
                 <button id="close-calculator" class="hover:opacity-70 transition" style="color: var(--text-secondary);">✕</button>
@@ -1858,7 +1858,7 @@
 
     <!-- Shopping List Modal -->
     <dialog id="shopping-list-modal" class="rounded-2xl p-0 backdrop:bg-black/50">
-        <div class="p-4 md:p-6 rounded-2xl min-w-[90vw] sm:min-w-[400px] md:min-w-[500px] max-w-[95vw] md:max-w-[600px]" style="background: var(--bg-primary);">
+        <div class="p-3 sm:p-4 md:p-6 rounded-2xl w-[95vw] max-w-[600px]" style="background: var(--bg-primary);">
             <div class="flex justify-between items-center mb-4">
                 <h2 class="text-lg md:text-2xl font-bold" style="color: var(--text-primary);" data-i18n="shoppingListTitle">Список покупок</h2>
                 <div class="flex gap-2">
@@ -1914,14 +1914,22 @@
 
     <style>
         .calc-btn {
-            padding: 1rem;
-            font-size: 1.125rem;
+            padding: 0.75rem;
+            font-size: 1rem;
             font-weight: 700;
             background-color: rgb(229, 231, 235);
             color: rgb(31, 41, 55);
             border-radius: 0.5rem;
             transition: background-color 0.2s;
         }
+        
+        @media (max-width: 640px) {
+            .calc-btn {
+                padding: 0.5rem;
+                font-size: 0.875rem;
+            }
+        }
+        
         .dark .calc-btn {
             background-color: rgb(55, 65, 81);
             color: rgb(229, 231, 235);
