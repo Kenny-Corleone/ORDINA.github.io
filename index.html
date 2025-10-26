@@ -22,8 +22,15 @@
             background-color: rgba(0, 0, 0, 0.5);
         }
         .task-tab-active {
+            /* Highlight active task tab */
             background-color: #3b82f6;
             color: white;
+            border-color: #3b82f6;
+        }
+        .dark .task-tab-active {
+            background-color: #2563eb !important;
+            color: #f8fafc !important;
+            border-color: #2563eb !important;
         }
         .calendar-day {
             min-height: 120px;
@@ -135,84 +142,183 @@
             }
         }
         /* Dark mode overrides */
-        /* Define colours for dark mode; override tailwind utility classes for backgrounds and text */
+        /* Completely redesigned dark mode palette with high contrast */
         .dark body {
-            background-color: #1f2937;
-            color: #f9fafb;
+            /* Base background for dark mode */
+            background-color: #0d1117;
+            color: #cbd5e1;
         }
-        .dark .bg-white {
-            background-color: #1f2937 !important;
-        }
-        .dark .bg-gray-50 {
-            background-color: #374151 !important;
-        }
-        .dark .bg-gray-100 {
-            background-color: #4b5563 !important;
-        }
+        /* Override common light backgrounds with dark surfaces */
+        .dark .bg-white,
+        .dark .bg-gray-50,
+        .dark .bg-gray-100,
         .dark .bg-gray-200 {
-            background-color: #6b7280 !important;
+            background-color: #161b22 !important;
         }
+        /* Deeper surface for nested elements */
         .dark .bg-gray-300 {
-            background-color: #4b5563 !important;
+            background-color: #192734 !important;
         }
+        /* Adjust text colours for readability */
+        .dark .text-gray-900,
         .dark .text-gray-800,
         .dark .text-gray-700,
         .dark .text-gray-600,
         .dark .text-gray-500 {
-            color: #e5e7eb !important;
+            color: #f0f6fc !important;
         }
         .dark .text-gray-400 {
-            color: #9ca3af !important;
+            color: #8b9eb4 !important;
         }
+        .dark .text-gray-300 {
+            color: #6b809c !important;
+        }
+        /* Adjust border colours to match dark surfaces */
         .dark .border-gray-100,
         .dark .border-gray-200,
-        .dark .border-gray-300 {
-            border-color: #374151 !important;
+        .dark .border-gray-300,
+        .dark .border-gray-400 {
+            border-color: #24344d !important;
         }
-        .dark .shadow-lg {
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.5), 0 4px 6px -4px rgba(0, 0, 0, 0.5) !important;
-        }
-        .dark .shadow-md {
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.5), 0 2px 4px -1px rgba(0, 0, 0, 0.5) !important;
-        }
+        /* Enhance card shadows on dark background */
+        .dark .shadow-lg,
+        .dark .shadow-md,
         .dark .shadow-sm {
-            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.5), 0 1px 2px -1px rgba(0, 0, 0, 0.5) !important;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.7), 0 4px 6px -4px rgba(0, 0, 0, 0.7) !important;
         }
-
         /* Dark mode adjustments for status backgrounds and text colours */
         .dark .bg-green-100 {
-            background-color: #064e3b !important;
+            background-color: #033a26 !important;
         }
         .dark .bg-yellow-100 {
-            background-color: #78350f !important;
+            background-color: #442f04 !important;
         }
         .dark .bg-red-100 {
-            background-color: #7f1d1d !important;
+            background-color: #5b1010 !important;
         }
         .dark .bg-purple-100 {
-            background-color: #4c1d95 !important;
+            background-color: #2b1a47 !important;
         }
         .dark .text-green-700,
         .dark .text-green-600,
         .dark .text-green-800 {
-            color: #6ee7b7 !important;
+            color: #7fe7c0 !important;
         }
         .dark .text-yellow-700,
         .dark .text-yellow-600,
         .dark .text-yellow-800 {
-            color: #facc15 !important;
+            color: #eacb5f !important;
         }
         .dark .text-red-700,
         .dark .text-red-600,
         .dark .text-red-800 {
-            color: #fca5a5 !important;
+            color: #f99292 !important;
         }
         .dark .text-purple-700,
         .dark .text-purple-600 {
-            color: #c4b5fd !important;
+            color: #b4a1e0 !important;
         }
         .dark .text-orange-600 {
-            color: #fdba74 !important;
+            color: #e9aa75 !important;
+        }
+
+        /* Additional dark mode overrides for light background classes
+           Some elements use very light colours like red-50 or yellow-50 which become unreadable on dark backgrounds.
+           These overrides ensure they have appropriate dark shades. */
+        .dark .bg-red-50 {
+            background-color: #451212 !important;
+        }
+        .dark .bg-yellow-50 {
+            background-color: #4e3b0b !important;
+        }
+        .dark .bg-purple-50 {
+            background-color: #2b1a47 !important;
+        }
+        .dark .bg-green-50 {
+            background-color: #013220 !important;
+        }
+        .dark .bg-blue-50 {
+            background-color: #102a43 !important;
+        }
+
+        /* Modern Radio equalizer animation */
+        .equalizer {
+            display: flex;
+            align-items: flex-end;
+            height: 16px;
+            width: auto;
+        }
+        .equalizer span {
+            display: block;
+            width: 4px;
+            height: 4px;
+            background-color: rgba(255, 255, 255, 0.7);
+            border-radius: 2px;
+            animation: equalize 1.2s infinite ease-in-out alternate;
+        }
+        .equalizer span:nth-child(1) {
+            animation-delay: 0s;
+        }
+        .equalizer span:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+        .equalizer span:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+        .equalizer span:nth-child(4) {
+            animation-delay: 0.6s;
+        }
+        .equalizer span:nth-child(5) {
+            animation-delay: 0.8s;
+        }
+        .equalizer.paused span {
+            animation: none;
+            height: 4px;
+        }
+        @keyframes equalize {
+            from { height: 4px; }
+            to { height: 16px; }
+        }
+
+        /* Task tab styling */
+        .task-tab-button {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+            padding: 0.5rem 0.75rem;
+            margin-right: 0.5rem;
+            border: 1px solid #d1d5db;
+            border-bottom: none;
+            border-radius: 0.75rem 0.75rem 0 0;
+            background-color: #ffffff;
+            color: #374151;
+            font-weight: 500;
+            font-size: 0.875rem;
+            cursor: pointer;
+        }
+        .task-tab-button:last-child {
+            margin-right: 0;
+        }
+        .task-tab-button:hover {
+            background-color: #f3f4f6;
+        }
+        .task-tab-active {
+            background-color: #2563eb;
+            color: #ffffff;
+            border-color: #2563eb;
+        }
+        .dark .task-tab-button {
+            background-color: #1f2937;
+            border-color: #374151;
+            color: #d1d5db;
+        }
+        .dark .task-tab-button:hover {
+            background-color: #273549;
+        }
+        .dark .task-tab-active {
+            background-color: #3b82f6;
+            color: #f8fafc;
+            border-color: #3b82f6;
         }
     </style>
 </head>
@@ -225,7 +331,7 @@
                 <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                 <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
             </svg>
-            <p class="mt-4 text-lg font-semibold text-gray-700" data-i18n="loading">Загрузка данных...</p>
+            <p class="mt-4 text-lg font-semibold text-gray-700 dark:text-gray-300" data-i18n="loading">Загрузка данных...</p>
         </div>
     </div>
 
@@ -234,40 +340,40 @@
         <div class="max-w-sm w-full space-y-6">
             <div class="flex justify-center space-x-2 mb-4">
                 <button id="lang-ru-login" title="Русский" class="px-3 py-1 text-xs font-medium rounded-lg bg-blue-600 text-white">RU</button>
-                <button id="lang-en-login" title="English" class="px-3 py-1 text-xs font-medium rounded-lg bg-gray-200 text-gray-700 hover:bg-gray-300">EN</button>
-                <button id="lang-az-login" title="Azərbaycan" class="px-3 py-1 text-xs font-medium rounded-lg bg-gray-200 text-gray-700 hover:bg-gray-300">AZ</button>
+                <button id="lang-en-login" title="English" class="px-3 py-1 text-xs font-medium rounded-lg bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600">EN</button>
+                <button id="lang-az-login" title="Azərbaycan" class="px-3 py-1 text-xs font-medium rounded-lg bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600">AZ</button>
             </div>
             <div class="text-center">
                 <div class="mb-4">
                     <img src="https://raw.githubusercontent.com/Kenny-Corleone/ORDINA.github.io/main/logo%20ORDINA.png" alt="ORDINA Logo" class="mx-auto h-48 sm:h-56 w-auto drop-shadow-lg">
                 </div>
-                <h2 class="text-base sm:text-lg font-bold text-gray-800 mb-1" data-i18n="authTitle">Войдите в свой аккаунт</h2>
-                <p class="text-xs text-gray-600">Добро пожаловать в ORDINA</p>
+                <h2 class="text-base sm:text-lg font-bold text-gray-800 dark:text-gray-200 mb-1" data-i18n="authTitle">Войдите в свой аккаунт</h2>
+                <p class="text-xs text-gray-600 dark:text-gray-400">Добро пожаловать в ORDINA</p>
             </div>
-            <div class="bg-white rounded-2xl shadow-xl p-3 sm:p-4 space-y-3">
-                 <button type="button" id="google-signin-btn" class="group relative w-full flex justify-center items-center py-2 px-3 border border-gray-300 text-xs font-medium rounded-xl text-gray-700 bg-white hover:bg-gray-50 hover:shadow-md transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+            <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-3 sm:p-4 space-y-3">
+                 <button type="button" id="google-signin-btn" class="group relative w-full flex justify-center items-center py-2 px-3 border border-gray-300 dark:border-gray-600 text-xs font-medium rounded-xl text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 hover:shadow-md transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
                     <svg class="h-3 w-3 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48px" height="48px"><path fill="#FFC107" d="M43.611,20.083H42V20H24v8h11.303c-1.649,4.657-6.08,8-11.303,8c-6.627,0-12-5.373-12-12c0-6.627,5.373-12,12-12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C12.955,4,4,12.955,4,24c0,11.045,8.955,20,20,20c11.045,0,20-8.955,20-20C44,22.659,43.862,21.35,43.611,20.083z"></path><path fill="#FF3D00" d="M6.306,14.691l6.571,4.819C14.655,15.108,18.961,12,24,12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C16.318,4,9.656,8.337,6.306,14.691z"></path><path fill="#4CAF50" d="M24,44c5.166,0,9.86-1.977,13.409-5.192l-6.19-5.238C29.211,35.091,26.715,36,24,36c-5.222,0-9.521-3.108-11.28-7.481l-6.522,5.025C9.505,39.556,16.227,44,24,44z"></path><path fill="#1976D2" d="M43.611,20.083H42V20H24v8h11.303c-0.792,2.237-2.231,4.166-4.087,5.574l6.19,5.238C39.99,36.566,44,30.84,44,24C44,22.659,43.862,21.35,43.611,20.083z"></path></svg>
                     <span data-i18n="loginWithGoogle">Войти через Google</span>
                 </button>
                 <div class="relative">
-                    <div class="absolute inset-0 flex items-center"><div class="w-full border-t border-gray-200"></div></div>
-                    <div class="relative flex justify-center text-xs"><span class="px-2 bg-white text-gray-400 font-medium">или</span></div>
+                    <div class="absolute inset-0 flex items-center"><div class="w-full border-t border-gray-200 dark:border-gray-600"></div></div>
+                    <div class="relative flex justify-center text-xs"><span class="px-2 bg-white dark:bg-gray-800 text-gray-400 dark:text-gray-500 font-medium">или</span></div>
                 </div>
                 <form id="auth-form" class="space-y-3">
                     <div class="space-y-2">
                         <div>
-                            <label for="email-address" class="block text-xs font-medium text-gray-700 mb-1">Email</label>
-                            <input id="email-address" name="email" type="email" autocomplete="email" required class="w-full px-2.5 py-2 border border-gray-300 rounded-xl text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 text-sm" placeholder="Введите ваш email">
+                            <label for="email-address" class="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">Email</label>
+                            <input id="email-address" name="email" type="email" autocomplete="email" required class="w-full px-2.5 py-2 border border-gray-300 dark:border-gray-600 rounded-xl text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 text-sm bg-white dark:bg-gray-700" placeholder="Введите ваш email">
                         </div>
                         <div>
-                            <label for="password" class="block text-xs font-medium text-gray-700 mb-1">Пароль</label>
-                            <input id="password" name="password" type="password" autocomplete="current-password" required class="w-full px-2.5 py-2 border border-gray-300 rounded-xl text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 text-sm" placeholder="Введите пароль">
+                            <label for="password" class="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">Пароль</label>
+                            <input id="password" name="password" type="password" autocomplete="current-password" required class="w-full px-2.5 py-2 border border-gray-300 dark:border-gray-600 rounded-xl text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 text-sm bg-white dark:bg-gray-700" placeholder="Введите пароль">
                         </div>
                     </div>
                     <p id="auth-error" class="text-red-500 text-xs text-center"></p>
                     <div class="space-y-2">
                          <button type="submit" id="login-btn" class="w-full flex justify-center py-2 px-3 border border-transparent text-xs font-medium rounded-xl text-white bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-200 shadow-lg hover:shadow-xl" data-i18n="login">Войти</button>
-                         <button type="button" id="register-btn" class="w-full flex justify-center py-2 px-3 border border-gray-300 text-xs font-medium rounded-xl text-gray-700 bg-white hover:bg-gray-50 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-200" data-i18n="register">Зарегистрироваться</button>
+                         <button type="button" id="register-btn" class="w-full flex justify-center py-2 px-3 border border-gray-300 dark:border-gray-600 text-xs font-medium rounded-xl text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-200" data-i18n="register">Зарегистрироваться</button>
                     </div>
                 </form>
             </div>
@@ -276,90 +382,136 @@
     
     <div id="app" class="max-w-7xl mx-auto p-2 sm:p-4 md:p-6 relative opacity-0 transition-opacity duration-300 hidden">
         <!-- Fixed header wrapper to keep top bar, logo, and navigation static on scroll -->
-        <div id="fixed-header" class="sticky top-0 z-30 bg-white dark:bg-gray-900">
-        <!-- Combined header row: logo, motto, and controls -->
-        <div class="flex flex-col sm:flex-row items-center justify-between gap-2 py-1">
-            <!-- Left section: logo and motto -->
-            <div class="flex items-center gap-2">
-                <img src="https://raw.githubusercontent.com/Kenny-Corleone/ORDINA.github.io/main/logo%20ORDINA.png" alt="ORDINA Logo" class="h-12 sm:h-16 md:h-20 w-auto drop-shadow-lg">
-                <p class="text-gray-600 dark:text-gray-200 text-xs sm:text-sm md:text-base font-medium" data-i18n="appSubtitle">Управляй своей жизнью с легкостью</p>
-            </div>
-            <!-- Right section: currency, language, theme, radio, logout -->
-            <div class="flex flex-wrap items-center justify-end gap-2">
-                <div class="flex items-center border border-gray-300 dark:border-gray-600 rounded-lg p-0.5 text-sm">
-                    <button id="currency-azn" class="px-2 py-0.5 rounded-md currency-btn-active">AZN</button>
-                    <button id="currency-usd" class="px-2 py-0.5 rounded-md">USD</button>
+        <div id="fixed-header" class="sticky top-0 z-30 bg-white dark:bg-gray-900 shadow-sm">
+            <!-- Compact top bar for logo and controls -->
+            <div class="flex items-center justify-between px-2 sm:px-3 md:px-4 py-2 md:py-3">
+                <!-- Logo and motto -->
+                <div class="flex items-center gap-2 md:gap-3">
+                    <img src="https://raw.githubusercontent.com/Kenny-Corleone/ORDINA.github.io/main/logo%20ORDINA.png" alt="ORDINA Logo" class="h-24 sm:h-32 md:h-36 lg:h-40 w-auto drop-shadow-xl">
+                    <!-- Show motto on medium and larger screens -->
+                    <span class="hidden lg:inline-block text-gray-600 dark:text-gray-200 text-sm font-semibold" data-i18n="appSubtitle">Управляй своей жизнью с легкостью</span>
                 </div>
-                <div class="flex items-center space-x-1">
-                    <button id="lang-ru" title="Русский"><img src="https://placehold.co/32x24/d52b1e/ffffff?text=RU" alt="RU" class="rounded-sm cursor-pointer"></button>
-                    <button id="lang-en" title="English"><img src="https://placehold.co/32x24/012169/ffffff?text=EN" alt="EN" class="rounded-sm cursor-pointer"></button>
-                    <button id="lang-az" title="Azərbaycan"><img src="https://placehold.co/32x24/00a651/ffffff?text=AZ" alt="AZ" class="rounded-sm cursor-pointer"></button>
-                    <!-- Theme Toggle Button -->
-                    <button id="theme-toggle" title="Toggle theme" class="p-1 rounded-lg bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
-                        <span id="theme-icon-light" class="block dark:hidden">🌙</span>
-                        <span id="theme-icon-dark" class="hidden dark:block">☀️</span>
+                <!-- Controls: currency, languages, theme toggle, radio, logout -->
+                <div class="flex items-center gap-1.5 sm:gap-2 flex-wrap justify-end">
+                    <!-- Currency Toggle -->
+                    <div class="flex items-center border border-gray-300 dark:border-gray-600 rounded-lg overflow-hidden text-xs sm:text-sm">
+                        <button id="currency-azn" class="px-2 py-1 currency-btn-active">AZN</button>
+                        <button id="currency-usd" class="px-2 py-1">USD</button>
+                    </div>
+                    <!-- Language Buttons -->
+                    <div class="flex items-center space-x-1">
+                        <button id="lang-ru" title="Русский"><img src="https://placehold.co/28x20/d52b1e/ffffff?text=RU" alt="RU" class="rounded-sm cursor-pointer"></button>
+                        <button id="lang-en" title="English"><img src="https://placehold.co/28x20/012169/ffffff?text=EN" alt="EN" class="rounded-sm cursor-pointer"></button>
+                        <button id="lang-az" title="Azərbaycan"><img src="https://placehold.co/28x20/00a651/ffffff?text=AZ" alt="AZ" class="rounded-sm cursor-pointer"></button>
+                    </div>
+                    <!-- Theme Toggle -->
+                    <button id="theme-toggle" title="Toggle theme" class="p-1 rounded-md bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+                        <!-- Elegant moon icon for light mode -->
+                        <svg id="theme-icon-light" class="w-6 h-6 block dark:hidden transition-all duration-300" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        <!-- Elegant sun icon for dark mode -->
+                        <svg id="theme-icon-dark" class="w-6 h-6 hidden dark:block transition-all duration-300" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="12" cy="12" r="4" fill="currentColor"/>
+                            <path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                        </svg>
                     </button>
-                </div>
-                <!-- Radio Player -->
-                <div class="bg-white dark:bg-gray-800 p-1 rounded-lg shadow-md w-auto">
-                    <div class="flex items-center justify-between">
-                        <p class="text-sm font-medium text-gray-800 dark:text-gray-200" data-i18n="radioTitle">Радио AzerbaiJazz</p>
-                        <div class="flex items-center space-x-2">
-                            <audio id="radio-player" src="https://stream.zeno.fm/tjqlpbsxi4ytv"></audio>
-                            <button id="radio-play-pause-btn" class="w-8 h-8 flex items-center justify-center rounded-full bg-blue-600 text-white hover:bg-blue-700 transition focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
-                                <svg id="play-icon" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z"></path></svg>
-                                <svg id="pause-icon" class="w-5 h-5 hidden" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zM7 8a1 1 0 012 0v4a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v4a1 1 0 102 0V8a1 1 0 00-1-1z"></path></svg>
-                            </button>
+                    <!-- Modern Radio Player -->
+                    <div class="hidden md:flex items-center bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 dark:from-indigo-600 dark:via-purple-600 dark:to-pink-600 px-6 py-4 rounded-3xl shadow-2xl backdrop-blur-sm border border-white/20 space-x-4">
+                        <!-- Play/Pause Button -->
+                        <button id="radio-play-pause-btn" class="w-12 h-12 flex items-center justify-center rounded-full bg-white/25 backdrop-blur-sm text-white hover:bg-white/35 transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-white/30 shadow-lg hover:shadow-xl transform hover:scale-105">
+                            <svg id="play-icon" class="w-6 h-6 ml-0.5" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M8 5v14l11-7z"/>
+                            </svg>
+                            <svg id="pause-icon" class="w-6 h-6 hidden" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M6 4h4v16H6V4zm8 0h4v16h-4V4z"/>
+                            </svg>
+                        </button>
+                        
+                        <!-- Radio Info -->
+                        <div class="flex flex-col justify-center flex-grow min-w-0">
+                            <div class="flex items-center space-x-2">
+                                <div class="w-2 h-2 bg-red-500 rounded-full animate-pulse"></div>
+                                <span class="text-sm font-bold text-white truncate" data-i18n="radioTitle">AzerbaiJazz Radio</span>
+                            </div>
+                            <div class="flex items-center space-x-2 mt-1">
+                                <div id="equalizer" class="equalizer paused flex space-x-1">
+                                    <span class="w-1 bg-white/70 rounded-full animate-pulse"></span>
+                                    <span class="w-1 bg-white/70 rounded-full animate-pulse"></span>
+                                    <span class="w-1 bg-white/70 rounded-full animate-pulse"></span>
+                                    <span class="w-1 bg-white/70 rounded-full animate-pulse"></span>
+                                    <span class="w-1 bg-white/70 rounded-full animate-pulse"></span>
+                                </div>
+                                <span class="text-xs text-white/80">LIVE</span>
+                            </div>
                         </div>
+                        
+                        <!-- Volume Control -->
+                        <div class="flex items-center space-x-2">
+                            <svg class="w-4 h-4 text-white/80" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/>
+                            </svg>
+                            <input type="range" id="radio-volume-slider" min="0" max="1" step="0.01" value="1" class="w-20 h-1 rounded-full appearance-none cursor-pointer bg-white/30 accent-white focus:outline-none hover:bg-white/40 transition-colors">
+                        </div>
+                        
+                        <audio id="radio-player" src="https://stream.zeno.fm/tjqlpbsxi4ytv"></audio>
                     </div>
-                    <div class="flex items-center mt-1 space-x-2">
-                        <svg class="w-5 h-5 text-gray-500 dark:text-gray-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M9.383 3.076A1 1 0 0110 4v12a1 1 0 01-1.707.707L4.586 13H2a1 1 0 01-1-1V8a1 1 0 011-1h2.586l3.707-3.707a1 1 0 011.09-.217zM14.657 2.929a1 1 0 011.414 0A9.953 9.953 0 0117 10a9.953 9.953 0 01-1.072 4.929 1 1 0 11-1.5-1.329A7.957 7.957 0 0015 10a7.957 7.957 0 00-.843-3.742 1 1 0 010-1.329z" clip-rule="evenodd"></path><path d="M12.293 5.293a1 1 0 011.414 0A5.963 5.963 0 0114 10a5.963 5.963 0 01-.707 2.707 1 1 0 11-1.5-1.329A3.964 3.964 0 0012 10a3.964 3.964 0 00-.586-2.032 1 1 0 010-1.386z"></path></svg>
-                        <input type="range" id="radio-volume-slider" min="0" max="1" step="0.01" value="1" class="w-full h-1.5 bg-gray-200 dark:bg-gray-700 rounded-lg appearance-none cursor-pointer styled-slider">
-                    </div>
+                    <!-- Calculator Button -->
+                    <button id="calculator-btn" class="hidden md:flex items-center justify-center w-12 h-12 rounded-full bg-gradient-to-br from-blue-500 to-cyan-500 text-white hover:from-blue-600 hover:to-cyan-600 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105" title="Калькулятор">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"/>
+                        </svg>
+                    </button>
+                    <!-- Shopping List Button -->
+                    <button id="shopping-list-btn" class="hidden md:flex items-center justify-center w-12 h-12 rounded-full bg-gradient-to-br from-green-500 to-emerald-500 text-white hover:from-green-600 hover:to-emerald-600 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105" title="Список покупок">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"/>
+                        </svg>
+                    </button>
+                    <!-- Logout -->
+                    <button id="logout-btn" class="text-xs sm:text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-blue-600 px-2" data-i18n="logout">Выйти</button>
                 </div>
-                <button id="logout-btn" class="text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-blue-600" data-i18n="logout">Выйти</button>
             </div>
-        </div>
-
-        <nav class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg mb-1">
-            <div class="flex border-b border-gray-100 dark:border-gray-700 overflow-x-auto">
-                <button data-tab="dashboard" class="tab-button px-4 sm:px-6 py-1 border-b-2 border-transparent tab-active whitespace-nowrap text-sm sm:text-base font-medium text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-200" data-i18n="tabDashboard">Сводка</button>
-                <button data-tab="debts" class="tab-button px-4 sm:px-6 py-1 border-b-2 border-transparent whitespace-nowrap text-sm sm:text-base font-medium text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-200" data-i18n="tabDebts">Долги</button>
-                <button data-tab="recurring-expenses" class="tab-button px-4 sm:px-6 py-1 border-b-2 border-transparent whitespace-nowrap text-sm sm:text-base font-medium text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-200" data-i18n="tabRecurringExpenses">Ежемесячные расходы</button>
-                <button data-tab="expenses" class="tab-button px-4 sm:px-6 py-1 border-b-2 border-transparent whitespace-nowrap text-sm sm:text-base font-medium text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-200" data-i18n="tabMonthlyExpenses">Расходы месяца</button>
-                <button data-tab="tasks" class="tab-button px-4 sm:px-6 py-1 border-b-2 border-transparent whitespace-nowrap text-sm sm:text-base font-medium text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-200" data-i18n="tabTasks">Список задач</button>
-                <button data-tab="calendar" class="tab-button px-4 sm:px-6 py-1 border-b-2 border-transparent whitespace-nowrap text-sm sm:text-base font-medium text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-200" data-i18n="tabCalendar">Календарь</button>
-                <button data-tab="payments" class="tab-button px-4 sm:px-6 py-1 border-b-2 border-transparent whitespace-nowrap text-sm sm:text-base font-medium text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-200" data-i18n="tabPayments">Оплата</button>
-            </div>
-        </nav>
-        </div> <!-- end of fixed-header -->
+            <!-- Navigation -->
+            <nav class="bg-gray-50 dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 rounded-b-2xl">
+                <div class="flex overflow-x-auto">
+                    <button data-tab="dashboard" class="tab-button px-3 sm:px-4 md:px-5 py-2 border-b-2 border-transparent tab-active whitespace-nowrap text-xs sm:text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-700 transition" data-i18n="tabDashboard">Сводка</button>
+                    <button data-tab="debts" class="tab-button px-3 sm:px-4 md:px-5 py-2 border-b-2 border-transparent whitespace-nowrap text-xs sm:text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-700 transition" data-i18n="tabDebts">Долги</button>
+                    <button data-tab="recurring-expenses" class="tab-button px-3 sm:px-4 md:px-5 py-2 border-b-2 border-transparent whitespace-nowrap text-xs sm:text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-700 transition" data-i18n="tabRecurringExpenses">Ежемесячные</button>
+                    <button data-tab="expenses" class="tab-button px-3 sm:px-4 md:px-5 py-2 border-b-2 border-transparent whitespace-nowrap text-xs sm:text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-700 transition" data-i18n="tabMonthlyExpenses">Расходы</button>
+                    <button data-tab="tasks" class="tab-button px-3 sm:px-4 md:px-5 py-2 border-b-2 border-transparent whitespace-nowrap text-xs sm:text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-700 transition" data-i18n="tabTasks">Задачи</button>
+                    <button data-tab="calendar" class="tab-button px-3 sm:px-4 md:px-5 py-2 border-b-2 border-transparent whitespace-nowrap text-xs sm:text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-700 transition" data-i18n="tabCalendar">Календарь</button>
+                    <button data-tab="payments" class="tab-button px-3 sm:px-4 md:px-5 py-2 border-b-2 border-transparent whitespace-nowrap text-xs sm:text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-700 transition" data-i18n="tabPayments">Оплата</button>
+                </div>
+            </nav>
+        </div><!-- end of fixed-header -->
 
         <main>
             <div id="dashboard-page" class="page-content">
-                 <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center mb-8 gap-6">
-                    <div><h2 class="text-2xl sm:text-3xl font-bold text-gray-800" data-i18n="dashboardTitle">Сводка за месяц</h2></div>
+                 <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center mb-6 md:mb-8 gap-4">
+                    <div><h2 class="text-xl sm:text-2xl md:text-3xl font-bold text-gray-800 dark:text-gray-200" data-i18n="dashboardTitle">Сводка за месяц</h2></div>
                      <div class="w-full lg:w-auto">
-                        <p id="current-datetime" class="font-semibold text-lg text-gray-700 mb-2 text-center lg:text-right"></p>
-                        <select id="month-selector" class="bg-white border border-gray-300 text-gray-900 text-sm rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent block w-full lg:w-48 p-3 shadow-sm hover:shadow-md transition-all duration-200"></select>
+                        <p id="current-datetime" class="font-semibold text-base sm:text-lg text-gray-700 dark:text-gray-300 mb-2 text-center lg:text-right"></p>
+                        <select id="month-selector" class="bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-gray-100 text-sm rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent block w-full lg:w-48 p-2.5 md:p-3 shadow-sm hover:shadow-md transition-all duration-200"></select>
                     </div>
                 </div>
                 <div id="dashboard-loading" class="text-center p-8" data-i18n="loading">Загрузка данных...</div>
                 <div id="dashboard-content" class="hidden">
-                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-                        <div class="bg-gradient-to-br from-green-50 to-green-100 dark:from-green-800 dark:to-green-900 p-6 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 border border-green-200 dark:border-green-700"><h3 class="text-lg font-semibold text-green-700 dark:text-green-200 mb-3" data-i18n="dashRecurringPaid">Ежемесячные (оплачено)</h3><p id="total-recurring-paid" class="text-3xl sm:text-4xl font-bold text-green-600 dark:text-green-100">0 AZN</p></div>
-                        <div class="bg-gradient-to-br from-yellow-50 to-yellow-100 dark:from-yellow-700 dark:to-yellow-900 p-6 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 border border-yellow-200 dark:border-yellow-700"><h3 class="text-lg font-semibold text-yellow-700 dark:text-yellow-200 mb-3" data-i18n="dashRecurringRemaining">Ежемесячные (осталось)</h3><p id="total-recurring-remaining" class="text-3xl sm:text-4xl font-bold text-yellow-600 dark:text-yellow-100">0 AZN</p></div>
-                        <div class="bg-gradient-to-br from-red-50 to-red-100 dark:from-red-800 dark:to-red-900 p-6 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 border border-red-200 dark:border-red-700"><h3 class="text-lg font-semibold text-red-700 dark:text-red-200 mb-3" data-i18n="dashMonthlyExpenses">Расходы за месяц</h3><p id="total-monthly-outflow" class="text-3xl sm:text-4xl font-bold text-red-600 dark:text-red-100">0 AZN</p></div>
-                        <div class="bg-gradient-to-br from-purple-50 to-purple-100 dark:from-purple-800 dark:to-purple-900 p-6 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 border border-purple-200 dark:border-purple-700"><h3 class="text-lg font-semibold text-purple-700 dark:text-purple-200 mb-3" data-i18n="dashTotalDebt">Остаток общего долга</h3><p id="total-debt-remaining" class="text-3xl font-bold mt-2 text-orange-600 dark:text-orange-200">0 AZN</p></div>
-                        <div class="bg-white p-6 rounded-lg shadow-sm"><h3 class="text-lg font-medium text-gray-500" data-i18n="dashTasksMonth">Осталось задач (месяц)</h3><p id="tasks-remaining-month" class="text-3xl font-bold mt-2 text-indigo-600">0</p></div>
-                        <div class="bg-white p-6 rounded-lg shadow-sm"><h3 class="text-lg font-medium text-gray-500" data-i18n="dashTasksYear">Осталось задач (год)</h3><p id="tasks-remaining-year" class="text-3xl font-bold mt-2 text-purple-600">0</p></div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 mb-6 md:mb-8">
+                        <div class="bg-gradient-to-br from-green-50 to-green-100 dark:from-green-800 dark:to-green-900 p-4 md:p-6 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 border border-green-200 dark:border-green-700"><h3 class="text-base md:text-lg font-semibold text-green-700 dark:text-green-200 mb-2 md:mb-3" data-i18n="dashRecurringPaid">Ежемесячные (оплачено)</h3><p id="total-recurring-paid" class="text-2xl md:text-3xl lg:text-4xl font-bold text-green-600 dark:text-green-100">0 AZN</p></div>
+                        <div class="bg-gradient-to-br from-yellow-50 to-yellow-100 dark:from-yellow-700 dark:to-yellow-900 p-4 md:p-6 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 border border-yellow-200 dark:border-yellow-700"><h3 class="text-base md:text-lg font-semibold text-yellow-700 dark:text-yellow-200 mb-2 md:mb-3" data-i18n="dashRecurringRemaining">Ежемесячные (осталось)</h3><p id="total-recurring-remaining" class="text-2xl md:text-3xl lg:text-4xl font-bold text-yellow-600 dark:text-yellow-100">0 AZN</p></div>
+                        <div class="bg-gradient-to-br from-red-50 to-red-100 dark:from-red-800 dark:to-red-900 p-4 md:p-6 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 border border-red-200 dark:border-red-700"><h3 class="text-base md:text-lg font-semibold text-red-700 dark:text-red-200 mb-2 md:mb-3" data-i18n="dashMonthlyExpenses">Расходы за месяц</h3><p id="total-monthly-outflow" class="text-2xl md:text-3xl lg:text-4xl font-bold text-red-600 dark:text-red-100">0 AZN</p></div>
+                        <div class="bg-gradient-to-br from-purple-50 to-purple-100 dark:from-purple-800 dark:to-purple-900 p-4 md:p-6 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 border border-purple-200 dark:border-purple-700"><h3 class="text-base md:text-lg font-semibold text-purple-700 dark:text-purple-200 mb-2 md:mb-3" data-i18n="dashTotalDebt">Остаток общего долга</h3><p id="total-debt-remaining" class="text-2xl md:text-3xl font-bold mt-2 text-orange-600 dark:text-orange-200">0 AZN</p></div>
+                        <div class="bg-white dark:bg-gray-800 p-4 md:p-6 rounded-lg shadow-sm"><h3 class="text-base md:text-lg font-medium text-gray-500 dark:text-gray-400" data-i18n="dashTasksMonth">Осталось задач (месяц)</h3><p id="tasks-remaining-month" class="text-2xl md:text-3xl font-bold mt-2 text-indigo-600 dark:text-indigo-400">0</p></div>
+                        <div class="bg-white dark:bg-gray-800 p-4 md:p-6 rounded-lg shadow-sm"><h3 class="text-base md:text-lg font-medium text-gray-500 dark:text-gray-400" data-i18n="dashTasksYear">Осталось задач (год)</h3><p id="tasks-remaining-year" class="text-2xl md:text-3xl font-bold mt-2 text-purple-600 dark:text-purple-400">0</p></div>
                     </div>
-                    <div class="bg-white p-6 rounded-lg shadow-sm"><h3 class="text-xl font-semibold mb-4" data-i18n="dashTopCategories">Топ категорий расходов</h3><div class="max-h-96"><canvas id="expenses-chart"></canvas></div></div>
+                    <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-sm"><h3 class="text-xl font-semibold mb-4 text-gray-800 dark:text-gray-200" data-i18n="dashTopCategories">Топ категорий расходов</h3><div class="max-h-96"><canvas id="expenses-chart"></canvas></div></div>
                 </div>
             </div>
 
             <div id="debts-page" class="page-content hidden">
-                <div class="flex justify-between items-center mb-4"><h2 class="text-2xl font-semibold" data-i18n="debtsTitle">Общие долги</h2><button id="add-debt-btn" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition" data-i18n="addDebt">Добавить долг</button></div>
-                <div id="debts-table-wrapper" class="bg-white rounded-lg shadow-sm overflow-x-auto md:bg-transparent md:shadow-none">
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-4 md:mb-6"><h2 class="text-xl md:text-2xl font-bold text-gray-800 dark:text-gray-200" data-i18n="debtsTitle">Общие долги</h2><button id="add-debt-btn" class="bg-blue-600 text-white px-3 md:px-4 py-2 rounded-lg hover:bg-blue-700 transition text-sm md:text-base" data-i18n="addDebt">Добавить долг</button></div>
+                <div id="debts-table-wrapper" class="bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-x-auto md:bg-transparent md:shadow-none">
                     <table class="w-full text-sm text-left responsive-table">
                         <thead class="bg-gray-50 text-xs text-gray-700 uppercase"><tr><th class="px-6 py-3" data-i18n="debtName">Долг (Имя)</th><th class="px-6 py-3" data-i18n="amount">Сумма</th><th class="px-6 py-3" data-i18n="paid">Оплачено</th><th class="px-6 py-3" data-i18n="remaining">Осталось</th><th class="px-6 py-3" data-i18n="lastPaymentDate">Дата последней оплаты</th><th class="px-6 py-3" data-i18n="comments">Комментарии</th><th class="px-6 py-3" data-i18n="actions">Действия</th></tr></thead>
                         <tbody id="debts-table"></tbody>
@@ -369,8 +521,8 @@
             </div>
 
             <div id="recurring-expenses-page" class="page-content hidden">
-                <div class="flex justify-between items-center mb-4"><h2 class="text-2xl font-semibold"><span data-i18n="recurringTitle">Ежемесячные расходы</span> (<span id="recurring-month-name"></span>)</h2><button id="add-recurring-expense-btn" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition" data-i18n="addTemplate">Добавить шаблон</button></div>
-                <div id="recurring-expenses-table-wrapper" class="bg-white rounded-lg shadow-sm overflow-x-auto md:bg-transparent md:shadow-none">
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-4 md:mb-6"><h2 class="text-xl md:text-2xl font-bold text-gray-800 dark:text-gray-200"><span data-i18n="recurringTitle">Ежемесячные расходы</span> (<span id="recurring-month-name"></span>)</h2><button id="add-recurring-expense-btn" class="bg-blue-600 text-white px-3 md:px-4 py-2 rounded-lg hover:bg-blue-700 transition text-sm md:text-base" data-i18n="addTemplate">Добавить шаблон</button></div>
+                <div id="recurring-expenses-table-wrapper" class="bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-x-auto md:bg-transparent md:shadow-none">
                     <table class="w-full text-sm text-left responsive-table">
                         <thead class="bg-gray-50 text-xs text-gray-700 uppercase"><tr><th class="px-6 py-3" data-i18n="name">Наименование</th><th class="px-6 py-3" data-i18n="amount">Сумма</th><th class="px-6 py-3" data-i18n="paymentDay">День оплаты</th><th class="px-6 py-3" data-i18n="status">Статус оплаты</th><th class="px-6 py-3" data-i18n="details">Детали</th><th class="px-6 py-3" data-i18n="templateActions">Действия с шаблоном</th></tr></thead>
                         <tbody id="recurring-expenses-table"></tbody>
@@ -380,7 +532,7 @@
             </div>
 
             <div id="expenses-page" class="page-content hidden">
-                 <div class="flex justify-between items-center mb-4"><h2 class="text-2xl font-semibold"><span data-i18n="expensesTitle">Все расходы за</span> <span class="current-month-name"></span></h2><div class="flex space-x-2"><button id="manage-categories-btn" class="bg-gray-200 text-gray-800 px-4 py-2 rounded-lg hover:bg-gray-300 transition" data-i18n="manageCategories">Управление категориями</button><button id="add-expense-btn" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition" data-i18n="addExpense">Добавить расход</button></div></div>
+                 <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-4 md:mb-6"><h2 class="text-xl md:text-2xl font-bold text-gray-800 dark:text-gray-200"><span data-i18n="expensesTitle">Все расходы за</span> <span class="current-month-name"></span></h2><div class="flex flex-wrap gap-2"><button id="manage-categories-btn" class="bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 px-3 md:px-4 py-2 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 transition text-sm md:text-base" data-i18n="manageCategories">Управление категориями</button><button id="add-expense-btn" class="bg-blue-600 text-white px-3 md:px-4 py-2 rounded-lg hover:bg-blue-700 transition text-sm md:text-base" data-i18n="addExpense">Добавить расход</button></div></div>
                 <div id="expenses-table-wrapper" class="bg-white rounded-lg shadow-sm overflow-x-auto md:bg-transparent md:shadow-none">
                     <table class="w-full text-sm text-left responsive-table">
                         <thead class="bg-gray-50 text-xs text-gray-700 uppercase"><tr><th class="px-6 py-3" data-i18n="name">Наименование</th><th class="px-6 py-3" data-i18n="category">Категория</th><th class="px-6 py-3" data-i18n="amount">Сумма</th><th class="px-6 py-3" data-i18n="date">Дата</th><th class="px-6 py-3" data-i18n="actions">Действия</th></tr></thead>
@@ -391,7 +543,46 @@
             </div>
             
             <div id="tasks-page" class="page-content hidden">
-                <div class="mb-4 border-b border-gray-200"><nav class="flex -mb-px" aria-label="Tabs"><button class="task-tab-button task-tab-active" data-task-tab="today"><span data-i18n="taskToday">На сегодня</span> (<span id="today-date"></span>)</button><button class="task-tab-button" data-task-tab="month"><span data-i18n="taskMonth">На месяц</span></button><button class="task-tab-button" data-task-tab="year"><span data-i18n="taskYear">На год</span></button></nav></div>
+                <!-- Task tabs redesigned: buttons with icons -->
+                <div class="mb-6">
+                    <nav class="flex flex-wrap gap-2" aria-label="Task Tabs">
+                        <button class="task-tab-button task-tab-active" data-task-tab="today">
+                            <!-- Day icon -->
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                                <circle cx="12" cy="12" r="5"></circle>
+                                <g stroke="currentColor" stroke-width="2">
+                                    <line x1="12" y1="1" x2="12" y2="3"></line>
+                                    <line x1="12" y1="21" x2="12" y2="23"></line>
+                                    <line x1="1" y1="12" x2="3" y2="12"></line>
+                                    <line x1="21" y1="12" x2="23" y2="12"></line>
+                                    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                                    <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                                    <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                                    <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                                </g>
+                            </svg>
+                            <span data-i18n="taskToday">На сегодня</span>
+                            <span class="ml-1">(</span><span id="today-date"></span><span>)</span>
+                        </button>
+                        <button class="task-tab-button" data-task-tab="month">
+                            <!-- Month icon: four squares -->
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                                <rect x="3" y="4" width="6" height="6"></rect>
+                                <rect x="3" y="12" width="6" height="6"></rect>
+                                <rect x="11" y="4" width="6" height="6"></rect>
+                                <rect x="11" y="12" width="6" height="6"></rect>
+                            </svg>
+                            <span data-i18n="taskMonth">На месяц</span>
+                        </button>
+                        <button class="task-tab-button" data-task-tab="year">
+                            <!-- Long-term icon: bookmark shape -->
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M6 2a2 2 0 012-2h8a2 2 0 012 2v18l-6-4-6 4V2z"></path>
+                            </svg>
+                            <span data-i18n="taskYear">Долгосрочный</span>
+                        </button>
+                    </nav>
+                </div>
                 <div id="task-tab-today" class="task-tab-content">
                     <div class="flex justify-between items-center mb-4"><h3 class="text-xl font-semibold" data-i18n="taskTodayTitle">Задачи на сегодня</h3><button id="add-daily-task-btn" class="bg-blue-600 text-white px-4 py-2 rounded-lg" data-i18n="addTask">Добавить задачу</button></div>
                     <div id="daily-tasks-table-wrapper" class="bg-white rounded-lg shadow-sm overflow-x-auto md:bg-transparent md:shadow-none">
@@ -521,7 +712,7 @@
                 debtsTitle: "Общие долги", addDebt: "Добавить долг", debtName: "Долг (Имя)", amount: "Сумма", paid: "Оплачено", remaining: "Осталось", lastPaymentDate: "Дата последней оплаты", comments: "Комментарии", actions: "Действия", emptyDebts: "Список долгов пуст. Нажмите кнопку 'Добавить долг', чтобы начать.",
                 recurringTitle: "Ежемесячные расходы", addTemplate: "Добавить шаблон", paymentDay: "День оплаты", status: "Статус", details: "Детали", templateActions: "Действия с шаблоном", emptyRecurring: "Список ежемесячных расходов пуст. Создайте шаблон.",
                 expensesTitle: "Все расходы за", addExpense: "Добавить расход", category: "Категория", date: "Дата", emptyExpenses: "Расходов в этом месяце еще нет.",
-                taskToday: "На сегодня", taskMonth: "На месяц", taskYear: "На год", taskTodayTitle: "Задачи на сегодня", taskMonthTitle: "Задачи на месяц", taskYearTitle: "Задачи на год", addTask: "Добавить задачу", name: "Имя", notes: "Заметки", deadline: "Дедлайн", emptyTasks: "Список задач пуст.",
+                taskToday: "На сегодня", taskMonth: "На месяц", taskYear: "Долгосрочный", taskTodayTitle: "Задачи на сегодня", taskMonthTitle: "Задачи на месяц", taskYearTitle: "Долгосрочные задачи", addTask: "Добавить задачу", name: "Имя", notes: "Заметки", deadline: "Дедлайн", emptyTasks: "Список задач пуст.",
                 cancel: "Отмена", save: "Сохранить", add: "Добавить", delete: "Удалить", close: "Закрыть",
                 debtorName: "Имя должника/Название", totalAmount: "Общая сумма", paidAmount: "Оплаченная сумма", comment: "Комментарий",
                 addDebtPayment: "Добавить платеж по долгу", paymentAmount: "Сумма платежа", paymentDayNum: "День оплаты (1-31)",
@@ -529,7 +720,7 @@
                 paidStatus: "Оплачено", unpaidStatus: "Не оплачено",
                 statusDone: "Выполнено", statusNotDone: "Не выполнено", statusSkipped: "Пропущено",
                 editDebt: "Редактировать долг", editTemplate: "Редактировать шаблон", editExpense: "Редактировать расход", editTask: "Редактировать задачу",
-                addTaskForToday: "Добавить задачу на сегодня", addTaskForMonth: "Добавить задачу на месяц", addTaskForYear: "Добавить задачу на год",
+                addTaskForToday: "Добавить задачу на сегодня", addTaskForMonth: "Добавить задачу на месяц", addTaskForYear: "Добавить долгосрочную задачу",
                 chartLabel: "Расходы",
                 dashTasksMonth: "Осталось задач (месяц)", dashTasksYear: "Осталось задач (год)",
                 debtRepayments: "Погашение долгов", recurringPayments: "Ежемесячные платежи",
@@ -558,7 +749,7 @@
                 debtsTitle: "All Debts", addDebt: "Add Debt", debtName: "Debt (Name)", amount: "Amount", paid: "Paid", remaining: "Remaining", lastPaymentDate: "Last Payment Date", comments: "Comments", actions: "Actions", emptyDebts: "Debt list is empty. Click 'Add Debt' to start.",
                 recurringTitle: "Recurring Expenses", addTemplate: "Add Template", paymentDay: "Payment Day", status: "Status", details: "Details", templateActions: "Template Actions", emptyRecurring: "Recurring expense list is empty. Create a template.",
                 expensesTitle: "All Expenses for", addExpense: "Add Expense", category: "Category", date: "Date", emptyExpenses: "No expenses for this month yet.",
-                taskToday: "Today", taskMonth: "Month", taskYear: "Year", taskTodayTitle: "Today's Tasks", taskMonthTitle: "Monthly Tasks", taskYearTitle: "Yearly Tasks", addTask: "Add Task", name: "Name", notes: "Notes", deadline: "Deadline", emptyTasks: "Task list is empty.",
+                taskToday: "Today", taskMonth: "Month", taskYear: "Long-term", taskTodayTitle: "Today's Tasks", taskMonthTitle: "Monthly Tasks", taskYearTitle: "Long-term Tasks", addTask: "Add Task", name: "Name", notes: "Notes", deadline: "Deadline", emptyTasks: "Task list is empty.",
                 cancel: "Cancel", save: "Save", add: "Add", delete: "Delete", close: "Close",
                 debtorName: "Debtor Name/Title", totalAmount: "Total Amount", paidAmount: "Paid Amount", comment: "Comment",
                 addDebtPayment: "Add Debt Payment", paymentAmount: "Payment Amount", paymentDayNum: "Payment Day (1-31)",
@@ -566,7 +757,7 @@
                 paidStatus: "Paid", unpaidStatus: "Unpaid",
                 statusDone: "Done", statusNotDone: "Not Done", statusSkipped: "Skipped",
                 editDebt: "Edit Debt", editTemplate: "Edit Template", editExpense: "Edit Expense", editTask: "Edit Task",
-                addTaskForToday: "Add Task for Today", addTaskForMonth: "Add Task for Month", addTaskForYear: "Add Task for Year",
+                addTaskForToday: "Add Task for Today", addTaskForMonth: "Add Task for Month", addTaskForYear: "Add Long-term Task",
                 chartLabel: "Expenses",
                 dashTasksMonth: "Tasks Remaining (Month)", dashTasksYear: "Tasks Remaining (Year)",
                 debtRepayments: "Debt Repayments", recurringPayments: "Recurring Payments",
@@ -593,7 +784,7 @@
                 debtsTitle: "Bütün borclar", addDebt: "Borç əlavə et", debtName: "Borç (Ad)", amount: "Məbləğ", paid: "Ödənilmiş", remaining: "Qalan", lastPaymentDate: "Son ödəniş tarixi", comments: "Şərhlər", actions: "Əməлијјатлар", emptyDebts: "Borclar siyahısı boşdur. Başlamaq üçün 'Borç əlavə et' düyməsini basın.",
                 recurringTitle: "Aylıq xərclər", addTemplate: "Şablon əlavə et", paymentDay: "Ödəniş günü", status: "Status", details: "Təfərrüatlar", templateActions: "Şablon əməliyyatları", emptyRecurring: "Aylıq xərclər siyahısı boşdur. Şablon yaradın.",
                 expensesTitle: "Bütün xərclər", addExpense: "Xərc əlavə et", category: "Kateqoriya", date: "Tarix", emptyExpenses: "Bu ay üçün hələ xərc yoxdur.",
-                taskToday: "Bu gün", taskMonth: "Ay", taskYear: "İl", taskTodayTitle: "Bu günkü tapşırıqlar", taskMonthTitle: "Aylıq tapşırıqlar", taskYearTitle: "İllik tapşırıqlar", addTask: "Tapşırıq əlavə et", name: "Ad", notes: "Qeydlər", deadline: "Müddət", emptyTasks: "Tapşırıqlar siyahısı boşdur.",
+                taskToday: "Bu gün", taskMonth: "Ay", taskYear: "Uzunmüddətli", taskTodayTitle: "Bu günkü tapşırıqlar", taskMonthTitle: "Aylıq tapşırıqlar", taskYearTitle: "Uzunmüddətli tapşırıqlar", addTask: "Tapşırıq əlavə et", name: "Ad", notes: "Qeydlər", deadline: "Müddət", emptyTasks: "Tapşırıqlar siyahısı boşdur.",
                 cancel: "Ləğv et", save: "Saxla", add: "Əlavə et", delete: "Sil", close: "Bağla",
                 debtorName: "Borclu adı/Başlıq", totalAmount: "Ümumi məbləğ", paidAmount: "Ödənilmiş məbləğ", comment: "Şərh",
                 addDebtPayment: "Borç ödənişi əlavə et", paymentAmount: "Ödəniş məbləği", paymentDayNum: "Ödəniş günü (1-31)",
@@ -601,7 +792,7 @@
                 paidStatus: "Ödənilmiş", unpaidStatus: "Ödənilməmiş",
                 statusDone: "Tamamlanmış", statusNotDone: "Tamamlanmamış", statusSkipped: "Keçilmiş",
                 editDebt: "Borcu redaktə et", editTemplate: "Şablonu redaktə et", editExpense: "Xərci redaktə et", editTask: "Tapşırığı redaktə et",
-                addTaskForToday: "Bu gün üçün tapşırıq əlavə et", addTaskForMonth: "Ay üçün tapşırıq əlavə et", addTaskForYear: "İl üçün tapşırıq əlavə et",
+                addTaskForToday: "Bu gün üçün tapşırıq əlavə et", addTaskForMonth: "Ay üçün tapşırıq əlavə et", addTaskForYear: "Uzunmüddətli tapşırıq əlavə et",
                 chartLabel: "Xərclər",
                 dashTasksMonth: "Qalan tapşırıqlar (ay)", dashTasksYear: "Qalan tapşırıqlar (il)",
                 debtRepayments: "Borç ödənişləri", recurringPayments: "Aylıq ödənişlər",
@@ -1355,16 +1546,19 @@
         const playIcon = document.getElementById('play-icon');
         const pauseIcon = document.getElementById('pause-icon');
         const volumeSlider = document.getElementById('radio-volume-slider');
+        const equalizer = document.getElementById('equalizer');
 
         playPauseBtn.addEventListener('click', () => {
             if (radioPlayer.paused) {
                 radioPlayer.play().catch(e => console.error("Radio play error:", e));
                 playIcon.classList.add('hidden');
                 pauseIcon.classList.remove('hidden');
+                if (equalizer) equalizer.classList.remove('paused');
             } else {
                 radioPlayer.pause();
                 playIcon.classList.remove('hidden');
                 pauseIcon.classList.add('hidden');
+                if (equalizer) equalizer.classList.add('paused');
             }
         });
 
@@ -1407,5 +1601,393 @@
         });
 
     </script>
+
+    <!-- Calculator Modal -->
+    <dialog id="calculator-modal" class="rounded-2xl p-0 backdrop:bg-black/50">
+        <div class="bg-white dark:bg-gray-800 p-4 md:p-6 rounded-2xl min-w-[280px] sm:min-w-[320px]">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-lg md:text-xl font-bold text-gray-800 dark:text-gray-200">Калькулятор</h2>
+                <button id="close-calculator" class="text-gray-500 hover:text-gray-700 dark:hover:text-gray-300">✕</button>
+            </div>
+            <div class="space-y-3">
+                <input type="text" id="calc-display" class="w-full p-3 md:p-4 text-xl md:text-2xl font-bold text-right bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" readonly value="0">
+                <div class="grid grid-cols-4 gap-2">
+                    <button class="calc-btn" data-value="clear">C</button>
+                    <button class="calc-btn" data-value="clearEntry">CE</button>
+                    <button class="calc-btn" data-value="backspace">⌫</button>
+                    <button class="calc-btn bg-blue-600 hover:bg-blue-700 text-white" data-value="÷">÷</button>
+                    
+                    <button class="calc-btn" data-value="7">7</button>
+                    <button class="calc-btn" data-value="8">8</button>
+                    <button class="calc-btn" data-value="9">9</button>
+                    <button class="calc-btn bg-blue-600 hover:bg-blue-700 text-white" data-value="×">×</button>
+                    
+                    <button class="calc-btn" data-value="4">4</button>
+                    <button class="calc-btn" data-value="5">5</button>
+                    <button class="calc-btn" data-value="6">6</button>
+                    <button class="calc-btn bg-blue-600 hover:bg-blue-700 text-white" data-value="−">−</button>
+                    
+                    <button class="calc-btn" data-value="1">1</button>
+                    <button class="calc-btn" data-value="2">2</button>
+                    <button class="calc-btn" data-value="3">3</button>
+                    <button class="calc-btn bg-blue-600 hover:bg-blue-700 text-white" data-value="+">+</button>
+                    
+                    <button class="calc-btn" data-value="0">0</button>
+                    <button class="calc-btn" data-value=".">.</button>
+                    <button class="calc-btn bg-green-600 hover:bg-green-700 text-white col-span-2" data-value="=">=</button>
+                </div>
+            </div>
+        </div>
+    </dialog>
+
+    <!-- Shopping List Modal -->
+    <dialog id="shopping-list-modal" class="rounded-2xl p-0 backdrop:bg-black/50">
+        <div class="bg-white dark:bg-gray-800 p-4 md:p-6 rounded-2xl min-w-[90vw] sm:min-w-[400px] md:min-w-[500px] max-w-[95vw] md:max-w-[600px]">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-lg md:text-2xl font-bold text-gray-800 dark:text-gray-200">Список покупок</h2>
+                <div class="flex gap-2">
+                    <button id="copy-shopping-list" class="px-3 md:px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 font-medium text-xs md:text-sm">📋 Копировать</button>
+                    <button id="close-shopping-list" class="text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 px-2">✕</button>
+                </div>
+            </div>
+            
+            <!-- Add Item Form -->
+            <div class="bg-gray-50 dark:bg-gray-700 p-4 rounded-xl mb-4">
+                <div class="grid grid-cols-12 gap-2">
+                    <div class="col-span-2">
+                        <input type="number" id="item-quantity" placeholder="Кол-во" min="1" class="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" value="1">
+                    </div>
+                    <div class="col-span-5">
+                        <input type="text" id="item-name" placeholder="Название товара" class="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    <div class="col-span-3">
+                        <input type="number" id="item-price" placeholder="Цена (AZN)" step="0.01" min="0" class="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    <div class="col-span-2">
+                        <button id="add-shopping-item" class="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-medium">+ Добавить</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Shopping List Table -->
+            <div class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 overflow-hidden">
+                <div class="overflow-x-auto max-h-96 overflow-y-auto">
+                    <table class="w-full">
+                        <thead class="bg-gray-50 dark:bg-gray-700 sticky top-0">
+                            <tr>
+                                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase">№</th>
+                                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase">Кол-во</th>
+                                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase">Товар</th>
+                                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase">Цена</th>
+                                <th class="px-4 py-3 text-right text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase">Сумма</th>
+                                <th class="px-4 py-3 text-center text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase">Действия</th>
+                            </tr>
+                        </thead>
+                        <tbody id="shopping-list-items" class="divide-y divide-gray-200 dark:divide-gray-700 text-sm"></tbody>
+                    </table>
+                </div>
+                <div class="px-4 py-3 bg-gray-50 dark:bg-gray-700 border-t border-gray-200 dark:border-gray-600">
+                    <div class="flex justify-between items-center">
+                        <span class="font-semibold text-gray-800 dark:text-gray-200">Итого:</span>
+                        <span id="shopping-total" class="text-xl font-bold text-blue-600 dark:text-blue-400">0 AZN</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </dialog>
+
+    <style>
+        .calc-btn {
+            padding: 1rem;
+            font-size: 1.125rem;
+            font-weight: 700;
+            background-color: rgb(229, 231, 235);
+            color: rgb(31, 41, 55);
+            border-radius: 0.5rem;
+            transition: background-color 0.2s;
+        }
+        .dark .calc-btn {
+            background-color: rgb(55, 65, 81);
+            color: rgb(229, 231, 235);
+        }
+        .calc-btn:hover {
+            background-color: rgb(209, 213, 219);
+        }
+        .dark .calc-btn:hover {
+            background-color: rgb(75, 85, 99);
+        }
+        #shopping-list-items tr {
+            transition: background-color 0.2s;
+        }
+        #shopping-list-items tr:hover {
+            background-color: rgb(249, 250, 251);
+        }
+        .dark #shopping-list-items tr:hover {
+            background-color: rgb(55, 65, 81);
+        }
+        #shopping-list-items tr.completed {
+            opacity: 0.6;
+        }
+        #shopping-list-items tr.completed td {
+            text-decoration: line-through;
+        }
+        input[type="checkbox"] {
+            cursor: pointer;
+        }
+    </style>
+
+    <script>
+        // Calculator Logic
+        let calculator = {
+            currentValue: '0',
+            previousValue: null,
+            operation: null,
+            shouldReset: false
+        };
+
+        const calcDisplay = document.getElementById('calc-display');
+        const calcButtons = document.querySelectorAll('.calc-btn');
+
+        function updateDisplay() {
+            calcDisplay.value = calculator.currentValue;
+        }
+
+        function calculate(a, b, op) {
+            const num1 = parseFloat(a);
+            const num2 = parseFloat(b);
+            switch(op) {
+                case '+': return (num1 + num2).toString();
+                case '−': return (num1 - num2).toString();
+                case '×': return (num1 * num2).toString();
+                case '÷': return num2 !== 0 ? (num1 / num2).toString() : 'Error';
+                default: return '0';
+            }
+        }
+
+        calcButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const value = btn.dataset.value;
+
+                if (value >= '0' && value <= '9' || value === '.') {
+                    if (calculator.shouldReset) {
+                        calculator.currentValue = '0';
+                        calculator.shouldReset = false;
+                    }
+                    if (calculator.currentValue === '0') {
+                        calculator.currentValue = value === '.' ? '0.' : value;
+                    } else {
+                        if (value === '.' && calculator.currentValue.includes('.')) return;
+                        calculator.currentValue += value;
+                    }
+                } else if (value === 'clear') {
+                    calculator.currentValue = '0';
+                    calculator.previousValue = null;
+                    calculator.operation = null;
+                } else if (value === 'clearEntry') {
+                    calculator.currentValue = '0';
+                } else if (value === 'backspace') {
+                    calculator.currentValue = calculator.currentValue.length > 1 
+                        ? calculator.currentValue.slice(0, -1) 
+                        : '0';
+                } else if (['+', '−', '×', '÷'].includes(value)) {
+                    if (calculator.previousValue !== null && calculator.operation) {
+                        calculator.currentValue = calculate(calculator.previousValue, calculator.currentValue, calculator.operation);
+                    }
+                    calculator.previousValue = calculator.currentValue;
+                    calculator.operation = value;
+                    calculator.shouldReset = true;
+                } else if (value === '=') {
+                    if (calculator.previousValue !== null && calculator.operation) {
+                        calculator.currentValue = calculate(calculator.previousValue, calculator.currentValue, calculator.operation);
+                        calculator.previousValue = null;
+                        calculator.operation = null;
+                    }
+                    calculator.shouldReset = true;
+                }
+
+                updateDisplay();
+            });
+        });
+
+        // Calculator Modal
+        document.getElementById('calculator-btn').addEventListener('click', () => {
+            document.getElementById('calculator-modal').showModal();
+        });
+        document.getElementById('close-calculator').addEventListener('click', () => {
+            document.getElementById('calculator-modal').close();
+        });
+
+        // Shopping List Logic
+        let shoppingList = JSON.parse(localStorage.getItem('shoppingList') || '[]');
+
+        function calculateTotal() {
+            const total = shoppingList.reduce((sum, item) => {
+                return sum + (item.price || 0) * (item.quantity || 1);
+            }, 0);
+            document.getElementById('shopping-total').textContent = total.toFixed(2) + ' AZN';
+        }
+
+        function renderShoppingList() {
+            const tbody = document.getElementById('shopping-list-items');
+            tbody.innerHTML = shoppingList.map((item, index) => {
+                const total = (item.price || 0) * (item.quantity || 1);
+                return `
+                    <tr class="${item.completed ? 'completed' : ''}">
+                        <td class="px-4 py-3 text-sm text-gray-600 dark:text-gray-400">${index + 1}</td>
+                        <td class="px-4 py-3 text-sm text-gray-900 dark:text-gray-100">
+                            <input type="number" value="${item.quantity || 1}" min="1" 
+                                onchange="updateQuantity(${index}, this.value)" 
+                                class="w-16 p-1 border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-center">
+                        </td>
+                        <td class="px-4 py-3">
+                            <input type="text" value="${item.name || ''}" 
+                                onblur="updateName(${index}, this.value)" 
+                                class="w-full px-2 py-1 border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-700">
+                        </td>
+                        <td class="px-4 py-3 text-sm text-gray-900 dark:text-gray-100">
+                            <input type="number" value="${item.price || 0}" step="0.01" min="0" 
+                                onchange="updatePrice(${index}, this.value)" 
+                                class="w-24 p-1 border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-right">
+                        </td>
+                        <td class="px-4 py-3 text-right text-sm font-semibold text-gray-900 dark:text-gray-100">${total.toFixed(2)} AZN</td>
+                        <td class="px-4 py-3 text-center">
+                            <div class="flex gap-2 justify-center">
+                                <input type="checkbox" ${item.completed ? 'checked' : ''} 
+                                    onchange="toggleShoppingItem(${index})" 
+                                    class="rounded cursor-pointer">
+                                <button onclick="deleteShoppingItem(${index})" 
+                                    class="px-2 py-1 text-red-600 hover:bg-red-50 dark:hover:bg-red-900 rounded text-sm">🗑️</button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+            localStorage.setItem('shoppingList', JSON.stringify(shoppingList));
+            calculateTotal();
+        }
+
+        function toggleShoppingItem(index) {
+            shoppingList[index].completed = !shoppingList[index].completed;
+            renderShoppingList();
+        }
+
+        function updateQuantity(index, value) {
+            shoppingList[index].quantity = parseInt(value) || 1;
+            renderShoppingList();
+        }
+
+        function updateName(index, value) {
+            if (value.trim()) {
+                shoppingList[index].name = value.trim();
+                renderShoppingList();
+            }
+        }
+
+        function updatePrice(index, value) {
+            shoppingList[index].price = parseFloat(value) || 0;
+            renderShoppingList();
+        }
+
+        function deleteShoppingItem(index) {
+            if (confirm('Удалить этот товар?')) {
+                shoppingList.splice(index, 1);
+                renderShoppingList();
+            }
+        }
+
+        // Add shopping item
+        document.getElementById('add-shopping-item').addEventListener('click', () => {
+            const nameInput = document.getElementById('item-name');
+            const quantityInput = document.getElementById('item-quantity');
+            const priceInput = document.getElementById('item-price');
+            
+            const name = nameInput.value.trim();
+            const quantity = parseInt(quantityInput.value) || 1;
+            const price = parseFloat(priceInput.value) || 0;
+            
+            if (name) {
+                shoppingList.push({ 
+                    name, 
+                    quantity, 
+                    price, 
+                    completed: false 
+                });
+                renderShoppingList();
+                nameInput.value = '';
+                quantityInput.value = '1';
+                priceInput.value = '';
+            }
+        });
+
+        document.getElementById('item-name').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                document.getElementById('add-shopping-item').click();
+            }
+        });
+
+        // Copy shopping list
+        document.getElementById('copy-shopping-list').addEventListener('click', () => {
+            const notCompleted = shoppingList.filter(item => !item.completed);
+            const completed = shoppingList.filter(item => item.completed);
+            
+            let text = '📋 СПИСОК ПОКУПОК\n';
+            text += '═'.repeat(40) + '\n\n';
+            
+            if (notCompleted.length > 0) {
+                text += 'К ПРИОБРЕТЕНИЮ:\n';
+                text += '─'.repeat(40) + '\n';
+                notCompleted.forEach((item, idx) => {
+                    const total = (item.price || 0) * (item.quantity || 1);
+                    text += `${idx + 1}. ${item.name || 'Товар'}\n`;
+                    text += `   ${item.quantity || 1} шт. × ${(item.price || 0).toFixed(2)} AZN = ${total.toFixed(2)} AZN\n\n`;
+                });
+                
+                const notCompletedTotal = notCompleted.reduce((sum, item) => 
+                    sum + (item.price || 0) * (item.quantity || 1), 0);
+                text += `ИТОГО: ${notCompletedTotal.toFixed(2)} AZN\n\n`;
+            }
+            
+            if (completed.length > 0) {
+                text += '✅ КУПЛЕНО:\n';
+                text += '─'.repeat(40) + '\n';
+                completed.forEach((item, idx) => {
+                    const total = (item.price || 0) * (item.quantity || 1);
+                    text += `${idx + 1}. ${item.name || 'Товар'}\n`;
+                    text += `   ${item.quantity || 1} шт. × ${(item.price || 0).toFixed(2)} AZN = ${total.toFixed(2)} AZN\n\n`;
+                });
+                
+                const completedTotal = completed.reduce((sum, item) => 
+                    sum + (item.price || 0) * (item.quantity || 1), 0);
+                text += `ИТОГО: ${completedTotal.toFixed(2)} AZN\n\n`;
+            }
+            
+            const grandTotal = shoppingList.reduce((sum, item) => 
+                sum + (item.price || 0) * (item.quantity || 1), 0);
+            text += '═'.repeat(40) + '\n';
+            text += `ОБЩАЯ СУММА: ${grandTotal.toFixed(2)} AZN\n`;
+            text += '═'.repeat(40);
+            
+            navigator.clipboard.writeText(text).then(() => {
+                showToast('Список скопирован в буфер обмена!');
+            });
+        });
+
+        // Shopping List Modal
+        document.getElementById('shopping-list-btn').addEventListener('click', () => {
+            renderShoppingList();
+            document.getElementById('shopping-list-modal').showModal();
+        });
+        document.getElementById('close-shopping-list').addEventListener('click', () => {
+            document.getElementById('shopping-list-modal').close();
+        });
+
+        // Make functions globally accessible
+        window.toggleShoppingItem = toggleShoppingItem;
+        window.updateQuantity = updateQuantity;
+        window.updateName = updateName;
+        window.updatePrice = updatePrice;
+        window.deleteShoppingItem = deleteShoppingItem;
+    </script>
+
 </body>
 </html>
