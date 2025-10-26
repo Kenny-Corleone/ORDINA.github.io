@@ -126,19 +126,206 @@
             opacity: 1;
         }
 
-        /* Mobile Optimization */
-        @media (max-width: 640px) {
+        /* ============================================
+           RESPONSIVE DESIGN - ALL SCREEN SIZES
+           ============================================ */
+
+        /* Extra Small Devices (Phones, 320px - 480px) */
+        @media (max-width: 480px) {
+            body {
+                font-size: 13px;
+            }
+
+            h1 {
+                font-size: 1.5rem;
+            }
+
+            h2 {
+                font-size: 1.25rem;
+            }
+
+            h3 {
+                font-size: 1.1rem;
+            }
+
+            .premium-card {
+                padding: 0.875rem;
+                border-radius: 14px;
+                border-width: 1.5px;
+            }
+
+            .stat-card {
+                padding: 1rem;
+                border-radius: 12px;
+                min-width: 100%;
+            }
+
+            .premium-btn {
+                padding: 10px 20px;
+                font-size: 0.8rem;
+                border-radius: 10px;
+            }
+
+            .premium-input {
+                padding: 10px 14px;
+                font-size: 0.85rem;
+                border-radius: 10px;
+            }
+
+            .theme-toggle-btn {
+                width: 40px;
+                height: 40px;
+            }
+
+            .theme-icon {
+                width: 20px;
+                height: 20px;
+            }
+
+            img[alt="ORDINA Logo"] {
+                max-height: 60px !important;
+            }
+
+            /* Compact navigation tabs */
+            .tab-button {
+                padding: 0.5rem 0.75rem;
+                font-size: 0.75rem;
+            }
+        }
+
+        /* Small Devices (Phones, 481px - 640px) */
+        @media (min-width: 481px) and (max-width: 640px) {
             body {
                 font-size: 14px;
             }
 
+            h1 {
+                font-size: 1.75rem;
+            }
+
+            h2 {
+                font-size: 1.4rem;
+            }
+
             .premium-card {
-                padding: 0.75rem;
-                border-radius: 8px;
+                padding: 1rem;
+                border-radius: 16px;
             }
 
             .stat-card {
-                padding: 0.75rem;
+                padding: 1.25rem;
+                border-radius: 14px;
+            }
+
+            .premium-btn {
+                padding: 12px 24px;
+                font-size: 0.875rem;
+                border-radius: 12px;
+            }
+
+            .theme-toggle-btn {
+                width: 44px;
+                height: 44px;
+            }
+
+            .theme-icon {
+                width: 22px;
+                height: 22px;
+            }
+
+            img[alt="ORDINA Logo"] {
+                max-height: 70px !important;
+            }
+
+            .tab-button {
+                padding: 0.6rem 1rem;
+                font-size: 0.8rem;
+            }
+        }
+
+        /* Medium Devices (Tablets, 641px - 768px) */
+        @media (min-width: 641px) and (max-width: 768px) {
+            body {
+                font-size: 15px;
+            }
+
+            .premium-card {
+                padding: 1.25rem;
+                border-radius: 18px;
+            }
+
+            .stat-card {
+                padding: 1.5rem;
+                border-radius: 16px;
+            }
+
+            img[alt="ORDINA Logo"] {
+                max-height: 80px !important;
+            }
+        }
+
+        /* Large Tablets & Small Laptops (769px - 1024px) */
+        @media (min-width: 769px) and (max-width: 1024px) {
+            body {
+                font-size: 15px;
+            }
+
+            .premium-card {
+                padding: 1.5rem;
+                border-radius: 18px;
+            }
+
+            .stat-card {
+                padding: 1.75rem;
+                border-radius: 16px;
+            }
+
+            img[alt="ORDINA Logo"] {
+                max-height: 90px !important;
+            }
+        }
+
+        /* Desktop (1025px - 1440px) */
+        @media (min-width: 1025px) and (max-width: 1440px) {
+            body {
+                font-size: 16px;
+            }
+
+            .premium-card {
+                padding: 1.75rem;
+                border-radius: 20px;
+            }
+
+            .stat-card {
+                padding: 1.75rem;
+                border-radius: 18px;
+            }
+        }
+
+        /* Large Desktop (1441px+) */
+        @media (min-width: 1441px) {
+            body {
+                font-size: 17px;
+            }
+
+            .premium-card {
+                padding: 2rem;
+                border-radius: 24px;
+            }
+
+            .stat-card {
+                padding: 2rem;
+                border-radius: 20px;
+            }
+
+            .theme-toggle-btn {
+                width: 56px;
+                height: 56px;
+            }
+
+            .theme-icon {
+                width: 28px;
+                height: 28px;
             }
         }
 
@@ -499,8 +686,65 @@
             background: linear-gradient(135deg, var(--navy-deep) 0%, var(--navy-medium) 50%, #0d1b2a 100%);
         }
 
-        /* Premium Responsive Tables */
-        @media screen and (max-width: 768px) {
+        /* Premium Responsive Tables - Mobile First */
+        @media screen and (max-width: 480px) {
+            .responsive-table thead {
+                display: none;
+            }
+
+            .responsive-table tr {
+                display: block;
+                border: 1.5px solid rgba(212, 175, 55, 0.25);
+                border-radius: 14px;
+                margin-bottom: 1rem;
+                padding: 1rem;
+                background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(248, 249, 250, 0.9) 100%);
+                backdrop-filter: blur(10px);
+                box-shadow: 0 8px 24px rgba(10, 22, 40, 0.08);
+                transition: all 0.3s ease;
+            }
+
+            .responsive-table tr:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 12px 32px rgba(212, 175, 55, 0.18);
+                border-color: var(--gold-primary);
+            }
+
+            .dark .responsive-table tr {
+                background: linear-gradient(135deg, rgba(26, 41, 66, 0.95) 0%, rgba(10, 22, 40, 0.9) 100%);
+                box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+            }
+
+            .responsive-table tr:last-child {
+                margin-bottom: 0;
+            }
+
+            .responsive-table td {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 0.65rem 0;
+                border-bottom: 1px solid rgba(212, 175, 55, 0.12);
+                font-size: 0.85rem;
+            }
+
+            .responsive-table td:last-child {
+                border-bottom: none;
+                padding-top: 1rem;
+                justify-content: flex-end;
+            }
+
+            .responsive-table td::before {
+                content: attr(data-label);
+                font-weight: 800;
+                color: var(--gold-primary);
+                margin-right: 0.75rem;
+                font-size: 0.75rem;
+                letter-spacing: 0.5px;
+            }
+        }
+
+        @media screen and (min-width: 481px) and (max-width: 768px) {
             .responsive-table thead {
                 display: none;
             }
@@ -508,9 +752,9 @@
             .responsive-table tr {
                 display: block;
                 border: 2px solid rgba(212, 175, 55, 0.25);
-                border-radius: 18px;
+                border-radius: 16px;
                 margin-bottom: 1.25rem;
-                padding: 1.5rem;
+                padding: 1.25rem;
                 background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(248, 249, 250, 0.9) 100%);
                 backdrop-filter: blur(10px);
                 box-shadow: 0 10px 30px rgba(10, 22, 40, 0.1);
@@ -553,6 +797,18 @@
                 margin-right: 1rem;
                 font-size: 0.85rem;
                 letter-spacing: 0.5px;
+            }
+        }
+
+        /* Tablet Landscape - Show simplified table */
+        @media screen and (min-width: 769px) and (max-width: 1024px) {
+            .responsive-table {
+                font-size: 0.9rem;
+            }
+
+            .responsive-table th,
+            .responsive-table td {
+                padding: 0.875rem 1rem;
             }
         }
 
@@ -797,38 +1053,234 @@
             box-shadow: 0 0 0 4px rgba(212, 175, 55, 0.15);
         }
 
-        /* Premium Mobile Optimizations */
-        @media (max-width: 640px) {
-            .premium-card {
-                border-radius: 16px;
-                padding: 1.25rem;
+        /* ============================================
+           ADDITIONAL RESPONSIVE OPTIMIZATIONS
+           ============================================ */
+
+        /* Container & Layout Adjustments */
+        @media (max-width: 480px) {
+            #app {
+                padding: 0.5rem !important;
+            }
+
+            #fixed-header {
+                padding: 0.75rem !important;
+            }
+
+            /* Compact header controls */
+            #fixed-header .flex {
+                gap: 0.5rem;
+            }
+
+            /* Stack stat cards vertically */
+            .stat-card {
+                flex: 1 1 100%;
+                max-width: 100%;
+            }
+
+            /* Smaller buttons in header */
+            #calculator-btn,
+            #shopping-list-btn {
+                width: 36px !important;
+                height: 36px !important;
+            }
+
+            #calculator-btn svg,
+            #shopping-list-btn svg {
+                width: 18px !important;
+                height: 18px !important;
+            }
+
+            /* Compact currency toggle */
+            #currency-azn,
+            #currency-usd {
+                padding: 0.4rem 0.6rem;
+                font-size: 0.7rem;
+            }
+
+            /* Hide radio player on very small screens */
+            .radio-player-container {
+                display: none !important;
+            }
+        }
+
+        @media (min-width: 481px) and (max-width: 640px) {
+            #app {
+                padding: 0.75rem !important;
             }
 
             .stat-card {
-                padding: 1.25rem;
-                border-radius: 14px;
+                flex: 1 1 calc(50% - 0.5rem);
+                min-width: calc(50% - 0.5rem);
+            }
+        }
+
+        @media (min-width: 641px) and (max-width: 768px) {
+            .stat-card {
+                flex: 1 1 calc(33.333% - 0.75rem);
+                min-width: calc(33.333% - 0.75rem);
+            }
+        }
+
+        @media (min-width: 769px) and (max-width: 1024px) {
+            .stat-card {
+                flex: 1 1 calc(33.333% - 0.75rem);
+                min-width: 180px;
+            }
+        }
+
+        @media (min-width: 1025px) {
+            .stat-card {
+                flex: 1 1 calc(16.666% - 0.75rem);
+                min-width: 160px;
+            }
+        }
+
+        /* Navigation Tabs Responsive */
+        @media (max-width: 480px) {
+            nav .flex {
+                gap: 0;
             }
 
-            .premium-btn {
-                padding: 12px 24px;
-                font-size: 0.875rem;
-                border-radius: 12px;
+            .tab-button {
+                padding: 0.5rem 0.5rem;
+                font-size: 0.7rem;
+                white-space: nowrap;
+            }
+        }
+
+        @media (min-width: 481px) and (max-width: 768px) {
+            .tab-button {
+                padding: 0.6rem 0.875rem;
+                font-size: 0.8rem;
+            }
+        }
+
+        /* Modal & Dialog Responsive */
+        @media (max-width: 640px) {
+            dialog {
+                max-width: 95vw !important;
+                margin: 1rem;
+                padding: 1.25rem !important;
             }
 
-            .theme-toggle-btn {
-                width: 44px;
-                height: 44px;
+            dialog h2 {
+                font-size: 1.25rem;
+            }
+        }
+
+        /* Chart Responsive */
+        @media (max-width: 768px) {
+            canvas {
+                max-height: 250px !important;
+            }
+        }
+
+        @media (min-width: 769px) and (max-width: 1024px) {
+            canvas {
+                max-height: 300px !important;
+            }
+        }
+
+        /* Calendar Responsive */
+        @media (max-width: 480px) {
+            .calendar-day {
+                min-height: 80px;
+                font-size: 0.75rem;
             }
 
-            .theme-icon {
-                width: 22px;
-                height: 22px;
+            .calendar-day-number {
+                width: 28px;
+                height: 28px;
+                font-size: 0.75rem;
+            }
+        }
+
+        @media (min-width: 481px) and (max-width: 768px) {
+            .calendar-day {
+                min-height: 100px;
+                font-size: 0.85rem;
             }
 
-            h1,
-            h2,
-            h3 {
-                letter-spacing: -0.01em;
+            .calendar-day-number {
+                width: 34px;
+                height: 34px;
+            }
+        }
+
+        /* Task Tabs Responsive */
+        @media (max-width: 640px) {
+            .task-tab-button {
+                padding: 0.6rem 1rem;
+                font-size: 0.8rem;
+                border-radius: 12px 12px 0 0;
+            }
+        }
+
+        /* ============================================
+           TOUCH & MOBILE INTERACTION OPTIMIZATIONS
+           ============================================ */
+        @media (hover: none) and (pointer: coarse) {
+
+            /* Larger touch targets for mobile */
+            button,
+            a,
+            input[type="checkbox"],
+            input[type="radio"],
+            select {
+                min-height: 44px;
+                min-width: 44px;
+            }
+
+            /* Remove hover effects on touch devices */
+            .premium-card:hover,
+            .stat-card:hover,
+            .premium-btn:hover {
+                transform: none;
+            }
+
+            /* Active states for touch feedback */
+            .premium-btn:active {
+                transform: scale(0.97);
+                opacity: 0.9;
+            }
+
+            button:active {
+                transform: scale(0.95);
+            }
+
+            /* Prevent text selection on buttons */
+            button,
+            .tab-button,
+            .task-tab-button {
+                -webkit-user-select: none;
+                user-select: none;
+                -webkit-tap-highlight-color: transparent;
+            }
+
+            /* Smooth scrolling for mobile */
+            * {
+                -webkit-overflow-scrolling: touch;
+            }
+        }
+
+        /* ============================================
+           HIGH DPI / RETINA DISPLAYS
+           ============================================ */
+        @media (-webkit-min-device-pixel-ratio: 2),
+        (min-resolution: 192dpi) {
+
+            /* Sharper borders on retina */
+            .premium-card,
+            .stat-card {
+                border-width: 0.5px;
+            }
+
+            /* Crisper text rendering */
+            body {
+                -webkit-font-smoothing: antialiased;
+                -moz-osx-font-smoothing: grayscale;
+                text-rendering: optimizeLegibility;
             }
         }
 
@@ -865,6 +1317,62 @@
             height: 4px;
             background: linear-gradient(90deg, var(--gold-primary), transparent);
             border-radius: 2px;
+        }
+
+        /* ============================================
+           CONTAINER & SPACING OPTIMIZATIONS
+           ============================================ */
+
+        /* Max width container for ultra-wide screens */
+        @media (min-width: 1920px) {
+            #app {
+                max-width: 1800px;
+                margin: 0 auto;
+            }
+        }
+
+        /* Flexible gap system */
+        @media (max-width: 480px) {
+
+            .flex,
+            .grid {
+                gap: 0.5rem !important;
+            }
+        }
+
+        @media (min-width: 481px) and (max-width: 768px) {
+
+            .flex,
+            .grid {
+                gap: 0.75rem !important;
+            }
+        }
+
+        @media (min-width: 769px) {
+
+            .flex,
+            .grid {
+                gap: 1rem !important;
+            }
+        }
+
+        /* Responsive padding for main sections */
+        @media (max-width: 480px) {
+            .page-content {
+                padding: 0.75rem 0;
+            }
+        }
+
+        @media (min-width: 481px) and (max-width: 768px) {
+            .page-content {
+                padding: 1rem 0;
+            }
+        }
+
+        @media (min-width: 769px) {
+            .page-content {
+                padding: 1.5rem 0;
+            }
         }
 
         /* Premium Loading Animation */
@@ -2816,10 +3324,38 @@
             transition: background-color 0.2s;
         }
 
-        @media (max-width: 640px) {
+        /* Calculator Responsive Styles */
+        @media (max-width: 400px) {
+            .calc-btn {
+                padding: 0.4rem;
+                font-size: 0.75rem;
+            }
+
+            #calculator-display {
+                font-size: 1.25rem;
+                padding: 0.75rem;
+            }
+        }
+
+        @media (min-width: 401px) and (max-width: 640px) {
             .calc-btn {
                 padding: 0.5rem;
                 font-size: 0.875rem;
+            }
+
+            #calculator-display {
+                font-size: 1.5rem;
+            }
+        }
+
+        @media (min-width: 641px) {
+            .calc-btn {
+                padding: 0.75rem;
+                font-size: 1rem;
+            }
+
+            #calculator-display {
+                font-size: 2rem;
             }
         }
 
@@ -2865,31 +3401,151 @@
         }
 
 
-        /* Mobile Optimizations for Samsung S23 Plus (360px) */
+        /* ============================================
+           ULTRA SMALL DEVICES (320px - 400px)
+           Samsung S23, iPhone SE, etc.
+           ============================================ */
         @media (max-width: 400px) {
             #app {
-                padding-left: 0.5rem !important;
-                padding-right: 0.5rem !important;
+                padding: 0.375rem !important;
             }
 
             .premium-card {
                 border-radius: 12px;
                 padding: 0.75rem;
+                border-width: 1px;
             }
 
-            /* Table responsive */
+            .stat-card {
+                padding: 0.875rem;
+                border-radius: 10px;
+            }
+
+            /* Ultra compact table */
             .responsive-table {
-                font-size: 0.75rem;
+                font-size: 0.7rem;
             }
 
             .responsive-table th,
             .responsive-table td {
-                padding: 0.5rem;
+                padding: 0.4rem;
             }
 
-            /* Adjust grid columns for small screens */
+            .responsive-table td::before {
+                font-size: 0.65rem;
+            }
+
+            /* Compact grid */
             .grid {
-                gap: 0.75rem;
+                gap: 0.5rem;
+            }
+
+            /* Ultra small buttons */
+            .premium-btn {
+                padding: 8px 16px;
+                font-size: 0.75rem;
+                border-radius: 8px;
+            }
+
+            /* Tiny theme toggle */
+            .theme-toggle-btn {
+                width: 36px;
+                height: 36px;
+            }
+
+            .theme-icon {
+                width: 18px;
+                height: 18px;
+            }
+
+            /* Compact logo */
+            img[alt="ORDINA Logo"] {
+                max-height: 50px !important;
+            }
+
+            /* Ultra compact tabs */
+            .tab-button {
+                padding: 0.4rem 0.4rem;
+                font-size: 0.65rem;
+            }
+
+            /* Smaller headings */
+            h1 {
+                font-size: 1.35rem;
+            }
+
+            h2 {
+                font-size: 1.15rem;
+            }
+
+            h3 {
+                font-size: 1rem;
+            }
+
+            /* Compact inputs */
+            .premium-input {
+                padding: 8px 12px;
+                font-size: 0.8rem;
+            }
+
+            /* Hide non-essential elements */
+            [data-i18n="appSubtitle"] {
+                display: none !important;
+            }
+        }
+
+        /* ============================================
+           LANDSCAPE ORIENTATION OPTIMIZATIONS
+           ============================================ */
+        @media (max-height: 500px) and (orientation: landscape) {
+            .premium-card {
+                padding: 0.75rem;
+            }
+
+            .stat-card {
+                padding: 0.875rem;
+            }
+
+            img[alt="ORDINA Logo"] {
+                max-height: 50px !important;
+            }
+
+            .theme-toggle-btn {
+                width: 40px;
+                height: 40px;
+            }
+
+            #fixed-header {
+                position: sticky;
+                top: 0;
+            }
+        }
+
+        /* ============================================
+           PRINT STYLES
+           ============================================ */
+        @media print {
+            body {
+                background: white !important;
+            }
+
+            .premium-card,
+            .stat-card {
+                border: 1px solid #ddd !important;
+                box-shadow: none !important;
+                page-break-inside: avoid;
+            }
+
+            #theme-toggle,
+            #calculator-btn,
+            #shopping-list-btn,
+            #logout-btn,
+            .radio-player-container {
+                display: none !important;
+            }
+
+            nav {
+                display: none !important;
             }
         }
     </style>
