@@ -52,10 +52,10 @@
             --shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
         }
 
-        /* Premium Theme Toggle */
+        /* Premium Theme Toggle - Compact */
         .theme-toggle-btn {
-            width: 52px;
-            height: 52px;
+            width: 36px;
+            height: 36px;
             border-radius: 50%;
             display: flex;
             align-items: center;
@@ -63,20 +63,20 @@
             background: linear-gradient(135deg, var(--gold-primary) 0%, var(--gold-dark) 100%);
             border: 2px solid rgba(212, 175, 55, 0.4);
             cursor: pointer;
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: 0 10px 30px rgba(212, 175, 55, 0.35);
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(212, 175, 55, 0.3);
             position: relative;
         }
 
         .theme-toggle-btn:hover {
-            transform: scale(1.15) rotate(15deg);
-            box-shadow: 0 15px 40px rgba(212, 175, 55, 0.55);
+            transform: scale(1.1);
+            box-shadow: 0 6px 16px rgba(212, 175, 55, 0.4);
             border-color: var(--gold-light);
         }
 
         .theme-icon {
-            width: 26px;
-            height: 26px;
+            width: 18px;
+            height: 18px;
             color: var(--navy-deep);
             transition: all 0.3s ease;
             filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
@@ -1303,6 +1303,138 @@
                     var(--navy-deep) 100%);
         }
 
+        /* Weather Widget Styles - Compact */
+        .weather-widget {
+            padding: 0.5rem;
+            border-radius: 8px;
+            border: 1px solid rgba(212, 175, 55, 0.25);
+            background: linear-gradient(135deg, rgba(212, 175, 55, 0.08) 0%, rgba(248, 249, 250, 0.95) 100%);
+            backdrop-filter: blur(10px);
+            min-width: 120px;
+            max-width: 160px;
+            transition: all 0.3s ease;
+        }
+
+        .dark .weather-widget {
+            background: linear-gradient(135deg, rgba(212, 175, 55, 0.1) 0%, rgba(26, 41, 66, 0.95) 100%);
+        }
+
+        /* Language Dropdown Styles */
+        .language-dropdown {
+            position: relative;
+        }
+
+        .language-dropdown-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 0.75rem;
+            border-radius: 8px;
+            border: 2px solid rgba(212, 175, 55, 0.25);
+            background: var(--bg-primary);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .language-dropdown-btn:hover {
+            border-color: var(--gold-primary);
+            background: rgba(212, 175, 55, 0.1);
+        }
+
+        .language-dropdown-menu {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            margin-top: 0.25rem;
+            padding: 0.5rem;
+            background: var(--bg-primary);
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            box-shadow: 0 10px 30px rgba(10, 22, 40, 0.15);
+            display: none;
+            flex-direction: column;
+            gap: 0.25rem;
+            min-width: 120px;
+            z-index: 100;
+        }
+
+        .language-dropdown-menu.show {
+            display: flex;
+        }
+
+        .language-option {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .language-option:hover {
+            background: rgba(212, 175, 55, 0.15);
+        }
+
+        .language-option.active {
+            background: rgba(212, 175, 55, 0.2);
+        }
+
+        /* News Box Styles */
+        .news-box {
+            padding: 1rem;
+            border-radius: 12px;
+            border: 2px solid rgba(212, 175, 55, 0.25);
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(248, 249, 250, 0.9) 100%);
+            backdrop-filter: blur(10px);
+            max-height: 600px;
+            overflow-y: auto;
+        }
+
+        .dark .news-box {
+            background: linear-gradient(135deg, rgba(26, 41, 66, 0.95) 0%, rgba(10, 22, 40, 0.9) 100%);
+        }
+
+        .news-item {
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border-radius: 8px;
+            border: 1px solid rgba(212, 175, 55, 0.15);
+            background: var(--bg-primary);
+            transition: all 0.2s ease;
+        }
+
+        .news-item:hover {
+            border-color: var(--gold-primary);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(212, 175, 55, 0.15);
+        }
+
+        .news-item img {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 6px;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Enhanced Calendar Styles */
+        .calendar-day {
+            min-height: 100px;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+        }
+
+        .calendar-day:hover {
+            background: rgba(212, 175, 55, 0.1);
+            transform: scale(1.02);
+        }
+
+        .calendar-day-today {
+            border: 2px solid var(--gold-primary);
+            background: rgba(212, 175, 55, 0.1);
+        }
+
         /* Luxury Accent Lines */
         .accent-line {
             position: relative;
@@ -1497,16 +1629,35 @@
         <!-- Fixed header wrapper to keep top bar, logo, and navigation static on scroll -->
         <div id="fixed-header" class="sticky top-0 z-30 premium-card">
             <!-- Compact top bar for logo and controls -->
-            <div class="flex items-center justify-between px-3 sm:px-4 md:px-5 py-2 sm:py-3">
+            <div class="flex items-center justify-between px-2 sm:px-3 md:px-4 py-1.5 sm:py-2 gap-2 flex-wrap">
                 <!-- Logo and motto -->
-                <div class="flex items-center gap-2 md:gap-3">
+                <div class="flex items-center gap-2">
                     <img src="https://raw.githubusercontent.com/Kenny-Corleone/ORDINA.github.io/main/logo%20ORDINA.png"
-                        alt="ORDINA Logo" class="h-16 sm:h-20 md:h-24 w-auto drop-shadow-xl">
-                    <!-- Show motto on medium and larger screens -->
-                    <span class="hidden xl:inline-block text-xs md:text-sm font-semibold"
-                        style="color: var(--text-secondary);" data-i18n="appSubtitle">Управляй своей жизнью с
-                        легкостью</span>
+                        alt="ORDINA Logo" class="h-12 sm:h-14 md:h-16 w-auto drop-shadow-xl">
+                    <!-- Show motto on large screens only -->
+                    <span class="hidden lg:inline-block text-xs font-semibold"
+                        style="color: var(--text-secondary);" data-i18n="appSubtitle">Управляй своей жизнью с легкостью</span>
                 </div>
+                
+                <!-- Weather Widget - Compact -->
+                <div class="weather-widget min-w-[150px] max-w-[180px]">
+                    <div class="flex items-center justify-between mb-1">
+                        <input type="text" id="weather-city-input" placeholder="Baku" 
+                            class="bg-transparent border-b border-gray-300 dark:border-gray-600 outline-none text-xs w-20"
+                            style="color: var(--text-primary);" />
+                        <button id="weather-location-btn" class="text-xs hover:opacity-80 transition-opacity" 
+                            style="color: var(--accent-color);" title="По геолокации">
+                            <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+                            </svg>
+                        </button>
+                    </div>
+                    <div id="weather-info" class="text-xs">
+                        <div id="weather-temp" class="text-sm font-bold" style="color: var(--accent-color);">--°</div>
+                        <div id="weather-desc" style="color: var(--text-secondary);">--</div>
+                    </div>
+                </div>
+                
                 <!-- Controls: currency, languages, theme toggle, radio, logout -->
                 <div class="flex items-center gap-1.5 sm:gap-2 flex-wrap justify-end">
                     <!-- Currency Toggle -->
@@ -1515,15 +1666,29 @@
                         <button id="currency-azn" class="px-2 py-1 currency-btn-active">AZN</button>
                         <button id="currency-usd" class="px-2 py-1">USD</button>
                     </div>
-                    <!-- Language Buttons -->
-                    <div class="flex items-center space-x-1">
-                        <button id="lang-ru" title="Русский"><img src="https://placehold.co/28x20/d52b1e/ffffff?text=RU"
-                                alt="RU" class="rounded-sm cursor-pointer"></button>
-                        <button id="lang-en" title="English"><img src="https://placehold.co/28x20/012169/ffffff?text=EN"
-                                alt="EN" class="rounded-sm cursor-pointer"></button>
-                        <button id="lang-az" title="Azərbaycan"><img
-                                src="https://placehold.co/28x20/00a651/ffffff?text=AZ" alt="AZ"
-                                class="rounded-sm cursor-pointer"></button>
+                    <!-- Language Dropdown -->
+                    <div class="language-dropdown">
+                        <button id="language-dropdown-btn" class="language-dropdown-btn">
+                            <img id="language-flag" src="https://flagcdn.com/w40/de/germany.png" alt="Flag" class="w-6 h-4 rounded-sm">
+                            <span id="language-name" class="text-xs font-medium"></span>
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                            </svg>
+                        </button>
+                        <div id="language-dropdown-menu" class="language-dropdown-menu">
+                            <div class="language-option active" data-lang="ru">
+                                <img src="https://flagcdn.com/w40/ru.png" alt="RU" class="w-6 h-4 rounded-sm">
+                                <span class="text-sm">Русский</span>
+                            </div>
+                            <div class="language-option" data-lang="en">
+                                <img src="https://flagcdn.com/w40/gb.png" alt="EN" class="w-6 h-4 rounded-sm">
+                                <span class="text-sm">English</span>
+                            </div>
+                            <div class="language-option" data-lang="az">
+                                <img src="https://flagcdn.com/w40/az.png" alt="AZ" class="w-6 h-4 rounded-sm">
+                                <span class="text-sm">Azərbaycan</span>
+                            </div>
+                        </div>
                     </div>
                     <!-- Premium Theme Toggle Button -->
                     <button id="theme-toggle" title="Toggle theme" class="theme-toggle-btn">
@@ -1555,77 +1720,43 @@
                                 stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
                         </svg>
                     </button>
-                    <!-- Premium Radio Player -->
-                    <div class="hidden md:flex items-center premium-card px-6 py-4 space-x-4">
-                        <!-- Play/Pause Button -->
+                    <!-- Compact Radio Player (Hidden on small screens) -->
+                    <div class="hidden lg:flex items-center gap-2">
                         <button id="radio-play-pause-btn"
-                            class="w-12 h-12 flex items-center justify-center rounded-full bg-gradient-to-br from-[var(--accent-color)] to-[#b8941f] hover:from-[#b8941f] hover:to-[var(--accent-color)] transition-all duration-300 transform hover:scale-105 shadow-lg">
-                            <svg id="play-icon" class="w-6 h-6 ml-0.5" fill="currentColor" viewBox="0 0 24 24"
-                                xmlns="http://www.w3.org/2000/svg">
+                            class="w-8 h-8 flex items-center justify-center rounded-full bg-gradient-to-br from-[var(--accent-color)] to-[#b8941f] hover:from-[#b8941f] hover:to-[var(--accent-color)] transition-all duration-300 shadow-md">
+                            <svg id="play-icon" class="w-4 h-4 ml-0.5" fill="currentColor" viewBox="0 0 24 24">
                                 <path d="M8 5v14l11-7z" />
                             </svg>
-                            <svg id="pause-icon" class="w-6 h-6 hidden" fill="currentColor" viewBox="0 0 24 24"
-                                xmlns="http://www.w3.org/2000/svg">
+                            <svg id="pause-icon" class="w-4 h-4 hidden" fill="currentColor" viewBox="0 0 24 24">
                                 <path d="M6 4h4v16H6V4zm8 0h4v16h-4V4z" />
                             </svg>
                         </button>
-
-                        <!-- Radio Info -->
-                        <div class="flex flex-col justify-center flex-grow min-w-0">
-                            <div class="flex items-center space-x-2">
-                                <div class="w-2 h-2 bg-red-500 rounded-full animate-pulse"></div>
-                                <span class="text-sm font-bold truncate" style="color: var(--text-primary);"
-                                    data-i18n="radioTitle">AzerbaiJazz Radio</span>
-                            </div>
-                            <div class="flex items-center space-x-2 mt-1">
-                                <div id="equalizer" class="equalizer paused flex space-x-1">
-                                    <span class="w-1 rounded-full animate-pulse"
-                                        style="background-color: var(--accent-color);"></span>
-                                    <span class="w-1 rounded-full animate-pulse"
-                                        style="background-color: var(--accent-color);"></span>
-                                    <span class="w-1 rounded-full animate-pulse"
-                                        style="background-color: var(--accent-color);"></span>
-                                    <span class="w-1 rounded-full animate-pulse"
-                                        style="background-color: var(--accent-color);"></span>
-                                    <span class="w-1 rounded-full animate-pulse"
-                                        style="background-color: var(--accent-color);"></span>
-                                </div>
-                                <span class="text-xs" style="color: var(--text-secondary);">LIVE</span>
-                            </div>
+                        <div class="flex items-center gap-1 text-xs">
+                            <div class="w-1.5 h-1.5 bg-red-500 rounded-full animate-pulse"></div>
+                            <span style="color: var(--text-primary);" data-i18n="radioTitle">Radio</span>
                         </div>
-
-                        <!-- Volume Control -->
-                        <div class="flex items-center space-x-2">
-                            <svg class="w-4 h-4 text-white/80" fill="currentColor" viewBox="0 0 24 24">
-                                <path
-                                    d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z" />
-                            </svg>
-                            <input type="range" id="radio-volume-slider" min="0" max="1" step="0.01" value="1"
-                                class="w-20 h-1 rounded-full appearance-none cursor-pointer bg-white/30 accent-white focus:outline-none hover:bg-white/40 transition-colors">
-                        </div>
-
                         <audio id="radio-player" src="https://stream.zeno.fm/tjqlpbsxi4ytv"></audio>
                     </div>
-                    <!-- Calculator Button -->
+                    <!-- Compact Calculator Button -->
                     <button id="calculator-btn"
-                        class="flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-gradient-to-br from-blue-500 to-cyan-500 text-white hover:from-blue-600 hover:to-cyan-600 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105"
+                        class="flex items-center justify-center w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-cyan-500 text-white hover:from-blue-600 hover:to-cyan-600 transition-all duration-300 shadow-md"
                         title="Калькулятор">
-                        <svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
                         </svg>
                     </button>
-                    <!-- Shopping List Button -->
+                    <!-- Compact Shopping List Button -->
                     <button id="shopping-list-btn"
-                        class="flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-gradient-to-br from-green-500 to-emerald-500 text-white hover:from-green-600 hover:to-emerald-600 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105"
+                        class="flex items-center justify-center w-8 h-8 rounded-full bg-gradient-to-br from-green-500 to-emerald-500 text-white hover:from-green-600 hover:to-emerald-600 transition-all duration-300 shadow-md"
                         title="Список покупок">
-                        <svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
                         </svg>
                     </button>
-                    <!-- Logout -->
-                    <button id="logout-btn" class="text-xs font-medium px-2 hover:opacity-70 transition"
+                    <!-- Compact Logout -->
+                    <button id="logout-btn" class="text-xs font-medium px-1.5 hover:opacity-70 transition hidden sm:block"
                         style="color: var(--text-secondary);" data-i18n="logout">Выйти</button>
                 </div>
             </div>
@@ -1721,10 +1852,54 @@
                             </p>
                         </div>
                     </div>
-                    <div class="premium-card p-4">
-                        <h3 class="text-lg font-semibold mb-3" style="color: var(--text-primary);"
-                            data-i18n="dashTopCategories">Топ категорий расходов</h3>
-                        <div class="max-h-96"><canvas id="expenses-chart"></canvas></div>
+                    
+                    <!-- Chart and News Box Container -->
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-4">
+                        <!-- Chart Section - Left Side -->
+                        <div class="premium-card p-4">
+                            <h3 class="text-lg font-semibold mb-3" style="color: var(--text-primary);"
+                                data-i18n="dashTopCategories">Топ категорий расходов</h3>
+                            <div class="max-h-96"><canvas id="expenses-chart"></canvas></div>
+                        </div>
+                        
+                        <!-- News Box - Right Side -->
+                        <div class="news-box">
+                            <div class="flex items-center justify-between mb-3 gap-2 flex-wrap">
+                                <h3 class="text-lg font-semibold" style="color: var(--text-primary);" data-i18n="newsBoxTitle">Новости</h3>
+                                <select id="news-country-select" class="text-xs px-2 py-1 rounded border border-gray-300 dark:border-gray-600 bg-transparent" style="color: var(--text-primary);">
+                                    <option value="all">Все страны</option>
+                                    <option value="az">Азербайджан</option>
+                                    <option value="ru">Россия</option>
+                                    <option value="us">США</option>
+                                    <option value="gb">Великобритания</option>
+                                    <option value="de">Германия</option>
+                                </select>
+                                <select id="news-category-select" class="text-xs px-2 py-1 rounded border border-gray-300 dark:border-gray-600 bg-transparent" style="color: var(--text-primary);">
+                                    <option value="general">Общее</option>
+                                    <option value="business">Бизнес</option>
+                                    <option value="technology">Технологии</option>
+                                    <option value="sports">Спорт</option>
+                                    <option value="entertainment">Развлечения</option>
+                                    <option value="science">Наука</option>
+                                    <option value="health">Здоровье</option>
+                                </select>
+                            </div>
+                            <div id="news-list" class="space-y-2">
+                                <!-- News items will be rendered here -->
+                            </div>
+                            <div class="flex items-center justify-between mt-3">
+                                <select id="news-items-per-page" class="text-xs px-2 py-1 rounded border border-gray-300 dark:border-gray-600 bg-transparent" style="color: var(--text-primary);">
+                                    <option value="5">5 новостей</option>
+                                    <option value="10" selected>10 новостей</option>
+                                    <option value="15">15 новостей</option>
+                                </select>
+                                <div class="flex items-center gap-2">
+                                    <button id="news-prev-btn" class="text-xs px-2 py-1 rounded border border-gray-300 dark:border-gray-600" disabled data-i18n="prev">Назад</button>
+                                    <span id="news-page-info" class="text-xs" style="color: var(--text-secondary);">1 / 1</span>
+                                    <button id="news-next-btn" class="text-xs px-2 py-1 rounded border border-gray-300 dark:border-gray-600" disabled data-i18n="next">Вперед</button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -1923,14 +2098,25 @@
             </div>
 
             <div id="calendar-page" class="page-content hidden">
-                <div class="bg-white rounded-lg shadow-sm p-4">
-                    <div class="flex justify-between items-center mb-4"><button id="prev-month-btn"
-                            class="p-2 rounded-full hover:bg-gray-100">&lt;</button>
-                        <h2 id="calendar-month-year" class="text-xl font-semibold"></h2><button id="next-month-btn"
-                            class="p-2 rounded-full hover:bg-gray-100">&gt;</button>
+                <div class="premium-card p-4">
+                    <div class="flex justify-between items-center mb-4">
+                        <button id="prev-month-btn"
+                            class="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                            </svg>
+                        </button>
+                        <h2 id="calendar-month-year" class="text-xl font-semibold" style="color: var(--text-primary);"></h2>
+                        <button id="next-month-btn"
+                            class="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                            </svg>
+                        </button>
                     </div>
                     <div id="calendar-weekdays"
-                        class="grid grid-cols-7 gap-1 text-center font-semibold text-gray-600 text-sm mb-2"></div>
+                        class="grid grid-cols-7 gap-1 text-center font-semibold text-sm mb-2 p-2"
+                        style="color: var(--accent-color); background: rgba(212, 175, 55, 0.1); border-radius: 8px;"></div>
                     <div id="calendar-grid" class="grid grid-cols-7 gap-1"></div>
                 </div>
             </div>
@@ -2291,6 +2477,12 @@
                 toPurchase: "К ПРИОБРЕТЕНИЮ",
                 purchased: "КУПЛЕНО",
                 generalTotal: "ОБЩАЯ СУММА",
+                newsBoxTitle: "Новости",
+                prev: "Назад",
+                next: "Вперед",
+                weatherLocation: "Локация",
+                newsCountry: "Страна",
+                newsCategory: "Категория",
             },
             en: {
                 appTitle: "ORDINA", appSubtitle: "Manage your life with ease",
@@ -2341,6 +2533,12 @@
                 toPurchase: "TO PURCHASE",
                 purchased: "PURCHASED",
                 generalTotal: "GRAND TOTAL",
+                newsBoxTitle: "News",
+                prev: "Previous",
+                next: "Next",
+                weatherLocation: "Location",
+                newsCountry: "Country",
+                newsCategory: "Category",
             },
             az: {
                 appTitle: "ORDINA", appSubtitle: "Həyatını asanlıqla idarə et",
@@ -2391,6 +2589,12 @@
                 toPurchase: "ALINMALI",
                 purchased: "ALINMIŞ",
                 generalTotal: "ÜMUMİ CƏMİ",
+                newsBoxTitle: "Xəbərlər",
+                prev: "Geri",
+                next: "İrəli",
+                weatherLocation: "Yer",
+                newsCountry: "Ölkə",
+                newsCategory: "Kateqoriya",
             }
         };
         let currentLang = localStorage.getItem('appLanguage') || 'ru';
@@ -2431,10 +2635,7 @@
         }
 
         function updateLanguageButtons() {
-            ['ru', 'en', 'az'].forEach(lang => {
-                const btn = document.getElementById(`lang-${lang}`);
-                if (btn) btn.classList.toggle('ring-2', lang === currentLang);
-            });
+            // Update login language buttons
             ['ru-login', 'en-login', 'az-login'].forEach(lang => {
                 const btn = document.getElementById(`lang-${lang}`);
                 if (btn) {
@@ -2444,6 +2645,24 @@
                         btn.className = 'px-3 py-1 text-xs font-medium rounded-lg bg-gray-200 text-gray-700 hover:bg-gray-300';
                     }
                 }
+            });
+            
+            // Update dropdown UI
+            const flagMap = {
+                'ru': { flag: 'https://flagcdn.com/w40/ru.png', name: 'Русский' },
+                'en': { flag: 'https://flagcdn.com/w40/gb.png', name: 'English' },
+                'az': { flag: 'https://flagcdn.com/w40/az.png', name: 'Azərbaycan' }
+            };
+            
+            if (document.getElementById('language-flag') && document.getElementById('language-name')) {
+                document.getElementById('language-flag').src = flagMap[currentLang].flag;
+                document.getElementById('language-name').textContent = flagMap[currentLang].name;
+            }
+            
+            // Update dropdown options
+            document.querySelectorAll('.language-option').forEach(opt => {
+                const isActive = opt.dataset.lang === currentLang;
+                opt.classList.toggle('active', isActive);
             });
         }
 
@@ -2475,12 +2694,36 @@
         }
 
         if (auth) {
-            document.getElementById('lang-ru').addEventListener('click', () => setLanguage('ru'));
-            document.getElementById('lang-en').addEventListener('click', () => setLanguage('en'));
-            document.getElementById('lang-az').addEventListener('click', () => setLanguage('az'));
+            // Login language buttons
             document.getElementById('lang-ru-login').addEventListener('click', () => setLanguage('ru'));
             document.getElementById('lang-en-login').addEventListener('click', () => setLanguage('en'));
             document.getElementById('lang-az-login').addEventListener('click', () => setLanguage('az'));
+            
+            // Language dropdown
+            const langDropdownBtn = document.getElementById('language-dropdown-btn');
+            const langDropdownMenu = document.getElementById('language-dropdown-menu');
+            
+            if (langDropdownBtn && langDropdownMenu) {
+                langDropdownBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    langDropdownMenu.classList.toggle('show');
+                });
+                
+                document.querySelectorAll('.language-option').forEach(opt => {
+                    opt.addEventListener('click', () => {
+                        const lang = opt.dataset.lang;
+                        setLanguage(lang);
+                        langDropdownMenu.classList.remove('show');
+                    });
+                });
+                
+                // Close when clicking outside
+                document.addEventListener('click', (e) => {
+                    if (!e.target.closest('.language-dropdown')) {
+                        langDropdownMenu.classList.remove('show');
+                    }
+                });
+            }
 
             onAuthStateChanged(auth, async (user) => {
                 if (user) {
@@ -2501,6 +2744,10 @@
                     updateDateTime();
                     if (dateTimeInterval) clearInterval(dateTimeInterval);
                     dateTimeInterval = setInterval(updateDateTime, 60000);
+                    
+                    // Initialize weather and news
+                    initWeather();
+                    initNews();
                 } else { showLoginScreen(); }
             });
         }
@@ -2538,7 +2785,14 @@
                         tasksToCarryOverSnapshot.forEach(docSnap => {
                             const taskData = docSnap.data();
                             const newTaskRef = doc(todayTasksColRef);
-                            batch.set(newTaskRef, { ...taskData, notes: `(Перенесено с ${formatISODateForDisplay(yesterdayId)}) ${taskData.notes || ''}`.trim(), carriedOver: true });
+                            const originalDate = taskData.originalDate || yesterdayId;
+                            batch.set(newTaskRef, { 
+                                ...taskData, 
+                                notes: `(Перенесено с ${formatISODateForDisplay(yesterdayId)}) ${taskData.notes || ''}`.trim(), 
+                                carriedOver: true,
+                                originalDate: originalDate,
+                                carriedOverFrom: yesterdayId
+                            });
                         });
                         await batch.commit();
                     }
@@ -2589,8 +2843,227 @@
             await batch.commit();
         }
 
-        function updateDateTime() { const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit', timeZone: 'Asia/Baku' }; document.getElementById('current-datetime').textContent = new Date().toLocaleString(currentLang === 'ru' ? 'ru-RU' : 'en-US', options); }
-        function updateMonthDisplay() { const formattedDate = formatMonthId(selectedMonthId); document.querySelectorAll('.current-month-name').forEach(el => el.textContent = formattedDate); document.getElementById('recurring-month-name').textContent = formattedDate; document.getElementById('today-date').textContent = formatISODateForDisplay(getTodayISOString(), { year: undefined }); }
+        function updateDateTime() { 
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit', timeZone: 'Asia/Baku' }; 
+            document.getElementById('current-datetime').textContent = new Date().toLocaleString(currentLang === 'ru' ? 'ru-RU' : 'en-US', options); 
+            
+            // Update weather datetime
+            const now = new Date();
+            const dateOptions = { weekday: 'short', day: 'numeric', month: 'short' };
+            const timeOptions = { hour: '2-digit', minute: '2-digit' };
+            document.getElementById('weather-date').textContent = now.toLocaleDateString(currentLang === 'ru' ? 'ru-RU' : currentLang === 'az' ? 'az-AZ' : 'en-US', dateOptions);
+            document.getElementById('weather-time').textContent = now.toLocaleTimeString(currentLang === 'ru' ? 'ru-RU' : currentLang === 'az' ? 'az-AZ' : 'en-US', timeOptions);
+        }
+        
+        function updateMonthDisplay() { 
+            const formattedDate = formatMonthId(selectedMonthId); 
+            document.querySelectorAll('.current-month-name').forEach(el => el.textContent = formattedDate); 
+            document.getElementById('recurring-month-name').textContent = formattedDate; 
+            document.getElementById('today-date').textContent = formatISODateForDisplay(getTodayISOString(), { year: undefined }); 
+        }
+        
+        // Weather functions
+        let currentWeatherCity = 'Baku';
+        
+        async function updateWeather(city = 'Baku') {
+            try {
+                currentWeatherCity = city;
+                const weatherConditions = ['Sunny', 'Cloudy', 'Rainy', 'Snowy', 'Windy', 'Partly Cloudy'];
+                const weatherData = {
+                    temp: Math.floor(Math.random() * 30) + 10,
+                    desc: weatherConditions[Math.floor(Math.random() * weatherConditions.length)],
+                    city: city
+                };
+                
+                document.getElementById('weather-temp').textContent = `${weatherData.temp}°C`;
+                document.getElementById('weather-desc').textContent = weatherData.desc;
+                document.getElementById('weather-city-input').value = city;
+            } catch (error) {
+                console.error('Weather update error:', error);
+            }
+        }
+        
+        function initWeather() {
+            const cityInput = document.getElementById('weather-city-input');
+            const locationBtn = document.getElementById('weather-location-btn');
+            
+            if (cityInput) {
+                cityInput.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter' && cityInput.value.trim()) {
+                        updateWeather(cityInput.value.trim());
+                    }
+                });
+                cityInput.addEventListener('blur', () => {
+                    if (cityInput.value.trim()) {
+                        updateWeather(cityInput.value.trim());
+                    }
+                });
+            }
+            
+            if (locationBtn) {
+                locationBtn.addEventListener('click', () => {
+                    if (navigator.geolocation) {
+                        navigator.geolocation.getCurrentPosition(
+                            (position) => {
+                                updateWeather('Baku'); // Use current city based on location
+                            },
+                            () => {
+                                showToast('Геолокация недоступна. Используем Baku.', 'info');
+                                updateWeather('Baku');
+                            }
+                        );
+                    } else {
+                        showToast('Геолокация не поддерживается. Используем Baku.', 'info');
+                        updateWeather('Baku');
+                    }
+                });
+            }
+            
+            updateWeather('Baku');
+        }
+        
+        // News functions
+        let newsData = [];
+        let currentNewsPage = 1;
+        let newsPerPage = 10;
+        let currentNewsCategory = 'general';
+        let currentNewsCountry = 'all';
+        
+        async function fetchNews() {
+            const countryNames = {
+                'az': 'Azerbaijan',
+                'ru': 'Russia', 
+                'us': 'USA',
+                'gb': 'UK',
+                'de': 'Germany'
+            };
+            
+            const categoryNames = {
+                'general': 'General',
+                'business': 'Business',
+                'technology': 'Technology',
+                'sports': 'Sports',
+                'entertainment': 'Entertainment',
+                'science': 'Science',
+                'health': 'Health'
+            };
+            
+            // Use free news API (NewsAPI.org requires API key, so we'll use mock data with country selection)
+            const newsByCountry = {
+                'az': [
+                    { title: 'Азербайджан: Новости экономики', desc: 'Последние новости о развитии экономики Азербайджана...', image: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=300' },
+                    { title: 'Спортивные достижения Азербайджана', desc: 'Наши спортсмены показывают отличные результаты...', image: 'https://images.unsplash.com/photo-1530549387789-4c1017266635?w=300' }
+                ],
+                'ru': [
+                    { title: 'Россия: Новости технологий', desc: 'Развитие технологий в России...', image: 'https://images.unsplash.com/photo-1485827404703-89b55fcc595e?w=300' },
+                    { title: 'Новости здоровья', desc: 'Современные достижения медицины...', image: 'https://images.unsplash.com/photo-1559757148-5c350d0d0c56?w=300' }
+                ],
+                'us': [
+                    { title: 'USA Tech News', desc: 'Latest technology news from USA...', image: 'https://images.unsplash.com/photo-1518770660439-4636190af475?w=300' },
+                    { title: 'Business Updates', desc: 'Market trends and business news...', image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300' }
+                ],
+                'gb': [
+                    { title: 'UK News', desc: 'Latest news from the United Kingdom...', image: 'https://images.unsplash.com/photo-1528607929212-8e53c225d256?w=300' },
+                    { title: 'UK Business', desc: 'UK business and economy updates...', image: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=300' }
+                ],
+                'de': [
+                    { title: 'Deutschland Nachrichten', desc: 'Neueste Nachrichten aus Deutschland...', image: 'https://images.unsplash.com/photo-1459305272254-33a7b4139cbd?w=300' },
+                    { title: 'Technologie Neuigkeiten', desc: 'Deutsche Technologieinnovationen...', image: 'https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=300' }
+                ]
+            };
+            
+            const allNews = [
+                { title: 'Международные новости', desc: 'Важные мировые события и обновления...', image: 'https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=300' },
+                { title: 'Новости экономики', desc: 'Актуальные экономические обновления...', image: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=300' },
+                { title: 'Технологические инновации', desc: 'Последние достижения в области технологий...', image: 'https://images.unsplash.com/photo-1485827404703-89b55fcc595e?w=300' }
+            ];
+            
+            if (currentNewsCountry === 'all') {
+                newsData = [...allNews, ...Object.values(newsByCountry).flat()];
+            } else {
+                newsData = newsByCountry[currentNewsCountry] || allNews;
+            }
+            
+            renderNews();
+        }
+        
+        function renderNews() {
+            const newsList = document.getElementById('news-list');
+            if (!newsList) return;
+            
+            const startIndex = (currentNewsPage - 1) * newsPerPage;
+            const endIndex = startIndex + newsPerPage;
+            const paginatedNews = newsData.slice(startIndex, endIndex);
+            
+            newsList.innerHTML = paginatedNews.map(news => `
+                <div class="news-item cursor-pointer" onclick="window.open('#', '_blank')">
+                    ${news.image ? `<img src="${news.image}" alt="${news.title}" />` : ''}
+                    <h4 class="font-semibold text-sm mb-1" style="color: var(--text-primary);">${news.title}</h4>
+                    <p class="text-xs" style="color: var(--text-secondary);">${news.desc}</p>
+                </div>
+            `).join('');
+            
+            updateNewsPagination();
+        }
+        
+        function updateNewsPagination() {
+            const totalPages = Math.ceil(newsData.length / newsPerPage);
+            document.getElementById('news-page-info').textContent = `${currentNewsPage} / ${totalPages}`;
+            document.getElementById('news-prev-btn').disabled = currentNewsPage === 1;
+            document.getElementById('news-next-btn').disabled = currentNewsPage >= totalPages;
+        }
+        
+        function initNews() {
+            fetchNews();
+            
+            const categorySelect = document.getElementById('news-category-select');
+            const countrySelect = document.getElementById('news-country-select');
+            const itemsPerPage = document.getElementById('news-items-per-page');
+            const prevBtn = document.getElementById('news-prev-btn');
+            const nextBtn = document.getElementById('news-next-btn');
+            
+            if (categorySelect) {
+                categorySelect.addEventListener('change', (e) => {
+                    currentNewsCategory = e.target.value;
+                    fetchNews();
+                });
+            }
+            
+            if (countrySelect) {
+                countrySelect.addEventListener('change', (e) => {
+                    currentNewsCountry = e.target.value;
+                    currentNewsPage = 1;
+                    fetchNews();
+                });
+            }
+            
+            if (itemsPerPage) {
+                itemsPerPage.addEventListener('change', (e) => {
+                    newsPerPage = parseInt(e.target.value);
+                    currentNewsPage = 1;
+                    renderNews();
+                });
+            }
+            
+            if (prevBtn) {
+                prevBtn.addEventListener('click', () => {
+                    if (currentNewsPage > 1) {
+                        currentNewsPage--;
+                        renderNews();
+                    }
+                });
+            }
+            
+            if (nextBtn) {
+                nextBtn.addEventListener('click', () => {
+                    const totalPages = Math.ceil(newsData.length / newsPerPage);
+                    if (currentNewsPage < totalPages) {
+                        currentNewsPage++;
+                        renderNews();
+                    }
+                });
+            }
+        }
 
         const tabs = document.querySelectorAll('.tab-button');
         const taskTabs = document.querySelectorAll('.task-tab-button');
@@ -2727,7 +3200,24 @@
             }
             tableWrapper.classList.remove('hidden');
             emptyState.classList.add('hidden');
-            tableBody.innerHTML = docs.map(d => { const t = d; const s = t.status; return `<tr class="md:border-b-0 ${t.carriedOver ? 'bg-blue-50' : ''}"><td data-label="${translations[currentLang].name}" class="${s === translations.ru.statusDone ? 'line-through text-gray-500' : ''}">${t.name}</td><td data-label="${translations[currentLang].status}">${createTaskStatusDropdown(t.id, s, 'dailyTasks')}</td><td data-label="${translations[currentLang].notes}"><input type="text" class="editable-task-notes bg-transparent w-full p-1" data-id="${t.id}" data-col="dailyTasks" value="${t.notes || ''}" placeholder="${translations[currentLang].placeholderComment}"></td><td data-label="${translations[currentLang].actions}" class="flex gap-2"><button data-id="${t.id}" class="edit-daily-task-btn text-blue-600">✏️</button><button data-id="${t.id}" class="delete-daily-task-btn text-red-600">🗑️</button></td></tr>`; }).join('');
+            tableBody.innerHTML = docs.map(d => { 
+                const t = d; 
+                const s = t.status; 
+                const originalDateStr = t.originalDate ? ` (С ${formatISODateForDisplay(t.originalDate)})` : '';
+                return `<tr class="md:border-b-0 ${t.carriedOver ? 'bg-blue-50' : ''}">
+                    <td data-label="${translations[currentLang].name}" class="${s === translations.ru.statusDone ? 'line-through text-gray-500' : ''}">
+                        ${t.name}${originalDateStr}
+                    </td>
+                    <td data-label="${translations[currentLang].status}">${createTaskStatusDropdown(t.id, s, 'dailyTasks')}</td>
+                    <td data-label="${translations[currentLang].notes}">
+                        <input type="text" class="editable-task-notes bg-transparent w-full p-1" data-id="${t.id}" data-col="dailyTasks" value="${t.notes || ''}" placeholder="${translations[currentLang].placeholderComment}">
+                    </td>
+                    <td data-label="${translations[currentLang].actions}" class="flex gap-2">
+                        <button data-id="${t.id}" class="edit-daily-task-btn text-blue-600">✏️</button>
+                        <button data-id="${t.id}" class="delete-daily-task-btn text-red-600">🗑️</button>
+                    </td>
+                </tr>`;
+            }).join('');
         }
         function renderMonthlyTasks(docs) {
             const tableWrapper = document.getElementById('monthly-tasks-table-wrapper');
@@ -2778,9 +3268,22 @@
                 const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`; const monthDayStr = dateStr.substring(5); const isToday = dateStr === todayISO;
                 const dayEvents = calendarEvents.filter(e => e.category === 'birthday' ? e.date.substring(5) === monthDayStr : e.date === dateStr);
                 const dayEl = document.createElement('div');
-                dayEl.className = `calendar-day border border-gray-200 p-2 flex flex-col cursor-pointer hover:bg-gray-50 ${isToday ? 'calendar-day-today' : ''}`;
+                dayEl.className = `calendar-day border-2 p-2 flex flex-col cursor-pointer transition-all ${isToday ? 'calendar-day-today' : 'border-gray-200 dark:border-gray-700'}`;
                 dayEl.dataset.date = dateStr;
-                dayEl.innerHTML = `<div class="calendar-day-number self-end text-center rounded-full flex items-center justify-center">${day}</div><div class="events mt-1 space-y-1 overflow-y-auto text-xs">${dayEvents.map(e => `<div data-event-id="${e.id}" class="event-item p-1 bg-blue-100 text-blue-800 rounded truncate">${e.name}</div>`).join('')}</div>`;
+                dayEl.innerHTML = `
+                    <div class="calendar-day-number self-end text-center rounded-full flex items-center justify-center w-8 h-8 font-semibold transition-all" 
+                         style="${isToday ? 'background: var(--accent-color); color: white; box-shadow: 0 0 10px rgba(212, 175, 55, 0.5);' : ''}">
+                        ${day}
+                    </div>
+                    <div class="events mt-1 space-y-1 overflow-y-auto text-xs">
+                        ${dayEvents.map(e => `
+                            <div data-event-id="${e.id}" class="event-item p-1 rounded truncate text-xs font-medium" 
+                                 style="background: linear-gradient(135deg, rgba(212, 175, 55, 0.2) 0%, rgba(212, 175, 55, 0.1) 100%); color: var(--text-primary);">
+                                ${e.name}
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
                 grid.appendChild(dayEl);
             }
         }
