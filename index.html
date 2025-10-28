@@ -18,26 +18,30 @@
         }
 
         :root {
-            /* Premium Luxury Palette - Gold & Navy */
+            /* Premium Luxury Palette - Gold & Graphite */
             --gold-primary: #D4AF37;
             --gold-light: #F4E4C1;
             --gold-dark: #B8941F;
-            --navy-deep: #0A1628;
-            --navy-medium: #1A2942;
+            --gold-accent: #E6C547;
+            --graphite-deep: #1A1A1A;
+            --graphite-medium: #2D2D2D;
+            --graphite-light: #404040;
             --white-pure: #FFFFFF;
             --white-soft: #F8F9FA;
             --emerald: #50C878;
             --ruby: #E0115F;
+            --silver: #C0C0C0;
 
-            --primary-color: var(--navy-deep);
-            --secondary-color: var(--navy-medium);
+            --primary-color: var(--graphite-deep);
+            --secondary-color: var(--graphite-medium);
             --accent-color: var(--gold-primary);
-            --text-primary: var(--navy-deep);
+            --text-primary: var(--graphite-deep);
             --text-secondary: #64748b;
             --bg-primary: var(--white-pure);
             --bg-secondary: var(--white-soft);
             --border-color: rgba(212, 175, 55, 0.25);
-            --shadow: 0 20px 60px rgba(10, 22, 40, 0.12);
+            --shadow: 0 20px 60px rgba(26, 26, 26, 0.12);
+            --shadow-gold: 0 8px 32px rgba(212, 175, 55, 0.2);
         }
 
         .dark {
@@ -46,10 +50,11 @@
             --accent-color: var(--gold-primary);
             --text-primary: var(--white-soft);
             --text-secondary: #94a3b8;
-            --bg-primary: var(--navy-deep);
-            --bg-secondary: var(--navy-medium);
+            --bg-primary: var(--graphite-deep);
+            --bg-secondary: var(--graphite-medium);
             --border-color: rgba(212, 175, 55, 0.35);
             --shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+            --shadow-gold: 0 8px 32px rgba(212, 175, 55, 0.3);
         }
 
         /* Premium Theme Toggle - Compact */
@@ -86,22 +91,45 @@
             color: var(--white-pure);
         }
 
-        /* Luxury Stat Cards */
+        /* Luxury Stat Cards - Enhanced */
         .stat-card {
             padding: 1.75rem;
-            border-radius: 18px;
-            border: 2px solid rgba(212, 175, 55, 0.25);
+            border-radius: 12px;
+            border: 2px solid rgba(212, 175, 55, 0.2);
             background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(248, 249, 250, 0.9) 100%);
             backdrop-filter: blur(10px);
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             position: relative;
             overflow: hidden;
-            box-shadow: 0 10px 30px rgba(10, 22, 40, 0.08);
+            box-shadow: var(--shadow);
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--gold-primary), var(--gold-accent), var(--gold-primary));
+            opacity: 0.8;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-gold);
+            border-color: rgba(212, 175, 55, 0.4);
         }
 
         .dark .stat-card {
-            background: linear-gradient(135deg, rgba(26, 41, 66, 0.95) 0%, rgba(10, 22, 40, 0.9) 100%);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            background: linear-gradient(135deg, rgba(26, 26, 26, 0.95) 0%, rgba(45, 45, 45, 0.9) 100%);
+            border-color: rgba(212, 175, 55, 0.3);
+            box-shadow: var(--shadow);
+        }
+
+        .dark .stat-card:hover {
+            box-shadow: var(--shadow-gold);
+            border-color: rgba(212, 175, 55, 0.5);
         }
 
         .stat-card::after {
@@ -183,7 +211,7 @@
             }
 
             img[alt="ORDINA Logo"] {
-                max-height: 60px !important;
+                max-height: 64px !important;
             }
 
             /* Compact navigation tabs */
@@ -234,7 +262,7 @@
             }
 
             img[alt="ORDINA Logo"] {
-                max-height: 70px !important;
+                max-height: 64px !important;
             }
 
             .tab-button {
@@ -260,7 +288,7 @@
             }
 
             img[alt="ORDINA Logo"] {
-                max-height: 80px !important;
+                max-height: 64px !important;
             }
         }
 
@@ -281,7 +309,7 @@
             }
 
             img[alt="ORDINA Logo"] {
-                max-height: 90px !important;
+                max-height: 64px !important;
             }
         }
 
@@ -1104,6 +1132,103 @@
             }
         }
 
+        /* Radio Equalizer Animation */
+        .equalizer-bar {
+            height: 4px;
+            transition: height 0.1s ease;
+            animation: equalizerPulse 0.5s ease-in-out infinite alternate;
+        }
+
+        .equalizer-bar:nth-child(1) { animation-delay: 0s; }
+        .equalizer-bar:nth-child(2) { animation-delay: 0.1s; }
+        .equalizer-bar:nth-child(3) { animation-delay: 0.2s; }
+        .equalizer-bar:nth-child(4) { animation-delay: 0.3s; }
+        .equalizer-bar:nth-child(5) { animation-delay: 0.4s; }
+
+        @keyframes equalizerPulse {
+            0% { height: 4px; }
+            100% { height: 20px; }
+        }
+
+        .equalizer-bar.paused {
+            animation-play-state: paused;
+        }
+
+        /* Enhanced Responsive Design */
+        @media (max-width: 480px) {
+            .weather-widget {
+                min-width: 120px;
+                max-width: 140px;
+                padding: 0.5rem;
+            }
+            
+            .news-box {
+                padding: 1rem;
+            }
+            
+            .stat-card {
+                padding: 1.25rem;
+            }
+            
+            .equalizer-bar {
+                width: 0.75px;
+            }
+            
+            #fixed-header {
+                padding: 0.5rem;
+            }
+            
+            .tab-button {
+                padding: 0.5rem 0.75rem;
+                font-size: 0.75rem;
+            }
+        }
+
+        @media (min-width: 481px) and (max-width: 768px) {
+            .weather-widget {
+                min-width: 140px;
+                max-width: 160px;
+            }
+            
+            .news-box {
+                padding: 1.25rem;
+            }
+            
+            .stat-card {
+                padding: 1.5rem;
+            }
+        }
+
+        @media (min-width: 769px) and (max-width: 1024px) {
+            .weather-widget {
+                min-width: 160px;
+                max-width: 180px;
+            }
+            
+            .news-box {
+                padding: 1.5rem;
+            }
+            
+            .stat-card {
+                padding: 1.75rem;
+            }
+        }
+
+        @media (min-width: 1025px) {
+            .weather-widget {
+                min-width: 180px;
+                max-width: 200px;
+            }
+            
+            .news-box {
+                padding: 1.75rem;
+            }
+            
+            .stat-card {
+                padding: 2rem;
+            }
+        }
+
         @media (min-width: 481px) and (max-width: 640px) {
             #app {
                 padding: 0.75rem !important;
@@ -1308,15 +1433,22 @@
             padding: 0.5rem;
             border-radius: 8px;
             border: 1px solid rgba(212, 175, 55, 0.25);
-            background: linear-gradient(135deg, rgba(212, 175, 55, 0.08) 0%, rgba(248, 249, 250, 0.95) 100%);
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(248, 249, 250, 0.8) 100%);
             backdrop-filter: blur(10px);
             min-width: 120px;
-            max-width: 160px;
+            max-width: 140px;
             transition: all 0.3s ease;
+            box-shadow: var(--shadow);
+        }
+
+        .weather-widget:hover {
+            box-shadow: var(--shadow-gold);
+            border-color: rgba(212, 175, 55, 0.4);
         }
 
         .dark .weather-widget {
-            background: linear-gradient(135deg, rgba(212, 175, 55, 0.1) 0%, rgba(26, 41, 66, 0.95) 100%);
+            background: linear-gradient(135deg, rgba(26, 26, 26, 0.9) 0%, rgba(45, 45, 45, 0.8) 100%);
+            border-color: rgba(212, 175, 55, 0.3);
         }
 
         /* Language Dropdown Styles */
@@ -1327,10 +1459,10 @@
         .language-dropdown-btn {
             display: flex;
             align-items: center;
-            gap: 0.5rem;
-            padding: 0.5rem 0.75rem;
-            border-radius: 8px;
-            border: 2px solid rgba(212, 175, 55, 0.25);
+            gap: 0.25rem;
+            padding: 0.25rem 0.5rem;
+            border-radius: 6px;
+            border: 1px solid rgba(212, 175, 55, 0.25);
             background: var(--bg-primary);
             cursor: pointer;
             transition: all 0.3s ease;
@@ -1343,18 +1475,17 @@
 
         .language-dropdown-menu {
             position: absolute;
-            top: 100%;
+            bottom: 100%;
             right: 0;
-            margin-top: 0.25rem;
+            margin-bottom: 0.25rem;
             padding: 0.5rem;
             background: var(--bg-primary);
             border: 2px solid var(--border-color);
             border-radius: 8px;
             box-shadow: 0 10px 30px rgba(10, 22, 40, 0.15);
             display: none;
-            flex-direction: column;
-            gap: 0.25rem;
-            min-width: 120px;
+            flex-direction: row;
+            gap: 0.5rem;
             z-index: 100;
         }
 
@@ -1365,57 +1496,95 @@
         .language-option {
             display: flex;
             align-items: center;
-            gap: 0.5rem;
-            padding: 0.5rem;
-            border-radius: 6px;
+            justify-content: center;
+            width: 32px;
+            height: 24px;
+            border-radius: 4px;
             cursor: pointer;
             transition: all 0.2s ease;
+            padding: 0;
+        }
+
+        .language-option img {
+            width: 32px;
+            height: 24px;
+            border-radius: 4px;
+            object-fit: cover;
         }
 
         .language-option:hover {
-            background: rgba(212, 175, 55, 0.15);
+            transform: scale(1.1);
+            box-shadow: 0 0 8px rgba(212, 175, 55, 0.4);
         }
 
         .language-option.active {
-            background: rgba(212, 175, 55, 0.2);
+            box-shadow: 0 0 12px rgba(212, 175, 55, 0.6);
+            transform: scale(1.05);
         }
 
-        /* News Box Styles */
+        .language-option span {
+            display: none;
+        }
+
+        /* News Box Styles - Refined to compact functional list */
         .news-box {
-            padding: 1rem;
-            border-radius: 12px;
-            border: 2px solid rgba(212, 175, 55, 0.25);
+            padding: 16px;
+            border-radius: 10px;
+            border: 1px solid rgba(212, 175, 55, 0.25);
             background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(248, 249, 250, 0.9) 100%);
             backdrop-filter: blur(10px);
             max-height: 600px;
             overflow-y: auto;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+            transition: box-shadow 0.2s ease, border-color 0.2s ease;
+        }
+
+        .news-box:hover {
+            box-shadow: var(--shadow-gold);
+            border-color: rgba(212, 175, 55, 0.4);
         }
 
         .dark .news-box {
-            background: linear-gradient(135deg, rgba(26, 41, 66, 0.95) 0%, rgba(10, 22, 40, 0.9) 100%);
+            background: linear-gradient(135deg, rgba(26, 26, 26, 0.95) 0%, rgba(45, 45, 45, 0.9) 100%);
+            border-color: rgba(212, 175, 55, 0.3);
         }
 
         .news-item {
-            padding: 1rem;
-            margin-bottom: 1rem;
+            padding: 12px;
+            margin-bottom: 12px;
             border-radius: 8px;
             border: 1px solid rgba(212, 175, 55, 0.15);
             background: var(--bg-primary);
-            transition: all 0.2s ease;
+            transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.2s ease, background-color 0.2s ease;
         }
 
         .news-item:hover {
             border-color: var(--gold-primary);
             transform: translateY(-2px);
             box-shadow: 0 4px 12px rgba(212, 175, 55, 0.15);
+            background-color: rgba(227, 179, 65, 0.08);
         }
 
+        /* Do not force oversized images; keep thumbnails compact via utility classes */
         .news-item img {
-            width: 100%;
-            height: 150px;
-            object-fit: cover;
             border-radius: 6px;
-            margin-bottom: 0.5rem;
+        }
+
+        /* Line clamp utility */
+        .line-clamp-2 {
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .line-clamp-3 {
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
         }
 
         /* Enhanced Calendar Styles */
@@ -1629,64 +1798,85 @@
         <!-- Fixed header wrapper to keep top bar, logo, and navigation static on scroll -->
         <div id="fixed-header" class="sticky top-0 z-30 premium-card">
             <!-- Compact top bar for logo and controls -->
-            <div class="flex items-center justify-between px-2 sm:px-3 md:px-4 py-1.5 sm:py-2 gap-2 flex-wrap">
-                <!-- Logo and motto -->
-                <div class="flex items-center gap-2">
-                    <img src="https://raw.githubusercontent.com/Kenny-Corleone/ORDINA.github.io/main/logo%20ORDINA.png"
-                        alt="ORDINA Logo" class="h-12 sm:h-14 md:h-16 w-auto drop-shadow-xl">
-                    <!-- Show motto on large screens only -->
-                    <span class="hidden lg:inline-block text-xs font-semibold"
-                        style="color: var(--text-secondary);" data-i18n="appSubtitle">Управляй своей жизнью с легкостью</span>
-                </div>
-                
-                <!-- Weather Widget - Compact -->
-                <div class="weather-widget min-w-[150px] max-w-[180px]">
-                    <div class="flex items-center justify-between mb-1">
-                        <input type="text" id="weather-city-input" placeholder="Baku" 
-                            class="bg-transparent border-b border-gray-300 dark:border-gray-600 outline-none text-xs w-20"
-                            style="color: var(--text-primary);" />
-                        <button id="weather-location-btn" class="text-xs hover:opacity-80 transition-opacity" 
-                            style="color: var(--accent-color);" title="По геолокации">
-                            <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24">
-                                <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
-                            </svg>
-                        </button>
+            <div class="flex items-center justify-between px-2 sm:px-3 py-1 gap-2">
+                <!-- Left: Logo and Motto -->
+                <div class="flex items-center gap-2 flex-1">
+                    <!-- Logo and Motto Block -->
+                    <div class="flex flex-col items-start gap-1">
+                        <img src="https://raw.githubusercontent.com/Kenny-Corleone/ORDINA.github.io/main/logo%20ORDINA.png"
+                            alt="ORDINA Logo" class="h-12 sm:h-16 md:h-20 lg:h-24 w-auto drop-shadow-lg">
+                        <!-- Motto - Calligraphy style -->
+                        <div class="hidden md:block">
+                            <div class="text-sm font-medium leading-none" style="color: var(--text-secondary); font-family: 'Playfair Display', Georgia, serif; font-style: italic; letter-spacing: 0.02em;" data-i18n="appSubtitle">
+                                Управляй своей жизнью с лёгкостью
+                            </div>
+                        </div>
                     </div>
-                    <div id="weather-info" class="text-xs">
-                        <div id="weather-temp" class="text-sm font-bold" style="color: var(--accent-color);">--°</div>
-                        <div id="weather-desc" style="color: var(--text-secondary);">--</div>
+                    
+                    <!-- Weather Widget - Premium Design -->
+                    <div class="weather-widget hidden sm:flex flex-col gap-2 p-3 rounded-xl border-2 min-w-[200px] max-w-[260px]" style="border-color: var(--border-color); background: linear-gradient(135deg, rgba(212, 175, 55, 0.08) 0%, rgba(248, 249, 250, 0.95) 100%); backdrop-filter: blur(10px); box-shadow: var(--shadow);">
+                        <!-- City Search Row -->
+                        <div class="flex items-center gap-2">
+                            <div class="relative flex-1">
+                                <svg class="w-3 h-3 absolute left-1.5 top-1/2 transform -translate-y-1/2 pointer-events-none" style="color: var(--accent-color);" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                                </svg>
+                                <input type="text" id="weather-city-input" placeholder=""
+                                    class="w-full pl-6 pr-2 py-1 text-xs rounded-md border outline-none transition-all duration-200"
+                                    style="border-color: var(--border-color); color: var(--text-primary); background: var(--bg-primary);"
+                                    onkeypress="if(event.key==='Enter') { event.target.blur(); }" />
+                            </div>
+                            <button id="weather-location-btn" class="p-1.5 rounded-md hover:scale-110 transition-all duration-200" 
+                                style="background: linear-gradient(135deg, var(--gold-primary) 0%, var(--gold-dark) 100%); color: var(--graphite-deep); box-shadow: 0 2px 8px rgba(212, 175, 55, 0.3);" title="">
+                                <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+                                </svg>
+                            </button>
+                        </div>
+                        <!-- Weather Info -->
+                        <div id="weather-info" class="flex items-center justify-between">
+                            <div class="flex items-center gap-2">
+                                <div id="weather-temp" class="text-2xl font-extrabold" style="color: var(--accent-color);">--°</div>
+                                <div class="flex flex-col text-xs">
+                                    <div id="weather-desc" class="font-medium leading-tight" style="color: var(--text-primary);">--</div>
+                                    <div id="weather-time" class="text-[10px] leading-tight" style="color: var(--text-secondary);">--</div>
+                                </div>
+                            </div>
+                            <svg class="w-10 h-10 opacity-50" style="color: var(--accent-color);" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/>
+                            </svg>
+                        </div>
                     </div>
                 </div>
                 
                 <!-- Controls: currency, languages, theme toggle, radio, logout -->
-                <div class="flex items-center gap-1.5 sm:gap-2 flex-wrap justify-end">
+                <div class="flex items-center gap-1 sm:gap-1.5">
                     <!-- Currency Toggle -->
                     <div
-                        class="flex items-center border border-gray-300 dark:border-gray-600 rounded-lg overflow-hidden text-xs sm:text-sm">
-                        <button id="currency-azn" class="px-2 py-1 currency-btn-active">AZN</button>
-                        <button id="currency-usd" class="px-2 py-1">USD</button>
+                        class="flex items-center border border-gray-300 dark:border-gray-600 rounded-lg overflow-hidden text-xs">
+                        <button id="currency-azn" class="px-1.5 py-0.5 currency-btn-active">AZN</button>
+                        <button id="currency-usd" class="px-1.5 py-0.5">USD</button>
                     </div>
                     <!-- Language Dropdown -->
                     <div class="language-dropdown">
                         <button id="language-dropdown-btn" class="language-dropdown-btn">
-                            <img id="language-flag" src="https://flagcdn.com/w40/de/germany.png" alt="Flag" class="w-6 h-4 rounded-sm">
-                            <span id="language-name" class="text-xs font-medium"></span>
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <img id="language-flag" src="https://flagcdn.com/w40/ru.png" alt="Flag" class="w-6 h-4 rounded-sm">
+                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
                             </svg>
                         </button>
                         <div id="language-dropdown-menu" class="language-dropdown-menu">
-                            <div class="language-option active" data-lang="ru">
-                                <img src="https://flagcdn.com/w40/ru.png" alt="RU" class="w-6 h-4 rounded-sm">
-                                <span class="text-sm">Русский</span>
+                            <div class="language-option active" data-lang="ru" title="Русский">
+                                <img src="https://flagcdn.com/w40/ru.png" alt="RU">
+                                <span>Русский</span>
                             </div>
-                            <div class="language-option" data-lang="en">
-                                <img src="https://flagcdn.com/w40/gb.png" alt="EN" class="w-6 h-4 rounded-sm">
-                                <span class="text-sm">English</span>
+                            <div class="language-option" data-lang="en" title="English">
+                                <img src="https://flagcdn.com/w40/gb.png" alt="EN">
+                                <span>English</span>
                             </div>
-                            <div class="language-option" data-lang="az">
-                                <img src="https://flagcdn.com/w40/az.png" alt="AZ" class="w-6 h-4 rounded-sm">
-                                <span class="text-sm">Azərbaycan</span>
+                            <div class="language-option" data-lang="az" title="Azərbaycan">
+                                <img src="https://flagcdn.com/w40/az.png" alt="AZ">
+                                <span>Azərbaycan</span>
                             </div>
                         </div>
                     </div>
@@ -1720,10 +1910,10 @@
                                 stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
                         </svg>
                     </button>
-                    <!-- Compact Radio Player (Hidden on small screens) -->
-                    <div class="hidden lg:flex items-center gap-2">
+                    <!-- Enhanced Radio Player with Equalizer -->
+                    <div class="hidden md:flex items-center gap-2 bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-700 rounded-lg px-3 py-2 border border-gray-200 dark:border-gray-600">
                         <button id="radio-play-pause-btn"
-                            class="w-8 h-8 flex items-center justify-center rounded-full bg-gradient-to-br from-[var(--accent-color)] to-[#b8941f] hover:from-[#b8941f] hover:to-[var(--accent-color)] transition-all duration-300 shadow-md">
+                            class="w-8 h-8 flex items-center justify-center rounded-full bg-gradient-to-br from-[var(--accent-color)] to-[#b8941f] hover:from-[#b8941f] hover:to-[var(--accent-color)] transition-all duration-300 shadow-sm">
                             <svg id="play-icon" class="w-4 h-4 ml-0.5" fill="currentColor" viewBox="0 0 24 24">
                                 <path d="M8 5v14l11-7z" />
                             </svg>
@@ -1731,32 +1921,39 @@
                                 <path d="M6 4h4v16H6V4zm8 0h4v16h-4V4z" />
                             </svg>
                         </button>
-                        <div class="flex items-center gap-1 text-xs">
-                            <div class="w-1.5 h-1.5 bg-red-500 rounded-full animate-pulse"></div>
-                            <span style="color: var(--text-primary);" data-i18n="radioTitle">Radio</span>
+                        
+                        <!-- Animated Equalizer -->
+                        <div id="equalizer" class="flex items-end gap-0.5 h-6">
+                            <div class="equalizer-bar w-1 bg-gradient-to-t from-[var(--accent-color)] to-[#b8941f] rounded-full"></div>
+                            <div class="equalizer-bar w-1 bg-gradient-to-t from-[var(--accent-color)] to-[#b8941f] rounded-full"></div>
+                            <div class="equalizer-bar w-1 bg-gradient-to-t from-[var(--accent-color)] to-[#b8941f] rounded-full"></div>
+                            <div class="equalizer-bar w-1 bg-gradient-to-t from-[var(--accent-color)] to-[#b8941f] rounded-full"></div>
+                            <div class="equalizer-bar w-1 bg-gradient-to-t from-[var(--accent-color)] to-[#b8941f] rounded-full"></div>
                         </div>
+                        
+                        <div class="text-xs font-medium" style="color: var(--text-primary);" data-i18n="radioTitle">AzerbaiJazz Radio</div>
                         <audio id="radio-player" src="https://stream.zeno.fm/tjqlpbsxi4ytv"></audio>
                     </div>
                     <!-- Compact Calculator Button -->
                     <button id="calculator-btn"
-                        class="flex items-center justify-center w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-cyan-500 text-white hover:from-blue-600 hover:to-cyan-600 transition-all duration-300 shadow-md"
+                        class="flex items-center justify-center w-7 h-7 rounded-full bg-gradient-to-br from-blue-500 to-cyan-500 text-white hover:from-blue-600 hover:to-cyan-600 transition-all duration-300 shadow-sm"
                         title="Калькулятор">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
                         </svg>
                     </button>
                     <!-- Compact Shopping List Button -->
                     <button id="shopping-list-btn"
-                        class="flex items-center justify-center w-8 h-8 rounded-full bg-gradient-to-br from-green-500 to-emerald-500 text-white hover:from-green-600 hover:to-emerald-600 transition-all duration-300 shadow-md"
+                        class="flex items-center justify-center w-7 h-7 rounded-full bg-gradient-to-br from-green-500 to-emerald-500 text-white hover:from-green-600 hover:to-emerald-600 transition-all duration-300 shadow-sm"
                         title="Список покупок">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
                         </svg>
                     </button>
                     <!-- Compact Logout -->
-                    <button id="logout-btn" class="text-xs font-medium px-1.5 hover:opacity-70 transition hidden sm:block"
+                    <button id="logout-btn" class="text-xs font-medium px-1 hover:opacity-70 transition"
                         style="color: var(--text-secondary);" data-i18n="logout">Выйти</button>
                 </div>
             </div>
@@ -1805,9 +2002,6 @@
                             data-i18n="dashboardTitle">Сводка за месяц</h2>
                     </div>
                     <div class="w-full lg:w-auto">
-                        <p id="current-datetime"
-                            class="font-semibold text-base sm:text-lg text-gray-700 dark:text-gray-300 mb-2 text-center lg:text-right">
-                        </p>
                         <select id="month-selector"
                             class="bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-gray-100 text-sm rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent block w-full lg:w-48 p-2.5 md:p-3 shadow-sm hover:shadow-md transition-all duration-200"></select>
                     </div>
@@ -1855,48 +2049,107 @@
                     
                     <!-- Chart and News Box Container -->
                     <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-4">
-                        <!-- Chart Section - Left Side -->
-                        <div class="premium-card p-4">
-                            <h3 class="text-lg font-semibold mb-3" style="color: var(--text-primary);"
-                                data-i18n="dashTopCategories">Топ категорий расходов</h3>
-                            <div class="max-h-96"><canvas id="expenses-chart"></canvas></div>
+                        <!-- Left Side - Enhanced Content -->
+                        <div class="space-y-4">
+                            <!-- Quick Stats Card -->
+                            <div class="premium-card p-4">
+                                <h3 class="text-lg font-semibold mb-3" style="color: var(--text-primary);" data-i18n="dashTopCategories">Топ категорий расходов</h3>
+                                <div class="max-h-64"><canvas id="expenses-chart"></canvas></div>
+                            </div>
+                            
+                            <!-- Quick Actions Card -->
+                            <div class="premium-card p-4">
+                                <h3 class="text-lg font-semibold mb-3" style="color: var(--text-primary);">Быстрые действия</h3>
+                                <div class="grid grid-cols-2 gap-3">
+                                    <button class="modern-btn bg-gradient-to-r from-blue-600 to-blue-700 text-white px-3 py-2 text-sm" data-i18n="addExpense">
+                                        Добавить расход
+                                    </button>
+                                    <button class="modern-btn bg-gradient-to-r from-green-600 to-green-700 text-white px-3 py-2 text-sm" data-i18n="addTask">
+                                        Добавить задачу
+                                    </button>
+                                    <button class="modern-btn bg-gradient-to-r from-purple-600 to-purple-700 text-white px-3 py-2 text-sm" data-i18n="addDebt">
+                                        Добавить долг
+                                    </button>
+                                    <button class="modern-btn bg-gradient-to-r from-orange-600 to-orange-700 text-white px-3 py-2 text-sm" data-i18n="addTemplate">
+                                        Добавить шаблон
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <!-- Recent Activity Card -->
+                            <div class="premium-card p-4">
+                                <h3 class="text-lg font-semibold mb-3" style="color: var(--text-primary);" data-i18n="lastActivity">Последняя активность</h3>
+                                <div id="recent-activity" class="space-y-2">
+                                    <div class="flex items-center gap-2 text-sm">
+                                        <div class="w-2 h-2 bg-green-500 rounded-full"></div>
+                                        <span style="color: var(--text-secondary);" data-i18n="activityExpenseAdded">Расход добавлен: Продукты - 25 AZN</span>
+                                    </div>
+                                    <div class="flex items-center gap-2 text-sm">
+                                        <div class="w-2 h-2 bg-blue-500 rounded-full"></div>
+                                        <span style="color: var(--text-secondary);" data-i18n="activityTaskDone">Задача выполнена: Позвонить в банк</span>
+                                    </div>
+                                    <div class="flex items-center gap-2 text-sm">
+                                        <div class="w-2 h-2 bg-purple-500 rounded-full"></div>
+                                        <span style="color: var(--text-secondary);" data-i18n="activityDebtUpdated">Долг обновлен: Кредит - 150 AZN</span>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                         
                         <!-- News Box - Right Side -->
                         <div class="news-box">
                             <div class="flex items-center justify-between mb-3 gap-2 flex-wrap">
                                 <h3 class="text-lg font-semibold" style="color: var(--text-primary);" data-i18n="newsBoxTitle">Новости</h3>
-                                <select id="news-country-select" class="text-xs px-2 py-1 rounded border border-gray-300 dark:border-gray-600 bg-transparent" style="color: var(--text-primary);">
-                                    <option value="all">Все страны</option>
-                                    <option value="az">Азербайджан</option>
-                                    <option value="ru">Россия</option>
-                                    <option value="us">США</option>
-                                    <option value="gb">Великобритания</option>
-                                    <option value="de">Германия</option>
-                                </select>
-                                <select id="news-category-select" class="text-xs px-2 py-1 rounded border border-gray-300 dark:border-gray-600 bg-transparent" style="color: var(--text-primary);">
-                                    <option value="general">Общее</option>
-                                    <option value="business">Бизнес</option>
-                                    <option value="technology">Технологии</option>
-                                    <option value="sports">Спорт</option>
-                                    <option value="entertainment">Развлечения</option>
-                                    <option value="science">Наука</option>
-                                    <option value="health">Здоровье</option>
-                                </select>
+                                <div class="flex gap-2">
+                                    <select id="news-country-select" class="text-xs px-2 py-1 rounded border border-gray-300 dark:border-gray-600 bg-transparent" style="color: var(--text-primary);">
+                                        <option value="all" data-i18n="newsAllCountries">Все страны</option>
+                                        <option value="az" data-i18n="newsAzerbaijan">Азербайджан</option>
+                                        <option value="ru" data-i18n="newsRussia">Россия</option>
+                                        <option value="us" data-i18n="newsUSA">США</option>
+                                        <option value="gb" data-i18n="newsUK">Великобритания</option>
+                                        <option value="de" data-i18n="newsGermany">Германия</option>
+                                        <option value="tr" data-i18n="newsTurkey">Турция</option>
+                                        <option value="ua" data-i18n="newsUkraine">Украина</option>
+                                        <option value="fr" data-i18n="newsFrance">Франция</option>
+                                        <option value="it" data-i18n="newsItaly">Италия</option>
+                                        <option value="es" data-i18n="newsSpain">Испания</option>
+                                        <option value="cn" data-i18n="newsChina">Китай</option>
+                                    </select>
+                                    <select id="news-category-select" class="text-xs px-2 py-1 rounded border border-gray-300 dark:border-gray-600 bg-transparent" style="color: var(--text-primary);">
+                                        <option value="general" data-i18n="newsGeneral">Общее</option>
+                                        <option value="business" data-i18n="newsBusiness">Бизнес</option>
+                                        <option value="tech" data-i18n="newsTech">Технологии</option>
+                                        <option value="science" data-i18n="newsScience">Наука</option>
+                                        <option value="politics" data-i18n="newsPolitics">Политика</option>
+                                        <option value="economy" data-i18n="newsEconomy">Экономика</option>
+                                        <option value="war" data-i18n="newsWar">Война</option>
+                                        <option value="culture" data-i18n="newsCulture">Культура</option>
+                                        <option value="health" data-i18n="newsHealth">Здоровье</option>
+                                        <option value="sport" data-i18n="newsSport">Спорт</option>
+                                    </select>
+                                </div>
                             </div>
-                            <div id="news-list" class="space-y-2">
+                            
+                            <!-- News Loading Indicator -->
+                            <div id="news-loading" class="hidden text-center py-4">
+                                <div class="inline-block animate-spin rounded-full h-6 w-6 border-b-2" style="border-color: var(--accent-color);"></div>
+                                <p class="text-xs mt-2" style="color: var(--text-secondary);" data-i18n="loading">Загрузка...</p>
+                            </div>
+                            
+                            <div id="news-list" class="space-y-3">
                                 <!-- News items will be rendered here -->
                             </div>
-                            <div class="flex items-center justify-between mt-3">
-                                <select id="news-items-per-page" class="text-xs px-2 py-1 rounded border border-gray-300 dark:border-gray-600 bg-transparent" style="color: var(--text-primary);">
-                                    <option value="5">5 новостей</option>
-                                    <option value="10" selected>10 новостей</option>
-                                    <option value="15">15 новостей</option>
+                            
+                            <div class="flex items-center justify-between mt-4 pt-3 border-t border-gray-200 dark:border-gray-600">
+                <select id="news-items-per-page" class="text-xs px-2 py-1 rounded border border-gray-300 dark:border-gray-600 bg-transparent" style="color: var(--text-primary);">
+                                    <option value="5">5</option>
+                                    <option value="10" selected>10</option>
+                                    <option value="15">15</option>
                                 </select>
                                 <div class="flex items-center gap-2">
-                                    <button id="news-prev-btn" class="text-xs px-2 py-1 rounded border border-gray-300 dark:border-gray-600" disabled data-i18n="prev">Назад</button>
-                                    <span id="news-page-info" class="text-xs" style="color: var(--text-secondary);">1 / 1</span>
-                                    <button id="news-next-btn" class="text-xs px-2 py-1 rounded border border-gray-300 dark:border-gray-600" disabled data-i18n="next">Вперед</button>
+                                    <button id="news-prev-btn" class="text-xs px-3 py-1 rounded border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors" disabled data-i18n="prev">Назад</button>
+                                    <span id="news-page-info" class="text-xs px-2" style="color: var(--text-secondary);">1 / 1</span>
+                                    <button id="news-next-btn" class="text-xs px-3 py-1 rounded border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors" disabled data-i18n="next">Вперед</button>
                                 </div>
                             </div>
                         </div>
@@ -2483,6 +2736,46 @@
                 weatherLocation: "Локация",
                 newsCountry: "Страна",
                 newsCategory: "Категория",
+                newsAllCountries: "Все страны",
+                newsAzerbaijan: "Азербайджан",
+                newsRussia: "Россия",
+                newsUSA: "США",
+                newsUK: "Великобритания",
+                newsGermany: "Германия",
+                newsTurkey: "Турция",
+                newsUkraine: "Украина",
+                newsFrance: "Франция",
+                newsItaly: "Италия",
+                newsSpain: "Испания",
+                newsChina: "Китай",
+                newsGeneral: "Общее",
+                newsBusiness: "Бизнес",
+                newsTech: "Технологии",
+                newsScience: "Наука",
+                newsPolitics: "Политика",
+                newsEconomy: "Экономика",
+                newsWar: "Война",
+                newsCulture: "Культура",
+                newsHealth: "Здоровье",
+                newsSport: "Спорт",
+                weatherLoading: "Загрузка...",
+                weatherError: "Ошибка загрузки",
+                weatherLocationError: "Геолокация недоступна",
+                weatherLocationSuccess: "Геолокация получена",
+                weatherUpdated: "Погода обновлена для города",
+                radioTitle: "AzerbaiJazz Radio",
+                radioPlaying: "Играет",
+                radioPaused: "Пауза",
+                newsNotFound: "Новости не найдены",
+                lastActivity: "Последняя активность",
+                activityExpenseAdded: "Расход добавлен: Продукты - 25 AZN",
+                activityTaskDone: "Задача выполнена: Позвонить в банк",
+                activityDebtUpdated: "Долг обновлен: Кредит - 150 AZN",
+                months: ["Январь","Февраль","Март","Апрель","Май","Июнь","Июль","Август","Сентябрь","Октябрь","Ноябрь","Декабрь"],
+                monthsShort: ["Янв","Фев","Мар","Апр","Май","Июн","Июл","Авг","Сен","Окт","Ноя","Дек"],
+                weekdaysFull: ["Понедельник","Вторник","Среда","Четверг","Пятница","Суббота","Воскресенье"],
+                weatherCityPlaceholder: "Баку",
+                weatherGeoTitle: "По геолокации",
             },
             en: {
                 appTitle: "ORDINA", appSubtitle: "Manage your life with ease",
@@ -2539,6 +2832,46 @@
                 weatherLocation: "Location",
                 newsCountry: "Country",
                 newsCategory: "Category",
+                newsAllCountries: "All Countries",
+                newsAzerbaijan: "Azerbaijan",
+                newsRussia: "Russia",
+                newsUSA: "USA",
+                newsUK: "United Kingdom",
+                newsGermany: "Germany",
+                newsTurkey: "Turkey",
+                newsUkraine: "Ukraine",
+                newsFrance: "France",
+                newsItaly: "Italy",
+                newsSpain: "Spain",
+                newsChina: "China",
+                newsGeneral: "General",
+                newsBusiness: "Business",
+                newsTech: "Technology",
+                newsScience: "Science",
+                newsPolitics: "Politics",
+                newsEconomy: "Economy",
+                newsWar: "War",
+                newsCulture: "Culture",
+                newsHealth: "Health",
+                newsSport: "Sports",
+                weatherLoading: "Loading...",
+                weatherError: "Loading error",
+                weatherLocationError: "Geolocation unavailable",
+                weatherLocationSuccess: "Geolocation obtained",
+                weatherUpdated: "Weather updated for city",
+                radioTitle: "AzerbaiJazz Radio",
+                radioPlaying: "Playing",
+                radioPaused: "Paused",
+                newsNotFound: "No news found",
+                lastActivity: "Recent Activity",
+                activityExpenseAdded: "Expense added: Groceries - 25 AZN",
+                activityTaskDone: "Task completed: Call the bank",
+                activityDebtUpdated: "Debt updated: Credit - 150 AZN",
+                months: ["January","February","March","April","May","June","July","August","September","October","November","December"],
+                monthsShort: ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"],
+                weekdaysFull: ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"],
+                weatherCityPlaceholder: "Baku",
+                weatherGeoTitle: "By geolocation",
             },
             az: {
                 appTitle: "ORDINA", appSubtitle: "Həyatını asanlıqla idarə et",
@@ -2595,6 +2928,46 @@
                 weatherLocation: "Yer",
                 newsCountry: "Ölkə",
                 newsCategory: "Kateqoriya",
+                newsAllCountries: "Bütün ölkələr",
+                newsAzerbaijan: "Azərbaycan",
+                newsRussia: "Rusiya",
+                newsUSA: "ABŞ",
+                newsUK: "Böyük Britaniya",
+                newsGermany: "Almaniya",
+                newsTurkey: "Türkiyə",
+                newsUkraine: "Ukrayna",
+                newsFrance: "Fransa",
+                newsItaly: "İtaliya",
+                newsSpain: "İspaniya",
+                newsChina: "Çin",
+                newsGeneral: "Ümumi",
+                newsBusiness: "Biznes",
+                newsTech: "Texnologiya",
+                newsScience: "Elm",
+                newsPolitics: "Siyasət",
+                newsEconomy: "İqtisadiyyat",
+                newsWar: "Müharibə",
+                newsCulture: "Mədəniyyət",
+                newsHealth: "Sağlamlıq",
+                newsSport: "İdman",
+                weatherLoading: "Yüklənir...",
+                weatherError: "Yükləmə xətası",
+                weatherLocationError: "Geolokasiya əlçatan deyil",
+                weatherLocationSuccess: "Geolokasiya əldə edildi",
+                weatherUpdated: "Hava şəhər üçün yeniləndi",
+                radioTitle: "AzerbaiJazz Radio",
+                radioPlaying: "Oynayır",
+                radioPaused: "Pauza",
+                newsNotFound: "Xəbər tapılmadı",
+                lastActivity: "Son fəaliyyət",
+                activityExpenseAdded: "Xərc əlavə edildi: Məhsullar - 25 AZN",
+                activityTaskDone: "Tapşırıq tamamlandı: Banka zəng et",
+                activityDebtUpdated: "Borc yeniləndi: Kredit - 150 AZN",
+                months: ["Yanvar","Fevral","Mart","Aprel","May","İyun","İyul","Avqust","Sentyabr","Oktyabr","Noyabr","Dekabr"],
+                monthsShort: ["Yan","Fev","Mar","Apr","May","İyn","İyl","Avq","Sen","Okt","Noy","Dek"],
+                weekdaysFull: ["Bazar ertəsi","Çərşənbə axşamı","Çərşənbə","Cümə axşamı","Cümə","Şənbə","Bazar"],
+                weatherCityPlaceholder: "Bakı",
+                weatherGeoTitle: "Geolokasiya ilə",
             }
         };
         let currentLang = localStorage.getItem('appLanguage') || 'ru';
@@ -2610,13 +2983,34 @@
             const date = new Date(year, month - 1, day);
             const defaultOptions = { day: 'numeric', month: 'long' };
             if (options.year) defaultOptions.year = 'numeric';
-            return date.toLocaleDateString(currentLang === 'ru' ? 'ru-RU' : 'en-US', { ...defaultOptions, ...options });
+            const locale = currentLang === 'ru' ? 'ru-RU' : (currentLang === 'az' ? 'az-Latn-AZ' : 'en-US');
+            return date.toLocaleDateString(locale, { ...defaultOptions, ...options });
         }
         function formatMonthId(monthId) {
             if (!monthId) return '';
             const [year, month] = monthId.split('-');
-            const date = new Date(year, month - 1);
-            return date.toLocaleString(currentLang === 'ru' ? 'ru-RU' : 'en-US', { month: 'long', year: 'numeric', timeZone: 'Asia/Baku' });
+            const monthIndex = parseInt(month, 10) - 1;
+            const t = translations[currentLang];
+            const monthName = t.months && t.months[monthIndex] ? t.months[monthIndex] : month;
+            return `${monthName} ${year}`;
+        }
+
+        function applyDynamicTranslations() {
+            // textContent translations
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.dataset.i18n;
+                if (translations[currentLang][key]) el.textContent = translations[currentLang][key];
+            });
+            // placeholders
+            const weatherCityInputEl = document.getElementById('weather-city-input');
+            if (weatherCityInputEl) weatherCityInputEl.placeholder = translations[currentLang].weatherCityPlaceholder || '';
+            const locationBtn = document.getElementById('weather-location-btn');
+            if (locationBtn) locationBtn.title = translations[currentLang].weatherGeoTitle || '';
+            // options in selects (news)
+            document.querySelectorAll('#news-country-select option, #news-category-select option').forEach(opt => {
+                const key = opt.dataset.i18n;
+                if (key && translations[currentLang][key]) opt.textContent = translations[currentLang][key];
+            });
         }
 
         function setLanguage(lang) {
@@ -2624,13 +3018,14 @@
             currentLang = lang;
             localStorage.setItem('appLanguage', lang);
             document.documentElement.lang = lang;
-            document.querySelectorAll('[data-i18n]').forEach(el => {
-                const key = el.dataset.i18n;
-                if (translations[lang][key]) el.textContent = translations[lang][key];
-            });
+            applyDynamicTranslations();
             updateLanguageButtons();
             updateMonthDisplay();
             renderCalendar();
+            // re-render weather with translated description/time format
+            try { updateWeather(currentWeatherCity || 'Baku'); } catch(e) { /* noop */ }
+            // re-fetch or re-render news to reflect UI language
+            try { fetchNews(); } catch(e) { try { renderNews(); } catch(_) {} }
             attachListeners();
         }
 
@@ -2649,14 +3044,14 @@
             
             // Update dropdown UI
             const flagMap = {
-                'ru': { flag: 'https://flagcdn.com/w40/ru.png', name: 'Русский' },
-                'en': { flag: 'https://flagcdn.com/w40/gb.png', name: 'English' },
-                'az': { flag: 'https://flagcdn.com/w40/az.png', name: 'Azərbaycan' }
+                'ru': 'https://flagcdn.com/w40/ru.png',
+                'en': 'https://flagcdn.com/w40/gb.png',
+                'az': 'https://flagcdn.com/w40/az.png'
             };
             
-            if (document.getElementById('language-flag') && document.getElementById('language-name')) {
-                document.getElementById('language-flag').src = flagMap[currentLang].flag;
-                document.getElementById('language-name').textContent = flagMap[currentLang].name;
+            const languageFlag = document.getElementById('language-flag');
+            if (languageFlag) {
+                languageFlag.src = flagMap[currentLang];
             }
             
             // Update dropdown options
@@ -2741,13 +3136,17 @@
                     await ensureRecurringTasksForMonth(selectedMonthId);
                     attachListeners();
                     setLanguage(currentLang);
-                    updateDateTime();
-                    if (dateTimeInterval) clearInterval(dateTimeInterval);
-                    dateTimeInterval = setInterval(updateDateTime, 60000);
                     
-                    // Initialize weather and news
-                    initWeather();
-                    initNews();
+                    // Wait for DOM to be fully ready
+                    setTimeout(() => {
+                        updateDateTime();
+                        if (dateTimeInterval) clearInterval(dateTimeInterval);
+                        dateTimeInterval = setInterval(updateDateTime, 60000);
+                        
+                        // Initialize weather and news after DOM is ready
+                        initWeather();
+                        initNews();
+                    }, 1000);
                 } else { showLoginScreen(); }
             });
         }
@@ -2843,23 +3242,17 @@
             await batch.commit();
         }
 
-        function updateDateTime() { 
-            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit', timeZone: 'Asia/Baku' }; 
-            document.getElementById('current-datetime').textContent = new Date().toLocaleString(currentLang === 'ru' ? 'ru-RU' : 'en-US', options); 
-            
-            // Update weather datetime
-            const now = new Date();
-            const dateOptions = { weekday: 'short', day: 'numeric', month: 'short' };
-            const timeOptions = { hour: '2-digit', minute: '2-digit' };
-            document.getElementById('weather-date').textContent = now.toLocaleDateString(currentLang === 'ru' ? 'ru-RU' : currentLang === 'az' ? 'az-AZ' : 'en-US', dateOptions);
-            document.getElementById('weather-time').textContent = now.toLocaleTimeString(currentLang === 'ru' ? 'ru-RU' : currentLang === 'az' ? 'az-AZ' : 'en-US', timeOptions);
-        }
+        function updateDateTime() { /* removed separate date strip per requirements */ }
         
         function updateMonthDisplay() { 
             const formattedDate = formatMonthId(selectedMonthId); 
-            document.querySelectorAll('.current-month-name').forEach(el => el.textContent = formattedDate); 
-            document.getElementById('recurring-month-name').textContent = formattedDate; 
-            document.getElementById('today-date').textContent = formatISODateForDisplay(getTodayISOString(), { year: undefined }); 
+            document.querySelectorAll('.current-month-name').forEach(el => {
+                if (el) el.textContent = formattedDate;
+            }); 
+            const recurringMonthNameEl = document.getElementById('recurring-month-name');
+            const todayDateEl = document.getElementById('today-date');
+            if (recurringMonthNameEl) recurringMonthNameEl.textContent = formattedDate; 
+            if (todayDateEl) todayDateEl.textContent = formatISODateForDisplay(getTodayISOString(), { year: undefined }); 
         }
         
         // Weather functions
@@ -2868,52 +3261,173 @@
         async function updateWeather(city = 'Baku') {
             try {
                 currentWeatherCity = city;
-                const weatherConditions = ['Sunny', 'Cloudy', 'Rainy', 'Snowy', 'Windy', 'Partly Cloudy'];
-                const weatherData = {
-                    temp: Math.floor(Math.random() * 30) + 10,
-                    desc: weatherConditions[Math.floor(Math.random() * weatherConditions.length)],
-                    city: city
+                const weatherTempEl = document.getElementById('weather-temp');
+                const weatherDescEl = document.getElementById('weather-desc');
+                const weatherTimeEl = document.getElementById('weather-time');
+                const weatherCityInputEl = document.getElementById('weather-city-input');
+                
+                // Show loading
+                if (weatherTempEl) weatherTempEl.textContent = '...';
+                if (weatherDescEl) weatherDescEl.textContent = translations[currentLang].weatherLoading;
+                if (weatherTimeEl) weatherTimeEl.textContent = '...';
+                
+                // Use wttr.in free weather API
+                const encodedCity = encodeURIComponent(city);
+                const response = await fetch(`https://wttr.in/${encodedCity}?format=j1&lang=${currentLang}`);
+                
+                if (!response.ok) {
+                    throw new Error('Weather service unavailable');
+                }
+                
+                const data = await response.json();
+                const current = data.current_condition[0];
+                
+                const temp = parseInt(current.temp_C);
+                let desc = current.weatherDesc[0].value;
+                
+                // Translate weather descriptions based on current language
+                const weatherTranslations = {
+                    ru: {
+                        'Sunny': 'Солнечно',
+                        'Clear': 'Ясно',
+                        'Cloudy': 'Облачно',
+                        'Partly cloudy': 'Переменная облачность',
+                        'Rain': 'Дождь',
+                        'Light rain': 'Слабый дождь',
+                        'Drizzle': 'Моросящий дождь',
+                        'Fog': 'Туман',
+                        'Mist': 'Дымка',
+                        'Overcast': 'Пасмурно',
+                        'Thundery outbreaks': 'Гроза'
+                    },
+                    en: {
+                        'Sunny': 'Sunny',
+                        'Clear': 'Clear',
+                        'Cloudy': 'Cloudy',
+                        'Partly cloudy': 'Partly cloudy',
+                        'Rain': 'Rain',
+                        'Light rain': 'Light rain',
+                        'Drizzle': 'Drizzle',
+                        'Fog': 'Fog',
+                        'Mist': 'Mist',
+                        'Overcast': 'Overcast',
+                        'Thundery outbreaks': 'Thunderstorms'
+                    },
+                    az: {
+                        'Sunny': 'Günəşli',
+                        'Clear': 'Açıq',
+                        'Cloudy': 'Buludlu',
+                        'Partly cloudy': 'Qismən buludlu',
+                        'Rain': 'Yağış',
+                        'Light rain': 'Zəif yağış',
+                        'Drizzle': 'Çiskin',
+                        'Fog': 'Duman',
+                        'Mist': 'Sis',
+                        'Overcast': 'Tutqun',
+                        'Thundery outbreaks': 'Göy gurultusu'
+                    }
                 };
                 
-                document.getElementById('weather-temp').textContent = `${weatherData.temp}°C`;
-                document.getElementById('weather-desc').textContent = weatherData.desc;
-                document.getElementById('weather-city-input').value = city;
+                // Translate description
+                const langTranslations = weatherTranslations[currentLang] || weatherTranslations.en;
+                desc = langTranslations[desc] || desc;
+                
+                // Get current time
+                const now = new Date();
+                const timeString = now.toLocaleString(currentLang === 'ru' ? 'ru-RU' : currentLang === 'az' ? 'az-AZ' : 'en-US', {
+                    weekday: 'short',
+                    day: 'numeric',
+                    month: 'short',
+                    year: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    timeZone: 'Asia/Baku'
+                });
+                
+                const weatherData = {
+                    temp: temp,
+                    desc: desc,
+                    city: city,
+                    time: timeString
+                };
+                
+                if (weatherTempEl) weatherTempEl.textContent = `${weatherData.temp}°C`;
+                if (weatherDescEl) weatherDescEl.textContent = weatherData.desc;
+                if (weatherTimeEl) weatherTimeEl.textContent = weatherData.time;
+                if (weatherCityInputEl) weatherCityInputEl.value = city;
+                if (weatherCityInputEl) weatherCityInputEl.placeholder = translations[currentLang].weatherCityPlaceholder || '';
+                const locationBtn = document.getElementById('weather-location-btn');
+                if (locationBtn) locationBtn.title = translations[currentLang].weatherGeoTitle || '';
+                
             } catch (error) {
                 console.error('Weather update error:', error);
+                const weatherTempEl = document.getElementById('weather-temp');
+                const weatherDescEl = document.getElementById('weather-desc');
+                const weatherTimeEl = document.getElementById('weather-time');
+                const weatherCityInputEl = document.getElementById('weather-city-input');
+                
+                // Show error state
+                if (weatherTempEl) weatherTempEl.textContent = '--°C';
+                if (weatherDescEl) weatherDescEl.textContent = translations[currentLang].weatherError;
+                if (weatherTimeEl) weatherTimeEl.textContent = '--';
+                if (weatherCityInputEl) weatherCityInputEl.value = translations[currentLang].weatherCityPlaceholder || 'Baku';
+                
+                // Try to update after error
+                setTimeout(() => {
+                    updateWeather('Baku');
+                }, 3000);
             }
         }
         
         function initWeather() {
+            console.log('Initializing weather...');
             const cityInput = document.getElementById('weather-city-input');
             const locationBtn = document.getElementById('weather-location-btn');
+            
+            console.log('Weather elements:', { cityInput, locationBtn });
             
             if (cityInput) {
                 cityInput.addEventListener('keypress', (e) => {
                     if (e.key === 'Enter' && cityInput.value.trim()) {
+                        console.log('Updating weather for city:', cityInput.value.trim());
+                        updateWeather(cityInput.value.trim());
+                        showToast(`${translations[currentLang].weatherUpdated} ${cityInput.value.trim()}`, 'success');
+                    }
+                });
+                cityInput.addEventListener('change', () => {
+                    if (cityInput.value.trim()) {
+                        console.log('City changed:', cityInput.value.trim());
                         updateWeather(cityInput.value.trim());
                     }
                 });
                 cityInput.addEventListener('blur', () => {
                     if (cityInput.value.trim()) {
+                        console.log('Updating weather on blur:', cityInput.value.trim());
                         updateWeather(cityInput.value.trim());
                     }
                 });
             }
             
             if (locationBtn) {
-                locationBtn.addEventListener('click', () => {
+                locationBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    console.log('Location button clicked');
                     if (navigator.geolocation) {
                         navigator.geolocation.getCurrentPosition(
                             (position) => {
-                                updateWeather('Baku'); // Use current city based on location
+                                console.log('Got position:', position);
+                                showToast(translations[currentLang].weatherLocationSuccess, 'success');
+                                updateWeather('Baku');
                             },
-                            () => {
-                                showToast('Геолокация недоступна. Используем Baku.', 'info');
+                            (error) => {
+                                console.error('Geolocation error:', error);
+                                showToast(translations[currentLang].weatherLocationError, 'info');
                                 updateWeather('Baku');
                             }
                         );
                     } else {
-                        showToast('Геолокация не поддерживается. Используем Baku.', 'info');
+                        console.log('Geolocation not supported');
+                        showToast(translations[currentLang].weatherLocationError, 'info');
                         updateWeather('Baku');
                     }
                 });
@@ -2930,52 +3444,79 @@
         let currentNewsCountry = 'all';
         
         async function fetchNews() {
-            const countryNames = {
-                'az': 'Azerbaijan',
-                'ru': 'Russia', 
-                'us': 'USA',
-                'gb': 'UK',
-                'de': 'Germany'
-            };
+            console.log('Fetching news for country:', currentNewsCountry, 'category:', currentNewsCategory);
             
-            const categoryNames = {
-                'general': 'General',
-                'business': 'Business',
-                'technology': 'Technology',
-                'sports': 'Sports',
-                'entertainment': 'Entertainment',
-                'science': 'Science',
-                'health': 'Health'
-            };
+            // Show loading indicator
+            const newsLoading = document.getElementById('news-loading');
+            const newsList = document.getElementById('news-list');
+            if (newsLoading) newsLoading.classList.remove('hidden');
+            if (newsList) newsList.classList.add('hidden');
             
-            // Use free news API (NewsAPI.org requires API key, so we'll use mock data with country selection)
+            // Simulate API delay for better UX
+            await new Promise(resolve => setTimeout(resolve, 500));
+            
             const newsByCountry = {
                 'az': [
-                    { title: 'Азербайджан: Новости экономики', desc: 'Последние новости о развитии экономики Азербайджана...', image: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=300' },
-                    { title: 'Спортивные достижения Азербайджана', desc: 'Наши спортсмены показывают отличные результаты...', image: 'https://images.unsplash.com/photo-1530549387789-4c1017266635?w=300' }
+                    { title: 'Азербайджан: Новости экономики', desc: 'Последние новости о развитии экономики Азербайджана...', image: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=300', url: '#' },
+                    { title: 'Спортивные достижения Азербайджана', desc: 'Наши спортсмены показывают отличные результаты...', image: 'https://images.unsplash.com/photo-1530549387789-4c1017266635?w=300', url: '#' },
+                    { title: 'Развитие технологий в Азербайджане', desc: 'IT сектор показывает уверенный рост...', image: 'https://images.unsplash.com/photo-1485827404703-89b55fcc595e?w=300', url: '#' },
+                    { title: 'Культура и искусство Азербайджана', desc: 'Новые проекты в области культуры...', image: 'https://images.unsplash.com/photo-1485827404703-89b55fcc595e?w=300', url: '#' }
                 ],
                 'ru': [
-                    { title: 'Россия: Новости технологий', desc: 'Развитие технологий в России...', image: 'https://images.unsplash.com/photo-1485827404703-89b55fcc595e?w=300' },
-                    { title: 'Новости здоровья', desc: 'Современные достижения медицины...', image: 'https://images.unsplash.com/photo-1559757148-5c350d0d0c56?w=300' }
+                    { title: 'Россия: Новости технологий', desc: 'Развитие технологий в России...', image: 'https://images.unsplash.com/photo-1485827404703-89b55fcc595e?w=300', url: '#' },
+                    { title: 'Новости здоровья', desc: 'Современные достижения медицины...', image: 'https://images.unsplash.com/photo-1559757148-5c350d0d0c56?w=300', url: '#' },
+                    { title: 'Экономика России', desc: 'Актуальные экономические новости...', image: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=300', url: '#' },
+                    { title: 'Спортивные новости из России', desc: 'Достижения российских спортсменов...', image: 'https://images.unsplash.com/photo-1530549387789-4c1017266635?w=300', url: '#' }
                 ],
                 'us': [
-                    { title: 'USA Tech News', desc: 'Latest technology news from USA...', image: 'https://images.unsplash.com/photo-1518770660439-4636190af475?w=300' },
-                    { title: 'Business Updates', desc: 'Market trends and business news...', image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300' }
+                    { title: 'USA Tech News', desc: 'Latest technology news from USA...', image: 'https://images.unsplash.com/photo-1518770660439-4636190af475?w=300', url: '#' },
+                    { title: 'Business Updates', desc: 'Market trends and business news...', image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300', url: '#' },
+                    { title: 'USA Sports', desc: 'Latest sports news from America...', image: 'https://images.unsplash.com/photo-1530549387789-4c1017266635?w=300', url: '#' },
+                    { title: 'USA Entertainment', desc: 'Hollywood and entertainment updates...', image: 'https://images.unsplash.com/photo-1485827404703-89b55fcc595e?w=300', url: '#' }
                 ],
                 'gb': [
-                    { title: 'UK News', desc: 'Latest news from the United Kingdom...', image: 'https://images.unsplash.com/photo-1528607929212-8e53c225d256?w=300' },
-                    { title: 'UK Business', desc: 'UK business and economy updates...', image: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=300' }
+                    { title: 'UK News', desc: 'Latest news from the United Kingdom...', image: 'https://images.unsplash.com/photo-1528607929212-8e53c225d256?w=300', url: '#' },
+                    { title: 'UK Business', desc: 'UK business and economy updates...', image: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=300', url: '#' },
+                    { title: 'UK Sports', desc: 'Premier League and UK sports...', image: 'https://images.unsplash.com/photo-1530549387789-4c1017266635?w=300', url: '#' }
                 ],
                 'de': [
-                    { title: 'Deutschland Nachrichten', desc: 'Neueste Nachrichten aus Deutschland...', image: 'https://images.unsplash.com/photo-1459305272254-33a7b4139cbd?w=300' },
-                    { title: 'Technologie Neuigkeiten', desc: 'Deutsche Technologieinnovationen...', image: 'https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=300' }
+                    { title: 'Deutschland Nachrichten', desc: 'Neueste Nachrichten aus Deutschland...', image: 'https://images.unsplash.com/photo-1459305272254-33a7b4139cbd?w=300', url: '#' },
+                    { title: 'Technologie Neuigkeiten', desc: 'Deutsche Technologieinnovationen...', image: 'https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=300', url: '#' },
+                    { title: 'Wirtschaftsnachrichten', desc: 'Deutsche Wirtschaft und Finanzen...', image: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=300', url: '#' }
+                ],
+                'tr': [
+                    { title: 'Türkiye Haberleri', desc: 'Türkiye\'den son haberler...', image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300', url: '#' },
+                    { title: 'Türk Ekonomisi', desc: 'Türk ekonomisinden haberler...', image: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=300', url: '#' }
+                ],
+                'ua': [
+                    { title: 'Україна: Новини', desc: 'Останні новини з України...', image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300', url: '#' },
+                    { title: 'Українська економіка', desc: 'Новини української економіки...', image: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=300', url: '#' }
+                ],
+                'fr': [
+                    { title: 'Actualités France', desc: 'Dernières nouvelles de France...', image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300', url: '#' },
+                    { title: 'Économie Française', desc: 'Nouvelles économiques françaises...', image: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=300', url: '#' }
+                ],
+                'it': [
+                    { title: 'Notizie Italia', desc: 'Ultime notizie dall\'Italia...', image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300', url: '#' },
+                    { title: 'Economia Italiana', desc: 'Notizie economiche italiane...', image: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=300', url: '#' }
+                ],
+                'es': [
+                    { title: 'Noticias España', desc: 'Últimas noticias de España...', image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300', url: '#' },
+                    { title: 'Economía Española', desc: 'Noticias económicas españolas...', image: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=300', url: '#' }
+                ],
+                'cn': [
+                    { title: '中国新闻', desc: '来自中国的最新消息...', image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300', url: '#' },
+                    { title: '中国经济', desc: '中国经济新闻...', image: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=300', url: '#' }
                 ]
             };
             
             const allNews = [
-                { title: 'Международные новости', desc: 'Важные мировые события и обновления...', image: 'https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=300' },
-                { title: 'Новости экономики', desc: 'Актуальные экономические обновления...', image: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=300' },
-                { title: 'Технологические инновации', desc: 'Последние достижения в области технологий...', image: 'https://images.unsplash.com/photo-1485827404703-89b55fcc595e?w=300' }
+                { title: 'Международные новости', desc: 'Важные мировые события и обновления...', image: 'https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=300', url: '#' },
+                { title: 'Новости экономики', desc: 'Актуальные экономические обновления...', image: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=300', url: '#' },
+                { title: 'Технологические инновации', desc: 'Последние достижения в области технологий...', image: 'https://images.unsplash.com/photo-1485827404703-89b55fcc595e?w=300', url: '#' },
+                { title: 'Мировой спорт', desc: 'Последние спортивные события...', image: 'https://images.unsplash.com/photo-1530549387789-4c1017266635?w=300', url: '#' },
+                { title: 'Здоровье и медицина', desc: 'Новости медицины и здоровья...', image: 'https://images.unsplash.com/photo-1559757148-5c350d0d0c56?w=300', url: '#' },
+                { title: 'Наука и исследования', desc: 'Научные открытия и исследования...', image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300', url: '#' }
             ];
             
             if (currentNewsCountry === 'all') {
@@ -2984,22 +3525,52 @@
                 newsData = newsByCountry[currentNewsCountry] || allNews;
             }
             
+            console.log('Total news items:', newsData.length);
             renderNews();
+            
+            // Hide loading indicator
+            if (newsLoading) newsLoading.classList.add('hidden');
+            if (newsList) newsList.classList.remove('hidden');
         }
         
         function renderNews() {
             const newsList = document.getElementById('news-list');
-            if (!newsList) return;
+            if (!newsList) {
+                console.error('News list element not found!');
+                return;
+            }
+            
+            if (newsData.length === 0) {
+                console.log('No news data available');
+                return;
+            }
+            
+            console.log('Rendering news, total items:', newsData.length);
             
             const startIndex = (currentNewsPage - 1) * newsPerPage;
             const endIndex = startIndex + newsPerPage;
             const paginatedNews = newsData.slice(startIndex, endIndex);
             
-            newsList.innerHTML = paginatedNews.map(news => `
-                <div class="news-item cursor-pointer" onclick="window.open('#', '_blank')">
-                    ${news.image ? `<img src="${news.image}" alt="${news.title}" />` : ''}
-                    <h4 class="font-semibold text-sm mb-1" style="color: var(--text-primary);">${news.title}</h4>
-                    <p class="text-xs" style="color: var(--text-secondary);">${news.desc}</p>
+            console.log('Rendering news items:', paginatedNews.length);
+            
+            if (paginatedNews.length === 0) {
+                newsList.innerHTML = `<p class="text-xs text-center" style="color: var(--text-secondary);">${translations[currentLang].newsNotFound}</p>`;
+                return;
+            }
+            
+            newsList.innerHTML = paginatedNews.map((news, index) => `
+                <div class="news-item cursor-pointer hover:shadow-md transition-all duration-200 border border-gray-200 dark:border-gray-600 rounded-lg p-3 bg-white dark:bg-gray-800" onclick="window.open('${news.url}', '_blank')">
+                    <div class="flex gap-3">
+                        ${news.image ? `<img src="${news.image}" alt="${news.title}" loading="lazy" class="w-16 h-16 object-cover rounded-lg flex-shrink-0" />` : '<div class="w-16 h-16 bg-gray-200 dark:bg-gray-700 rounded-lg flex-shrink-0 flex items-center justify-center"><svg class="w-6 h-6 text-gray-400" fill="currentColor" viewBox="0 0 24 24"><path d="M4 6h16v2H4zm0 5h16v2H4zm0 5h16v2H4z"/></svg></div>'}
+                        <div class="flex-1 min-w-0">
+                            <h4 class="font-semibold text-sm mb-1 line-clamp-2" style="color: var(--text-primary);">${news.title}</h4>
+                            <p class="text-xs line-clamp-2" style="color: var(--text-secondary);">${news.desc}</p>
+                            <div class="flex items-center justify-between mt-2">
+                                <span class="text-xs px-2 py-1 bg-gray-100 dark:bg-gray-700 rounded-full" style="color: var(--text-secondary);">${currentNewsCountry.toUpperCase()}</span>
+                                <span class="text-xs" style="color: var(--text-secondary);">${new Date().toLocaleDateString()}</span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             `).join('');
             
@@ -3008,23 +3579,43 @@
         
         function updateNewsPagination() {
             const totalPages = Math.ceil(newsData.length / newsPerPage);
-            document.getElementById('news-page-info').textContent = `${currentNewsPage} / ${totalPages}`;
-            document.getElementById('news-prev-btn').disabled = currentNewsPage === 1;
-            document.getElementById('news-next-btn').disabled = currentNewsPage >= totalPages;
+            const newsPageInfo = document.getElementById('news-page-info');
+            const newsPrevBtn = document.getElementById('news-prev-btn');
+            const newsNextBtn = document.getElementById('news-next-btn');
+            
+            if (newsPageInfo) {
+                newsPageInfo.textContent = `${currentNewsPage} / ${totalPages}`;
+            }
+            if (newsPrevBtn) {
+                newsPrevBtn.disabled = currentNewsPage === 1;
+            }
+            if (newsNextBtn) {
+                newsNextBtn.disabled = currentNewsPage >= totalPages;
+            }
         }
         
         function initNews() {
-            fetchNews();
-            
+            console.log('Initializing news...');
             const categorySelect = document.getElementById('news-category-select');
             const countrySelect = document.getElementById('news-country-select');
             const itemsPerPage = document.getElementById('news-items-per-page');
             const prevBtn = document.getElementById('news-prev-btn');
             const nextBtn = document.getElementById('news-next-btn');
+            const newsList = document.getElementById('news-list');
+            
+            console.log('News elements:', { categorySelect, countrySelect, itemsPerPage, prevBtn, nextBtn, newsList });
+            
+            if (!newsList) {
+                console.error('News list element not found, cannot initialize news');
+                return;
+            }
+            
+            fetchNews();
             
             if (categorySelect) {
                 categorySelect.addEventListener('change', (e) => {
                     currentNewsCategory = e.target.value;
+                    console.log('Category changed to:', currentNewsCategory);
                     fetchNews();
                 });
             }
@@ -3033,6 +3624,7 @@
                 countrySelect.addEventListener('change', (e) => {
                     currentNewsCountry = e.target.value;
                     currentNewsPage = 1;
+                    console.log('Country changed to:', currentNewsCountry);
                     fetchNews();
                 });
             }
@@ -3041,12 +3633,15 @@
                 itemsPerPage.addEventListener('change', (e) => {
                     newsPerPage = parseInt(e.target.value);
                     currentNewsPage = 1;
+                    console.log('Items per page changed to:', newsPerPage);
                     renderNews();
                 });
             }
             
             if (prevBtn) {
-                prevBtn.addEventListener('click', () => {
+                prevBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    console.log('Previous button clicked');
                     if (currentNewsPage > 1) {
                         currentNewsPage--;
                         renderNews();
@@ -3055,7 +3650,9 @@
             }
             
             if (nextBtn) {
-                nextBtn.addEventListener('click', () => {
+                nextBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    console.log('Next button clicked');
                     const totalPages = Math.ceil(newsData.length / newsPerPage);
                     if (currentNewsPage < totalPages) {
                         currentNewsPage++;
@@ -3255,11 +3852,12 @@
             tableBody.innerHTML = docs.map(d => { const t = d, id = d.id; const s = t.status; return `<tr class="md:border-b-0"><td data-label="${translations[currentLang].name}" class="${s === translations.ru.statusDone ? 'line-through text-gray-500' : ''}">${t.name}</td><td data-label="${translations[currentLang].deadline}">${formatISODateForDisplay(t.deadline, { year: 'numeric' })}</td><td data-label="${translations[currentLang].status}">${createTaskStatusDropdown(id, s, 'yearlyTasks')}</td><td data-label="${translations[currentLang].notes}"><input type="text" class="editable-task-notes bg-transparent w-full p-1" data-id="${id}" data-col="yearlyTasks" value="${t.notes || ''}" placeholder="${translations[currentLang].placeholderComment}"></td><td data-label="${translations[currentLang].actions}" class="flex gap-2"><button data-id="${id}" class="edit-yearly-task-btn text-blue-600">✏️</button><button data-id="${id}" class="delete-yearly-task-btn text-red-600">🗑️</button></td></tr>`; }).join('');
         }
 
-        function renderMonthSelector(months) { const s = document.getElementById('month-selector'); s.innerHTML = months.map(m => `<option value="${m}" ${m === selectedMonthId ? 'selected' : ''}>${formatMonthId(m)}</option>`).join(''); }
+        function renderMonthSelector(months) { const s = document.getElementById('month-selector'); s.innerHTML = months.map(m => { const [y, mm] = m.split('-'); const label = formatMonthId(m); return `<option value="${m}" ${m === selectedMonthId ? 'selected' : ''}>${label}</option>`; }).join(''); }
 
         function renderCalendar() {
             const grid = document.getElementById('calendar-grid'); const monthYearEl = document.getElementById('calendar-month-year'); const weekdaysEl = document.getElementById('calendar-weekdays'); const month = calendarDate.getMonth(), year = calendarDate.getFullYear();
-            monthYearEl.textContent = calendarDate.toLocaleString(currentLang === 'ru' ? 'ru-RU' : 'en-US', { month: 'long', year: 'numeric', timeZone: 'Asia/Baku' });
+            const locale = currentLang === 'ru' ? 'ru-RU' : (currentLang === 'az' ? 'az-Latn-AZ' : 'en-US');
+            monthYearEl.textContent = calendarDate.toLocaleString(locale, { month: 'long', year: 'numeric', timeZone: 'Asia/Baku' });
             weekdaysEl.innerHTML = translations[currentLang].weekdays.map(day => `<div>${day}</div>`).join('');
             const firstDayOfMonth = new Date(year, month, 1).getDay(); const daysInMonth = new Date(year, month + 1, 0).getDate(); const startingDay = (firstDayOfMonth === 0) ? 6 : firstDayOfMonth - 1;
             grid.innerHTML = ''; for (let i = 0; i < startingDay; i++) { grid.insertAdjacentHTML('beforeend', '<div></div>'); }
@@ -3625,30 +4223,74 @@
         });
 
         // Radio Player Logic
+        // Enhanced Radio Player with Equalizer
         const radioPlayer = document.getElementById('radio-player');
         const playPauseBtn = document.getElementById('radio-play-pause-btn');
         const playIcon = document.getElementById('play-icon');
         const pauseIcon = document.getElementById('pause-icon');
-        const volumeSlider = document.getElementById('radio-volume-slider');
-        const equalizer = document.getElementById('equalizer');
-
+        const equalizerBars = document.querySelectorAll('.equalizer-bar');
+        
+        let isPlaying = false;
+        let equalizerInterval;
+        
+        function startEqualizer() {
+            equalizerInterval = setInterval(() => {
+                equalizerBars.forEach((bar, index) => {
+                    const randomHeight = Math.random() * 16 + 4; // 4px to 20px
+                    bar.style.height = `${randomHeight}px`;
+                });
+            }, 150);
+        }
+        
+        function stopEqualizer() {
+            if (equalizerInterval) {
+                clearInterval(equalizerInterval);
+            }
+            equalizerBars.forEach(bar => {
+                bar.style.height = '4px';
+            });
+        }
+        
         playPauseBtn.addEventListener('click', () => {
             if (radioPlayer.paused) {
-                radioPlayer.play().catch(e => console.error("Radio play error:", e));
+                radioPlayer.play().catch(e => console.error('Radio play error:', e));
                 playIcon.classList.add('hidden');
                 pauseIcon.classList.remove('hidden');
-                if (equalizer) equalizer.classList.remove('paused');
+                startEqualizer();
+                isPlaying = true;
             } else {
                 radioPlayer.pause();
                 playIcon.classList.remove('hidden');
                 pauseIcon.classList.add('hidden');
-                if (equalizer) equalizer.classList.add('paused');
+                stopEqualizer();
+                isPlaying = false;
             }
         });
-
-        volumeSlider.addEventListener('input', (e) => {
-            radioPlayer.volume = e.target.value;
+        
+        radioPlayer.addEventListener('ended', () => {
+            playIcon.classList.remove('hidden');
+            pauseIcon.classList.add('hidden');
+            stopEqualizer();
+            isPlaying = false;
         });
+        
+        radioPlayer.addEventListener('error', () => {
+            playIcon.classList.remove('hidden');
+            pauseIcon.classList.add('hidden');
+            stopEqualizer();
+            isPlaying = false;
+            console.error('Radio player error');
+        });
+
+        // Volume slider not implemented yet
+        // If you want volume control, add: <input type="range" id="volume-slider" min="0" max="1" step="0.1" value="1">
+        // Then uncomment:
+        // const volumeSlider = document.getElementById('volume-slider');
+        // if (volumeSlider) {
+        //     volumeSlider.addEventListener('input', (e) => {
+        //         radioPlayer.volume = e.target.value;
+        //     });
+        // }
 
         // Theme toggle logic
         document.addEventListener('DOMContentLoaded', () => {
