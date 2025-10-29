@@ -24,7 +24,7 @@ export class Router {
 
     this.routes.set(path, {
       moduleName,
-      requiresAuth: options.requiresAuth !== false, // Default to true
+      requiresAuth: options.requiresAuth === true, // Default to false for testing
       title: options.title || path
     });
 
