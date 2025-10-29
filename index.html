@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ORDINA ✨ Ultra-Modern Command Center</title>
+
+    <!-- SEO Meta Tags -->
+    <meta name="description"
+        content="ORDINA - Premium personal finance and life management suite. Track expenses, manage debts, organize tasks, and stay informed with integrated weather and news.">
+    <meta name="keywords"
+        content="finance, budget, expense tracker, debt management, task manager, calendar, personal assistant">
+    <meta name="author" content="ORDINA">
+
+    <!-- Open Graph / Social Media -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="ORDINA • Personal Command Center">
+    <meta property="og:description"
+        content="Manage your life with ease - Premium financial suite with expense tracking, debt management, and productivity tools">
+    <meta property="og:site_name" content="ORDINA">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml"
+        href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='0.9em' font-size='90'>💎</text></svg>">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap"
+        rel="stylesheet">
+
+    <!-- External Libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"
+        integrity="sha512-a6XN0PbgXCEgKLF0hoF3eWD1QZ3XkMtIOZB8H+aVRC6LOhIPltoMrR0pbw/I8G5pWqvtgiIUbBs7P1d3e2xF3g=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+
+    <!-- Main Stylesheet -->
+    <link rel="stylesheet" href="./css/main.css">
+</head>
+
+<body class="antialiased text-gray-800">
+    <!-- Particles Background -->
+    <div id="particles-js"></div>
+
+    <!-- Main Container -->
+    <div class="app-container">
+        <!-- Header -->
+        <header id="app-header" class="modern-header">
+            <!-- Header content will be rendered by HeaderComponent -->
+        </header>
+
+        <!-- Navigation Tabs -->
+        <nav id="app-navigation" class="navigation-tabs">
+            <!-- Navigation will be rendered by Router -->
+        </nav>
+
+        <!-- Main Content Area -->
+        <main id="app-main" class="main-content">
+            <!-- Dashboard Module -->
+            <div id="dashboard-page" class="page-content">
+                <div id="dashboard-content">
+                    <!-- Dashboard content will be rendered by DashboardModule -->
+                </div>
+            </div>
+
+            <!-- Expenses Module -->
+            <div id="expenses-page" class="page-content hidden">
+                <div id="expenses-content">
+                    <!-- Expenses content will be rendered by ExpensesModule -->
+                </div>
+            </div>
+
+            <!-- Recurring Expenses Module -->
+            <div id="recurring-expenses-page" class="page-content hidden">
+                <div id="recurring-expenses-content">
+                    <!-- Recurring expenses content will be rendered by ExpensesModule -->
+                </div>
+            </div>
+
+            <!-- Debts Module -->
+            <div id="debts-page" class="page-content hidden">
+                <div id="debts-content">
+                    <!-- Debts content will be rendered by DebtsModule -->
+                </div>
+            </div>
+
+            <!-- Tasks Module -->
+            <div id="tasks-page" class="page-content hidden">
+                <div id="tasks-content">
+                    <!-- Tasks content will be rendered by TasksModule -->
+                </div>
+            </div>
+
+            <!-- Calendar Module -->
+            <div id="calendar-page" class="page-content hidden">
+                <div id="calendar-content">
+                    <!-- Calendar content will be rendered by CalendarModule -->
+                </div>
+            </div>
+
+            <!-- News Module -->
+            <div id="news-page" class="page-content hidden">
+                <div id="news-content">
+                    <!-- News content will be rendered by NewsModule -->
+                </div>
+            </div>
+
+            <!-- Payments Module -->
+            <div id="payments-page" class="page-content hidden">
+                <div id="payments-content">
+                    <iframe src="https://hesab.az/" class="w-full h-screen border-0"></iframe>
+                </div>
+            </div>
+        </main>
+
+        <!-- Toast Notifications Container -->
+        <div id="toast-container" class="toast-container">
+            <!-- Toast notifications will be rendered by ToastComponent -->
+        </div>
+
+        <!-- Modal Container -->
+        <div id="modal-container" class="modal-container">
+            <!-- Modals will be rendered by ModalComponent -->
+        </div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script type="module">
+        // Firebase configuration will be imported from js/core/firebase.js
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+        import { getAuth } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
+        import { getFirestore } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+
+        // Store Firebase instances globally for backward compatibility
+        window.firebaseApp = null;
+        window.firebaseAuth = null;
+        window.firebaseDb = null;
+    </script>
+
+    <!-- Main Application Script -->
+    <script type="module" src="./js/main.js"></script>
+</body>
+
+</html>

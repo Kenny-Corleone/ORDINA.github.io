@@ -1,0 +1,43 @@
+/**
+ * Темная тема - Premium Dark Theme
+ */
+
+[data-theme="dark"],
+.dark {
+    /* Premium Luxury Palette - Gold & Graphite (Dark Mode) */
+    --gold-primary: #D4AF37;
+    --gold-light: #F4E4C1;
+    --gold-dark: #B8941F;
+    --gold-accent: #E6C547;
+    --graphite-deep: #1A1A1A;
+    --graphite-medium: #2D2D2D;
+    --graphite-light: #404040;
+    --white-pure: #FFFFFF;
+    --white-soft: #F8F9FA;
+    --emerald: #50C878;
+    --ruby: #E0115F;
+    --silver: #C0C0C0;
+
+    /* Semantic Colors - Dark Mode */
+    --primary-color: var(--gold-light);
+    --secondary-color: var(--gold-primary);
+    --accent-color: var(--gold-primary);
+    --text-primary: var(--white-soft);
+    --text-secondary: #94a3b8;
+    --bg-primary: var(--graphite-deep);
+    --bg-secondary: var(--graphite-medium);
+    --border-color: rgba(212, 175, 55, 0.35);
+    --shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+    --shadow-gold: 0 8px 32px rgba(212, 175, 55, 0.3);
+}
+
+.dark body,
+body.dark {
+    background: linear-gradient(135deg, #0A1628 0%, #1A2942 50%, #0d1b2a 100%);
+    color: var(--text-primary);
+}
+
+/* Smooth theme transition */
+* {
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}

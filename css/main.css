@@ -1,0 +1,122 @@
+/**
+ * ═══════════════════════════════════════════════════════════════════════════
+ * 🎨 ORDINA - ГЛАВНЫЙ CSS ФАЙЛ
+ * ═══════════════════════════════════════════════════════════════════════════
+ * 
+ * Этот файл импортирует все CSS модули в правильном порядке.
+ * Порядок импорта критически важен для корректной работы стилей!
+ */
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   1. CORE - Базовые стили и переменные
+   ═══════════════════════════════════════════════════════════════════════════ */
+@import './core/variables.css';
+@import './core/reset.css';
+@import './core/typography.css';
+@import './core/animations.css';
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   2. THEMES - Темы оформления (светлая/темная)
+   ═══════════════════════════════════════════════════════════════════════════ */
+@import './themes/light.css';
+@import './themes/dark.css';
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   3. LAYOUT - Структура страницы
+   ═══════════════════════════════════════════════════════════════════════════ */
+@import './layout/header.css';
+@import './layout/navigation.css';
+@import './layout/sidebar.css';
+@import './layout/footer.css';
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   4. COMPONENTS - Переиспользуемые компоненты
+   ═══════════════════════════════════════════════════════════════════════════ */
+@import './components/buttons.css';
+@import './components/cards.css';
+@import './components/forms.css';
+@import './components/modals.css';
+@import './components/weather.css';
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   5. MODULES - Модули приложения
+   ═══════════════════════════════════════════════════════════════════════════ */
+@import './components/dashboard.css';
+@import './components/expenses.css';
+@import './components/debts.css';
+@import './components/tasks.css';
+@import './components/calendar.css';
+@import './components/news.css';
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   6. RESPONSIVE - Адаптивность для всех устройств
+   ═══════════════════════════════════════════════════════════════════════════ */
+@import './responsive/mobile.css';
+@import './responsive/tablet.css';
+@import './responsive/desktop.css';
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   7. UTILITY - Вспомогательные классы
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* Container */
+.container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+/* Visibility */
+.hidden {
+    display: none !important;
+}
+
+.visible {
+    display: block !important;
+}
+
+/* Text Alignment */
+.text-center {
+    text-align: center;
+}
+
+.text-left {
+    text-align: left;
+}
+
+.text-right {
+    text-align: right;
+}
+
+/* Flexbox Utilities */
+.flex {
+    display: flex;
+}
+
+.flex-center {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.flex-between {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+/* Spacing Utilities */
+.mt-1 { margin-top: 0.5rem; }
+.mt-2 { margin-top: 1rem; }
+.mt-3 { margin-top: 1.5rem; }
+.mt-4 { margin-top: 2rem; }
+
+.mb-1 { margin-bottom: 0.5rem; }
+.mb-2 { margin-bottom: 1rem; }
+.mb-3 { margin-bottom: 1.5rem; }
+.mb-4 { margin-bottom: 2rem; }
+
+.p-1 { padding: 0.5rem; }
+.p-2 { padding: 1rem; }
+.p-3 { padding: 1.5rem; }
+.p-4 { padding: 2rem; }

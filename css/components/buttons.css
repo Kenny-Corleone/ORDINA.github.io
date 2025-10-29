@@ -1,0 +1,150 @@
+/**
+ * Стили кнопок - Premium Button System
+ */
+
+/* Premium Button */
+.premium-btn {
+    background: linear-gradient(135deg, var(--gold-primary) 0%, var(--gold-dark) 100%);
+    color: var(--graphite-deep);
+    border: none;
+    border-radius: 14px;
+    padding: 14px 32px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    font-size: 0.95rem;
+    letter-spacing: 0.5px;
+    box-shadow: 0 10px 30px rgba(212, 175, 55, 0.35);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 44px;
+    min-width: 44px;
+}
+
+.premium-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 15px 40px rgba(212, 175, 55, 0.5);
+}
+
+.dark .premium-btn {
+    color: var(--white-pure);
+}
+
+/* Icon Button */
+.icon-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.8);
+    border: 1px solid rgba(212, 175, 55, 0.2);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.dark .icon-btn {
+    background: rgba(45, 45, 45, 0.8);
+    border-color: rgba(212, 175, 55, 0.3);
+}
+
+.icon-btn:hover {
+    background: white;
+    border-color: var(--gold-primary);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(212, 175, 55, 0.2);
+}
+
+.dark .icon-btn:hover {
+    background: rgba(45, 45, 45, 1);
+}
+
+/* Standard Button */
+.btn {
+    padding: 0.75rem 1.5rem;
+    border-radius: var(--card-radius-md);
+    font-size: 1rem;
+    font-weight: 600;
+    transition: all var(--transition-normal);
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 44px;
+    min-width: 44px;
+    border: 2px solid transparent;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, var(--gold-primary) 0%, var(--gold-dark) 100%);
+    color: var(--graphite-deep);
+    box-shadow: 0 4px 12px rgba(212, 175, 55, 0.3);
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(212, 175, 55, 0.45);
+}
+
+.dark .btn-primary {
+    color: var(--white-pure);
+}
+
+.btn-secondary {
+    background: var(--bg-secondary);
+    color: var(--text-primary);
+    border-color: var(--border-color);
+}
+
+.btn-secondary:hover {
+    border-color: var(--gold-primary);
+    background: rgba(212, 175, 55, 0.08);
+}
+
+.btn-danger {
+    background: linear-gradient(135deg, var(--ruby) 0%, #C00E4F 100%);
+    color: white;
+    box-shadow: 0 4px 12px rgba(224, 17, 95, 0.3);
+}
+
+.btn-danger:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(224, 17, 95, 0.45);
+}
+
+.btn-success {
+    background: linear-gradient(135deg, var(--emerald) 0%, #40B868 100%);
+    color: white;
+    box-shadow: 0 4px 12px rgba(80, 200, 120, 0.3);
+}
+
+.btn-success:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(80, 200, 120, 0.45);
+}
+
+/* Touch optimization */
+@media (hover: none) and (pointer: coarse) {
+    .btn,
+    .premium-btn,
+    .icon-btn {
+        min-height: 44px;
+        min-width: 44px;
+    }
+}
+
+@media (max-width: 480px) {
+    .premium-btn {
+        padding: 0.6rem 1rem;
+        font-size: 0.85rem;
+        border-radius: 10px;
+    }
+    
+    .icon-btn {
+        width: 36px;
+        height: 36px;
+    }
+}

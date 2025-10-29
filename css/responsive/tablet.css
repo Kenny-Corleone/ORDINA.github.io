@@ -1,0 +1,118 @@
+/**
+ * Планшетные стили (641px - 1024px)
+ * Оптимизация для планшетов в портретной и ландшафтной ориентации
+ */
+
+/* Medium Devices (641px - 768px) - Планшеты портрет */
+@media (min-width: 641px) and (max-width: 768px) {
+    body {
+        font-size: 15px;
+    }
+    
+    .container {
+        padding: 1.25rem;
+    }
+    
+    .premium-card {
+        padding: 1.25rem;
+        border-radius: 16px;
+    }
+    
+    .stat-card {
+        padding: 1.5rem;
+        border-radius: 16px;
+    }
+    
+    .grid {
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 1.25rem;
+    }
+    
+    h1 {
+        font-size: 2rem;
+    }
+    
+    h2 {
+        font-size: 1.75rem;
+    }
+    
+    h3 {
+        font-size: 1.5rem;
+    }
+}
+
+/* Large Tablets (769px - 1024px) - Планшеты ландшафт */
+@media (min-width: 769px) and (max-width: 1024px) {
+    body {
+        font-size: 15px;
+    }
+    
+    .container {
+        padding: 1.5rem;
+    }
+    
+    .premium-card {
+        padding: 1.5rem;
+        border-radius: 18px;
+    }
+    
+    .stat-card {
+        padding: 1.75rem;
+        border-radius: 16px;
+    }
+    
+    .grid {
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 1.5rem;
+    }
+    
+    h1 {
+        font-size: 2.25rem;
+    }
+    
+    h2 {
+        font-size: 1.875rem;
+    }
+    
+    h3 {
+        font-size: 1.625rem;
+    }
+}
+
+/* Общие стили для всех планшетов */
+@media (min-width: 641px) and (max-width: 1024px) {
+    /* Оптимизация навигации */
+    .tab-button {
+        padding: 0.6rem 1rem;
+        font-size: 0.875rem;
+    }
+    
+    /* Адаптивные модальные окна */
+    .modal {
+        max-width: 600px;
+    }
+    
+    /* Оптимизация форм */
+    .form-control,
+    .premium-input {
+        padding: 0.875rem 1rem;
+    }
+}
+
+/* Планшеты в портретной ориентации */
+@media (min-width: 641px) and (max-width: 1024px) and (orientation: portrait) {
+    .grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* Планшеты в ландшафтной ориентации */
+@media (min-width: 641px) and (max-width: 1024px) and (orientation: landscape) {
+    .grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+    
+    .premium-logo-img {
+        height: 100px;
+    }
+}

@@ -1,0 +1,38 @@
+/**
+ * Светлая тема - Premium Light Theme
+ */
+
+:root,
+[data-theme="light"],
+body:not(.dark) {
+    /* Premium Luxury Palette - Gold & Graphite */
+    --gold-primary: #D4AF37;
+    --gold-light: #F4E4C1;
+    --gold-dark: #B8941F;
+    --gold-accent: #E6C547;
+    --graphite-deep: #1A1A1A;
+    --graphite-medium: #2D2D2D;
+    --graphite-light: #404040;
+    --white-pure: #FFFFFF;
+    --white-soft: #F8F9FA;
+    --emerald: #50C878;
+    --ruby: #E0115F;
+    --silver: #C0C0C0;
+
+    /* Semantic Colors */
+    --primary-color: var(--graphite-deep);
+    --secondary-color: var(--graphite-medium);
+    --accent-color: var(--gold-primary);
+    --text-primary: var(--graphite-deep);
+    --text-secondary: #64748b;
+    --bg-primary: var(--white-pure);
+    --bg-secondary: var(--white-soft);
+    --border-color: rgba(212, 175, 55, 0.25);
+    --shadow: 0 20px 60px rgba(26, 26, 26, 0.12);
+    --shadow-gold: 0 8px 32px rgba(212, 175, 55, 0.2);
+}
+
+body:not(.dark) {
+    background: linear-gradient(135deg, #F8F9FA 0%, #FFFFFF 50%, #F4E4C1 100%);
+    color: var(--text-primary);
+}

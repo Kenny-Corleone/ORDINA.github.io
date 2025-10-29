@@ -1,0 +1,71 @@
+/**
+ * Стили компонента Tasks
+ */
+
+.tasks-container {
+    display: grid;
+    gap: 1.5rem;
+}
+
+.tasks-list {
+    display: grid;
+    gap: 0.75rem;
+}
+
+.task-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 1rem;
+    background: var(--bg-primary);
+    border: 2px solid var(--border-color);
+    border-radius: var(--card-radius-md);
+    transition: all 0.3s ease;
+}
+
+.task-item:hover {
+    border-color: var(--gold-primary);
+    transform: translateX(4px);
+}
+
+.task-item.completed {
+    opacity: 0.6;
+}
+
+.task-item.completed .task-name {
+    text-decoration: line-through;
+}
+
+.task-checkbox {
+    width: 20px;
+    height: 20px;
+    border: 2px solid var(--border-color);
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.task-checkbox:checked {
+    background-color: var(--gold-primary);
+    border-color: var(--gold-primary);
+}
+
+.task-name {
+    flex: 1;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.task-deadline {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+}
+
+@media (max-width: 768px) {
+    .task-item {
+        padding: 0.75rem;
+    }
+    
+    .task-name {
+        font-size: 0.9rem;
+    }
+}

@@ -1,0 +1,55 @@
+/**
+ * CSS переменные - Premium Luxury Palette
+ */
+
+:root {
+    /* Premium Luxury Palette - Gold & Graphite */
+    --gold-primary: #D4AF37;
+    --gold-light: #F4E4C1;
+    --gold-dark: #B8941F;
+    --gold-accent: #E6C547;
+    --graphite-deep: #1A1A1A;
+    --graphite-medium: #2D2D2D;
+    --graphite-light: #404040;
+    --white-pure: #FFFFFF;
+    --white-soft: #F8F9FA;
+    --emerald: #50C878;
+    --ruby: #E0115F;
+    --silver: #C0C0C0;
+
+    /* Semantic Colors */
+    --primary-color: var(--graphite-deep);
+    --secondary-color: var(--graphite-medium);
+    --accent-color: var(--gold-primary);
+    --text-primary: var(--graphite-deep);
+    --text-secondary: #64748b;
+    --bg-primary: var(--white-pure);
+    --bg-secondary: var(--white-soft);
+    --border-color: rgba(212, 175, 55, 0.25);
+    --shadow: 0 20px 60px rgba(26, 26, 26, 0.12);
+    --shadow-gold: 0 8px 32px rgba(212, 175, 55, 0.2);
+
+    /* Border Radius */
+    --card-radius-xl: 20px;
+    --card-radius-md: 14px;
+    --card-radius-sm: 10px;
+    
+    /* Spacing */
+    --spacing-xs: 0.5rem;
+    --spacing-sm: 0.75rem;
+    --spacing-md: 1rem;
+    --spacing-lg: 1.5rem;
+    --spacing-xl: 2rem;
+    
+    /* Font Sizes */
+    --font-xs: 0.75rem;
+    --font-sm: 0.875rem;
+    --font-md: 1rem;
+    --font-lg: 1.125rem;
+    --font-xl: 1.25rem;
+    
+    /* Transitions */
+    --transition-fast: 0.15s ease;
+    --transition-normal: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-slow: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
