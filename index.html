@@ -1771,9 +1771,10 @@
                 height: 14px !important;
             }
 
-            /* Hide radio player on very small screens */
-            .radio-player-container {
-                display: none !important;
+            /* Radio player на мобильных - компактный */
+            [role="region"][aria-label="Radio player"] {
+                padding: 0.375rem 0.5rem !important;
+                min-width: auto;
             }
 
             /* Ensure all navigation items are visible */
@@ -3135,25 +3136,25 @@
                     <!-- Нижняя строка: radio, калькулятор, покупки, выход -->
                     <div class="flex items-center gap-0.5 sm:gap-1">
                     <!-- 🎵 Premium Radio Player -->
-                    <div class="hidden md:flex items-center gap-2 rounded-xl px-3 py-2"
+                    <div class="flex items-center gap-1 sm:gap-2 rounded-xl px-2 sm:px-3 py-1.5 sm:py-2"
                         style="background: linear-gradient(135deg, rgba(102, 126, 234, 0.15) 0%, rgba(118, 75, 162, 0.15) 100%); backdrop-filter: blur(12px); border: 1px solid rgba(102, 126, 234, 0.3); box-shadow: 0 4px 16px rgba(102, 126, 234, 0.15);"
                         role="region" aria-label="Radio player">
                         <button id="radio-play-pause-btn"
-                            class="w-8 h-8 flex items-center justify-center rounded-xl transition-all duration-300 shadow-md hover:shadow-lg hover:scale-110 active:scale-95"
+                            class="w-7 h-7 sm:w-8 sm:h-8 flex items-center justify-center rounded-xl transition-all duration-300 shadow-md hover:shadow-lg hover:scale-110 active:scale-95"
                             style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);"
                             aria-label="Play/Pause radio" title="Play/Pause (Space)">
-                            <svg id="play-icon" class="w-4 h-4 ml-0.5 text-white" fill="currentColor" viewBox="0 0 24 24"
+                            <svg id="play-icon" class="w-3.5 h-3.5 sm:w-4 sm:h-4 ml-0.5 text-white" fill="currentColor" viewBox="0 0 24 24"
                                 aria-hidden="true">
                                 <path d="M8 5v14l11-7z" />
                             </svg>
-                            <svg id="pause-icon" class="w-4 h-4 hidden text-white" fill="currentColor" viewBox="0 0 24 24"
+                            <svg id="pause-icon" class="w-3.5 h-3.5 sm:w-4 sm:h-4 hidden text-white" fill="currentColor" viewBox="0 0 24 24"
                                 aria-hidden="true">
                                 <path d="M6 4h4v16H6V4zm8 0h4v16h-4V4z" />
                             </svg>
                         </button>
 
                         <!-- Enhanced Animated Equalizer -->
-                        <div id="equalizer" class="flex items-end gap-1 h-5">
+                        <div id="equalizer" class="flex items-end gap-0.5 sm:gap-1 h-4 sm:h-5">
                             <div class="equalizer-bar w-1 rounded-full"
                                 style="background: linear-gradient(to top, #667eea, #764ba2); min-height: 4px;"></div>
                             <div class="equalizer-bar w-1 rounded-full"
@@ -3166,7 +3167,7 @@
                                 style="background: linear-gradient(to top, #667eea, #764ba2); min-height: 4px;"></div>
                         </div>
 
-                        <div class="text-xs font-semibold hidden lg:block" style="color: var(--text-primary); background: rgba(255, 255, 255, 0.6); padding: 0.25rem 0.5rem; border-radius: 6px; backdrop-filter: blur(4px);" data-i18n="radioTitle">AzerbaiJazz Radio</div>
+                        <div class="text-xs font-semibold hidden sm:block" style="color: var(--text-primary); background: rgba(255, 255, 255, 0.6); padding: 0.25rem 0.5rem; border-radius: 6px; backdrop-filter: blur(4px);" data-i18n="radioTitle">AzerbaiJazz Radio</div>
                         <audio id="radio-player" src="https://stream.zeno.fm/tjqlpbsxi4ytv"
                             aria-label="AzerbaiJazz Radio stream"></audio>
                     </div>
@@ -6177,9 +6178,9 @@
             }
 
             img[alt="ORDINA Logo"] {
-                height: 65px !important;
-                max-height: 65px !important;
-                min-height: 65px !important;
+                height: 90px !important;
+                max-height: 90px !important;
+                min-height: 90px !important;
             }
 
             .theme-toggle-btn {
