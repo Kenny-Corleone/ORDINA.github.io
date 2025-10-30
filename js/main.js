@@ -216,6 +216,7 @@ async function initializeApp() {
     // ========== STEP 6: Setup Authentication ==========
     console.log('📦 Step 6: Setting up authentication...');
     setupAuthentication(app, authService, router);
+    setupAuthUI(authService);
     console.log('✓ Authentication setup complete');
 
     // ========== STEP 7: Initialize App ==========
@@ -265,6 +266,94 @@ async function initializeApp() {
         console.error('Failed to handle init error:', e);
       }
     }
+  }
+}
+
+/**
+ * Настройка UI аутентификации
+ * @param {AuthService} authService - Сервис аутентификации
+ */
+function setupAuthUI(authService) {
+  // Google Sign In button
+  const googleSignInBtn = document.getElementById('google-signin-btn');
+  if (googleSignInBtn) {
+    googleSignInBtn.addEventListener('click', async () => {
+      try {
+        googleSignInBtn.disabled = true;
+        googleSignInBtn.textContent = 'Вход...';
+        
+        await authService.loginWithGoogle();
+        
+        // Success - auth state listener will handle navigation
+      } catch (error) {
+        console.error('Google sign in error:', error);
+        
+        const errorEl = document.getElementById('auth-error');
+        if (errorEl) {
+          errorEl.textContent = error.message || 'Ошибка входа через Google';
+        }
+        
+        googleSignInBtn.disabled = false;
+        googleSignInBtn.innerHTML = `
+          <svg class="h-4 w-4 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48">
+            <path fill="#FFC107" d="M43.611,20.083H42V20H24v8h11.303c-1.649,4.657-6.08,8-11.303,8c-6.627,0-12-5.373-12-12c0-6.627,5.373-12,12-12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C12.955,4,4,12.955,4,24c0,11.045,8.955,20,20,20c11.045,0,20-8.955,20-20C44,22.659,43.862,21.35,43.611,20.083z"/>
+            <path fill="#FF3D00" d="M6.306,14.691l6.571,4.819C14.655,15.108,18.961,12,24,12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C16.318,4,9.656,8.337,6.306,14.691z"/>
+            <path fill="#4CAF50" d="M24,44c5.166,0,9.86-1.977,13.409-5.192l-6.19-5.238C29.211,35.091,26.715,36,24,36c-5.222,0-9.521-3.108-11.28-7.481l-6.522,5.025C9.505,39.556,16.227,44,24,44z"/>
+            <path fill="#1976D2" d="M43.611,20.083H42V20H24v8h11.303c-0.792,2.237-2.231,4.166-4.087,5.574l6.19,5.238C39.99,36.566,44,30.84,44,24C44,22.659,43.862,21.35,43.611,20.083z"/>
+          </svg>
+          <span>Войти через Google</span>
+        `;
+      }
+    });
+  }
+
+  // Email/Password form
+  const authForm = document.getElementById('auth-form');
+  if (authForm) {
+    authForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const email = document.getElementById('email-address').value;
+      const password = document.getElementById('password').value;
+      const errorEl = document.getElementById('auth-error');
+      
+      try {
+        await authService.login(email, password);
+        // Success - auth state listener will handle navigation
+      } catch (error) {
+        console.error('Login error:', error);
+        if (errorEl) {
+          errorEl.textContent = error.message || 'Ошибка входа';
+        }
+      }
+    });
+  }
+
+  // Register button
+  const registerBtn = document.getElementById('register-btn');
+  if (registerBtn) {
+    registerBtn.addEventListener('click', async () => {
+      const email = document.getElementById('email-address').value;
+      const password = document.getElementById('password').value;
+      const errorEl = document.getElementById('auth-error');
+      
+      if (!email || !password) {
+        if (errorEl) {
+          errorEl.textContent = 'Введите email и пароль';
+        }
+        return;
+      }
+      
+      try {
+        await authService.register(email, password);
+        // Success - auth state listener will handle navigation
+      } catch (error) {
+        console.error('Register error:', error);
+        if (errorEl) {
+          errorEl.textContent = error.message || 'Ошибка регистрации';
+        }
+      }
+    });
   }
 }
 
