@@ -31,7 +31,16 @@
         integrity="sha512-a6XN0PbgXCEgKLF0hoF3eWD1QZ3XkMtIOZB8H+aVRC6LOhIPltoMrR0pbw/I8G5pWqvtgiIUbBs7P1d3e2xF3g=="
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.tailwindcss.com/3.4.1"></script>
+    <script>
+        // Отключаем предупреждение о production для Tailwind Play CDN
+        tailwind.config = {
+            important: true,
+            corePlugins: {
+                preflight: true,
+            }
+        }
+    </script>
     <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <style>
@@ -4463,7 +4472,7 @@
         }
 
         function setupCollections(todayId = getTodayISOString()) {
-            if (!userId) return;
+            if (!userId || !selectedMonthId) return;
             debtsCol = collection(db, `users/${userId}/debts`);
             recurringExpensesCol = collection(db, `users/${userId}/recurringExpenses`);
             monthlyDataCol = collection(db, `users/${userId}/monthlyData`);
@@ -5156,7 +5165,10 @@
         taskTabs.forEach(tab => tab.addEventListener('click', () => { taskTabs.forEach(t => t.classList.remove('task-tab-active')); tab.classList.add('task-tab-active'); document.querySelectorAll('.task-tab-content').forEach(p => p.classList.add('hidden')); document.getElementById(`task-tab-${tab.dataset.taskTab}`).classList.remove('hidden'); }));
 
         function attachListeners() {
-            if (!userId) return;
+            if (!userId || !currentMonthId || !selectedMonthId) {
+                // Инициализация еще не завершена
+                return;
+            }
             detachListeners();
             setupCollections();
             unsubscribes.push(onSnapshot(query(debtsCol), s => { allDebts = s.docs; renderDebts(allDebts); updateDashboard(); }));
@@ -5179,6 +5191,7 @@
         const createEmptyState = (messageKey) => `<div class="flex flex-col items-center justify-center p-12 bg-gray-50 rounded-lg"><svg class="w-16 h-16 text-gray-300 mb-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M21 7.5l-9-5.25L3 7.5m18 0l-9 5.25m9-5.25v9l-9 5.25M3 7.5l9 5.25M3 7.5v9l9 5.25m0-9v9" /></svg><p class="text-gray-500 font-medium">${translations[currentLang][messageKey]}</p></div>`;
 
         function renderDebts(docs) {
+            if (!userId) return;
             const tableWrapper = document.getElementById('debts-table-wrapper');
             const tableBody = document.getElementById('debts-table');
             const emptyState = document.getElementById('debts-empty');
@@ -5199,6 +5212,7 @@
         }
 
         function renderRecurringExpenses() {
+            if (!userId || !selectedMonthId) return;
             const tableWrapper = document.getElementById('recurring-expenses-table-wrapper');
             const tableBody = document.getElementById('recurring-expenses-table');
             const emptyState = document.getElementById('recurring-expenses-empty');
@@ -5234,6 +5248,7 @@
         }
 
         function renderExpenses(docs) {
+            if (!userId || !selectedMonthId) return;
             const tableWrapper = document.getElementById('expenses-table-wrapper');
             const tableBody = document.getElementById('expenses-table');
             const emptyState = document.getElementById('expenses-empty');
@@ -5447,7 +5462,10 @@
         });
 
         async function updateDashboard() {
-            if (!userId) return;
+            if (!userId || !currentMonthId || !selectedMonthId) {
+                // Инициализация еще не завершена, не вызываем ошибку
+                return;
+            }
             document.getElementById('app').classList.remove('opacity-0'); document.getElementById('loading-overlay').classList.add('hidden'); document.getElementById('dashboard-loading').classList.add('hidden'); document.getElementById('dashboard-content').classList.remove('hidden');
             const totalRecurringPaid = allRecurringTemplates.filter(t => currentMonthStatuses[t.id] === translations.ru.paidStatus).reduce((s, t) => s + (t.amount || 0), 0);
             document.getElementById('total-recurring-paid').textContent = formatCurrency(totalRecurringPaid);
