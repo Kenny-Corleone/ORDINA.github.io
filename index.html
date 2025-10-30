@@ -3070,39 +3070,39 @@
                 <div class="flex flex-col items-end gap-1">
                     <!-- Верхняя строка: валюта, язык, тема -->
                     <div class="flex items-center gap-0.5 sm:gap-1">
-                        <!-- Currency Toggle -->
-                        <div
-                            class="flex items-center border border-gray-300 dark:border-gray-600 rounded-lg overflow-hidden text-xs">
-                            <button id="currency-azn" class="px-1.5 py-0.5 currency-btn-active">AZN</button>
-                            <button id="currency-usd" class="px-1.5 py-0.5">USD</button>
-                        </div>
-                        <!-- Language Dropdown -->
-                        <div class="language-dropdown">
-                            <button id="language-dropdown-btn" class="language-dropdown-btn">
-                                <img id="language-flag" src="https://flagcdn.com/w40/ru.png" alt="Flag"
-                                    class="w-6 h-4 rounded-sm">
-                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M19 9l-7 7-7-7" />
-                                </svg>
-                            </button>
-                            <div id="language-dropdown-menu" class="language-dropdown-menu">
-                                <div class="language-option active" data-lang="ru" title="Русский">
-                                    <img src="https://flagcdn.com/w40/ru.png" alt="RU">
-                                    <span>Русский</span>
-                                </div>
-                                <div class="language-option" data-lang="en" title="English">
-                                    <img src="https://flagcdn.com/w40/gb.png" alt="EN">
-                                    <span>English</span>
-                                </div>
-                                <div class="language-option" data-lang="az" title="Azərbaycan">
-                                    <img src="https://flagcdn.com/w40/az.png" alt="AZ">
-                                    <span>Azərbaycan</span>
-                                </div>
+                    <!-- Currency Toggle -->
+                    <div
+                        class="flex items-center border border-gray-300 dark:border-gray-600 rounded-lg overflow-hidden text-xs">
+                        <button id="currency-azn" class="px-1.5 py-0.5 currency-btn-active">AZN</button>
+                        <button id="currency-usd" class="px-1.5 py-0.5">USD</button>
+                    </div>
+                    <!-- Language Dropdown -->
+                    <div class="language-dropdown">
+                        <button id="language-dropdown-btn" class="language-dropdown-btn">
+                            <img id="language-flag" src="https://flagcdn.com/w40/ru.png" alt="Flag"
+                                class="w-6 h-4 rounded-sm">
+                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M19 9l-7 7-7-7" />
+                            </svg>
+                        </button>
+                        <div id="language-dropdown-menu" class="language-dropdown-menu">
+                            <div class="language-option active" data-lang="ru" title="Русский">
+                                <img src="https://flagcdn.com/w40/ru.png" alt="RU">
+                                <span>Русский</span>
+                            </div>
+                            <div class="language-option" data-lang="en" title="English">
+                                <img src="https://flagcdn.com/w40/gb.png" alt="EN">
+                                <span>English</span>
+                            </div>
+                            <div class="language-option" data-lang="az" title="Azərbaycan">
+                                <img src="https://flagcdn.com/w40/az.png" alt="AZ">
+                                <span>Azərbaycan</span>
                             </div>
                         </div>
-                        <!-- Premium Theme Toggle Button -->
-                        <button id="theme-toggle" title="Toggle theme" class="theme-toggle-btn">
+                    </div>
+                    <!-- Premium Theme Toggle Button -->
+                    <button id="theme-toggle" title="Toggle theme" class="theme-toggle-btn">
                         <!-- Sun icon - shown in dark mode to switch to light -->
                         <svg id="theme-icon-sun" class="theme-icon hidden dark:block" viewBox="0 0 24 24" fill="none"
                             xmlns="http://www.w3.org/2000/svg">
@@ -3191,8 +3191,8 @@
                     <!-- Compact Logout -->
                     <button id="logout-btn" class="text-xs font-medium px-1 hover:opacity-70 transition"
                         style="color: var(--text-secondary);" data-i18n="logout">Выйти</button>
-                    </div>
                 </div>
+            </div>
             </div>
             <!-- Navigation - Компактная -->
             <nav class="border-t" style="background: var(--bg-primary); border-color: var(--border-color);">
@@ -4410,9 +4410,13 @@
 
         if (auth) {
             // Login language buttons
-            document.getElementById('lang-ru-login').addEventListener('click', () => setLanguage('ru'));
-            document.getElementById('lang-en-login').addEventListener('click', () => setLanguage('en'));
-            document.getElementById('lang-az-login').addEventListener('click', () => setLanguage('az'));
+            const langRuLogin = document.getElementById('lang-ru-login');
+            const langEnLogin = document.getElementById('lang-en-login');
+            const langAzLogin = document.getElementById('lang-az-login');
+            
+            if (langRuLogin) langRuLogin.addEventListener('click', () => setLanguage('ru'));
+            if (langEnLogin) langEnLogin.addEventListener('click', () => setLanguage('en'));
+            if (langAzLogin) langAzLogin.addEventListener('click', () => setLanguage('az'));
 
             // Language dropdown
             const langDropdownBtn = document.getElementById('language-dropdown-btn');
@@ -4469,10 +4473,18 @@
                     }, 1000);
                 } else { showLoginScreen(); }
             });
+        } else {
+            console.error('Firebase Auth не инициализирован');
+            showLoginScreen();
         }
 
         function setupCollections(todayId = getTodayISOString()) {
-            if (!userId || !selectedMonthId) return;
+            if (!userId) return;
+            // Если selectedMonthId не установлен, используем текущий месяц
+            if (!selectedMonthId) {
+                const todayISO = getTodayISOString();
+                selectedMonthId = todayISO.slice(0, 7);
+            }
             debtsCol = collection(db, `users/${userId}/debts`);
             recurringExpensesCol = collection(db, `users/${userId}/recurringExpenses`);
             monthlyDataCol = collection(db, `users/${userId}/monthlyData`);
