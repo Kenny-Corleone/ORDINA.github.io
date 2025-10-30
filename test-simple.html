@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ORDINA - Test</title>
+    <link rel="stylesheet" href="./css/main.css">
+</head>
+<body>
+    <div style="padding: 2rem;">
+        <h1>ORDINA - Тест загрузки</h1>
+        <p>Если ты видишь этот текст, значит HTML и CSS загружаются правильно.</p>
+        
+        <div id="test-container" style="margin-top: 2rem;">
+            <h2>Проверка модулей:</h2>
+            <ul id="test-results"></ul>
+        </div>
+    </div>
+
+    <script type="module">
+        const results = document.getElementById('test-results');
+        
+        function addResult(text, success = true) {
+            const li = document.createElement('li');
+            li.textContent = text;
+            li.style.color = success ? 'green' : 'red';
+            results.appendChild(li);
+        }
+
+        // Test 1: Check if modules can be imported
+        try {
+            const { OrdinaApp } = await import('./js/core/app.js');
+            addResult('✓ OrdinaApp импортирован');
+        } catch (e) {
+            addResult('✗ Ошибка импорта OrdinaApp: ' + e.message, false);
+        }
+
+        try {
+            const { Router } = await import('./js/core/router.js');
+            addResult('✓ Router импортирован');
+        } catch (e) {
+            addResult('✗ Ошибка импорта Router: ' + e.message, false);
+        }
+
+        try {
+            const { WeatherService } = await import('./js/services/weather.service.js');
+            addResult('✓ WeatherService импортирован');
+        } catch (e) {
+            addResult('✗ Ошибка импорта WeatherService: ' + e.message, false);
+        }
+
+        addResult('Все базовые проверки завершены!');
+    </script>
+</body>
+</html>
