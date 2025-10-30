@@ -6212,9 +6212,14 @@
             #theme-toggle,
             #calculator-btn,
             #shopping-list-btn,
-            #logout-btn,
-            .radio-player-container {
+            #logout-btn {
                 display: none !important;
+            }
+
+            /* Radio player на мобильных - компактный */
+            [role="region"][aria-label="Radio player"] {
+                padding: 0.375rem 0.5rem !important;
+                min-width: auto;
             }
 
             nav {
