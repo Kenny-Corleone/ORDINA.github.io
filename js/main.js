@@ -28,6 +28,16 @@ import { NewsService } from './services/news.service.js';
 // ==================== GLOBAL ERROR HANDLER ====================
 
 /**
+ * Hide loading overlay
+ */
+function hideLoadingOverlay() {
+  const overlay = document.getElementById('loading-overlay');
+  if (overlay) {
+    overlay.style.display = 'none';
+  }
+}
+
+/**
  * Глобальный обработчик ошибок
  * Перехватывает необработанные ошибки и отклонения промисов
  */
@@ -277,15 +287,15 @@ function setupAuthentication(app, authService, router) {
       });
       
       // Скрыть экран авторизации если он показан
-      const authScreen = document.getElementById('auth-screen');
+      const authScreen = document.getElementById('auth-container');
       if (authScreen) {
         authScreen.classList.add('hidden');
       }
       
       // Показать основной контент
-      const mainContent = document.getElementById('main-content');
+      const mainContent = document.querySelector('.app-container');
       if (mainContent) {
-        mainContent.classList.remove('hidden');
+        mainContent.style.display = 'block';
       }
       
       // Перейти на дашборд если на странице авторизации
@@ -301,15 +311,15 @@ function setupAuthentication(app, authService, router) {
       });
       
       // Показать экран авторизации
-      const authScreen = document.getElementById('auth-screen');
+      const authScreen = document.getElementById('auth-container');
       if (authScreen) {
         authScreen.classList.remove('hidden');
       }
       
       // Скрыть основной контент
-      const mainContent = document.getElementById('main-content');
+      const mainContent = document.querySelector('.app-container');
       if (mainContent) {
-        mainContent.classList.add('hidden');
+        mainContent.style.display = 'none';
       }
       
       // Перейти на страницу авторизации
@@ -322,12 +332,21 @@ function setupAuthentication(app, authService, router) {
 }
 
 /**
- * Скрыть overlay загрузки
+ * Показать ошибку инициализации
  */
-function hideLoadingOverlay() {
+function showInitializationError(error) {
   const loadingOverlay = document.getElementById('loading-overlay');
   if (loadingOverlay) {
-    loadingOverlay.classList.add('hidden');
+    loadingOverlay.innerHTML = `
+      <div style="text-align: center; color: white; padding: 40px;">
+        <h1 style="font-size: 3rem; margin-bottom: 1rem;">❌ Ошибка</h1>
+        <p style="font-size: 1.2rem; margin-bottom: 1rem;">Не удалось загрузить приложение</p>
+        <p style="font-size: 0.9rem; opacity: 0.8;">${error.message}</p>
+        <button onclick="location.reload()" style="margin-top: 20px; padding: 10px 30px; font-size: 1rem; background: white; color: #667eea; border: none; border-radius: 50px; cursor: pointer;">
+          Перезагрузить
+        </button>
+      </div>
+    `;
     // Удалить из DOM через некоторое время
     setTimeout(() => {
       loadingOverlay.remove();

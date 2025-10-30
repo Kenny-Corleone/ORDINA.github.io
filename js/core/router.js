@@ -95,13 +95,8 @@ export class Router {
       return hash;
     }
 
-    // Check if user is authenticated
-    const user = this.app.state.user;
-    if (!user) {
-      return 'auth'; // Redirect to auth if not logged in
-    }
-
-    // Return default route
+    // Return default route (dashboard)
+    // Auth is optional for now
     return this.defaultRoute;
   }
 
@@ -119,12 +114,12 @@ export class Router {
         return;
       }
 
-      // Check authentication requirement
-      if (route.requiresAuth && !this.app.state.user) {
-        console.warn(`Route "${path}" requires authentication`);
-        this.navigate('auth', { replace: true });
-        return;
-      }
+      // Check authentication requirement (disabled for now)
+      // if (route.requiresAuth && !this.app.state.user) {
+      //   console.warn(`Route "${path}" requires authentication`);
+      //   this.navigate('auth', { replace: true });
+      //   return;
+      // }
 
       // Don't navigate if already on this route
       if (this.currentRoute === path && !options.force) {
