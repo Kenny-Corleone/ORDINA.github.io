@@ -333,29 +333,6 @@ function setupAuthentication(app, authService, router) {
 
 /**
  * Показать ошибку инициализации
- */
-function showInitializationError(error) {
-  const loadingOverlay = document.getElementById('loading-overlay');
-  if (loadingOverlay) {
-    loadingOverlay.innerHTML = `
-      <div style="text-align: center; color: white; padding: 40px;">
-        <h1 style="font-size: 3rem; margin-bottom: 1rem;">❌ Ошибка</h1>
-        <p style="font-size: 1.2rem; margin-bottom: 1rem;">Не удалось загрузить приложение</p>
-        <p style="font-size: 0.9rem; opacity: 0.8;">${error.message}</p>
-        <button onclick="location.reload()" style="margin-top: 20px; padding: 10px 30px; font-size: 1rem; background: white; color: #667eea; border: none; border-radius: 50px; cursor: pointer;">
-          Перезагрузить
-        </button>
-      </div>
-    `;
-    // Удалить из DOM через некоторое время
-    setTimeout(() => {
-      loadingOverlay.remove();
-    }, 300);
-  }
-}
-
-/**
- * Показать ошибку инициализации
  * @param {Error} error - Объект ошибки
  */
 function showInitializationError(error) {
