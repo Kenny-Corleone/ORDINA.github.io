@@ -41,8 +41,8 @@
             }
         }
     </script>
-    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
     <style>
         * {
             margin: 0;
@@ -64,11 +64,14 @@
             --purple: #a855f7;
             --cyan: #06b6d4;
             
+            /* Premium Gold Accent */
+            --accent-gold: #F4C430;
+            
             /* Legacy colors for compatibility */
-            --gold-primary: #f59e0b;
+            --gold-primary: #F4C430;
             --gold-light: #fbbf24;
             --gold-dark: #d97706;
-            --gold-accent: #fbbf24;
+            --gold-accent: #F4C430;
             --graphite-deep: #0f172a;
             --graphite-medium: #1e293b;
             --graphite-light: #334155;
@@ -77,6 +80,14 @@
             --emerald: #10b981;
             --ruby: #ef4444;
             --silver: #94a3b8;
+
+            /* RGB Tokens for rgba() usage */
+            --primary-rgb: 99, 102, 241;
+            --gold-rgb: 212, 175, 55;
+            --gold-light-rgb: 251, 191, 36;
+            --gold-dark-rgb: 217, 119, 6;
+            --graphite-deep-rgb: 15, 23, 42;
+            --white-rgb: 255, 255, 255;
 
             --primary-color: var(--primary);
             --secondary-color: var(--secondary);
@@ -90,9 +101,18 @@
             --border-hover: rgba(15, 23, 42, 0.2);
             --shadow: 0 4px 12px rgba(15, 23, 42, 0.08);
             --shadow-hover: 0 8px 24px rgba(15, 23, 42, 0.12);
-            --shadow-gold: 0 8px 32px rgba(99, 102, 241, 0.2);
+            --shadow-gold: 0 8px 32px rgba(var(--primary-rgb), 0.2);
             
-            /* Glassmorphism */
+            /* Unified Glassmorphism Tokens */
+            --glass-blur: blur(20px) saturate(180%);
+            --glass-bg-light: rgba(255, 255, 255, 0.95);
+            --glass-bg-dark: rgba(15, 23, 42, 0.4);
+            --glass-border-light: rgba(var(--gold-rgb), 0.15);
+            --glass-border-dark: rgba(255, 255, 255, 0.1);
+            --glass-shadow-light: 0 4px 24px 0 rgba(0, 0, 0, 0.04);
+            --glass-shadow-dark: 0 8px 32px 0 rgba(0, 0, 0, 0.6);
+            
+            /* Legacy glassmorphism (deprecated, use above) */
             --glass-bg: rgba(255, 255, 255, 0.1);
             --glass-border: rgba(255, 255, 255, 0.2);
             --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
@@ -108,6 +128,18 @@
             --card-radius-xl: 20px;
             --card-radius-md: 14px;
             --card-radius-sm: 10px;
+            --btn-radius: 16px;
+            --input-radius: 16px;
+            
+            /* Unified Component Sizes */
+            --hit-target-min: 44px;
+            --hit-size: 36px;
+            --tab-height-md: 44px;
+            
+            /* Unified Transitions */
+            --transition-base: all 0.3s ease;
+            --transition-smooth: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-bounce: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
         .dark {
@@ -118,30 +150,32 @@
             --text-secondary: #94a3b8;
             --bg-primary: var(--graphite-deep);
             --bg-secondary: var(--graphite-medium);
-            --border-color: rgba(212, 175, 55, 0.35);
+            --border-color: rgba(var(--gold-rgb), 0.35);
             --shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
-            --shadow-gold: 0 8px 32px rgba(212, 175, 55, 0.3);
+            --shadow-gold: 0 8px 32px rgba(var(--gold-rgb), 0.3);
         }
 
         /* Premium Theme Toggle - Compact */
         .theme-toggle-btn {
-            width: 36px;
-            height: 36px;
+            width: var(--hit-size);
+            height: var(--hit-size);
+            min-width: var(--hit-target-min);
+            min-height: var(--hit-target-min);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             background: linear-gradient(135deg, var(--gold-primary) 0%, var(--gold-dark) 100%);
-            border: 2px solid rgba(212, 175, 55, 0.4);
+            border: 2px solid rgba(var(--gold-rgb), 0.4);
             cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 12px rgba(212, 175, 55, 0.3);
+            transition: var(--transition-base);
+            box-shadow: 0 4px 12px rgba(var(--gold-rgb), 0.3);
             position: relative;
         }
 
         .theme-toggle-btn:hover {
             transform: scale(1.1);
-            box-shadow: 0 6px 16px rgba(212, 175, 55, 0.4);
+            box-shadow: 0 6px 16px rgba(var(--gold-rgb), 0.4);
             border-color: var(--gold-light);
         }
 
@@ -160,14 +194,16 @@
         /* Premium White 3D Stat Cards */
         .stat-card {
             padding: 1.75rem;
-            border-radius: 20px;
-            border: 1px solid rgba(212, 175, 55, 0.15);
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(20px) saturate(180%);
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border-radius: var(--card-radius-xl);
+            border: 1px solid var(--glass-border-light);
+            background: var(--glass-bg-light);
+            backdrop-filter: var(--glass-blur);
+            -webkit-backdrop-filter: var(--glass-blur);
+            transition: var(--transition-bounce);
             position: relative;
             overflow: hidden;
-            box-shadow: 0 4px 24px 0 rgba(0, 0, 0, 0.04);
+            box-shadow: var(--glass-shadow-light);
+            will-change: transform, background-position;
         }
 
         .stat-card::before {
@@ -177,7 +213,7 @@
             left: 0;
             right: 0;
             height: 4px;
-            background: linear-gradient(90deg, #D4AF37, #F4E4C1, #D4AF37);
+            background: linear-gradient(90deg, var(--gold-primary), var(--gold-light), var(--gold-primary));
             background-size: 200% 100%;
             animation: gradientSlide 3s ease infinite;
         }
@@ -194,15 +230,15 @@
             right: -50%;
             width: 200%;
             height: 200%;
-            background: radial-gradient(circle, rgba(99, 102, 241, 0.15) 0%, transparent 70%);
+            background: radial-gradient(circle, rgba(var(--primary-rgb), 0.15) 0%, transparent 70%);
             opacity: 0;
             transition: opacity 0.4s;
         }
 
         .stat-card:hover {
-            transform: translateY(-12px) scale(1.02);
-            box-shadow: 0 12px 40px rgba(212, 175, 55, 0.15);
-            border-color: rgba(212, 175, 55, 0.3);
+            transform: translateY(-6px) scale(1.01);
+            box-shadow: 0 12px 40px rgba(var(--gold-rgb), 0.15);
+            border-color: rgba(var(--gold-rgb), 0.3);
         }
 
         .stat-card:hover::after {
@@ -210,36 +246,18 @@
         }
 
         .dark .stat-card {
-            background: rgba(15, 23, 42, 0.4);
-            border-color: rgba(255, 255, 255, 0.1);
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.6);
+            background: var(--glass-bg-dark);
+            border-color: var(--glass-border-dark);
+            box-shadow: var(--glass-shadow-dark);
+        }
+
+        .dark .stat-card::after {
+            background: radial-gradient(circle, rgba(var(--gold-rgb), 0.15) 0%, transparent 70%);
         }
 
         .dark .stat-card:hover {
-            box-shadow: 0 20px 60px rgba(99, 102, 241, 0.6);
-            border-color: rgba(99, 102, 241, 0.5);
-        }
-
-        .stat-card::after {
-            content: '';
-            position: absolute;
-            top: -50%;
-            right: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(212, 175, 55, 0.15) 0%, transparent 70%);
-            opacity: 0;
-            transition: opacity 0.4s;
-        }
-
-        .stat-card:hover {
-            transform: translateY(-6px);
-            border-color: var(--gold-primary);
-            box-shadow: 0 20px 50px rgba(212, 175, 55, 0.25);
-        }
-
-        .stat-card:hover::after {
-            opacity: 1;
+            box-shadow: 0 20px 60px rgba(var(--primary-rgb), 0.6);
+            border-color: rgba(var(--primary-rgb), 0.5);
         }
 
         /* ============================================
@@ -266,13 +284,13 @@
 
             .premium-card {
                 padding: 1rem; /* Увеличено */
-                border-radius: 16px;
+                border-radius: var(--card-radius-md);
                 border-width: 2px;
             }
 
             .stat-card {
                 padding: 1.125rem; /* Увеличено */
-                border-radius: 14px;
+                border-radius: var(--card-radius-md);
                 min-width: 100%;
                 font-size: 0.875rem;
             }
@@ -280,20 +298,20 @@
             .premium-btn {
                 padding: 12px 24px; /* Увеличено */
                 font-size: 0.875rem;
-                border-radius: 12px;
-                min-height: 44px; /* Минимальная высота для удобства */
+                border-radius: var(--card-radius-sm);
+                min-height: var(--hit-target-min);
             }
 
             .premium-input {
                 padding: 12px 16px; /* Увеличено */
                 font-size: 0.9rem;
-                border-radius: 12px;
-                min-height: 44px;
+                border-radius: var(--card-radius-sm);
+                min-height: var(--hit-target-min);
             }
 
             .theme-toggle-btn {
-                width: 44px; /* Увеличено */
-                height: 44px;
+                width: var(--hit-target-min);
+                height: var(--hit-target-min);
             }
 
             .theme-icon {
@@ -311,7 +329,7 @@
             .tab-button {
                 padding: 0.625rem 1rem; /* Увеличено */
                 font-size: 0.8125rem;
-                min-height: 40px;
+                min-height: var(--hit-target-min);
             }
 
             /* Улучшенные отступы для контейнеров */
@@ -360,32 +378,32 @@
 
             .premium-card {
                 padding: 1.25rem; /* Увеличено */
-                border-radius: 18px;
+                border-radius: var(--card-radius-md);
             }
 
             .stat-card {
                 padding: 1.375rem; /* Увеличено */
-                border-radius: 16px;
+                border-radius: var(--card-radius-md);
                 font-size: 0.9rem;
             }
 
             .premium-btn {
                 padding: 13px 28px; /* Увеличено */
                 font-size: 0.9rem;
-                border-radius: 14px;
-                min-height: 46px;
+                border-radius: var(--card-radius-md);
+                min-height: var(--hit-target-min);
             }
 
             .premium-input {
                 padding: 13px 18px;
                 font-size: 0.95rem;
-                border-radius: 14px;
-                min-height: 46px;
+                border-radius: var(--card-radius-md);
+                min-height: var(--hit-target-min);
             }
 
             .theme-toggle-btn {
-                width: 46px; /* Увеличено */
-                height: 46px;
+                width: var(--hit-target-min);
+                height: var(--hit-target-min);
             }
 
             .theme-icon {
@@ -402,7 +420,7 @@
             .tab-button {
                 padding: 0.7rem 1.25rem; /* Увеличено */
                 font-size: 0.875rem;
-                min-height: 42px;
+                min-height: var(--hit-target-min);
             }
 
             #app {
@@ -431,19 +449,19 @@
 
             .premium-card {
                 padding: 1.5rem; /* Увеличено */
-                border-radius: 20px;
+                border-radius: var(--card-radius-xl);
             }
 
             .stat-card {
                 padding: 1.625rem; /* Увеличено */
-                border-radius: 18px;
+                border-radius: var(--card-radius-md);
                 font-size: 0.95rem;
             }
 
             .premium-btn {
                 padding: 14px 32px;
                 font-size: 0.95rem;
-                min-height: 48px;
+                min-height: var(--hit-target-min);
             }
 
             img[alt="ORDINA Logo"] {
@@ -455,6 +473,7 @@
             .tab-button {
                 padding: 0.75rem 1.5rem;
                 font-size: 0.9rem;
+                min-height: var(--hit-target-min);
             }
         }
 
@@ -478,19 +497,19 @@
 
             .premium-card {
                 padding: 1.75rem; /* Увеличено */
-                border-radius: 22px;
+                border-radius: var(--card-radius-xl);
             }
 
             .stat-card {
                 padding: 1.875rem; /* Увеличено */
-                border-radius: 20px;
+                border-radius: var(--card-radius-xl);
                 font-size: 1rem;
             }
 
             .premium-btn {
                 padding: 15px 36px;
                 font-size: 1rem;
-                min-height: 50px;
+                min-height: var(--hit-target-min);
             }
 
             img[alt="ORDINA Logo"] {
@@ -520,19 +539,19 @@
 
             .premium-card {
                 padding: 2rem; /* Увеличено */
-                border-radius: 24px;
+                border-radius: var(--card-radius-xl);
             }
 
             .stat-card {
                 padding: 2rem; /* Увеличено */
-                border-radius: 22px;
+                border-radius: var(--card-radius-xl);
                 font-size: 1.05rem;
             }
 
             .premium-btn {
                 padding: 16px 40px;
                 font-size: 1.05rem;
-                min-height: 52px;
+                min-height: var(--hit-target-min);
             }
         }
 
@@ -556,30 +575,30 @@
 
             .premium-card {
                 padding: 2.5rem; /* Увеличено */
-                border-radius: 28px;
+                border-radius: var(--card-radius-xl);
             }
 
             .stat-card {
                 padding: 2.25rem; /* Увеличено */
-                border-radius: 24px;
+                border-radius: var(--card-radius-xl);
                 font-size: 1.1rem;
             }
 
             .premium-btn {
                 padding: 18px 44px;
                 font-size: 1.1rem;
-                min-height: 56px;
+                min-height: var(--hit-target-min);
             }
 
             .premium-input {
                 padding: 16px 24px;
                 font-size: 1.1rem;
-                min-height: 56px;
+                min-height: var(--hit-target-min);
             }
 
             .theme-toggle-btn {
-                width: 60px; /* Увеличено */
-                height: 60px;
+                width: var(--hit-target-min);
+                height: var(--hit-target-min);
             }
 
             .theme-icon {
@@ -590,6 +609,7 @@
             .tab-button {
                 padding: 1rem 2rem;
                 font-size: 1.05rem;
+                min-height: var(--hit-target-min);
             }
         }
 
@@ -622,7 +642,7 @@
         }
         
         /* Particles Background */
-        #particles-js {
+        #background-animation {
             position: fixed;
             width: 100%;
             height: 100%;
@@ -702,8 +722,8 @@
         
         /* Pulse Glow */
         @keyframes pulseGlow {
-            0%, 100% { box-shadow: 0 0 20px rgba(99, 102, 241, 0.5); }
-            50% { box-shadow: 0 0 40px rgba(99, 102, 241, 0.8); }
+            0%, 100% { box-shadow: 0 0 20px rgba(var(--primary-rgb), 0.5); }
+            50% { box-shadow: 0 0 40px rgba(var(--primary-rgb), 0.8); }
         }
         
         .pulse-glow {
@@ -712,14 +732,14 @@
 
         /* Premium White Glassmorphism Cards */
         .premium-card {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(20px) saturate(180%);
-            -webkit-backdrop-filter: blur(20px) saturate(180%);
-            border: 1px solid rgba(212, 175, 55, 0.15);
-            border-radius: 24px;
-            box-shadow: 0 4px 24px 0 rgba(0, 0, 0, 0.04), 
-                        0 0 0 1px rgba(212, 175, 55, 0.1) inset;
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            background: var(--glass-bg-light);
+            backdrop-filter: var(--glass-blur);
+            -webkit-backdrop-filter: var(--glass-blur);
+            border: 1px solid var(--glass-border-light);
+            border-radius: var(--card-radius-xl);
+            box-shadow: var(--glass-shadow-light), 
+                        0 0 0 1px rgba(var(--gold-rgb), 0.1) inset;
+            transition: var(--transition-smooth);
             position: relative;
             overflow: hidden;
         }
@@ -727,13 +747,14 @@
         /* МИНИМАЛЬНЫЙ header - максимально компактный */
         #fixed-header.premium-card {
             padding: 0.25rem 0.375rem !important;
-            border-radius: 12px;
+            border-radius: var(--card-radius-sm);
         }
 
         @media (min-width: 641px) {
             #fixed-header.premium-card {
                 padding: 0.25rem 0.5rem !important;
             }
+
         }
 
         @media (min-width: 1025px) {
@@ -743,9 +764,9 @@
         }
 
         .dark .premium-card {
-            background: rgba(15, 23, 42, 0.4);
-            border-color: rgba(255, 255, 255, 0.1);
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.6), 
+            background: var(--glass-bg-dark);
+            border-color: var(--glass-border-dark);
+            box-shadow: var(--glass-shadow-dark), 
                         0 0 0 1px rgba(255, 255, 255, 0.05) inset;
         }
 
@@ -763,10 +784,10 @@
 
         .premium-card:hover {
             transform: translateY(-8px) scale(1.02);
-            border-color: rgba(212, 175, 55, 0.3);
-            box-shadow: 0 12px 40px 0 rgba(212, 175, 55, 0.15), 
-                        0 0 0 1px rgba(212, 175, 55, 0.2) inset,
-                        0 0 30px rgba(212, 175, 55, 0.1);
+            border-color: rgba(var(--gold-rgb), 0.3);
+            box-shadow: 0 12px 40px 0 rgba(var(--gold-rgb), 0.15), 
+                        0 0 0 1px rgba(var(--gold-rgb), 0.2) inset,
+                        0 0 30px rgba(var(--gold-rgb), 0.1);
         }
 
         .premium-card:hover::before {
@@ -774,25 +795,26 @@
         }
 
         .premium-btn {
-            background: linear-gradient(135deg, #D4AF37 0%, #B8941F 100%);
+            background: linear-gradient(135deg, var(--gold-primary) 0%, var(--gold-dark) 100%);
             color: white;
             border: none;
-            border-radius: 16px;
+            border-radius: var(--btn-radius);
             padding: 14px 32px;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: var(--transition-smooth);
             font-size: 0.95rem;
             letter-spacing: 0.3px;
-            box-shadow: 0 8px 24px rgba(212, 175, 55, 0.3);
+            min-height: var(--hit-target-min);
+            box-shadow: 0 8px 24px rgba(var(--gold-rgb), 0.3);
             position: relative;
             overflow: hidden;
         }
 
         .dark .premium-btn {
             color: white;
-            box-shadow: 0 10px 30px rgba(99, 102, 241, 0.6);
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            box-shadow: 0 10px 30px rgba(var(--primary-rgb), 0.6);
+            background: var(--gradient-primary);
         }
 
         .premium-btn::before {
@@ -812,11 +834,11 @@
 
         .premium-btn:hover {
             transform: translateY(-3px) scale(1.05);
-            box-shadow: 0 12px 32px rgba(212, 175, 55, 0.4);
+            box-shadow: 0 12px 32px rgba(var(--gold-rgb), 0.4);
         }
         
         .dark .premium-btn:hover {
-            box-shadow: 0 15px 40px rgba(99, 102, 241, 0.6);
+            box-shadow: 0 15px 40px rgba(var(--primary-rgb), 0.6);
         }
 
         .premium-btn:active {
@@ -824,42 +846,59 @@
         }
 
         .premium-input {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(212, 175, 55, 0.2);
-            border-radius: 16px;
+            background: var(--glass-bg-light);
+            backdrop-filter: blur(10px) saturate(180%);
+            -webkit-backdrop-filter: blur(10px) saturate(180%);
+            border: 1px solid var(--glass-border-light);
+            border-radius: var(--input-radius);
             padding: 14px 20px;
             color: var(--text-primary);
-            transition: all 0.3s ease;
+            transition: var(--transition-base);
             font-size: 0.95rem;
             font-weight: 500;
+            min-height: var(--hit-target-min);
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
         }
 
         .dark .premium-input {
-            background: rgba(15, 23, 42, 0.4);
+            background: var(--glass-bg-dark);
             color: var(--white-soft);
-            border-color: rgba(255, 255, 255, 0.1);
+            border-color: var(--glass-border-dark);
         }
 
         .premium-input:focus {
             outline: none;
-            border-color: rgba(212, 175, 55, 0.5);
-            box-shadow: 0 0 0 4px rgba(212, 175, 55, 0.1), 0 4px 16px rgba(212, 175, 55, 0.15);
+            border-color: rgba(var(--gold-rgb), 0.5);
+            box-shadow: 0 0 0 4px rgba(var(--gold-rgb), 0.1), 0 4px 16px rgba(var(--gold-rgb), 0.15);
             background: rgba(255, 255, 255, 1);
             transform: translateY(-2px);
         }
 
         .dark .premium-input:focus {
-            background: rgba(15, 23, 42, 0.6);
-            border-color: rgba(99, 102, 241, 0.6);
+            background: var(--glass-bg-dark);
+            border-color: rgba(var(--primary-rgb), 0.6);
+        }
+
+        /* Tab Button Base Styles */
+        .tab-button {
+            padding: 0.75rem 1.5rem;
+            font-size: 0.9rem;
+            min-height: var(--hit-target-min);
+            min-width: var(--hit-target-min);
+            border-radius: var(--card-radius-sm);
+            transition: var(--transition-base);
+            cursor: pointer;
+            border: none;
+            background: transparent;
+            color: var(--text-primary);
+            font-weight: 500;
         }
 
         .tab-active {
             border-bottom: 4px solid var(--gold-primary) !important;
             color: var(--gold-primary) !important;
             font-weight: 800;
-            background: linear-gradient(180deg, transparent 0%, rgba(212, 175, 55, 0.12) 100%);
+            background: linear-gradient(180deg, transparent 0%, rgba(var(--gold-rgb), 0.12) 100%);
             position: relative;
         }
 
@@ -871,13 +910,13 @@
             right: 0;
             height: 4px;
             background: linear-gradient(90deg, transparent, var(--gold-primary), transparent);
-            box-shadow: 0 0 10px rgba(212, 175, 55, 0.6);
+            box-shadow: 0 0 10px rgba(var(--gold-rgb), 0.6);
         }
 
         dialog::backdrop {
             background: rgba(10, 22, 40, 0.75);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
+            backdrop-filter: blur(12px) saturate(180%);
+            -webkit-backdrop-filter: blur(12px) saturate(180%);
         }
 
         /* Luxury Scrollbar */
@@ -887,14 +926,14 @@
         }
 
         ::-webkit-scrollbar-track {
-            background: rgba(212, 175, 55, 0.08);
-            border-radius: 10px;
+            background: rgba(var(--gold-rgb), 0.08);
+            border-radius: var(--card-radius-sm);
             margin: 4px;
         }
 
         ::-webkit-scrollbar-thumb {
             background: linear-gradient(180deg, var(--gold-primary) 0%, var(--gold-dark) 100%);
-            border-radius: 10px;
+            border-radius: var(--card-radius-sm);
             border: 3px solid transparent;
             background-clip: padding-box;
             box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.2);
@@ -903,14 +942,14 @@
         ::-webkit-scrollbar-thumb:hover {
             background: linear-gradient(180deg, var(--gold-light) 0%, var(--gold-primary) 100%);
             background-clip: padding-box;
-            box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3), 0 0 10px rgba(212, 175, 55, 0.5);
+            box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3), 0 0 10px rgba(var(--gold-rgb), 0.5);
         }
 
         .task-tab-active {
             background: linear-gradient(135deg, var(--gold-primary) 0%, var(--gold-dark) 100%) !important;
             color: var(--navy-deep) !important;
             border-color: var(--gold-primary) !important;
-            box-shadow: 0 -6px 20px rgba(212, 175, 55, 0.4);
+            box-shadow: 0 -6px 20px rgba(var(--gold-rgb), 0.4);
             font-weight: 800;
         }
 
@@ -920,22 +959,22 @@
 
         .calendar-day {
             min-height: 120px;
-            border: 2px solid rgba(212, 175, 55, 0.2);
-            transition: all 0.3s ease;
-            border-radius: 12px;
+            border: 2px solid rgba(var(--gold-rgb), 0.2);
+            transition: var(--transition-base);
+            border-radius: var(--card-radius-sm);
             margin: 2px;
         }
 
         .calendar-day:hover {
-            background: rgba(212, 175, 55, 0.08);
+            background: rgba(var(--gold-rgb), 0.08);
             border-color: var(--gold-primary);
             transform: scale(1.02);
         }
 
         .calendar-day-today {
-            background: linear-gradient(135deg, rgba(212, 175, 55, 0.2) 0%, rgba(212, 175, 55, 0.08) 100%);
+            background: linear-gradient(135deg, rgba(var(--gold-rgb), 0.2) 0%, rgba(var(--gold-rgb), 0.08) 100%);
             border: 3px solid var(--gold-primary);
-            box-shadow: 0 8px 24px rgba(212, 175, 55, 0.3);
+            box-shadow: 0 8px 24px rgba(var(--gold-rgb), 0.3);
         }
 
         .calendar-day-number {
@@ -952,7 +991,7 @@
         .calendar-day-today .calendar-day-number {
             background: linear-gradient(135deg, var(--gold-primary) 0%, var(--gold-dark) 100%);
             color: var(--navy-deep);
-            box-shadow: 0 6px 20px rgba(212, 175, 55, 0.5);
+            box-shadow: 0 6px 20px rgba(var(--gold-rgb), 0.5);
             font-weight: 900;
         }
 
@@ -960,17 +999,6 @@
             color: var(--white-pure);
         }
 
-        .currency-btn-active {
-            background: linear-gradient(135deg, var(--gold-primary) 0%, var(--gold-dark) 100%);
-            color: var(--navy-deep);
-            font-weight: 800;
-            box-shadow: 0 6px 20px rgba(212, 175, 55, 0.4);
-            transform: scale(1.05);
-        }
-
-        .dark .currency-btn-active {
-            color: var(--white-pure);
-        }
 
         /* ============================================
            НОВАЯ КРУТАЯ ВЕРХНЯЯ ПАНЕЛЬ
@@ -981,19 +1009,20 @@
             top: 0;
             z-index: 1000;
             background: rgba(255, 255, 255, 0.8);
-            backdrop-filter: blur(20px) saturate(180%);
-            border-bottom: 1px solid rgba(212, 175, 55, 0.1);
-            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.04);
-            transition: all 0.3s ease;
+            backdrop-filter: var(--glass-blur);
+            -webkit-backdrop-filter: var(--glass-blur);
+            border-bottom: 1px solid rgba(var(--gold-rgb), 0.1);
+            box-shadow: var(--glass-shadow-light);
+            transition: var(--transition-base);
         }
         
         .dark .modern-header {
-            background: rgba(15, 23, 42, 0.8);
-            border-bottom-color: rgba(255, 255, 255, 0.1);
+            background: var(--glass-bg-dark);
+            border-bottom-color: var(--glass-border-dark);
         }
         
         .modern-header:hover {
-            box-shadow: 0 8px 32px rgba(212, 175, 55, 0.1);
+            box-shadow: 0 8px 32px rgba(var(--gold-rgb), 0.1);
         }
         
         /* Search Bar */
@@ -1006,28 +1035,28 @@
         .modern-search input {
             width: 100%;
             padding: 12px 48px 12px 48px;
-            border-radius: 16px;
-            border: 1px solid rgba(212, 175, 55, 0.2);
+            border-radius: var(--input-radius);
+            border: 1px solid rgba(var(--gold-rgb), 0.2);
             background: rgba(255, 255, 255, 0.9);
             font-size: 14px;
-            transition: all 0.3s ease;
+            transition: var(--transition-base);
         }
         
         .dark .modern-search input {
-            background: rgba(15, 23, 42, 0.6);
-            border-color: rgba(255, 255, 255, 0.1);
+            background: var(--glass-bg-dark);
+            border-color: var(--glass-border-dark);
             color: white;
         }
         
         .modern-search input:focus {
             outline: none;
-            border-color: rgba(212, 175, 55, 0.5);
-            box-shadow: 0 0 0 4px rgba(212, 175, 55, 0.1);
+            border-color: rgba(var(--gold-rgb), 0.5);
+            box-shadow: 0 0 0 4px rgba(var(--gold-rgb), 0.1);
             background: white;
         }
         
         .dark .modern-search input:focus {
-            background: rgba(15, 23, 42, 0.8);
+            background: var(--glass-bg-dark);
         }
         
         .modern-search-icon {
@@ -1163,9 +1192,30 @@
             transform: scale(1.05);
         }
 
-        /* Responsive logo sizes - ОЧЕНЬ БОЛЬШОЙ ЛОГОТИП (как на нормальных сайтах) */
+        /* Защита: правила для dark mode не должны влиять на размеры логотипа в хедере */
+        .dark .header-logo-wrapper img[alt="ORDINA Logo"],
+        .dark #header-logo,
+        .dark .header-logo {
+            height: auto !important;
+            max-height: calc((clamp(44px, 4.4vw, 52px) - clamp(4px, 0.8vw, 6px) * 2) * 1.7568) !important;
+            min-height: 0 !important;
+            transform: none;
+            transform-origin: center;
+        }
+
+        /* Responsive logo sizes - увеличенный логотип в пределах колонки */
+        .header-logo-wrapper img[alt="ORDINA Logo"],
+        #header-logo,
+        .header-logo {
+            height: auto !important;
+            max-height: calc((clamp(44px, 4.4vw, 52px) - clamp(4px, 0.8vw, 6px) * 2) * 1.7568) !important;
+            min-height: 0 !important;
+            transform: none;
+            transform-origin: center;
+        }
+
         @media (max-width: 400px) {
-            img[alt="ORDINA Logo"] {
+            img[alt="ORDINA Logo"]:not(.header-logo):not(#header-logo) {
                 height: 100px !important;
                 max-height: 100px !important;
                 min-height: 100px !important;
@@ -1173,7 +1223,7 @@
         }
 
         @media (min-width: 401px) and (max-width: 640px) {
-            img[alt="ORDINA Logo"] {
+            img[alt="ORDINA Logo"]:not(.header-logo):not(#header-logo) {
                 height: 120px !important;
                 max-height: 120px !important;
                 min-height: 120px !important;
@@ -1181,7 +1231,7 @@
         }
 
         @media (min-width: 641px) and (max-width: 768px) {
-            img[alt="ORDINA Logo"] {
+            img[alt="ORDINA Logo"]:not(.header-logo):not(#header-logo) {
                 height: 140px !important;
                 max-height: 140px !important;
                 min-height: 140px !important;
@@ -1189,7 +1239,7 @@
         }
 
         @media (min-width: 769px) and (max-width: 1024px) {
-            img[alt="ORDINA Logo"] {
+            img[alt="ORDINA Logo"]:not(.header-logo):not(#header-logo) {
                 height: 160px !important;
                 max-height: 160px !important;
                 min-height: 160px !important;
@@ -1197,7 +1247,7 @@
         }
 
         @media (min-width: 1025px) and (max-width: 1440px) {
-            img[alt="ORDINA Logo"] {
+            img[alt="ORDINA Logo"]:not(.header-logo):not(#header-logo) {
                 height: 180px !important;
                 max-height: 180px !important;
                 min-height: 180px !important;
@@ -1205,7 +1255,7 @@
         }
 
         @media (min-width: 1441px) {
-            img[alt="ORDINA Logo"] {
+            img[alt="ORDINA Logo"]:not(.header-logo):not(#header-logo) {
                 height: 200px !important;
                 max-height: 200px !important;
                 min-height: 200px !important;
@@ -1227,13 +1277,14 @@
             display: flex;
             align-items: center;
             padding: 1.5rem 2rem;
-            border-radius: 18px;
+            border-radius: var(--card-radius-md);
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
-            backdrop-filter: blur(20px);
+            backdrop-filter: var(--glass-blur);
+            -webkit-backdrop-filter: var(--glass-blur);
             opacity: 0;
             transform: translateX(120%);
-            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-            border: 2px solid rgba(212, 175, 55, 0.3);
+            transition: var(--transition-smooth);
+            border: 2px solid rgba(var(--gold-rgb), 0.3);
             font-weight: 600;
         }
 
@@ -1695,11 +1746,7 @@
                 margin: 0.5rem 0;
             }
 
-            /* Logo responsive */
-            img[alt="ORDINA Logo"] {
-                height: 80px !important;
-                max-height: 80px !important;
-            }
+            /* Logo responsive - overridden by new header styles */
 
             /* Make motto visible on mobile */
             .hidden.md\\:block {
@@ -1740,12 +1787,6 @@
                 height: 18px !important;
             }
 
-            /* Compact currency toggle */
-            #currency-azn,
-            #currency-usd {
-                padding: 0.35rem 0.5rem;
-                font-size: 0.65rem;
-            }
 
             /* Weather widget on mobile */
             .weather-widget-new {
@@ -1789,11 +1830,731 @@
             }
         }
 
+        /* ============================================
+           NEW COMPACT HEADER STYLES (Grid Layout)
+           ============================================ */
+
+        /* A. Grid Layout & Base Structure */
+        #fixed-header {
+            margin-bottom: 0 !important;
+        }
+
+        #fixed-header.premium-card {
+            padding: 0 !important;
+            overflow: visible;
+        }
+
+        .header-grid-container {
+            display: grid;
+            grid-template-columns: 140px minmax(0, 1fr) auto auto auto auto auto auto auto;
+            align-items: center;
+            column-gap: 10.8px;
+            width: 100%;
+            padding-inline: clamp(8px, 2vw, 16px);
+            padding-block: clamp(4px, 0.8vw, 6px);
+            min-height: clamp(44px, 4.4vw, 52px);
+        }
+
+        @media (max-width: 768px) {
+            .header-grid-container {
+                grid-template-columns: 120px minmax(0, 1fr) auto auto auto auto auto auto auto;
+                column-gap: 9px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header-grid-container {
+                grid-template-columns: 100px minmax(0, 1fr) auto auto auto auto auto auto auto;
+                column-gap: 7.2px;
+            }
+        }
+
+        /* B. Column 1: Logo */
+        .header-logo-wrapper {
+            width: 100%;
+            max-width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            min-width: 0;
+        }
+
+        .header-logo-wrapper img {
+            max-height: calc((clamp(44px, 4.4vw, 52px) - clamp(4px, 0.8vw, 6px) * 2) * 1.7568) !important;
+            max-width: 100% !important;
+            width: auto !important;
+            height: auto !important;
+        }
+
+        /* Защита от глобальных правил для img/svg - ограничиваем логотип высотой хедера */
+        .header-logo-wrapper img,
+        #header-logo,
+        .header-logo {
+            display: block !important;
+            height: auto !important;
+            max-height: calc((clamp(44px, 4.4vw, 52px) - clamp(4px, 0.8vw, 6px) * 2) * 1.7568) !important;
+            width: auto !important;
+            max-width: 100% !important;
+            object-fit: contain !important;
+            flex-shrink: 0 !important;
+            align-self: center !important;
+            margin: 0 auto !important;
+        }
+
+        /* Override all old logo size rules */
+        #fixed-header img[alt="ORDINA Logo"],
+        .header-logo {
+            display: block !important;
+            height: auto !important;
+            max-height: calc((clamp(44px, 4.4vw, 52px) - clamp(4px, 0.8vw, 6px) * 2) * 1.7568) !important;
+            width: auto !important;
+            max-width: 100% !important;
+            object-fit: contain !important;
+            align-self: center !important;
+            margin: 0 auto !important;
+        }
+
+        @media (max-width: 480px) {
+            #fixed-header img[alt="ORDINA Logo"],
+            .header-logo,
+            .header-logo-wrapper img {
+                max-height: calc((clamp(44px, 4.4vw, 52px) - clamp(4px, 0.8vw, 6px) * 2) * 1.7568) !important;
+                height: auto !important;
+                width: auto !important;
+                max-width: 100% !important;
+            }
+        }
+
+        @media (max-height: 600px) {
+            .header-logo-wrapper img,
+            #header-logo,
+            .header-logo {
+                max-height: calc((clamp(42px, 4.2vw, 52px) - clamp(4px, 0.8vw, 6px) * 2) * 1.7568) !important;
+                max-width: 100% !important;
+            }
+        }
+
+        /* C. Column 2: Motto (Slogan) */
+        .header-motto {
+            font-size: clamp(1.11rem, 1.23vw, 1.34rem);
+            line-height: 1.15;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            min-width: 0;
+            background: linear-gradient(135deg, var(--accent-gold), var(--gold-primary) 60%, #F4E4C1);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            color: transparent;
+            font-weight: 500;
+            padding-left: 12px;
+        }
+
+        @media (max-width: 640px) and (min-width: 481px) {
+            .header-motto {
+                font-size: clamp(1.0rem, 1.11vw, 1.21rem);
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .header-motto {
+                font-size: clamp(0.92rem, 1.02vw, 1.12rem);
+            }
+        }
+
+        /* D. Column 3: Weather */
+        .header-weather-chip {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            height: clamp(32px, 3.2vw, 36px);
+            padding-inline: clamp(6px, 0.8vw, 10px);
+            border-radius: 12px;
+            background: linear-gradient(135deg, rgba(248, 250, 252, 0.95) 0%, rgba(241, 245, 249, 0.9) 100%);
+            backdrop-filter: blur(20px) saturate(180%);
+            border: 1px solid rgba(148, 163, 184, 0.25);
+            white-space: nowrap;
+            overflow: hidden;
+            margin-left: 10px;
+            flex-shrink: 0;
+        }
+
+        .dark .header-weather-chip {
+            background: linear-gradient(135deg, rgba(15, 23, 42, 0.98) 0%, rgba(30, 41, 59, 0.95) 100%);
+            border-color: rgba(99, 102, 234, 0.3);
+        }
+
+        .weather-temp-compact {
+            font-weight: 600;
+            font-size: clamp(13px, 1.1vw, 15px);
+            min-width: 42px;
+            text-align: center;
+        }
+
+        .weather-city-compact {
+            font-size: clamp(11px, 0.9vw, 13px);
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            max-width: 120px;
+        }
+
+        .weather-city-compact[title] {
+            cursor: help;
+        }
+
+        /* E. Column 4: Radio */
+        .header-radio-chip {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            height: clamp(32px, 3.2vw, 36px);
+            padding-inline: clamp(8px, 1vw, 12px);
+            border-radius: 12px;
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.15) 0%, rgba(118, 75, 162, 0.15) 100%);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(102, 126, 234, 0.3);
+            white-space: nowrap;
+            overflow: hidden;
+            margin-left: 10px;
+            margin-right: 0;
+            flex-shrink: 0;
+        }
+
+        .radio-play-btn {
+            width: 24px;
+            height: 24px;
+            min-width: 24px;
+            min-height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            flex-shrink: 0;
+            color: white;
+            padding: 0;
+        }
+
+        .radio-play-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+
+        .radio-label-wrapper {
+            flex: 1;
+            min-width: 0;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .radio-label {
+            font-size: clamp(11px, 0.9vw, 13px);
+            font-weight: 600;
+            white-space: nowrap;
+            display: inline-block;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 100%;
+        }
+
+        .radio-label.marquee {
+            animation: radioMarquee 12s linear infinite;
+            text-overflow: clip;
+            padding-right: 30px;
+        }
+
+        @keyframes radioMarquee {
+            0% {
+                transform: translateX(0);
+            }
+            95% {
+                transform: translateX(calc(-100% + 100%));
+            }
+            100% {
+                transform: translateX(calc(-100% + 100%));
+            }
+        }
+
+        .radio-equalizer {
+            display: flex;
+            align-items: flex-end;
+            gap: 2px;
+            height: clamp(12px, 1.2vw, 16px);
+            flex-shrink: 0;
+        }
+
+        .radio-equalizer .equalizer-bar {
+            width: 1.5px;
+            border-radius: 1px;
+            background: linear-gradient(to top, #667eea, #764ba2);
+            height: 12px;
+            transform-origin: bottom;
+        }
+
+        @media (max-width: 480px) {
+            .header-radio-chip {
+                padding-inline: 8px;
+                gap: 0;
+                justify-content: center;
+            }
+            .radio-label-wrapper,
+            .radio-equalizer {
+                display: none;
+            }
+            .radio-play-btn {
+                width: 24px;
+                height: 24px;
+                min-width: 24px;
+                min-height: 24px;
+            }
+        }
+
+        /* Date/Time Widget */
+        .header-datetime {
+            font-size: clamp(11px, 0.9vw, 13px);
+            color: var(--text-secondary);
+            white-space: nowrap;
+            padding: 0 clamp(4px, 0.5vw, 8px);
+            font-weight: 500;
+            height: clamp(32px, 3.2vw, 36px);
+            display: flex;
+            align-items: center;
+            line-height: 1;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            flex-shrink: 0;
+        }
+
+        /* D. Right Group: Theme + Language + Currency + Logout */
+        .header-right-group {
+            display: flex;
+            align-items: center;
+            gap: clamp(8px, 0.8vw, 10px);
+            flex-shrink: 0;
+        }
+
+        /* F. Column 5: Right Icons (Theme, Language, Currency, Logout) */
+        .header-theme-btn,
+        .header-logout-btn {
+            width: 32px;
+            height: 32px;
+            min-width: 32px;
+            min-height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: transparent;
+            border: 1px solid transparent;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: none;
+            color: var(--text-secondary);
+            flex-shrink: 0;
+            position: relative;
+        }
+        
+        .header-icon-22 {
+            width: 22px;
+            height: 22px;
+        }
+        
+        .header-icon-24 {
+            width: 24px;
+            height: 24px;
+        }
+
+        .header-logout-btn {
+            width: 32px;
+            height: 32px;
+            min-width: 32px;
+            min-height: 32px;
+            border-radius: 8px;
+            background: transparent;
+            border: 1px solid transparent;
+            box-shadow: none;
+            color: var(--text-secondary);
+        }
+
+        .header-logout-btn:hover {
+            background: rgba(228, 68, 68, 0.1);
+            border-color: rgba(228, 68, 68, 0.3);
+            color: #E44;
+            transform: scale(1.05);
+        }
+
+        .dark .header-theme-btn {
+            color: var(--white-pure);
+        }
+
+        .header-theme-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 2px 8px rgba(244, 196, 48, 0.2);
+            border-color: var(--gold-primary);
+            color: var(--gold-primary);
+        }
+
+        /* Language & Currency Dropdowns - NEW COMPACT VERSION */
+        .header-language-dropdown,
+        .header-currency-dropdown {
+            position: relative;
+            z-index: 10;
+        }
+
+        /* Language trigger button */
+        #lang-trigger {
+            width: 32px;
+            height: 32px;
+            min-width: 32px;
+            min-height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: transparent;
+            border: 1px solid transparent;
+            cursor: pointer;
+            pointer-events: auto;
+            position: relative;
+            z-index: 10;
+            transition: all 0.3s ease;
+            color: var(--text-secondary);
+            flex-shrink: 0;
+        }
+
+        .dark #lang-trigger {
+            color: var(--white-pure);
+        }
+
+        #lang-trigger:hover {
+            transform: scale(1.05);
+            border-color: var(--gold-primary);
+            color: var(--gold-primary);
+        }
+
+        #lang-trigger:focus-visible {
+            outline: 2px solid var(--gold-primary);
+            outline-offset: 2px;
+        }
+
+        #lang-trigger svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        /* Language menu - только флаги */
+        #lang-menu {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background: var(--glass-bg-light);
+            backdrop-filter: blur(20px) saturate(180%);
+            border-radius: 10px;
+            padding: 6px;
+            box-shadow: var(--glass-shadow-light);
+            display: none;
+            flex-direction: column;
+            gap: 6px;
+            transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s ease;
+            z-index: 10000;
+            opacity: 0;
+            visibility: hidden;
+            transform: scale(0.95);
+            border: 1px solid var(--glass-border-light);
+            margin-top: 4px;
+        }
+
+        .dark #lang-menu {
+            background: var(--glass-bg-dark);
+            border: 1px solid var(--glass-border-dark);
+            box-shadow: var(--glass-shadow-dark);
+        }
+
+        #lang-menu.open,
+        #lang-menu[aria-hidden="false"] {
+            display: flex;
+            opacity: 1;
+            visibility: visible;
+            transform: scale(1);
+        }
+
+        #lang-menu .language-dropdown-item {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+            border-radius: 6px;
+            border: 2px solid transparent;
+            background: transparent;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            width: 24px;
+            height: 24px;
+            min-width: 24px;
+            min-height: 24px;
+            flex-shrink: 0;
+        }
+
+        #lang-menu .language-dropdown-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: scale(1.05);
+        }
+
+        #lang-menu .language-dropdown-item.active {
+            border: 2px solid var(--gold-primary);
+        }
+
+        #lang-menu .flag {
+            font-size: 20px;
+            line-height: 20px;
+            display: block;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+        }
+
+        /* Currency trigger button */
+        #curr-trigger {
+            width: 32px;
+            height: 32px;
+            min-width: 32px;
+            min-height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: transparent;
+            border: 1px solid transparent;
+            cursor: pointer;
+            pointer-events: auto;
+            position: relative;
+            z-index: 10;
+            transition: all 0.3s ease;
+            color: var(--text-secondary);
+            flex-shrink: 0;
+            font-size: 18px;
+            line-height: 1;
+            font-weight: 500;
+        }
+
+        .dark #curr-trigger {
+            color: var(--white-pure);
+        }
+
+        #curr-trigger:hover {
+            transform: scale(1.05);
+            border-color: var(--gold-primary);
+            color: var(--gold-primary);
+        }
+
+        #curr-trigger:focus-visible {
+            outline: 2px solid var(--gold-primary);
+            outline-offset: 2px;
+        }
+
+        /* Currency menu - только символы */
+        #curr-menu {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background: var(--glass-bg-light);
+            backdrop-filter: blur(20px) saturate(180%);
+            border-radius: 10px;
+            padding: 6px;
+            box-shadow: var(--glass-shadow-light);
+            display: none;
+            flex-direction: column;
+            gap: 8px;
+            transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s ease;
+            z-index: 10000;
+            opacity: 0;
+            visibility: hidden;
+            transform: scale(0.95);
+            border: 1px solid var(--glass-border-light);
+            margin-top: 4px;
+            max-height: 90px;
+        }
+
+        .dark #curr-menu {
+            background: var(--glass-bg-dark);
+            border: 1px solid var(--glass-border-dark);
+            box-shadow: var(--glass-shadow-dark);
+        }
+
+        #curr-menu.open,
+        #curr-menu[aria-hidden="false"] {
+            display: flex;
+            opacity: 1;
+            visibility: visible;
+            transform: scale(1);
+        }
+
+        #curr-menu .currency-dropdown-item {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+            border-radius: 8px;
+            border: 2px solid transparent;
+            background: transparent;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            width: 24px;
+            height: 24px;
+            min-width: 24px;
+            min-height: 24px;
+            flex-shrink: 0;
+            font-size: 18px;
+            line-height: 1;
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+
+        #curr-menu .currency-dropdown-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: scale(1.05);
+        }
+
+        #curr-menu .currency-dropdown-item.active {
+            border: 2px solid var(--gold-primary);
+        }
+
+
+        .settings-section {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: flex-start;
+            gap: 8px;
+        }
+
+        @media (max-width: 768px) {
+            .settings-menu {
+                display: flex;
+                flex-direction: column;
+                row-gap: 12px;
+            }
+            .settings-section {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 8px;
+            }
+        }
+
+        .settings-label {
+            display: none;
+        }
+
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border-width: 0;
+        }
+
+
+        /* Logout Button */
+        .settings-logout-btn {
+            width: 24px;
+            height: 24px;
+            min-width: 24px;
+            min-height: 24px;
+            padding: 0;
+            border: none;
+            border-radius: 6px;
+            background: transparent;
+            color: var(--danger);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .settings-logout-btn svg {
+            width: 24px;
+            height: 24px;
+        }
+
+        .settings-logout-btn:hover {
+            background: rgba(var(--danger-rgb, 239, 68, 68), 0.1);
+            transform: scale(1.1);
+        }
+
+        /* E. Icon Sizes */
+        .header-icon-20 {
+            width: clamp(20px, 2vw, 22px);
+            height: clamp(20px, 2vw, 22px);
+            color: currentColor;
+            fill: currentColor;
+            stroke: currentColor;
+        }
+
+        .header-icon-24 {
+            width: 24px;
+            height: 24px;
+            color: currentColor;
+            fill: none;
+            stroke: currentColor;
+            flex-shrink: 0;
+        }
+
+        /* F. Navigation Tabs */
+        .header-nav {
+            margin-top: clamp(4px, 0.6vw, 8px);
+            padding-top: 0;
+            line-height: 1.1;
+        }
+
+        .header-tabs-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 8px;
+            width: 100%;
+        }
+
+        @media (max-width: 480px) {
+            .header-tabs-container {
+                display: flex;
+                overflow-x: auto;
+                scroll-snap-type: x mandatory;
+                -webkit-overflow-scrolling: touch;
+                gap: 0;
+            }
+            .header-tabs-container .tab-button {
+                scroll-snap-align: start;
+                flex-shrink: 0;
+            }
+        }
+
+        /* G. Override old styles */
+        #ordina-weather-widget {
+            display: flex !important;
+        }
+
+        /* Hide old weather widget structure */
+        .weather-widget-new {
+            display: none !important;
+        }
+
         /* Radio Equalizer Animation */
         .equalizer-bar {
-            height: 4px;
-            transition: height 0.15s cubic-bezier(0.4, 0, 0.2, 1);
-            animation: equalizerPulse 0.6s ease-in-out infinite alternate;
+            height: 12px;
+            transition: transform 0.2s ease-in-out;
+            animation: equalizerPulse 0.75s ease-in-out infinite alternate;
+            transform-origin: bottom;
         }
 
         .equalizer-bar:nth-child(1) {
@@ -1818,17 +2579,17 @@
 
         @keyframes equalizerPulse {
             0% {
-                height: 4px;
+                transform: scaleY(0.2);
             }
 
             100% {
-                height: 18px;
+                transform: scaleY(1);
             }
         }
 
         .equalizer-bar.paused {
             animation-play-state: paused;
-            height: 4px !important;
+            transform: scaleY(0.2) !important;
         }
 
         /* Enhanced Responsive Design */
@@ -1845,13 +2606,11 @@
                 width: 0.75px;
             }
 
-            #fixed-header {
-                padding: 0.25rem 0.375rem !important;
-            }
+            /* Header padding now handled by .header-grid-container */
 
             .tab-button {
                 padding: 0.5rem 0.75rem;
-                font-size: 0.75rem;
+                font-size: 0.875rem;
             }
         }
 
@@ -1925,7 +2684,7 @@
 
             .tab-button {
                 padding: 0.5rem 0.5rem;
-                font-size: 0.7rem;
+                font-size: 0.875rem;
                 white-space: nowrap;
             }
         }
@@ -1933,7 +2692,7 @@
         @media (min-width: 481px) and (max-width: 768px) {
             .tab-button {
                 padding: 0.6rem 0.875rem;
-                font-size: 0.8rem;
+                font-size: 1rem;
             }
         }
 
@@ -2647,80 +3406,6 @@
             }
         }
 
-        /* Language Dropdown Styles */
-        .language-dropdown {
-            position: relative;
-        }
-
-        .language-dropdown-btn {
-            display: flex;
-            align-items: center;
-            gap: 0.25rem;
-            padding: 0.25rem 0.5rem;
-            border-radius: 6px;
-            border: 1px solid rgba(212, 175, 55, 0.25);
-            background: var(--bg-primary);
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .language-dropdown-btn:hover {
-            border-color: var(--gold-primary);
-            background: rgba(212, 175, 55, 0.1);
-        }
-
-        .language-dropdown-menu {
-            position: absolute;
-            bottom: 100%;
-            right: 0;
-            margin-bottom: 0.25rem;
-            padding: 0.5rem;
-            background: var(--bg-primary);
-            border: 2px solid var(--border-color);
-            border-radius: 8px;
-            box-shadow: 0 10px 30px rgba(10, 22, 40, 0.15);
-            display: none;
-            flex-direction: row;
-            gap: 0.5rem;
-            z-index: 100;
-        }
-
-        .language-dropdown-menu.show {
-            display: flex;
-        }
-
-        .language-option {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 32px;
-            height: 24px;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            padding: 0;
-        }
-
-        .language-option img {
-            width: 32px;
-            height: 24px;
-            border-radius: 4px;
-            object-fit: cover;
-        }
-
-        .language-option:hover {
-            transform: scale(1.1);
-            box-shadow: 0 0 8px rgba(212, 175, 55, 0.4);
-        }
-
-        .language-option.active {
-            box-shadow: 0 0 12px rgba(212, 175, 55, 0.6);
-            transform: scale(1.05);
-        }
-
-        .language-option span {
-            display: none;
-        }
 
         /* News Panel Styles - REBUILT Premium Style */
         .news-panel {
@@ -2901,7 +3586,7 @@
 
 <body class="antialiased text-gray-800">
     <!-- Particles Background -->
-    <div id="particles-js"></div>
+    <div id="background-animation"></div>
 
     <div id="loading-overlay" class="fixed inset-0 bg-white bg-opacity-75 flex items-center justify-center z-50" style="z-index: 10000;">
         <div class="text-center">
@@ -3001,231 +3686,149 @@
     <div id="app" class="max-w-7xl mx-auto p-2 sm:p-4 md:p-6 relative opacity-0 transition-opacity duration-300 hidden">
         <!-- Fixed header wrapper to keep top bar, logo, and navigation static on scroll -->
         <div id="fixed-header" class="sticky top-0 z-30 premium-card">
-            <!-- Compact top bar for logo and controls -->
-            <div class="flex items-center justify-between px-1.5 sm:px-2 md:px-2.5 py-0.5 gap-1 sm:gap-1.5">
-                <!-- Left: Logo and Motto -->
-                <div class="flex items-center gap-2 flex-1">
-                    <!-- Logo -->
-                    <div class="flex items-center gap-2">
-                        <img src="https://raw.githubusercontent.com/Kenny-Corleone/ORDINA.github.io/main/logo%20ORDINA.png"
-                            alt="ORDINA Logo" class="w-auto drop-shadow-lg">
-                        <!-- Motto - Каллиграфический стиль -->
-                        <div class="hidden md:block">
-                            <div class="font-medium calligraphy-motto" style="color: var(--text-secondary); font-size: 0.875rem !important;"
-                                data-i18n="appSubtitle">Управляй своей жизнью с легкостью</div>
-                        </div>
-                    </div>
-
-                    <!-- 🌤️ КРАСИВЫЙ КОМПАКТНЫЙ ВИДЖЕТ ПОГОДЫ -->
-                    <div id="ordina-weather-widget" class="hidden lg:block">
-                        <div class="weather-widget-new">
-                            <div class="weather-widget-header">
-                                <div class="weather-icon-wrapper">
-                                    <div id="weather-animated-icon" class="weather-icon-circle">
-                                        <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                                            <circle cx="12" cy="12" r="5" stroke-width="2"/>
-                                            <line x1="12" y1="1" x2="12" y2="3" stroke-width="2"/>
-                                            <line x1="12" y1="21" x2="12" y2="23" stroke-width="2"/>
-                                            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" stroke-width="2"/>
-                                            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" stroke-width="2"/>
-                                            <line x1="1" y1="12" x2="3" y2="12" stroke-width="2"/>
-                                            <line x1="21" y1="12" x2="23" y2="12" stroke-width="2"/>
-                                        </svg>
-                                    </div>
-                                    <div class="weather-temp-wrapper">
-                                        <span id="weather-temp-new" class="weather-temp-value">--</span>
-                                        <span class="weather-temp-unit">°C</span>
-                                    </div>
-                                </div>
-                                <div class="weather-info-wrapper">
-                                    <div id="weather-city-new" class="weather-city-text">—</div>
-                                    <div id="weather-desc-new" class="weather-desc-text">—</div>
-                                    <div id="weather-datetime-new" class="weather-datetime-text">—</div>
-                                </div>
-                            </div>
-                            <div class="weather-widget-controls">
-                                <input type="text" id="weather-search-input" placeholder="" class="weather-search-field" data-i18n-placeholder="weatherCitySearchPlaceholder"/>
-                                <button id="weather-search-btn" class="weather-control-btn" title="Поиск">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <circle cx="11" cy="11" r="8" stroke-width="2"/>
-                                        <path d="M21 21l-4.35-4.35" stroke-width="2" stroke-linecap="round"/>
-                                    </svg>
-                                </button>
-                                <button id="weather-location-btn-new" class="weather-control-btn" title="Моя локация">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path d="M12 2a7 7 0 00-7 7c0 5.25 7 13 7 13s7-7.75 7-13a7 7 0 00-7-7z" stroke-width="2"/>
-                                        <circle cx="12" cy="9" r="2.5" stroke-width="2"/>
-                                    </svg>
-                                </button>
-                                <button id="weather-refresh-btn-new" class="weather-control-btn" title="Обновить">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                    </svg>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
+            <!-- Grid Layout: 5 Columns: LOGO | MOTO | WEATHER | RADIO | RIGHT-ICONS -->
+            <div id="header-grid-container" class="header-grid-container">
+                <!-- Column 1: Logo -->
+                <div class="header-logo-wrapper">
+                    <img src="https://raw.githubusercontent.com/Kenny-Corleone/ORDINA.github.io/main/logo%20ORDINA.png"
+                        alt="ORDINA Logo" id="header-logo" class="header-logo">
                 </div>
 
-                <!-- Controls справа: валюта/язык/тема над калькулятором, radio/калькулятор/покупки/выход -->
-                <div class="flex flex-col items-end gap-1">
-                    <!-- Верхняя строка: валюта, язык, тема -->
-                    <div class="flex items-center gap-0.5 sm:gap-1">
-                    <!-- Currency Toggle -->
-                    <div
-                        class="flex items-center border border-gray-300 dark:border-gray-600 rounded-lg overflow-hidden text-xs">
-                        <button id="currency-azn" class="px-1.5 py-0.5 currency-btn-active">AZN</button>
-                        <button id="currency-usd" class="px-1.5 py-0.5">USD</button>
+                <!-- Column 2: Motto (Slogan) -->
+                <div id="header-motto" class="header-motto" data-i18n="appSubtitle">Управляй своей жизнью с легкостью</div>
+
+                <!-- Column 3: Weather -->
+                <div id="ordina-weather-widget" class="header-weather-chip">
+                    <svg class="header-icon-24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="5"/>
+                        <line x1="12" y1="1" x2="12" y2="3"/>
+                        <line x1="12" y1="21" x2="12" y2="23"/>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+                        <line x1="1" y1="12" x2="3" y2="12"/>
+                        <line x1="21" y1="12" x2="23" y2="12"/>
+                    </svg>
+                    <span id="weather-temp-compact" class="weather-temp-compact">--</span>
+                    <span id="weather-city-compact" class="weather-city-compact" title="">—</span>
+                </div>
+
+                <!-- Column 4: Radio -->
+                <div class="header-radio-chip" role="region" aria-label="Radio player">
+                    <button id="radio-play-pause-btn" class="radio-play-btn" aria-label="Play/Pause radio" title="Play/Pause (Space)">
+                        <svg id="play-icon" class="header-icon-20" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                            <path d="M8 5v14l11-7z" />
+                        </svg>
+                        <svg id="pause-icon" class="header-icon-20 hidden" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                            <path d="M6 4h4v16H6V4zm8 0h4v16h-4V4z" />
+                        </svg>
+                    </button>
+                    <div class="radio-label-wrapper">
+                        <span id="radio-label" class="radio-label" data-i18n="radioTitle">AzerbaiJazz Radio</span>
                     </div>
-                    <!-- Language Dropdown -->
-                    <div class="language-dropdown">
-                        <button id="language-dropdown-btn" class="language-dropdown-btn">
-                            <img id="language-flag" src="https://flagcdn.com/w40/ru.png" alt="Flag"
-                                class="w-6 h-4 rounded-sm">
-                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M19 9l-7 7-7-7" />
-                            </svg>
-                        </button>
-                        <div id="language-dropdown-menu" class="language-dropdown-menu">
-                            <div class="language-option active" data-lang="ru" title="Русский">
-                                <img src="https://flagcdn.com/w40/ru.png" alt="RU">
-                                <span>Русский</span>
-                            </div>
-                            <div class="language-option" data-lang="en" title="English">
-                                <img src="https://flagcdn.com/w40/gb.png" alt="EN">
-                                <span>English</span>
-                            </div>
-                            <div class="language-option" data-lang="az" title="Azərbaycan">
-                                <img src="https://flagcdn.com/w40/az.png" alt="AZ">
-                                <span>Azərbaycan</span>
-                            </div>
-                        </div>
+                    <div id="equalizer" class="radio-equalizer">
+                        <div class="equalizer-bar"></div>
+                        <div class="equalizer-bar"></div>
+                        <div class="equalizer-bar"></div>
+                        <div class="equalizer-bar"></div>
+                        <div class="equalizer-bar"></div>
                     </div>
-                    <!-- Premium Theme Toggle Button -->
-                    <button id="theme-toggle" title="Toggle theme" class="theme-toggle-btn">
-                        <!-- Sun icon - shown in dark mode to switch to light -->
-                        <svg id="theme-icon-sun" class="theme-icon hidden dark:block" viewBox="0 0 24 24" fill="none"
-                            xmlns="http://www.w3.org/2000/svg">
+                    <audio id="radio-player" src="https://stream.zeno.fm/tjqlpbsxi4ytv" aria-label="AzerbaiJazz Radio stream"></audio>
+                </div>
+
+                <!-- Column 5: Date/Time -->
+                <div id="header-datetime" class="header-datetime"></div>
+
+                <!-- Column 6: Right Icons (Theme, Language, Currency, Logout) -->
+                <div class="header-right-group">
+                    <button id="theme-toggle" title="Toggle theme" class="header-theme-btn" aria-label="Toggle theme">
+                        <svg id="theme-icon-sun" class="header-icon-20 hidden dark:block" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <circle cx="12" cy="12" r="5" stroke="currentColor" stroke-width="2" fill="currentColor" />
-                            <line x1="12" y1="1" x2="12" y2="3" stroke="currentColor" stroke-width="2"
-                                stroke-linecap="round" />
-                            <line x1="12" y1="21" x2="12" y2="23" stroke="currentColor" stroke-width="2"
-                                stroke-linecap="round" />
-                            <line x1="1" y1="12" x2="3" y2="12" stroke="currentColor" stroke-width="2"
-                                stroke-linecap="round" />
-                            <line x1="21" y1="12" x2="23" y2="12" stroke="currentColor" stroke-width="2"
-                                stroke-linecap="round" />
-                            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" stroke="currentColor" stroke-width="2"
-                                stroke-linecap="round" />
-                            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" stroke="currentColor" stroke-width="2"
-                                stroke-linecap="round" />
-                            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" stroke="currentColor" stroke-width="2"
-                                stroke-linecap="round" />
-                            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" stroke="currentColor" stroke-width="2"
-                                stroke-linecap="round" />
+                            <line x1="12" y1="1" x2="12" y2="3" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                            <line x1="12" y1="21" x2="12" y2="23" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                            <line x1="1" y1="12" x2="3" y2="12" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                            <line x1="21" y1="12" x2="23" y2="12" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
                         </svg>
-                        <!-- Moon icon - shown in light mode to switch to dark -->
-                        <svg id="theme-icon-moon" class="theme-icon block dark:hidden" viewBox="0 0 24 24" fill="none"
-                            xmlns="http://www.w3.org/2000/svg">
-                            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" stroke="currentColor"
-                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                        <svg id="theme-icon-moon" class="header-icon-20 block dark:hidden" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
                         </svg>
                     </button>
-                    </div>
-                    <!-- Нижняя строка: radio, калькулятор, покупки, выход -->
-                    <div class="flex items-center gap-0.5 sm:gap-1">
-                    <!-- 🎵 Premium Radio Player -->
-                    <div class="flex items-center gap-1 sm:gap-2 rounded-xl px-2 sm:px-3 py-1.5 sm:py-2"
-                        style="background: linear-gradient(135deg, rgba(102, 126, 234, 0.15) 0%, rgba(118, 75, 162, 0.15) 100%); backdrop-filter: blur(12px); border: 1px solid rgba(102, 126, 234, 0.3); box-shadow: 0 4px 16px rgba(102, 126, 234, 0.15);"
-                        role="region" aria-label="Radio player">
-                        <button id="radio-play-pause-btn"
-                            class="w-7 h-7 sm:w-8 sm:h-8 flex items-center justify-center rounded-xl transition-all duration-300 shadow-md hover:shadow-lg hover:scale-110 active:scale-95"
-                            style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);"
-                            aria-label="Play/Pause radio" title="Play/Pause (Space)">
-                            <svg id="play-icon" class="w-3.5 h-3.5 sm:w-4 sm:h-4 ml-0.5 text-white" fill="currentColor" viewBox="0 0 24 24"
-                                aria-hidden="true">
-                                <path d="M8 5v14l11-7z" />
-                            </svg>
-                            <svg id="pause-icon" class="w-3.5 h-3.5 sm:w-4 sm:h-4 hidden text-white" fill="currentColor" viewBox="0 0 24 24"
-                                aria-hidden="true">
-                                <path d="M6 4h4v16H6V4zm8 0h4v16h-4V4z" />
+
+                    <!-- Language Dropdown -->
+                    <div class="header-language-dropdown">
+                        <button id="lang-trigger" role="button" aria-haspopup="true" aria-expanded="false" tabindex="0">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <line x1="2" y1="12" x2="22" y2="12"></line>
+                                <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
                             </svg>
                         </button>
-
-                        <!-- Enhanced Animated Equalizer -->
-                        <div id="equalizer" class="flex items-end gap-0.5 sm:gap-1 h-4 sm:h-5">
-                            <div class="equalizer-bar w-1 rounded-full"
-                                style="background: linear-gradient(to top, #667eea, #764ba2); min-height: 4px;"></div>
-                            <div class="equalizer-bar w-1 rounded-full"
-                                style="background: linear-gradient(to top, #667eea, #764ba2); min-height: 4px;"></div>
-                            <div class="equalizer-bar w-1 rounded-full"
-                                style="background: linear-gradient(to top, #667eea, #764ba2); min-height: 4px;"></div>
-                            <div class="equalizer-bar w-1 rounded-full"
-                                style="background: linear-gradient(to top, #667eea, #764ba2); min-height: 4px;"></div>
-                            <div class="equalizer-bar w-1 rounded-full"
-                                style="background: linear-gradient(to top, #667eea, #764ba2); min-height: 4px;"></div>
+                        <div id="lang-menu" role="menu" aria-hidden="true">
+                            <button class="language-dropdown-item active" data-lang="ru" role="menuitemradio" aria-checked="true">
+                                <span class="flag">🇷🇺</span>
+                            </button>
+                            <button class="language-dropdown-item" data-lang="en" role="menuitemradio" aria-checked="false">
+                                <span class="flag">🇬🇧</span>
+                            </button>
+                            <button class="language-dropdown-item" data-lang="az" role="menuitemradio" aria-checked="false">
+                                <span class="flag">🇦🇿</span>
+                            </button>
                         </div>
-
-                        <div class="text-xs font-semibold hidden sm:block" style="color: var(--text-primary); background: rgba(255, 255, 255, 0.6); padding: 0.25rem 0.5rem; border-radius: 6px; backdrop-filter: blur(4px);" data-i18n="radioTitle">AzerbaiJazz Radio</div>
-                        <audio id="radio-player" src="https://stream.zeno.fm/tjqlpbsxi4ytv"
-                            aria-label="AzerbaiJazz Radio stream"></audio>
                     </div>
-                    <!-- Premium Calculator Button -->
-                    <button id="calculator-btn"
-                        class="flex items-center justify-center w-9 h-9 rounded-xl bg-gradient-to-br from-blue-500 via-blue-600 to-cyan-500 text-white hover:from-blue-600 hover:via-blue-700 hover:to-cyan-600 transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105 active:scale-95"
-                        title="Калькулятор">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
-                            <path stroke-linecap="round" stroke-linejoin="round"
-                                d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+
+                    <!-- Currency Dropdown -->
+                    <div class="header-currency-dropdown">
+                        <button id="curr-trigger" role="button" aria-haspopup="true" aria-expanded="false" tabindex="0">₼</button>
+                        <div id="curr-menu" role="menu" aria-hidden="true">
+                            <button id="currency-azn" class="currency-dropdown-item active" data-currency="AZN" role="menuitemradio" aria-checked="true">₼</button>
+                            <button id="currency-usd" class="currency-dropdown-item" data-currency="USD" role="menuitemradio" aria-checked="false">$</button>
+                        </div>
+                    </div>
+
+                    <!-- Logout Button -->
+                    <button id="logout-btn" class="header-logout-btn" aria-label="Выйти" title="Выйти">
+                        <svg class="header-icon-20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                            <polyline points="16 17 21 12 16 7"></polyline>
+                            <line x1="21" y1="12" x2="9" y2="12"></line>
                         </svg>
                     </button>
-                    <!-- Premium Shopping List Button -->
-                    <button id="shopping-list-btn"
-                        class="flex items-center justify-center w-9 h-9 rounded-xl bg-gradient-to-br from-green-500 via-emerald-600 to-teal-500 text-white hover:from-green-600 hover:via-emerald-700 hover:to-teal-600 transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105 active:scale-95"
-                        title="Список покупок">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
-                            <path stroke-linecap="round" stroke-linejoin="round"
-                                d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
-                        </svg>
-                    </button>
-                    <!-- Compact Logout -->
-                    <button id="logout-btn" class="text-xs font-medium px-1 hover:opacity-70 transition"
-                        style="color: var(--text-secondary);" data-i18n="logout">Выйти</button>
                 </div>
-            </div>
             </div>
             <!-- Navigation - Компактная -->
-            <nav class="border-t" style="background: var(--bg-primary); border-color: var(--border-color);">
-                <div class="flex overflow-x-auto pb-0.5">
+            <nav class="header-nav border-t" style="background: var(--bg-primary); border-color: var(--border-color);">
+                <div class="header-tabs-container">
                     <button data-tab="dashboard"
-                        class="tab-button px-2 sm:px-3 md:px-4 py-1 sm:py-1.5 border-b-2 border-transparent tab-active whitespace-nowrap text-xs font-medium"
+                        class="tab-button px-2 sm:px-3 md:px-4 py-1.5 sm:py-2 border-b-2 border-transparent tab-active whitespace-nowrap text-sm sm:text-base font-semibold"
                         style="color: var(--text-secondary);" onmouseover="this.style.color='var(--text-primary)'"
                         onmouseout="this.style.color='var(--text-secondary)'" data-i18n="tabDashboard">Сводка</button>
                     <button data-tab="debts"
-                        class="tab-button px-2 sm:px-3 md:px-4 py-1 sm:py-1.5 border-b-2 border-transparent whitespace-nowrap text-xs font-medium"
+                        class="tab-button px-2 sm:px-3 md:px-4 py-1.5 sm:py-2 border-b-2 border-transparent whitespace-nowrap text-sm sm:text-base font-semibold"
                         style="color: var(--text-secondary);" onmouseover="this.style.color='var(--text-primary)'"
                         onmouseout="this.style.color='var(--text-secondary)'" data-i18n="tabDebts">Долги</button>
                     <button data-tab="recurring-expenses"
-                        class="tab-button px-2 sm:px-3 md:px-4 py-1 sm:py-1.5 border-b-2 border-transparent whitespace-nowrap text-xs font-medium"
+                        class="tab-button px-2 sm:px-3 md:px-4 py-1.5 sm:py-2 border-b-2 border-transparent whitespace-nowrap text-sm sm:text-base font-semibold"
                         style="color: var(--text-secondary);" onmouseover="this.style.color='var(--text-primary)'"
                         onmouseout="this.style.color='var(--text-secondary)'"
                         data-i18n="tabRecurringExpenses">Ежемесячные</button>
                     <button data-tab="expenses"
-                        class="tab-button px-2 sm:px-3 md:px-4 py-1 sm:py-1.5 border-b-2 border-transparent whitespace-nowrap text-xs font-medium"
+                        class="tab-button px-2 sm:px-3 md:px-4 py-1.5 sm:py-2 border-b-2 border-transparent whitespace-nowrap text-sm sm:text-base font-semibold"
                         style="color: var(--text-secondary);" onmouseover="this.style.color='var(--text-primary)'"
                         onmouseout="this.style.color='var(--text-secondary)'"
                         data-i18n="tabMonthlyExpenses">Расходы</button>
                     <button data-tab="tasks"
-                        class="tab-button px-2 sm:px-3 md:px-4 py-1 sm:py-1.5 border-b-2 border-transparent whitespace-nowrap text-xs font-medium"
+                        class="tab-button px-2 sm:px-3 md:px-4 py-1.5 sm:py-2 border-b-2 border-transparent whitespace-nowrap text-sm sm:text-base font-semibold"
                         style="color: var(--text-secondary);" onmouseover="this.style.color='var(--text-primary)'"
                         onmouseout="this.style.color='var(--text-secondary)'" data-i18n="tabTasks">Задачи</button>
                     <button data-tab="calendar"
-                        class="tab-button px-2 sm:px-3 md:px-4 py-1 sm:py-1.5 border-b-2 border-transparent whitespace-nowrap text-xs font-medium"
+                        class="tab-button px-2 sm:px-3 md:px-4 py-1.5 sm:py-2 border-b-2 border-transparent whitespace-nowrap text-sm sm:text-base font-semibold"
                         style="color: var(--text-secondary);" onmouseover="this.style.color='var(--text-primary)'"
                         onmouseout="this.style.color='var(--text-secondary)'" data-i18n="tabCalendar">Календарь</button>
                     <button data-tab="payments"
-                        class="tab-button px-2 sm:px-3 md:px-4 py-1 sm:py-1.5 border-b-2 border-transparent whitespace-nowrap text-xs font-medium"
+                        class="tab-button px-2 sm:px-3 md:px-4 py-1.5 sm:py-2 border-b-2 border-transparent whitespace-nowrap text-sm sm:text-base font-semibold"
                         style="color: var(--text-secondary);" onmouseover="this.style.color='var(--text-primary)'"
                         onmouseout="this.style.color='var(--text-secondary)'" data-i18n="tabPayments">Оплата</button>
                 </div>
@@ -3235,9 +3838,27 @@
         <main>
             <div id="dashboard-page" class="page-content">
                 <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center mb-6 md:mb-8 gap-4">
-                    <div>
+                    <div class="flex items-center gap-3">
                         <h2 class="text-xl sm:text-2xl md:text-3xl font-bold text-gray-800 dark:text-gray-200"
                             data-i18n="dashboardTitle">Сводка за месяц</h2>
+                        <!-- Premium Calculator Button -->
+                        <button id="calculator-btn"
+                            class="flex items-center justify-center w-9 h-9 rounded-xl bg-gradient-to-br from-blue-500 via-blue-600 to-cyan-500 text-white hover:from-blue-600 hover:via-blue-700 hover:to-cyan-600 transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105 active:scale-95"
+                            title="Калькулятор">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                            </svg>
+                        </button>
+                        <!-- Premium Shopping List Button -->
+                        <button id="shopping-list-btn"
+                            class="flex items-center justify-center w-9 h-9 rounded-xl bg-gradient-to-br from-green-500 via-emerald-600 to-teal-500 text-white hover:from-green-600 hover:via-emerald-700 hover:to-teal-600 transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105 active:scale-95"
+                            title="Список покупок">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
+                            </svg>
+                        </button>
                     </div>
                     <div class="w-full lg:w-auto">
                         <select id="month-selector"
@@ -4297,6 +4918,10 @@
         function applyDynamicTranslations() {
             // textContent translations
             document.querySelectorAll('[data-i18n]').forEach(el => {
+                // Пропускаем элементы меню языков (они содержат только флаги)
+                if (el.closest('#lang-menu') || el.classList.contains('language-dropdown-item') || el.classList.contains('flag')) {
+                    return;
+                }
                 const key = el.dataset.i18n;
                 if (translations[currentLang][key]) el.textContent = translations[currentLang][key];
             });
@@ -4350,6 +4975,35 @@
             attachListeners();
         }
 
+        function updateLanguageFlags() {
+            // Update dropdown items - только флаги
+            document.querySelectorAll('.language-dropdown-item').forEach(item => {
+                const lang = item.dataset.lang;
+                const isActive = lang === currentLang;
+                item.classList.toggle('active', isActive);
+                item.setAttribute('aria-checked', isActive);
+            });
+        }
+
+        function updateCurrencyButtons() {
+            // Update currency button - показываем символ валюты
+            const currencyBtn = document.getElementById('curr-trigger');
+            const currencyMap = { AZN: '₼', USD: '$' };
+            if (currencyBtn) currencyBtn.textContent = currencyMap[currentCurrency] || '₼';
+            
+            // Update dropdown items - только символы
+            const aznBtn = document.getElementById('currency-azn');
+            const usdBtn = document.getElementById('currency-usd');
+            if (aznBtn) {
+                aznBtn.classList.toggle('active', currentCurrency === 'AZN');
+                aznBtn.setAttribute('aria-checked', currentCurrency === 'AZN');
+            }
+            if (usdBtn) {
+                usdBtn.classList.toggle('active', currentCurrency === 'USD');
+                usdBtn.setAttribute('aria-checked', currentCurrency === 'USD');
+            }
+        }
+
         function updateLanguageButtons() {
             // Update login language buttons
             ['ru-login', 'en-login', 'az-login'].forEach(lang => {
@@ -4363,23 +5017,8 @@
                 }
             });
 
-            // Update dropdown UI
-            const flagMap = {
-                'ru': 'https://flagcdn.com/w40/ru.png',
-                'en': 'https://flagcdn.com/w40/gb.png',
-                'az': 'https://flagcdn.com/w40/az.png'
-            };
-
-            const languageFlag = document.getElementById('language-flag');
-            if (languageFlag) {
-                languageFlag.src = flagMap[currentLang];
-            }
-
-            // Update dropdown options
-            document.querySelectorAll('.language-option').forEach(opt => {
-                const isActive = opt.dataset.lang === currentLang;
-                opt.classList.toggle('active', isActive);
-            });
+            // Update header language button and dropdown (new structure)
+            updateLanguageFlags();
         }
 
         const loadingOverlay = document.getElementById('loading-overlay');
@@ -4419,31 +5058,171 @@
             if (langEnLogin) langEnLogin.addEventListener('click', () => setLanguage('en'));
             if (langAzLogin) langAzLogin.addEventListener('click', () => setLanguage('az'));
 
-            // Language dropdown
-            const langDropdownBtn = document.getElementById('language-dropdown-btn');
-            const langDropdownMenu = document.getElementById('language-dropdown-menu');
+            // Date/Time Widget
+            const datetimeEl = document.getElementById('header-datetime');
+            const langMap = { ru: 'ru-RU', en: 'en-US', az: 'az-AZ' };
+            const dayNames = {
+                ru: ['Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб'],
+                en: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+                az: ['Baz', 'B.e', 'Ç.a', 'Çər', 'C.a', 'Cüm', 'Şən']
+            };
+            const monthNames = {
+                ru: ['Янв', 'Фев', 'Мар', 'Апр', 'Май', 'Июн', 'Июл', 'Авг', 'Сен', 'Окт', 'Ноя', 'Дек'],
+                en: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+                az: ['Yan', 'Fev', 'Mar', 'Apr', 'May', 'İyn', 'İyl', 'Avq', 'Sen', 'Okt', 'Noy', 'Dek']
+            };
 
-            if (langDropdownBtn && langDropdownMenu) {
-                langDropdownBtn.addEventListener('click', (e) => {
+            function updateDateTime() {
+                if (!datetimeEl) return;
+                const now = new Date();
+                const dayNamesShort = {
+                    ru: ['Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб'],
+                    en: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+                    az: ['B', 'B.e', 'Ç.a', 'Ç', 'C.a', 'C', 'Ş']
+                };
+                const monthNamesShort = {
+                    ru: ['Янв', 'Фев', 'Мар', 'Апр', 'Май', 'Июн', 'Июл', 'Авг', 'Сен', 'Окт', 'Ноя', 'Дек'],
+                    en: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+                    az: ['Yan', 'Fev', 'Mar', 'Apr', 'May', 'İyn', 'İyl', 'Avq', 'Sen', 'Okt', 'Noy', 'Dek']
+                };
+                const day = dayNamesShort[currentLang]?.[now.getDay()] || dayNamesShort.en[now.getDay()];
+                const date = now.getDate();
+                const month = monthNamesShort[currentLang]?.[now.getMonth()] || monthNamesShort.en[now.getMonth()];
+                const hours = String(now.getHours()).padStart(2, '0');
+                const minutes = String(now.getMinutes()).padStart(2, '0');
+                datetimeEl.textContent = `${day}, ${date} ${month} · ${hours}:${minutes}`;
+            }
+            if (datetimeEl) {
+                updateDateTime();
+                setInterval(updateDateTime, 60000); // Обновление каждые 60 секунд
+            }
+
+            // Language & Currency Dropdowns - NEW COMPACT VERSION
+            const languageBtn = document.getElementById('lang-trigger');
+            const languageMenu = document.getElementById('lang-menu');
+            const currencyBtn = document.getElementById('curr-trigger');
+            const currencyMenu = document.getElementById('curr-menu');
+
+            // Close all menus helper
+            function closeAllMenus() {
+                if (languageMenu && languageMenu.classList.contains('open')) {
+                    languageMenu.classList.remove('open');
+                    languageBtn.setAttribute('aria-expanded', 'false');
+                    languageMenu.setAttribute('aria-hidden', 'true');
+                }
+                if (currencyMenu && currencyMenu.classList.contains('open')) {
+                    currencyMenu.classList.remove('open');
+                    currencyBtn.setAttribute('aria-expanded', 'false');
+                    currencyMenu.setAttribute('aria-hidden', 'true');
+                }
+            }
+
+            // Language dropdown handler
+            if (languageBtn && languageMenu) {
+                languageBtn.onclick = (e) => {
                     e.stopPropagation();
-                    langDropdownMenu.classList.toggle('show');
-                });
+                    languageMenu.classList.toggle('open');
+                    if (languageMenu.classList.contains('open')) {
+                        languageBtn.setAttribute('aria-expanded', 'true');
+                        languageMenu.setAttribute('aria-hidden', 'false');
+                    } else {
+                        languageBtn.setAttribute('aria-expanded', 'false');
+                        languageMenu.setAttribute('aria-hidden', 'true');
+                    }
+                };
 
-                document.querySelectorAll('.language-option').forEach(opt => {
-                    opt.addEventListener('click', () => {
-                        const lang = opt.dataset.lang;
+                // Language menu items
+                document.querySelectorAll('.language-dropdown-item').forEach(item => {
+                    item.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        const lang = item.dataset.lang;
                         setLanguage(lang);
-                        langDropdownMenu.classList.remove('show');
+                        updateLanguageFlags();
+                        closeAllMenus();
                     });
                 });
+            }
 
-                // Close when clicking outside
-                document.addEventListener('click', (e) => {
-                    if (!e.target.closest('.language-dropdown')) {
-                        langDropdownMenu.classList.remove('show');
+            // Currency dropdown handler
+            if (currencyBtn && currencyMenu) {
+                currencyBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const isOpen = currencyMenu.classList.contains('open');
+                    
+                    // Закрыть меню языка, если открыто
+                    if (languageMenu && languageMenu.classList.contains('open')) {
+                        languageMenu.classList.remove('open');
+                        languageBtn.setAttribute('aria-expanded', 'false');
+                        languageMenu.setAttribute('aria-hidden', 'true');
+                    }
+                    
+                    // Переключить меню валюты
+                    if (isOpen) {
+                        currencyMenu.classList.remove('open');
+                        currencyBtn.setAttribute('aria-expanded', 'false');
+                        currencyMenu.setAttribute('aria-hidden', 'true');
+                    } else {
+                        currencyMenu.classList.add('open');
+                        currencyBtn.setAttribute('aria-expanded', 'true');
+                        currencyMenu.setAttribute('aria-hidden', 'false');
                     }
                 });
+
+                // Currency menu items
+                document.querySelectorAll('.currency-dropdown-item').forEach(item => {
+                    item.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        const currency = item.dataset.currency;
+                        setCurrency(currency);
+                        updateCurrencyButtons();
+                        closeAllMenus();
+                    });
+                });
             }
+
+            // Logout button
+            const logoutBtn = document.getElementById('logout-btn');
+            if (logoutBtn) {
+                logoutBtn.addEventListener('click', async () => {
+                    await signOut(auth);
+                });
+            }
+
+            // Close menus on Escape
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') {
+                    closeAllMenus();
+                }
+            });
+
+            // Close menus on click outside
+            document.addEventListener('click', (e) => {
+                if (languageMenu && !languageMenu.contains(e.target) && !languageBtn.contains(e.target)) {
+                    languageMenu.classList.remove('open');
+                    languageBtn.setAttribute('aria-expanded', 'false');
+                    languageMenu.setAttribute('aria-hidden', 'true');
+                }
+                if (currencyMenu && !currencyMenu.contains(e.target) && !currencyBtn.contains(e.target)) {
+                    currencyMenu.classList.remove('open');
+                    currencyBtn.setAttribute('aria-expanded', 'false');
+                    currencyMenu.setAttribute('aria-hidden', 'true');
+                }
+            });
+
+            // Initialize
+            updateLanguageFlags();
+            updateCurrencyButtons();
+
+            // Spacebar to play/pause (radio player handlers are in main radio section)
+            document.addEventListener('keydown', (e) => {
+                if (e.code === 'Space' && e.target.tagName !== 'INPUT' && e.target.tagName !== 'TEXTAREA') {
+                    const radioPlayPauseBtn = document.getElementById('radio-play-pause-btn');
+                    if (radioPlayPauseBtn) {
+                        e.preventDefault();
+                        radioPlayPauseBtn.click();
+                    }
+                }
+            });
 
             onAuthStateChanged(auth, async (user) => {
                 if (user) {
@@ -4728,6 +5507,15 @@
                 if (tempEl) tempEl.textContent = temp;
                 if (cityEl) cityEl.textContent = data.name;
                 if (descEl) descEl.textContent = description;
+                
+                // Update compact weather widget
+                const tempCompactEl = document.getElementById('weather-temp-compact');
+                const cityCompactEl = document.getElementById('weather-city-compact');
+                if (tempCompactEl) tempCompactEl.textContent = temp + '°C';
+                if (cityCompactEl) {
+                    cityCompactEl.textContent = data.name;
+                    cityCompactEl.title = data.name;
+                }
                 // Format date and time using UTC offset (OpenWeatherMap returns offset in seconds from UTC)
                 if (datetimeEl) {
                     const now = new Date();
@@ -4764,13 +5552,21 @@
                     iconEl.innerHTML = `<svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor">${iconSvg}</svg>`;
                 }
 
-                showToast(`${translations[currentLang].weatherUpdated || 'Weather updated for'} ${data.name}`, 'success');
+                // Автозапуск попапа отключен
+                // showToast(`${translations[currentLang].weatherUpdated || 'Weather updated for'} ${data.name}`, 'success');
             } catch (e) {
                 console.error('Weather error:', e);
                 const tempEl = document.getElementById('weather-temp-new');
                 const descEl = document.getElementById('weather-desc-new');
                 if (tempEl) tempEl.textContent = '--';
                 if (descEl) descEl.textContent = translations[currentLang].weatherError || 'Error loading weather';
+                
+                // Update compact weather widget on error
+                const tempCompactEl = document.getElementById('weather-temp-compact');
+                const cityCompactEl = document.getElementById('weather-city-compact');
+                if (tempCompactEl) tempCompactEl.textContent = '--';
+                if (cityCompactEl) cityCompactEl.textContent = '—';
+                
                 showToast(translations[currentLang].weatherError || 'Error loading weather', 'error');
             }
         }
@@ -5030,7 +5826,8 @@
                 newsData = newsData.slice(0, 20);
 
             renderNews();
-                showToast(`${newsData.length} ${translations[currentLang].newsArticlesLoaded || 'news articles loaded'}`, 'success');
+                // Автозапуск попапа отключен
+                // showToast(`${newsData.length} ${translations[currentLang].newsArticlesLoaded || 'news articles loaded'}`, 'success');
             } catch (e) {
                 console.error('News fetch error:', e);
                 newsResults.innerHTML = `
@@ -5495,7 +6292,96 @@
             const chartLabels = sortedCategories.map(item => item[0]);
             const chartData = sortedCategories.map(item => item[1]);
             if (expensesChart) expensesChart.destroy();
-            expensesChart = new Chart(document.getElementById('expenses-chart').getContext('2d'), { type: 'bar', data: { labels: chartLabels, datasets: [{ label: `${translations[currentLang].chartLabel}`, data: chartData.map(amount => currentCurrency === 'USD' ? amount / exchangeRate : amount), backgroundColor: ['rgba(59,130,246,0.7)', 'rgba(239,68,68,0.7)', 'rgba(245,158,11,0.7)', 'rgba(16,185,129,0.7)', 'rgba(139,92,246,0.7)', 'rgba(236,72,153,0.7)', 'rgba(107,114,128,0.7)'], borderWidth: 1 }] }, options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true } }, plugins: { legend: { display: false } } } });
+            const computedStyle = getComputedStyle(document.documentElement);
+            const primaryColor = computedStyle.getPropertyValue('--primary').trim();
+            const goldColor = computedStyle.getPropertyValue('--gold-primary').trim();
+            const primaryRgb = computedStyle.getPropertyValue('--primary-rgb').trim();
+            const goldRgb = computedStyle.getPropertyValue('--gold-rgb').trim();
+            const fontFamily = computedStyle.getPropertyValue('font-family') || "'Poppins', -apple-system, BlinkMacSystemFont, sans-serif";
+            
+            expensesChart = new Chart(document.getElementById('expenses-chart').getContext('2d'), { 
+                type: 'bar', 
+                data: { 
+                    labels: chartLabels, 
+                    datasets: [{ 
+                        label: `${translations[currentLang].chartLabel}`, 
+                        data: chartData.map(amount => currentCurrency === 'USD' ? amount / exchangeRate : amount), 
+                        backgroundColor: [
+                            `rgba(${primaryRgb}, 0.7)`, 
+                            'rgba(239, 68, 68, 0.7)', 
+                            `rgba(${goldRgb}, 0.7)`, 
+                            'rgba(16, 185, 129, 0.7)', 
+                            'rgba(139, 92, 246, 0.7)', 
+                            'rgba(236, 72, 153, 0.7)', 
+                            'rgba(107, 114, 128, 0.7)'
+                        ], 
+                        borderColor: [
+                            `rgba(${primaryRgb}, 1)`, 
+                            'rgba(239, 68, 68, 1)', 
+                            `rgba(${goldRgb}, 1)`, 
+                            'rgba(16, 185, 129, 1)', 
+                            'rgba(139, 92, 246, 1)', 
+                            'rgba(236, 72, 153, 1)', 
+                            'rgba(107, 114, 128, 1)'
+                        ],
+                        borderWidth: 2
+                    }] 
+                }, 
+                options: { 
+                    responsive: true, 
+                    maintainAspectRatio: false,
+                    font: {
+                        family: fontFamily,
+                        size: 12,
+                        weight: '500'
+                    },
+                    scales: { 
+                        y: { 
+                            beginAtZero: true,
+                            ticks: {
+                                font: {
+                                    family: fontFamily,
+                                    size: 11
+                                },
+                                padding: 8
+                            },
+                            grid: {
+                                color: 'rgba(0, 0, 0, 0.05)',
+                                lineWidth: 1
+                            }
+                        },
+                        x: {
+                            ticks: {
+                                font: {
+                                    family: fontFamily,
+                                    size: 11
+                                },
+                                padding: 8
+                            },
+                            grid: {
+                                display: false
+                            }
+                        }
+                    }, 
+                    plugins: { 
+                        legend: { 
+                            display: true,
+                            position: 'top',
+                            align: 'center',
+                            labels: {
+                                font: {
+                                    family: fontFamily,
+                                    size: 12,
+                                    weight: '500'
+                                },
+                                padding: 12,
+                                usePointStyle: true,
+                                pointStyle: 'circle'
+                            }
+                        }
+                    } 
+                } 
+            });
         }
 
         function showToast(message, type = 'success') {
@@ -5697,13 +6583,11 @@
 
         function setCurrency(currency) {
             currentCurrency = currency; localStorage.setItem('currency', currency);
-            document.getElementById('currency-azn').classList.toggle('currency-btn-active', currency === 'AZN');
-            document.getElementById('currency-usd').classList.toggle('currency-btn-active', currency === 'USD');
+            // Update header currency button and dropdown
+            updateCurrencyButtons();
             document.querySelectorAll('.currency-symbol').forEach(el => el.textContent = currentCurrency);
             if (userId) { renderDebts(allDebts); renderRecurringExpenses(); renderExpenses(allExpenses); updateDashboard(); }
         }
-        document.getElementById('currency-azn').addEventListener('click', () => setCurrency('AZN'));
-        document.getElementById('currency-usd').addEventListener('click', () => setCurrency('USD'));
         setCurrency(currentCurrency);
 
         const authForm = document.getElementById('auth-form'); const authError = document.getElementById('auth-error');
@@ -5718,7 +6602,7 @@
             catch (error) { const t = translations[currentLang]; authError.textContent = { 'auth/invalid-email': t.authInvalidEmail, 'auth/email-already-in-use': t.authEmailInUse, 'auth/weak-password': t.authWeakPassword }[error.code] || t.authGenericError; }
         });
         document.getElementById('google-signin-btn')?.addEventListener('click', async () => { try { await signInWithPopup(auth, new GoogleAuthProvider()); } catch (error) { authError.textContent = translations[currentLang].authGenericError; } });
-        document.getElementById('logout-btn')?.addEventListener('click', async () => await signOut(auth));
+        // Logout is now handled in settings dropdown
 
         document.getElementById('app').addEventListener('click', async (e) => {
             const target = e.target; const id = target.dataset.id || target.closest('[data-id]')?.dataset.id; if (!id) return;
@@ -5750,43 +6634,71 @@
         const pauseIcon = document.getElementById('pause-icon');
         const equalizerBars = document.querySelectorAll('.equalizer-bar');
         const volumeSlider = document.getElementById('radio-volume');
+        const radioLabel = document.getElementById('radio-label');
+        const radioLabelWrapper = document.querySelector('.radio-label-wrapper');
 
         let isPlaying = false;
         let equalizerInterval;
 
+        // Check if radio label overflows and enable marquee
+        function checkRadioLabelOverflow() {
+            if (!radioLabel || !radioLabelWrapper || window.innerWidth <= 480) return;
+            
+            const wrapperWidth = radioLabelWrapper.clientWidth;
+            const labelWidth = radioLabel.scrollWidth;
+            
+            if (labelWidth > wrapperWidth) {
+                radioLabel.classList.add('marquee');
+            } else {
+                radioLabel.classList.remove('marquee');
+            }
+        }
+
+        // Check on load and resize
+        if (radioLabel && radioLabelWrapper) {
+            setTimeout(checkRadioLabelOverflow, 100);
+            window.addEventListener('resize', checkRadioLabelOverflow);
+            // Also check when language changes
+            const observer = new MutationObserver(checkRadioLabelOverflow);
+            observer.observe(radioLabel, { childList: true, characterData: true, subtree: true });
+        }
+
         function startEqualizer() {
-            // CSS animation handles it, but we can add extra randomness
             equalizerBars.forEach(bar => {
                 bar.classList.remove('paused');
             });
         }
 
         function stopEqualizer() {
-            if (equalizerInterval) {
-                clearInterval(equalizerInterval);
-                equalizerInterval = null;
-            }
             equalizerBars.forEach(bar => {
                 bar.classList.add('paused');
-                bar.style.height = '4px';
             });
         }
 
-        playPauseBtn.addEventListener('click', () => {
-            if (radioPlayer.paused) {
-                radioPlayer.play().catch(e => console.error('Radio play error:', e));
-                playIcon.classList.add('hidden');
-                pauseIcon.classList.remove('hidden');
-                startEqualizer();
-                isPlaying = true;
-            } else {
-                radioPlayer.pause();
-                playIcon.classList.remove('hidden');
-                pauseIcon.classList.add('hidden');
-                stopEqualizer();
-                isPlaying = false;
-            }
-        });
+        // Единый обработчик для радио - без двойных подписок
+        if (playPauseBtn && radioPlayer) {
+            playPauseBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                
+                if (radioPlayer.paused) {
+                    radioPlayer.play().catch(e => {
+                        console.error('Radio play error:', e);
+                        isPlaying = false;
+                    });
+                    playIcon.classList.add('hidden');
+                    pauseIcon.classList.remove('hidden');
+                    startEqualizer();
+                    isPlaying = true;
+                } else {
+                    radioPlayer.pause();
+                    playIcon.classList.remove('hidden');
+                    pauseIcon.classList.add('hidden');
+                    stopEqualizer();
+                    isPlaying = false;
+                }
+            });
+        }
 
         radioPlayer.addEventListener('ended', () => {
             playIcon.classList.remove('hidden');
@@ -6525,15 +7437,15 @@
             }
         });
 
-        // Show keyboard shortcuts hint on first load
-        if (!localStorage.getItem('keyboardShortcutsShown')) {
-            setTimeout(() => {
-                showToast(currentLang === 'ru' ? '💡 Используйте Ctrl+E/T/D/R для быстрых действий' :
-                    currentLang === 'az' ? '💡 Sürətli əməliyyatlar üçün Ctrl+E/T/D/R istifadə edin' :
-                        '💡 Use Ctrl+E/T/D/R for quick actions', 'success');
-                localStorage.setItem('keyboardShortcutsShown', 'true');
-            }, 3000);
-        }
+        // Show keyboard shortcuts hint on first load - ОТКЛЮЧЕНО
+        // if (!localStorage.getItem('keyboardShortcutsShown')) {
+        //     setTimeout(() => {
+        //         showToast(currentLang === 'ru' ? '💡 Используйте Ctrl+E/T/D/R для быстрых действий' :
+        //             currentLang === 'az' ? '💡 Sürətli əməliyyatlar üçün Ctrl+E/T/D/R istifadə edin' :
+        //                 '💡 Use Ctrl+E/T/D/R for quick actions', 'success');
+        //         localStorage.setItem('keyboardShortcutsShown', 'true');
+        //     }, 3000);
+        // }
 
         // ============================================
         // PERFORMANCE OPTIMIZATION - Debounce Helper
@@ -6559,50 +7471,69 @@
         }
 
         // Initialize Particles.js
-        if (typeof particlesJS !== 'undefined') {
-            // Определяем цвет частиц в зависимости от темы
-            const isDark = document.documentElement.classList.contains('dark');
-            const particleColor = isDark ? '#ffffff' : '#B8941F';
-            
-            particlesJS('particles-js', {
-                particles: {
-                    number: { value: 60, density: { enable: true, value_area: 800 } },
-                    color: { value: particleColor },
-                    shape: { type: 'circle' },
-                    opacity: { value: isDark ? 0.3 : 0.35, random: true },
-                    size: { value: isDark ? 2.5 : 3, random: true },
-                    line_linked: { 
-                        enable: true, 
-                        distance: 150, 
-                        color: particleColor, 
-                        opacity: isDark ? 0.2 : 0.25, 
-                        width: 1.5 
+        function initParticles() {
+            if (typeof particlesJS !== 'undefined') {
+                // Очищаем предыдущую инициализацию
+                const container = document.getElementById('background-animation');
+                if (container) {
+                    container.innerHTML = '';
+                }
+                
+                // Определяем цвет частиц в зависимости от темы
+                const isDark = document.documentElement.classList.contains('dark');
+                const particleColor = isDark ? '#ffffff' : '#B8941F';
+                
+                particlesJS('background-animation', {
+                    particles: {
+                        number: { value: 60, density: { enable: true, value_area: 800 } },
+                        color: { value: particleColor },
+                        shape: { type: 'circle' },
+                        opacity: { value: isDark ? 0.3 : 0.35, random: true },
+                        size: { value: isDark ? 2.5 : 3, random: true },
+                        line_linked: { 
+                            enable: true, 
+                            distance: 150, 
+                            color: particleColor, 
+                            opacity: isDark ? 0.2 : 0.25, 
+                            width: 1.5 
+                        },
+                        move: { 
+                            enable: true, 
+                            speed: 1.5, 
+                            direction: 'none', 
+                            random: true, 
+                            straight: false, 
+                            out_mode: 'out', 
+                            bounce: false 
+                        }
                     },
-                    move: { 
-                        enable: true, 
-                        speed: 1.5, 
-                        direction: 'none', 
-                        random: true, 
-                        straight: false, 
-                        out_mode: 'out', 
-                        bounce: false 
-                    }
-                },
-                interactivity: {
-                    detect_on: 'canvas',
-                    events: { 
-                        onhover: { enable: true, mode: 'grab' }, 
-                        onclick: { enable: true, mode: 'push' }, 
-                        resize: true 
+                    interactivity: {
+                        detect_on: 'canvas',
+                        events: { 
+                            onhover: { enable: true, mode: 'grab' }, 
+                            onclick: { enable: true, mode: 'push' }, 
+                            resize: true 
+                        },
+                        modes: { 
+                            grab: { distance: 140, line_linked: { opacity: 0.6 } },
+                            push: { particles_nb: 4 } 
+                        }
                     },
-                    modes: { 
-                        grab: { distance: 140, line_linked: { opacity: 0.6 } },
-                        push: { particles_nb: 4 } 
-                    }
-                },
-                retina_detect: true
-            });
+                    retina_detect: true
+                });
+            }
         }
+        
+        // Инициализация при загрузке
+        initParticles();
+        
+        // Переинициализация при смене темы
+        const observer = new MutationObserver(() => {
+            if (document.documentElement.classList.contains('dark') || !document.documentElement.classList.contains('dark')) {
+                setTimeout(initParticles, 100);
+            }
+        });
+        observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
 
         console.log('✨ ORDINA CANDY loaded successfully!');
         console.log('🎨 Ultra-modern glassmorphism design activated');
@@ -6611,4 +7542,7 @@
 
 </body>
 
+</html>
+</html>
+</html>
 </html>
