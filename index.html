@@ -1,48 +1,30 @@
 <!DOCTYPE html>
 <html lang="ru">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ORDINA ✨ Ultra-Modern Command Center</title>
-
-    <!-- SEO Meta Tags -->
-    <meta name="description"
-        content="ORDINA - Premium personal finance and life management suite. Track expenses, manage debts, organize tasks, and stay informed with integrated weather and news.">
-    <meta name="keywords"
-        content="finance, budget, expense tracker, debt management, task manager, calendar, personal assistant">
-    <meta name="author" content="ORDINA">
-
-    <!-- Open Graph / Social Media -->
-    <meta property="og:type" content="website">
-    <meta property="og:title" content="ORDINA • Personal Command Center">
-    <meta property="og:description"
-        content="Manage your life with ease - Premium financial suite with expense tracking, debt management, and productivity tools">
-    <meta property="og:site_name" content="ORDINA">
-
-    <!-- Favicon -->
-    <link rel="icon" type="image/png" sizes="32x32" href="https://raw.githubusercontent.com/Kenny-Corleone/ORDINA.github.io/main/logo%20ORDINA.png">
-    <link rel="icon" type="image/png" sizes="64x64" href="https://raw.githubusercontent.com/Kenny-Corleone/ORDINA.github.io/main/logo%20ORDINA.png">
-    <link rel="icon" type="image/png" sizes="128x128" href="https://raw.githubusercontent.com/Kenny-Corleone/ORDINA.github.io/main/logo%20ORDINA.png">
-    <link rel="apple-touch-icon" href="https://raw.githubusercontent.com/Kenny-Corleone/ORDINA.github.io/main/logo%20ORDINA.png">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"
-        integrity="sha512-a6XN0PbgXCEgKLF0hoF3eWD1QZ3XkMtIOZB8H+aVRC6LOhIPltoMrR0pbw/I8G5pWqvtgiIUbBs7P1d3e2xF3g=="
-        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdn.tailwindcss.com/3.4.1"></script>
-    <script>
-        // Отключаем предупреждение о production для Tailwind Play CDN
-        tailwind.config = {
-            important: true,
-            corePlugins: {
-                preflight: true,
-            }
-        }
-    </script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="description" content="ORDINA - Premium personal finance and life management suite. Track expenses, manage debts, organize tasks, and stay informed with integrated weather and news.">
+<meta name="keywords" content="finance,budget,expense tracker,debt management,task manager,calendar,personal assistant">
+<meta name="author" content="ORDINA">
+<meta property="og:type" content="website">
+<meta property="og:title" content="ORDINA • Personal Command Center">
+<meta property="og:description" content="Manage your life with ease - Premium financial suite with expense tracking, debt management, and productivity tools">
+<meta property="og:site_name" content="ORDINA">
+<title>ORDINA ✨ Ultra-Modern Command Center</title>
+<link rel="icon" type="image/png" sizes="16x16" href="./favicon-16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="./favicon-32.png">
+<link rel="apple-touch-icon" sizes="180x180" href="./favicon-180.png">
+<meta name="theme-color" content="#0B0F1A">
+<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="dns-prefetch" href="https://www.gstatic.com">
+<link rel="dns-prefetch" href="https://api.openweathermap.org">
+<link rel="dns-prefetch" href="https://stream.zeno.fm">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet"></noscript>
     <style>
         * {
             margin: 0;
@@ -92,24 +74,24 @@
             --primary-color: var(--primary);
             --secondary-color: var(--secondary);
             --accent-color: var(--accent);
-            --text-primary: #0f172a;
-            --text-secondary: #475569;
-            --bg-primary: #ffffff;
-            --bg-secondary: #f8fafc;
-            --bg-tertiary: #f1f5f9;
-            --border-color: rgba(15, 23, 42, 0.12);
-            --border-hover: rgba(15, 23, 42, 0.2);
-            --shadow: 0 4px 12px rgba(15, 23, 42, 0.08);
-            --shadow-hover: 0 8px 24px rgba(15, 23, 42, 0.12);
-            --shadow-gold: 0 8px 32px rgba(var(--primary-rgb), 0.2);
+            --text-primary: #1a1a1a;
+            --text-secondary: #4a5568;
+            --bg-primary: #f5f3f0;
+            --bg-secondary: #ebe8e3;
+            --bg-tertiary: #e0ddd8;
+            --border-color: rgba(74, 85, 104, 0.2);
+            --border-hover: rgba(74, 85, 104, 0.35);
+            --shadow: 0 4px 12px rgba(26, 26, 26, 0.1);
+            --shadow-hover: 0 8px 24px rgba(26, 26, 26, 0.15);
+            --shadow-gold: 0 8px 32px rgba(var(--primary-rgb), 0.25);
             
             /* Unified Glassmorphism Tokens */
             --glass-blur: blur(20px) saturate(180%);
-            --glass-bg-light: rgba(255, 255, 255, 0.95);
+            --glass-bg-light: rgba(245, 243, 240, 0.95);
             --glass-bg-dark: rgba(15, 23, 42, 0.4);
-            --glass-border-light: rgba(var(--gold-rgb), 0.15);
+            --glass-border-light: rgba(74, 85, 104, 0.25);
             --glass-border-dark: rgba(255, 255, 255, 0.1);
-            --glass-shadow-light: 0 4px 24px 0 rgba(0, 0, 0, 0.04);
+            --glass-shadow-light: 0 4px 24px 0 rgba(26, 26, 26, 0.12);
             --glass-shadow-dark: 0 8px 32px 0 rgba(0, 0, 0, 0.6);
             
             /* Legacy glassmorphism (deprecated, use above) */
@@ -236,7 +218,7 @@
         }
 
         .stat-card:hover {
-            transform: translateY(-6px) scale(1.01);
+            transform: translate3d(0,-4px,0) scale(1.01);
             box-shadow: 0 12px 40px rgba(var(--gold-rgb), 0.15);
             border-color: rgba(var(--gold-rgb), 0.3);
         }
@@ -413,7 +395,7 @@
 
         body {
             font-family: 'Poppins', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: linear-gradient(135deg, #ffffff 0%, #faf8f5 20%, #f5f1ea 40%, #f0ebe0 60%, #faf8f5 80%, #ffffff 100%);
+            background: linear-gradient(135deg, #f5f3f0 0%, #f0ede8 20%, #ebe8e3 40%, #e6e3de 60%, #f0ede8 80%, #f5f3f0 100%);
             background-size: 400% 400%;
             animation: gradientShift 30s ease infinite;
             color: var(--text-primary);
@@ -851,7 +833,7 @@
             outline: none;
             border-color: rgba(var(--gold-rgb), 0.5);
             box-shadow: 0 0 0 4px rgba(var(--gold-rgb), 0.1);
-            background: white;
+            background: var(--bg-primary);
         }
         
         .dark .modern-search input:focus {
@@ -891,8 +873,8 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            background: rgba(255, 255, 255, 0.8);
-            border: 1px solid rgba(212, 175, 55, 0.15);
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
             cursor: pointer;
             transition: all 0.3s ease;
             position: relative;
@@ -904,10 +886,10 @@
         }
         
         .icon-btn:hover {
-            background: white;
-            border-color: rgba(212, 175, 55, 0.3);
+            background: var(--bg-secondary);
+            border-color: var(--border-hover);
             transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(212, 175, 55, 0.15);
+            box-shadow: 0 4px 12px rgba(26, 26, 26, 0.15);
         }
         
         .dark .icon-btn:hover {
@@ -938,8 +920,8 @@
             gap: 8px;
             padding: 6px 12px 6px 6px;
             border-radius: 12px;
-            background: rgba(255, 255, 255, 0.8);
-            border: 1px solid rgba(212, 175, 55, 0.15);
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
             cursor: pointer;
             transition: all 0.3s ease;
         }
@@ -950,9 +932,9 @@
         }
         
         .profile-btn:hover {
-            background: white;
-            border-color: rgba(212, 175, 55, 0.3);
-            box-shadow: 0 4px 12px rgba(212, 175, 55, 0.15);
+            background: var(--bg-secondary);
+            border-color: var(--border-hover);
+            box-shadow: 0 4px 12px rgba(26, 26, 26, 0.15);
         }
         
         .profile-avatar {
@@ -977,40 +959,43 @@
             height: auto !important;
         }
 
-        img[alt="ORDINA Logo"]:hover {
+        img[alt="ORDINA Logo"]:hover:not(.header-logo):not(#header-logo) {
             filter: drop-shadow(0 25px 60px rgba(212, 175, 55, 0.7));
             transform: scale(1.05);
         }
 
-        .dark img[alt="ORDINA Logo"] {
+        .dark img[alt="ORDINA Logo"]:not(.header-logo):not(#header-logo) {
             filter: brightness(0) invert(1) drop-shadow(0 20px 50px rgba(212, 175, 55, 0.7));
         }
 
-        .dark img[alt="ORDINA Logo"]:hover {
+        .dark img[alt="ORDINA Logo"]:hover:not(.header-logo):not(#header-logo) {
             filter: brightness(0) invert(1) drop-shadow(0 25px 60px rgba(212, 175, 55, 0.9));
             transform: scale(1.05);
+        }
+
+        /* Header logo hover - no transform */
+        .header-logo-wrapper img:hover,
+        #header-logo:hover,
+        .header-logo:hover {
+            transform: none !important;
         }
 
         /* Защита: правила для dark mode не должны влиять на размеры логотипа в хедере */
         .dark .header-logo-wrapper img[alt="ORDINA Logo"],
         .dark #header-logo,
         .dark .header-logo {
-            height: auto !important;
-            max-height: calc((clamp(44px, 4.4vw, 52px) - clamp(4px, 0.8vw, 6px) * 2) * 1.7568) !important;
-            min-height: 0 !important;
-            transform: none;
-            transform-origin: center;
+            height: 100% !important;
+            max-height: 100% !important;
+            transform: none !important;
         }
 
         /* Responsive logo sizes - увеличенный логотип в пределах колонки */
         .header-logo-wrapper img[alt="ORDINA Logo"],
         #header-logo,
         .header-logo {
-            height: auto !important;
-            max-height: calc((clamp(44px, 4.4vw, 52px) - clamp(4px, 0.8vw, 6px) * 2) * 1.7568) !important;
-            min-height: 0 !important;
-            transform: none;
-            transform-origin: center;
+            height: 100% !important;
+            max-height: 100% !important;
+            transform: none !important;
         }
 
         @media (max-width: 400px) {
@@ -1268,6 +1253,21 @@
             }
         }
 
+        /* Premium Light Mode Surfaces */
+        .bg-white,
+        .bg-gray-50,
+        .bg-gray-100 {
+            background: var(--bg-primary) !important;
+        }
+
+        .bg-gray-200 {
+            background: var(--bg-secondary) !important;
+        }
+
+        .bg-gray-300 {
+            background: var(--bg-tertiary) !important;
+        }
+
         /* Premium Dark Mode - Luxury Edition */
         .dark body {
             background: linear-gradient(135deg, #0A1628 0%, #1A2942 50%, #0d1b2a 100%) !important;
@@ -1286,6 +1286,18 @@
             background: linear-gradient(135deg, rgba(26, 41, 66, 0.98) 0%, rgba(10, 22, 40, 0.95) 100%) !important;
         }
 
+        /* Premium Light Mode Text */
+        .text-gray-900,
+        .text-gray-800,
+        .text-gray-700 {
+            color: var(--text-primary) !important;
+        }
+
+        .text-gray-600,
+        .text-gray-500 {
+            color: var(--text-secondary) !important;
+        }
+
         /* Premium Dark Text */
         .dark .text-gray-900,
         .dark .text-gray-800,
@@ -1301,6 +1313,14 @@
 
         .dark .text-gray-300 {
             color: #94a3b8 !important;
+        }
+
+        /* Premium Light Mode Borders */
+        .border-gray-100,
+        .border-gray-200,
+        .border-gray-300,
+        .border-gray-400 {
+            border-color: var(--border-color) !important;
         }
 
         /* Premium Dark Borders */
@@ -1698,30 +1718,30 @@
 
         /* B. Column 1: Logo */
         .header-logo-wrapper {
-            width: 100%;
-            max-width: 100%;
-            height: 100%;
+            width: 120px;
+            height: 56.21px;
             display: flex;
             align-items: center;
-            justify-content: center;
+            justify-content: flex-start;
+            padding: 0;
+            overflow: hidden;
             flex-shrink: 0;
-            min-width: 0;
         }
 
-        /* Fluid Logo Scaling - No Fixed Sizes */
+        /* Logo Image - Fixed Size */
         .header-logo-wrapper img,
         #header-logo,
-            .header-logo,
+        .header-logo,
         #fixed-header img[alt="ORDINA Logo"] {
-            display: block;
-            height: auto;
-            max-height: calc((clamp(44px, 4.4vw, 52px) - clamp(4px, 0.8vw, 6px) * 2) * 1.7568);
+            height: 100%;
             width: auto;
-            max-width: 100%;
+            max-height: 100%;
             object-fit: contain;
+            image-rendering: -webkit-optimize-contrast;
+            transform: none !important;
+            display: block;
             flex-shrink: 0;
-            align-self: center;
-            margin: 0 auto;
+            margin: 0;
         }
 
         /* C. Column 2: Motto (Slogan) */
@@ -1889,8 +1909,8 @@
         .radio-play-btn {
             width: clamp(22px, 2.4vw, 24px);
             height: clamp(22px, 2.4vw, 24px);
-            min-width: var(--hit-target-min);
-            min-height: var(--hit-target-min);
+            min-width: 22px;
+            min-height: 22px;
         }
 
         @media (max-width: 480px) {
@@ -3389,7 +3409,7 @@
     <!-- Particles Background -->
     <div id="background-animation"></div>
 
-    <div id="loading-overlay" class="fixed inset-0 bg-white bg-opacity-75 flex items-center justify-center z-50" style="z-index: 10000;">
+    <div id="loading-overlay" class="fixed inset-0 flex items-center justify-center z-50" style="z-index: 10000; background: var(--bg-primary); opacity: 0.9;">
         <div class="text-center">
             <svg class="animate-spin h-10 w-10 text-blue-600 mx-auto" xmlns="http://www.w3.org/2000/svg" fill="none"
                 viewBox="0 0 24 24">
@@ -3417,7 +3437,8 @@
             </div>
             <div class="text-center">
                 <div class="mb-4">
-                    <img src="https://raw.githubusercontent.com/Kenny-Corleone/ORDINA.github.io/main/logo%20ORDINA.png"
+                    <img src="./ordina.png"
+                        srcset="./ordina.png 1x, ./ordina@2x.png 2x"
                         alt="ORDINA Logo" class="mx-auto h-48 sm:h-56 w-auto drop-shadow-lg">
                 </div>
                 <h2 class="text-base sm:text-lg font-bold text-gray-800 dark:text-gray-200 mb-1" data-i18n="authTitle">
@@ -3459,7 +3480,7 @@
                                 class="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">Email</label>
                             <input id="email-address" name="email" type="email" autocomplete="email" required
                                 class="w-full px-2.5 py-2 border border-gray-300 dark:border-gray-600 rounded-xl text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 text-sm bg-white dark:bg-gray-700"
-                                placeholder="Введите ваш email">
+                                data-placeholder-i18n="placeholderEmail">
                         </div>
                         <div>
                             <label for="password"
@@ -3467,7 +3488,7 @@
                             <input id="password" name="password" type="password" autocomplete="current-password"
                                 required
                                 class="w-full px-2.5 py-2 border border-gray-300 dark:border-gray-600 rounded-xl text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 text-sm bg-white dark:bg-gray-700"
-                                placeholder="Введите пароль">
+                                data-placeholder-i18n="placeholderPassword">
                         </div>
                     </div>
                     <p id="auth-error" class="text-red-500 text-xs text-center"></p>
@@ -3491,8 +3512,9 @@
             <div id="header-grid-container" class="header-grid-container">
                 <!-- Column 1: Logo -->
                 <div class="header-logo-wrapper">
-                    <img src="https://raw.githubusercontent.com/Kenny-Corleone/ORDINA.github.io/main/logo%20ORDINA.png"
-                        alt="ORDINA Logo" id="header-logo" class="header-logo">
+                    <img src="./ordina.png"
+                        srcset="./ordina.png 1x, ./ordina@2x.png 2x"
+                        width="56" height="56" alt="Ordina logo" id="header-logo" class="header-logo">
                 </div>
 
                 <!-- Column 2: Motto (Slogan) -->
@@ -4194,7 +4216,7 @@
                             class="bg-gray-50 border border-gray-300 rounded-lg w-full p-2.5"></div>
                     <div class="mb-4"><label for="event-birthday-year" class="block mb-2 text-sm font-medium"
                             data-i18n="birthYear">Год рождения (опционально)</label><input type="number"
-                            id="event-birthday-year" placeholder="1990"
+                            id="event-birthday-year" data-placeholder-i18n="placeholderBirthYear"
                             class="bg-gray-50 border border-gray-300 rounded-lg w-full p-2.5"></div>
                 </div>
                 <div id="event-fields-meeting" class="event-category-fields hidden">
@@ -4237,7 +4259,7 @@
         <div class="p-6">
             <h3 class="text-xl font-semibold mb-4" data-i18n="manageCategoriesTitle">Управление категориями</h3>
             <form id="category-form" class="mb-4">
-                <div class="flex gap-2"><input type="text" id="category-name" placeholder="Новая категория"
+                <div class="flex gap-2"><input type="text" id="category-name" data-placeholder-i18n="placeholderNewCategory"
                         class="flex-grow bg-gray-50 border border-gray-300 rounded-lg w-full p-2.5" required><button
                         type="submit" class="bg-blue-600 text-white px-5 py-2.5 rounded-lg hover:bg-blue-700"
                         data-i18n="add">Добавить</button></div>
@@ -4257,11 +4279,11 @@
                     d="M10 11V6m0 8h.01M19 10a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
             </svg>
             <p id="confirm-modal-text" class="mb-5 text-lg font-normal text-gray-600"></p>
-            <button id="confirm-modal-yes" type="button"
+            <button id="confirm-modal-yes" type="button" data-i18n="confirmYes"
                 class="text-white bg-red-600 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center me-2">
                 Да, удалить
             </button>
-            <button id="confirm-modal-no" type="button"
+            <button id="confirm-modal-no" type="button" data-i18n="confirmNo"
                 class="text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-200 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10">
                 Нет, отмена
             </button>
@@ -4273,6 +4295,7 @@
 
 
     <script type="module" defer>
+        performance.mark('script-start');
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import {
@@ -4297,12 +4320,12 @@
             auth = getAuth(app);
         } catch (e) {
             console.error("Firebase initialization error:", e);
-            document.getElementById('loading-overlay').classList.add('hidden');
-            document.getElementById('app').innerHTML = `<div class="p-4 text-center text-red-500">
-                <h1 class="text-2xl font-bold">Ошибка конфигурации Firebase</h1>
-                <p>Пожалуйста, убедитесь, что вы правильно вставили ваш <b>firebaseConfig</b> в HTML-файл.</p>
-            </div>`;
+            const lo = getCached('loading-overlay');
+            if (lo) lo.classList.add('hidden');
+            const appEl = getCached('app');
+            if (appEl) appEl.innerHTML = `<div class="p-4 text-center text-red-500"><h1 class="text-2xl font-bold" data-i18n="firebaseConfigError">Ошибка конфигурации Firebase</h1><p data-i18n="firebaseConfigErrorDesc">Пожалуйста, убедитесь, что вы правильно вставили ваш <b>firebaseConfig</b> в HTML-файл.</p></div>`;
         }
+        performance.mark('firebase-init');
 
         let userId = null;
         let currentMonthId;
@@ -4322,10 +4345,38 @@
         let unsubscribes = [];
         let expensesChart = null;
         let dateTimeInterval = null;
+        
+        // DOM cache
+        const $ = (id) => document.getElementById(id);
+        const $$ = (sel) => document.querySelectorAll(sel);
+        const $cache = {};
+        const getCached = (id) => $cache[id] || ($cache[id] = $(id));
 
-        const translations = {
-            ru: {
-                appTitle: "ORDINA", appSubtitle: "Управляй своей жизнью с легкостью",
+        // Initialize translations object with empty structure
+        let translations = { ru: {}, en: {}, az: {} };
+        
+        // Load translations from JSON files
+        async function loadTranslations() {
+            try {
+                const [ruRes, enRes, azRes] = await Promise.all([
+                    fetch('locale-ru.json'),
+                    fetch('locale-en.json'),
+                    fetch('locale-az.json')
+                ]);
+                const ru = await ruRes.json();
+                const en = await enRes.json();
+                const az = await azRes.json();
+                translations = { ru, en, az };
+                // Apply translations immediately if language is already set
+                if (currentLang) {
+                    applyDynamicTranslations();
+                }
+            } catch (error) {
+                console.error('Error loading translations, using fallback:', error);
+                // Fallback to inline translations if JSON files fail
+                translations = {
+                    ru: {
+                        appTitle: "ORDINA", appSubtitle: "Управляй своей жизнью с легкостью",
                 tabDashboard: "Сводка", tabDebts: "Долги", tabRecurringExpenses: "Ежемесячные расходы", tabMonthlyExpenses: "Расходы месяца", tabTasks: "Список задач", tabCalendar: "Календарь",
                 dashboardTitle: "Сводка за месяц", loading: "Загрузка данных...",
                 dashRecurringPaid: "Ежемесячные (оплачено)", dashRecurringRemaining: "Ежемесячные (осталось)", dashMonthlyExpenses: "Расходы за месяц", dashTotalDebt: "Остаток общего долга", dashTopCategories: "Топ категорий расходов",
@@ -4669,9 +4720,16 @@
                 newsArticlesLoaded: "xəbər yükləndi",
                 newsError: "Xəbərlərin yüklənməsində xəta",
                 tabPayments: "Ödənişlər",
+                    }
+                };
             }
-        };
+        }
+
+        // Initialize translations - will be loaded asynchronously
         let currentLang = localStorage.getItem('appLanguage') || 'ru';
+        
+        // Load translations immediately (non-blocking)
+        loadTranslations().catch(err => console.error('Failed to load translations:', err));
 
         function getTodayISOString() {
             const today = new Date();
@@ -4708,51 +4766,58 @@
         }
 
         function applyDynamicTranslations() {
-            // textContent translations
-            document.querySelectorAll('[data-i18n]').forEach(el => {
-                // Пропускаем элементы меню языков (они содержат только флаги)
-                if (el.closest('#lang-menu') || el.classList.contains('language-dropdown-item') || el.classList.contains('flag')) {
-                    return;
-                }
+            const t = translations[currentLang];
+            if (!t) return;
+            
+            // textContent translations - use cached selectors
+            $$('[data-i18n]').forEach(el => {
+                if (el.closest('#lang-menu') || el.classList.contains('language-dropdown-item') || el.classList.contains('flag')) return;
                 const key = el.dataset.i18n;
-                if (translations[currentLang][key]) el.textContent = translations[currentLang][key];
+                if (t[key]) el.textContent = t[key];
             });
-            // placeholders
-            const weatherCityInputEl = document.getElementById('weather-city-input');
-            if (weatherCityInputEl) weatherCityInputEl.placeholder = translations[currentLang].weatherCityPlaceholder || '';
-            const weatherSearchInputEl = document.getElementById('weather-search-input');
-            if (weatherSearchInputEl && translations[currentLang].weatherCitySearchPlaceholder) {
-                weatherSearchInputEl.placeholder = translations[currentLang].weatherCitySearchPlaceholder;
-            }
-            const locationBtn = document.getElementById('weather-location-btn');
-            if (locationBtn) locationBtn.title = translations[currentLang].weatherGeoTitle || '';
             
-            // News widget translations
-            const newsSearchInput = document.getElementById('news-search');
-            if (newsSearchInput) {
-                newsSearchInput.placeholder = translations[currentLang].newsSearchPlaceholder || 'Search...';
-            }
+            // Placeholder translations
+            $$('[data-placeholder-i18n]').forEach(el => {
+                const key = el.dataset.placeholderI18n;
+                if (t[key]) el.placeholder = t[key];
+            });
             
-            const newsCategorySelect = document.getElementById('news-category');
-            if (newsCategorySelect) {
-                const options = newsCategorySelect.querySelectorAll('option[data-i18n-option]');
-                options.forEach(opt => {
+            // Legacy placeholders - use cached
+            const wc = getCached('weather-city-input');
+            if (wc && t.weatherCityPlaceholder) wc.placeholder = t.weatherCityPlaceholder;
+            const ws = getCached('weather-search-input');
+            if (ws && t.weatherCitySearchPlaceholder) ws.placeholder = t.weatherCitySearchPlaceholder;
+            const loc = getCached('weather-location-btn');
+            if (loc && t.weatherGeoTitle) loc.title = t.weatherGeoTitle;
+            
+            const ns = getCached('news-search');
+            if (ns && t.newsSearchPlaceholder) ns.placeholder = t.newsSearchPlaceholder;
+            
+            const ncs = getCached('news-category');
+            if (ncs) {
+                ncs.querySelectorAll('option[data-i18n-option]').forEach(opt => {
                     const key = opt.dataset.i18nOption;
-                    if (translations[currentLang][key]) {
-                        const emoji = opt.textContent.match(/^[^\w\s]+/)?.[0] || '';
-                        opt.textContent = emoji + translations[currentLang][key];
+                    if (t[key]) {
+                        // Используем перевод напрямую, так как он уже содержит эмодзи
+                        opt.textContent = t[key];
                     }
                 });
             }
             
-            const newsRefreshBtn = document.getElementById('news-refresh');
-            if (newsRefreshBtn) {
-                newsRefreshBtn.title = translations[currentLang].newsRefresh || 'Refresh';
-            }
+            const nrb = getCached('news-refresh');
+            if (nrb && t.newsRefresh) nrb.title = t.newsRefresh;
         }
 
         function setLanguage(lang) {
-            if (!translations[lang]) return;
+            if (!translations[lang] || Object.keys(translations[lang]).length === 0) {
+                // If translations not loaded yet, wait a bit and try again
+                setTimeout(() => {
+                    if (translations[lang] && Object.keys(translations[lang]).length > 0) {
+                        setLanguage(lang);
+                    }
+                }, 100);
+                return;
+            }
             currentLang = lang;
             localStorage.setItem('appLanguage', lang);
             document.documentElement.lang = lang;
@@ -4886,7 +4951,16 @@
             }
             if (datetimeEl) {
                 updateDateTime();
-                setInterval(updateDateTime, 60000); // Обновление каждые 60 секунд
+                let lastUpdate = Date.now();
+                const updateLoop = () => {
+                    const now = Date.now();
+                    if (now - lastUpdate >= 60000) {
+                        updateDateTime();
+                        lastUpdate = now;
+                    }
+                    requestAnimationFrame(updateLoop);
+                };
+                requestAnimationFrame(updateLoop);
             }
 
             // Language & Currency Dropdowns - NEW COMPACT VERSION
@@ -5025,6 +5099,10 @@
                     calendarDate = new Date(todayISO + 'T00:00:00');
 
                     await setupDefaultData(user);
+                    // Ensure translations are loaded
+                    if (!translations.ru || !translations.en || !translations.az) {
+                        await loadTranslations();
+                    }
                     showApp();
                     setupCollections(todayISO);
                     await migrateCleanDuplicateTasks();
@@ -5688,54 +5766,125 @@
             return langSources[category] || langSources['all'] || [];
         }
 
-        // Парсинг RSS через бесплатный сервис
-        async function parseRSSFeed(url) {
-            try {
-                // Используем CORS proxy для обхода ограничений
-                const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(url)}`;
-                const res = await fetch(proxyUrl);
-                if (!res.ok) throw new Error('RSS fetch failed');
+        // Список альтернативных CORS прокси для надежности (в порядке приоритета)
+        const CORS_PROXIES = [
+            (url) => `https://api.allorigins.win/get?url=${encodeURIComponent(url)}`,
+            (url) => `https://corsproxy.io/?${encodeURIComponent(url)}`,
+            (url) => `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(url)}`,
+            (url) => `https://thingproxy.freeboard.io/fetch/${encodeURIComponent(url)}`,
+            (url) => `https://cors-anywhere.herokuapp.com/${encodeURIComponent(url)}`
+        ];
+
+        // Функция с таймаутом для запросов
+        function fetchWithTimeout(url, timeout = 12000) {
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), timeout);
+            
+            return fetch(url, { 
+                signal: controller.signal,
+                cache: 'no-cache'
+            }).finally(() => clearTimeout(timeoutId));
+        }
+
+        // Парсинг RSS через бесплатный сервис с retry и несколькими прокси
+        async function parseRSSFeed(url, retries = 2) {
+            let lastError = null;
+            
+            // Пробуем каждый прокси по очереди (быстрее переключаемся между прокси)
+            for (let proxyIndex = 0; proxyIndex < CORS_PROXIES.length; proxyIndex++) {
+                const proxyFn = CORS_PROXIES[proxyIndex];
                 
-                const data = await res.json();
-                const xmlText = data.contents;
-                const parser = new DOMParser();
-                const xmlDoc = parser.parseFromString(xmlText, 'text/xml');
-                
-                const items = xmlDoc.querySelectorAll('item');
-                const articles = [];
-                
-                items.forEach(item => {
-                    const title = item.querySelector('title')?.textContent || '';
-                    const desc = item.querySelector('description')?.textContent || '';
-                    const link = item.querySelector('link')?.textContent || '';
-                    const pubDate = item.querySelector('pubDate')?.textContent || '';
-                    
-                    // Извлекаем изображение из медиа-контента или описания
-                    let image = '';
-                    const mediaContent = item.querySelector('media\\:content, content');
-                    if (mediaContent && mediaContent.getAttribute('url')) {
-                        image = mediaContent.getAttribute('url');
-            } else {
-                        const imgMatch = desc.match(/<img[^>]+src="([^"]+)"/);
-                        if (imgMatch) image = imgMatch[1];
+                // Пробуем 1-2 раза с одним прокси (меньше попыток = быстрее переключение)
+                for (let attempt = 0; attempt < retries; attempt++) {
+                    try {
+                        const proxyUrl = proxyFn(url);
+                        const res = await fetchWithTimeout(proxyUrl, 10000);
+                        
+                        if (!res.ok) {
+                            throw new Error(`HTTP ${res.status}`);
+                        }
+                        
+                        // Пробуем получить данные в разных форматах
+                        let finalXml = null;
+                        const contentType = res.headers.get('content-type') || '';
+                        
+                        if (contentType.includes('application/json')) {
+                            const data = await res.json();
+                            finalXml = data.contents || data.content || data;
+                        } else if (contentType.includes('text/xml') || contentType.includes('application/xml')) {
+                            finalXml = await res.text();
+                        } else {
+                            // Пробуем как JSON, если не получилось - как текст
+                            try {
+                                const data = await res.json();
+                                finalXml = data.contents || data.content || data;
+                            } catch {
+                                finalXml = await res.text();
+                            }
+                        }
+                        
+                        if (!finalXml || (typeof finalXml === 'string' && finalXml.trim().length === 0)) {
+                            throw new Error('Empty response');
+                        }
+                        
+                        const parser = new DOMParser();
+                        const xmlDoc = parser.parseFromString(finalXml, 'text/xml');
+                        
+                        // Проверяем на ошибки парсинга
+                        const parseError = xmlDoc.querySelector('parsererror');
+                        if (parseError) {
+                            throw new Error('XML parse error');
+                        }
+                        
+                        const items = xmlDoc.querySelectorAll('item');
+                        const articles = [];
+                        
+                        if (items.length === 0) {
+                            throw new Error('No items found');
+                        }
+                        
+                        items.forEach(item => {
+                            const title = item.querySelector('title')?.textContent || '';
+                            const desc = item.querySelector('description')?.textContent || '';
+                            const link = item.querySelector('link')?.textContent || '';
+                            const pubDate = item.querySelector('pubDate')?.textContent || '';
+                            
+                            // Извлекаем изображение из медиа-контента или описания
+                            let image = '';
+                            const mediaContent = item.querySelector('media\\:content, content');
+                            if (mediaContent && mediaContent.getAttribute('url')) {
+                                image = mediaContent.getAttribute('url');
+                            } else {
+                                const imgMatch = desc.match(/<img[^>]+src="([^"]+)"/);
+                                if (imgMatch) image = imgMatch[1];
+                            }
+                            
+                            articles.push({
+                                title: title.replace(/<[^>]*>/g, '').trim(),
+                                desc: desc.replace(/<[^>]*>/g, '').trim().substring(0, 200),
+                                image: image,
+                                url: link,
+                                source: url.split('/')[2]?.replace('www.', '') || 'News',
+                                publishedAt: pubDate,
+                                categories: []
+                            });
+                        });
+                        
+                        if (articles.length > 0) {
+                            return articles;
+                        }
+                    } catch (e) {
+                        lastError = e;
+                        // Короткая задержка перед следующей попыткой (300ms вместо 500ms)
+                        if (attempt < retries - 1) {
+                            await new Promise(resolve => setTimeout(resolve, 300));
+                        }
                     }
-                    
-                    articles.push({
-                        title: title.replace(/<[^>]*>/g, '').trim(),
-                        desc: desc.replace(/<[^>]*>/g, '').trim().substring(0, 200),
-                        image: image,
-                        url: link,
-                        source: url.split('/')[2]?.replace('www.', '') || 'News',
-                        publishedAt: pubDate,
-                        categories: []
-                    });
-                });
-                
-                return articles;
-            } catch (e) {
-                console.error('RSS parse error:', e);
-                return [];
+                }
             }
+            
+            console.error('RSS parse error after all retries:', lastError);
+            return [];
         }
 
         async function fetchNews() {
@@ -5748,22 +5897,61 @@
             try {
                 // Определяем какие RSS источники использовать в зависимости от языка
                 const categoryKey = currentNewsCategory || 'all';
-                const rssUrls = getRSSSourcesForLanguage(currentLang, categoryKey);
+                let rssUrls = getRSSSourcesForLanguage(currentLang, categoryKey);
                 
                 if (rssUrls.length === 0) {
                     // Fallback на английские источники если для языка нет
                     const fallbackUrls = RSS_SOURCES['en'][categoryKey] || RSS_SOURCES['en']['all'];
-                    rssUrls.push(...fallbackUrls);
+                    rssUrls = [...fallbackUrls];
                 }
                 
-                // Загружаем новости из всех источников категории (ограничиваем до 2 для скорости)
+                // Пробуем загрузить из нескольких источников параллельно (до 3)
+                const urlsToFetch = rssUrls.slice(0, 3);
                 const allArticles = [];
-                const promises = rssUrls.slice(0, 2).map(url => parseRSSFeed(url));
-                const results = await Promise.all(promises);
                 
-                results.forEach(articles => {
-                    allArticles.push(...articles);
+                // Загружаем параллельно из нескольких источников
+                const promises = urlsToFetch.map(url => parseRSSFeed(url, 2));
+                const results = await Promise.allSettled(promises);
+                
+                // Собираем успешные результаты
+                results.forEach((result, index) => {
+                    if (result.status === 'fulfilled' && result.value && result.value.length > 0) {
+                        allArticles.push(...result.value);
+                    } else {
+                        console.warn(`Failed to load news from source ${urlsToFetch[index]}:`, result.reason);
+                    }
                 });
+                
+                // Если не получили новостей, пробуем остальные источники по одному
+                if (allArticles.length === 0 && rssUrls.length > 3) {
+                    for (let i = 3; i < Math.min(rssUrls.length, 6); i++) {
+                        try {
+                            const articles = await parseRSSFeed(rssUrls[i], 2);
+                            if (articles && articles.length > 0) {
+                                allArticles.push(...articles);
+                                break; // Останавливаемся на первом успешном
+                            }
+                        } catch (e) {
+                            console.warn(`Source ${rssUrls[i]} failed:`, e);
+                        }
+                    }
+                }
+                
+                // Если все еще нет новостей, пробуем английские источники как последний резерв
+                if (allArticles.length === 0 && currentLang !== 'en') {
+                    const fallbackUrls = RSS_SOURCES['en'][categoryKey] || RSS_SOURCES['en']['all'];
+                    for (const url of fallbackUrls.slice(0, 2)) {
+                        try {
+                            const articles = await parseRSSFeed(url, 2);
+                            if (articles && articles.length > 0) {
+                                allArticles.push(...articles);
+                                break;
+                            }
+                        } catch (e) {
+                            console.warn(`Fallback source ${url} failed:`, e);
+                        }
+                    }
+                }
                 
                 // Фильтруем по поисковому запросу если есть
                 if (currentNewsSearch) {
@@ -5777,12 +5965,32 @@
                 }
                 
                 // Сортируем по дате и ограничиваем до 20
-                newsData.sort((a, b) => new Date(b.publishedAt) - new Date(a.publishedAt));
+                newsData.sort((a, b) => {
+                    const dateA = new Date(a.publishedAt);
+                    const dateB = new Date(b.publishedAt);
+                    return dateB - dateA;
+                });
                 newsData = newsData.slice(0, 20);
 
-            renderNews();
-                // Автозапуск попапа отключен
-                // showToast(`${newsData.length} ${translations[currentLang].newsArticlesLoaded || 'news articles loaded'}`, 'success');
+                renderNews();
+                
+                // Показываем сообщение если новостей нет
+                if (newsData.length === 0) {
+                    newsResults.innerHTML = `
+                        <div class="news-empty">
+                            <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"/>
+                            </svg>
+                            <p data-i18n="newsNoNews">Новости не найдены</p>
+                        </div>
+                    `;
+                    setTimeout(() => {
+                        const emptyText = newsResults.querySelector('[data-i18n="newsNoNews"]');
+                        if (emptyText && translations[currentLang].newsNoNews) {
+                            emptyText.textContent = translations[currentLang].newsNoNews;
+                        }
+                    }, 0);
+                }
             } catch (e) {
                 console.error('News fetch error:', e);
                 newsResults.innerHTML = `
@@ -5801,7 +6009,7 @@
                 }, 0);
                 showToast(translations[currentLang].newsError || 'Failed to load news', 'error');
             } finally {
-            if (newsLoading) newsLoading.classList.add('hidden');
+                if (newsLoading) newsLoading.classList.add('hidden');
             }
         }
 
@@ -6078,7 +6286,8 @@
             tableBody.innerHTML = docs.map(d => {
                 const t = d;
                 const s = t.status;
-                const firstCarryDateStr = (t.first_carry_date || t.originalDate) ? ` (с ${formatISODateForDisplay(t.first_carry_date || t.originalDate)})` : '';
+                const taskCarriedFrom = translations[currentLang]?.taskCarriedFrom || 'с';
+                const firstCarryDateStr = (t.first_carry_date || t.originalDate) ? ` (${taskCarriedFrom} ${formatISODateForDisplay(t.first_carry_date || t.originalDate)})` : '';
                 return `<tr class="md:border-b-0 ${t.carriedOver ? 'bg-blue-50' : ''}">
                     <td data-label="${translations[currentLang].name}" class="${s === translations.ru.statusDone ? 'line-through text-gray-500' : ''}">
                         ${t.name}${firstCarryDateStr}
@@ -6409,21 +6618,21 @@
             try {
                 const id = form.querySelector('#debt-payment-id').value;
                 const amount = parseFloat(form.querySelector('#debt-payment-amount').value);
-                showToast(`ID: ${id}, Amount: ${amount}`); // Отладка
                 const debtRef = doc(debtsCol, id);
                 const debtDoc = await getDoc(debtRef);
                 if (debtDoc.exists()) {
                     const debt = debtDoc.data();
-                    showToast(`Найден долг: ${debt.name}`); // Отладка
                     await updateDoc(debtRef, { paidAmount: (debt.paidAmount || 0) + amount, lastPaymentDate: Timestamp.now() });
                     await addDoc(collection(db, `users/${userId}/monthlyData/${currentMonthId}/expenses`), { name: `${translations[currentLang].addDebtPayment}: ${debt.name}`, category: translations[currentLang].debtRepayments, amount: amount, date: getTodayISOString(), debtPaymentId: id });
                     showToast(translations[currentLang].toastSuccess);
                 } else {
-                    showToast(`Долг с ID ${id} не найден`, 'error'); // Отладка
+                    const errorMsg = translations[currentLang]?.errorDebtNotFound || 'Debt not found';
+                    showToast(errorMsg, 'error');
                 }
             } catch (error) {
                 console.error("Error adding debt payment:", error);
-                showToast(`Ошибка: ${error.message}`, 'error'); // Отладка
+                const errorMsg = translations[currentLang]?.errorGeneric || 'Error';
+                showToast(`${errorMsg}: ${error.message}`, 'error');
             }
         }
         async function handleRecurringExpenseFormSubmit(form) {
@@ -7504,13 +7713,12 @@
         observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
 
         console.log('✨ ORDINA CANDY loaded successfully!');
-        console.log('🎨 Ultra-modern glassmorphism design activated');
-        console.log('🎹 Keyboard shortcuts: Ctrl+E (Expense), Ctrl+T (Task), Ctrl+D (Debt), Ctrl+R (Recurring)');
     </script>
-
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js" integrity="sha512-a6XN0PbgXCEgKLF0hoF3eWD1QZ3XkMtIOZB8H+aVRC6LOhIPltoMrR0pbw/I8G5pWqvtgiIUbBs7P1d3e2xF3g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>tailwind.config={important:!0,corePlugins:{preflight:!0}}</script>
+<script defer src="https://cdn.tailwindcss.com/3.4.1"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
 </body>
-
-</html>
-</html>
-</html>
 </html>

@@ -1,0 +1,44 @@
+{
+  "name": "ordina",
+  "version": "2.1.0",
+  "description": "Premium personal finance and life management suite - Your Life Order Assistant",
+  "main": "index.html",
+  "scripts": {
+    "start": "python -m http.server 8000",
+    "dev": "python -m http.server 8000",
+    "serve": "npx http-server -p 8000 -c-1"
+  },
+  "keywords": [
+    "finance",
+    "budget",
+    "expense-tracker",
+    "debt-management",
+    "task-manager",
+    "calendar",
+    "personal-assistant",
+    "firebase",
+    "javascript",
+    "web-app"
+  ],
+  "author": "Kenny Corleone",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Kenny-Corleone/ORDINA.github.io.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Kenny-Corleone/ORDINA.github.io/issues"
+  },
+  "homepage": "https://kenny-corleone.github.io/ORDINA.github.io/",
+  "dependencies": {},
+  "devDependencies": {},
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not dead"
+  ]
+}
+
