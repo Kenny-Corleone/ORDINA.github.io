@@ -5235,6 +5235,7 @@
                     await setupDefaultData(user);
                     showApp();
                     setupCollections(todayISO);
+                    await migrateCleanDuplicateTasks();
                     await checkAndCarryOverDailyTasks(todayISO);
                     await checkAndCarryOverTasks();
                     await ensureRecurringTasksForMonth(selectedMonthId);
@@ -5282,34 +5283,196 @@
             const lastCheckKey = `lastDailyCheck_${userId}`;
             const lastCheck = localStorage.getItem(lastCheckKey);
             if (lastCheck === todayId) return;
-            const yesterday = new Date(todayId + 'T00:00:00');
-            yesterday.setDate(yesterday.getDate() - 1);
-            const yesterdayId = yesterday.toISOString().split('T')[0];
-            if (lastCheck && lastCheck < todayId) {
-                try {
-                    const yesterdayTasksCol = collection(db, `users/${userId}/dailyTasks/${yesterdayId}/tasks`);
-                    const q = query(yesterdayTasksCol, where("status", "==", translations.ru.statusNotDone));
-                    const tasksToCarryOverSnapshot = await getDocs(q);
-                    if (!tasksToCarryOverSnapshot.empty) {
-                        const batch = writeBatch(db);
-                        const todayTasksColRef = collection(db, `users/${userId}/dailyTasks/${todayId}/tasks`);
-                        tasksToCarryOverSnapshot.forEach(docSnap => {
-                            const taskData = docSnap.data();
-                            const newTaskRef = doc(todayTasksColRef);
-                            const originalDate = taskData.originalDate || yesterdayId;
-                            batch.set(newTaskRef, {
-                                ...taskData,
-                                notes: `(Перенесено с ${formatISODateForDisplay(yesterdayId)}) ${taskData.notes || ''}`.trim(),
-                                carriedOver: true,
-                                originalDate: originalDate,
-                                carriedOverFrom: yesterdayId
-                            });
+            
+            try {
+                const todayTasksColRef = collection(db, `users/${userId}/dailyTasks/${todayId}/tasks`);
+                const todayTasksSnapshot = await getDocs(query(todayTasksColRef));
+                const existingTodayTasks = new Map();
+                todayTasksSnapshot.docs.forEach(docSnap => {
+                    const taskData = docSnap.data();
+                    // Используем task_id если есть, иначе комбинацию name + first_carry_date
+                    const taskId = taskData.task_id || `${taskData.name}_${taskData.first_carry_date || taskData.originalDate || todayId}`;
+                    existingTodayTasks.set(taskId, { docRef: docSnap.ref, data: taskData });
+                });
+
+                // Ищем задачи во всех коллекциях с датами < сегодня (за последние 90 дней)
+                const todayDate = new Date(todayId + 'T00:00:00');
+                const tasksToCarryOver = [];
+                
+                for (let daysBack = 1; daysBack <= 90; daysBack++) {
+                    const checkDate = new Date(todayDate);
+                    checkDate.setDate(checkDate.getDate() - daysBack);
+                    const checkDateId = checkDate.toISOString().split('T')[0];
+                    
+                    const checkTasksCol = collection(db, `users/${userId}/dailyTasks/${checkDateId}/tasks`);
+                    const q = query(checkTasksCol, where("status", "==", translations.ru.statusNotDone));
+                    const snapshot = await getDocs(q);
+                    
+                    snapshot.docs.forEach(docSnap => {
+                        const taskData = docSnap.data();
+                        const firstCarryDate = taskData.first_carry_date || taskData.originalDate || checkDateId;
+                        // Используем task_id если есть, иначе комбинацию name + first_carry_date
+                        const taskId = taskData.task_id || `${taskData.name}_${firstCarryDate}`;
+                        
+                        tasksToCarryOver.push({
+                            taskId: taskId,
+                            oldDocRef: docSnap.ref,
+                            taskData: taskData,
+                            sourceDate: checkDateId,
+                            firstCarryDate: firstCarryDate
                         });
-                        await batch.commit();
+                    });
+                }
+
+                if (tasksToCarryOver.length === 0) {
+                    localStorage.setItem(lastCheckKey, todayId);
+                    return;
+                }
+
+                const batch = writeBatch(db);
+                const processedTaskIds = new Set();
+
+                for (const taskInfo of tasksToCarryOver) {
+                    // Пропускаем если уже обработали эту задачу
+                    if (processedTaskIds.has(taskInfo.taskId)) continue;
+                    processedTaskIds.add(taskInfo.taskId);
+
+                    // Пропускаем задачи, которые уже находятся в коллекции сегодня
+                    if (taskInfo.sourceDate === todayId) continue;
+
+                    const existingTask = existingTodayTasks.get(taskInfo.taskId);
+                    
+                    if (existingTask) {
+                        // Задача уже есть на сегодня - обновляем только необходимые поля
+                        const existingFirstCarryDate = existingTask.data.first_carry_date || existingTask.data.originalDate;
+                        const newFirstCarryDate = taskInfo.firstCarryDate;
+                        const finalFirstCarryDate = (existingFirstCarryDate && newFirstCarryDate && existingFirstCarryDate < newFirstCarryDate) 
+                            ? existingFirstCarryDate 
+                            : (newFirstCarryDate || existingFirstCarryDate);
+                        
+                        const updateData = {
+                            first_carry_date: finalFirstCarryDate,
+                            carriedOver: true,
+                            updatedAt: Timestamp.now()
+                        };
+                        // Сохраняем task_id если его нет у существующей задачи
+                        if (!existingTask.data.task_id && taskInfo.taskData.task_id) {
+                            updateData.task_id = taskInfo.taskData.task_id;
+                        }
+                        // Обновляем статус только если он не "выполнено" или "отменено"
+                        if (existingTask.data.status === translations.ru.statusNotDone && taskInfo.taskData.status) {
+                            updateData.status = taskInfo.taskData.status;
+                        }
+                        batch.update(existingTask.docRef, updateData);
+                    } else {
+                        // Задачи нет на сегодня - создаём новую
+                        const newTaskRef = doc(todayTasksColRef);
+                        const newTaskData = {
+                            ...taskInfo.taskData,
+                            first_carry_date: taskInfo.firstCarryDate,
+                            carriedOver: true,
+                            updatedAt: Timestamp.now()
+                        };
+                        // Сохраняем task_id если он есть, иначе генерируем новый
+                        if (taskInfo.taskData.task_id) {
+                            newTaskData.task_id = taskInfo.taskData.task_id;
+                        } else {
+                            // Генерируем новый task_id для старых задач без него
+                            newTaskData.task_id = `task_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+                        }
+                        // Удаляем старые поля
+                        delete newTaskData.carriedOverFrom;
+                        batch.set(newTaskRef, newTaskData);
                     }
-                } catch (error) { showToast(translations[currentLang].toastError, 'error'); }
+                    
+                    // Удаляем старую задачу из исходной коллекции (только если это не сегодня)
+                    if (taskInfo.sourceDate !== todayId) {
+                        batch.delete(taskInfo.oldDocRef);
+                    }
+                }
+
+                await batch.commit();
+                localStorage.setItem(lastCheckKey, todayId);
+            } catch (error) {
+                console.error("Error carrying over daily tasks:", error);
+                showToast(translations[currentLang].toastError, 'error');
             }
-            localStorage.setItem(lastCheckKey, todayId);
+        }
+
+        // Миграция для очистки дублей задач во вкладке "Сегодня"
+        async function migrateCleanDuplicateTasks() {
+            if (!userId) return;
+            const migrationKey = `migrated_clean_duplicates_${userId}`;
+            if (localStorage.getItem(migrationKey) === 'done') {
+                return; // Миграция уже выполнена
+            }
+
+            try {
+                const todayId = getTodayISOString();
+                const todayTasksColRef = collection(db, `users/${userId}/dailyTasks/${todayId}/tasks`);
+                const todayTasksSnapshot = await getDocs(query(todayTasksColRef));
+                
+                // Группируем задачи по name (title)
+                const tasksByName = new Map();
+                todayTasksSnapshot.docs.forEach(docSnap => {
+                    const taskData = docSnap.data();
+                    const name = taskData.name;
+                    if (!tasksByName.has(name)) {
+                        tasksByName.set(name, []);
+                    }
+                    tasksByName.get(name).push({
+                        docRef: docSnap.ref,
+                        data: taskData,
+                        updatedAt: taskData.updatedAt?.toMillis() || taskData.createdAt?.toMillis() || 0
+                    });
+                });
+
+                const batch = writeBatch(db);
+                let hasDuplicates = false;
+
+                // Обрабатываем каждую группу задач
+                tasksByName.forEach((tasks, name) => {
+                    if (tasks.length <= 1) return; // Нет дублей
+                    
+                    hasDuplicates = true;
+                    // Сортируем по updatedAt (самый свежий первый)
+                    tasks.sort((a, b) => b.updatedAt - a.updatedAt);
+                    
+                    // Оставляем первую задачу (самую свежую)
+                    const keepTask = tasks[0];
+                    const otherTasks = tasks.slice(1);
+                    
+                    // Находим минимальную first_carry_date среди всех дублей
+                    let minFirstCarryDate = keepTask.data.first_carry_date || keepTask.data.originalDate;
+                    otherTasks.forEach(task => {
+                        const taskFirstCarryDate = task.data.first_carry_date || task.data.originalDate;
+                        if (taskFirstCarryDate && (!minFirstCarryDate || taskFirstCarryDate < minFirstCarryDate)) {
+                            minFirstCarryDate = taskFirstCarryDate;
+                        }
+                    });
+                    
+                    // Обновляем оставшуюся задачу с минимальной first_carry_date
+                    if (minFirstCarryDate && minFirstCarryDate !== keepTask.data.first_carry_date) {
+                        batch.update(keepTask.docRef, {
+                            first_carry_date: minFirstCarryDate
+                        });
+                    }
+                    
+                    // Удаляем остальные дубли
+                    otherTasks.forEach(task => {
+                        batch.delete(task.docRef);
+                    });
+                });
+
+                if (hasDuplicates) {
+                    await batch.commit();
+                    console.log('Миграция: дубли задач очищены');
+                }
+                
+                localStorage.setItem(migrationKey, 'done');
+            } catch (error) {
+                console.error("Error in migration:", error);
+            }
         }
 
         async function checkAndCarryOverTasks() {
@@ -5972,7 +6135,17 @@
         const tabs = document.querySelectorAll('.tab-button');
         const taskTabs = document.querySelectorAll('.task-tab-button');
         tabs.forEach(tab => tab.addEventListener('click', () => { tabs.forEach(t => t.classList.remove('tab-active')); tab.classList.add('tab-active'); document.querySelectorAll('.page-content').forEach(p => p.classList.add('hidden')); document.getElementById(`${tab.dataset.tab}-page`).classList.remove('hidden'); }));
-        taskTabs.forEach(tab => tab.addEventListener('click', () => { taskTabs.forEach(t => t.classList.remove('task-tab-active')); tab.classList.add('task-tab-active'); document.querySelectorAll('.task-tab-content').forEach(p => p.classList.add('hidden')); document.getElementById(`task-tab-${tab.dataset.taskTab}`).classList.remove('hidden'); }));
+        taskTabs.forEach(tab => tab.addEventListener('click', async () => { 
+            taskTabs.forEach(t => t.classList.remove('task-tab-active')); 
+            tab.classList.add('task-tab-active'); 
+            document.querySelectorAll('.task-tab-content').forEach(p => p.classList.add('hidden')); 
+            document.getElementById(`task-tab-${tab.dataset.taskTab}`).classList.remove('hidden');
+            // При открытии вкладки "Сегодня" проверяем и переносим задачи
+            if (tab.dataset.taskTab === 'today' && userId) {
+                const todayId = getTodayISOString();
+                await checkAndCarryOverDailyTasks(todayId);
+            }
+        }));
 
         function attachListeners() {
             if (!userId || !currentMonthId || !selectedMonthId) {
@@ -6113,10 +6286,10 @@
             tableBody.innerHTML = docs.map(d => {
                 const t = d;
                 const s = t.status;
-                const originalDateStr = t.originalDate ? ` (С ${formatISODateForDisplay(t.originalDate)})` : '';
+                const firstCarryDateStr = (t.first_carry_date || t.originalDate) ? ` (с ${formatISODateForDisplay(t.first_carry_date || t.originalDate)})` : '';
                 return `<tr class="md:border-b-0 ${t.carriedOver ? 'bg-blue-50' : ''}">
                     <td data-label="${translations[currentLang].name}" class="${s === translations.ru.statusDone ? 'line-through text-gray-500' : ''}">
-                        ${t.name}${originalDateStr}
+                        ${t.name}${firstCarryDateStr}
                     </td>
                     <td data-label="${translations[currentLang].status}">${createTaskStatusDropdown(t.id, s, 'dailyTasks')}</td>
                     <td data-label="${translations[currentLang].notes}">
@@ -6526,7 +6699,16 @@
             }
         }
         const handleTaskSubmit = async (col, id, data) => {
-            try { if (!id) await addDoc(col, { ...data, createdAt: Timestamp.now(), status: translations.ru.statusNotDone }); else await updateDoc(doc(col, id), data); showToast(translations[currentLang].toastSuccess); }
+            try { 
+                if (!id) {
+                    // При создании новой задачи генерируем уникальный task_id
+                    const taskId = `task_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+                    await addDoc(col, { ...data, task_id: taskId, createdAt: Timestamp.now(), status: translations.ru.statusNotDone }); 
+                } else {
+                    await updateDoc(doc(col, id), data);
+                }
+                showToast(translations[currentLang].toastSuccess); 
+            }
             catch (error) { console.error("Error saving task:", error); showToast(translations[currentLang].toastError, 'error'); }
         };
         const handleDailyTaskFormSubmit = (form) => handleTaskSubmit(dailyTasksCol, form.querySelector('#daily-task-id').value, { name: form.querySelector('#daily-task-name').value, notes: form.querySelector('#daily-task-notes').value });
