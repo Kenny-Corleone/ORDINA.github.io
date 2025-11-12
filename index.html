@@ -53,17 +53,7 @@
 <link rel="dns-prefetch" href="https://stream.zeno.fm">
 <link rel="dns-prefetch" href="https://api.allorigins.win">
 <!-- Preload критических ресурсов для ускорения загрузки -->
-<!-- Preload для Tailwind только если не file:// протокол (CORS проблемы) -->
-<script>
-    if (window.location.protocol !== 'file:') {
-        const link = document.createElement('link');
-        link.rel = 'preload';
-        link.href = 'https://cdn.tailwindcss.com/3.4.1';
-        link.as = 'script';
-        link.crossOrigin = 'anonymous';
-        document.head.appendChild(link);
-    }
-</script>
+<!-- Preload для Tailwind убран из-за CORS ограничений CDN -->
 <link rel="preload" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" as="style">
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
 <noscript><link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet"></noscript>
@@ -5869,6 +5859,10 @@
                         const res = await fetchWithTimeout(proxyUrl, 5000);
                         
                         if (!res.ok) {
+                            // Для 400 ошибок пробуем следующий прокси сразу
+                            if (res.status === 400) {
+                                throw new Error(`HTTP ${res.status} - Bad Request, trying next proxy`);
+                            }
                             throw new Error(`HTTP ${res.status}`);
                         }
                         
@@ -5963,7 +5957,10 @@
                 }
             }
             
-            console.error('RSS parse error after all retries:', lastError);
+            // Тихо логируем ошибки RSS (не критично для работы приложения)
+            if (lastError) {
+                console.debug('RSS parse error after all retries:', lastError.message || lastError);
+            }
             return [];
         }
 
