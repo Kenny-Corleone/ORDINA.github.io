@@ -3863,20 +3863,9 @@
                                 <h3 class="text-lg font-semibold mb-3" style="color: var(--text-primary);"
                                     data-i18n="lastActivity">Последняя активность</h3>
                                 <div id="recent-activity" class="space-y-2">
-                                    <div class="flex items-center gap-2 text-sm">
-                                        <div class="w-2 h-2 bg-green-500 rounded-full"></div>
-                                        <span style="color: var(--text-secondary);"
-                                            data-i18n="activityExpenseAdded">Расход добавлен: Продукты - 25 AZN</span>
-                                    </div>
-                                    <div class="flex items-center gap-2 text-sm">
-                                        <div class="w-2 h-2 bg-blue-500 rounded-full"></div>
-                                        <span style="color: var(--text-secondary);" data-i18n="activityTaskDone">Задача
-                                            выполнена: Позвонить в банк</span>
-                                    </div>
-                                    <div class="flex items-center gap-2 text-sm">
-                                        <div class="w-2 h-2 bg-purple-500 rounded-full"></div>
-                                        <span style="color: var(--text-secondary);" data-i18n="activityDebtUpdated">Долг
-                                            обновлен: Кредит - 150 AZN</span>
+                                    <!-- Динамически заполняется функцией updateRecentActivity() -->
+                                    <div class="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400">
+                                        <span data-i18n="noRecentActivity">Нет недавней активности</span>
                                     </div>
                                 </div>
                             </div>
@@ -4621,9 +4610,10 @@
                 radioPaused: "Пауза",
                 newsNotFound: "Новости не найдены",
                 lastActivity: "Последняя активность",
-                activityExpenseAdded: "Расход добавлен: Продукты - 25 AZN",
-                activityTaskDone: "Задача выполнена: Позвонить в банк",
-                activityDebtUpdated: "Долг обновлен: Кредит - 150 AZN",
+                activityExpenseAdded: "Расход добавлен",
+                activityTaskDone: "Задача выполнена",
+                activityDebtUpdated: "Долг обновлен",
+                noRecentActivity: "Нет недавней активности",
                 months: ["Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"],
                 monthsShort: ["Янв", "Фев", "Мар", "Апр", "Май", "Июн", "Июл", "Авг", "Сен", "Окт", "Ноя", "Дек"],
                 weekdaysFull: ["Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота", "Воскресенье"],
@@ -4850,9 +4840,10 @@
                 radioPaused: "Pauza",
                 newsNotFound: "Xəbər tapılmadı",
                 lastActivity: "Son fəaliyyət",
-                activityExpenseAdded: "Xərc əlavə edildi: Məhsullar - 25 AZN",
-                activityTaskDone: "Tapşırıq tamamlandı: Banka zəng et",
-                activityDebtUpdated: "Borc yeniləndi: Kredit - 150 AZN",
+                activityExpenseAdded: "Xərc əlavə edildi",
+                activityTaskDone: "Tapşırıq tamamlandı",
+                activityDebtUpdated: "Borc yeniləndi",
+                noRecentActivity: "Son aktivlik yoxdur",
                 months: ["Yanvar", "Fevral", "Mart", "Aprel", "May", "İyun", "İyul", "Avqust", "Sentyabr", "Oktyabr", "Noyabr", "Dekabr"],
                 monthsShort: ["Yan", "Fev", "Mar", "Apr", "May", "İyn", "İyl", "Avq", "Sen", "Okt", "Noy", "Dek"],
                 weekdaysFull: ["Bazar ertəsi", "Çərşənbə axşamı", "Çərşənbə", "Cümə axşamı", "Cümə", "Şənbə", "Bazar"],
@@ -6762,6 +6753,102 @@
             });
             } catch (e) {
                 logger.error('Error creating chart:', e);
+            }
+            
+            // Обновляем последнюю активность
+            updateRecentActivity();
+        }
+        
+        // Функция для обновления раздела "Последняя активность"
+        function updateRecentActivity() {
+            try {
+                const activityContainer = document.getElementById('recent-activity');
+                if (!activityContainer) return;
+                
+                const activities = [];
+                
+                // Получаем последние расходы (за последние 7 дней)
+                const today = new Date();
+                const sevenDaysAgo = new Date(today);
+                sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+                
+                allExpenses.forEach(doc => {
+                    const expense = doc.data();
+                    const expenseDate = new Date(expense.date + 'T00:00:00');
+                    if (expenseDate >= sevenDaysAgo) {
+                        activities.push({
+                            type: 'expense',
+                            text: `${translations[currentLang].activityExpenseAdded || 'Расход добавлен'}: ${expense.name || expense.category} - ${formatCurrency(expense.amount)}`,
+                            date: expenseDate,
+                            color: 'green-500'
+                        });
+                    }
+                });
+                
+                // Получаем последние выполненные задачи
+                [...monthlyTasks, ...yearlyTasks, ...dailyTasks].forEach(task => {
+                    if (task.status === translations.ru.statusDone) {
+                        // Пытаемся найти дату выполнения (если есть поле updatedAt или completedAt)
+                        const taskDate = task.updatedAt ? task.updatedAt.toDate() : new Date();
+                        if (taskDate >= sevenDaysAgo) {
+                            activities.push({
+                                type: 'task',
+                                text: `${translations[currentLang].activityTaskDone || 'Задача выполнена'}: ${task.name}`,
+                                date: taskDate,
+                                color: 'blue-500'
+                            });
+                        }
+                    }
+                });
+                
+                // Получаем последние обновления долгов (где был платеж)
+                allDebts.forEach(doc => {
+                    const debt = doc.data();
+                    if (debt.lastPaymentDate) {
+                        const paymentDate = debt.lastPaymentDate.toDate();
+                        if (paymentDate >= sevenDaysAgo) {
+                            const remaining = (debt.totalAmount || 0) - (debt.paidAmount || 0);
+                            activities.push({
+                                type: 'debt',
+                                text: `${translations[currentLang].activityDebtUpdated || 'Долг обновлен'}: ${debt.name} - ${formatCurrency(remaining)} ${translations[currentLang].remaining || 'осталось'}`,
+                                date: paymentDate,
+                                color: 'purple-500'
+                            });
+                        }
+                    }
+                });
+                
+                // Сортируем по дате (новые сверху) и берем последние 5
+                activities.sort((a, b) => b.date - a.date);
+                const recentActivities = activities.slice(0, 5);
+                
+                // Очищаем контейнер
+                activityContainer.innerHTML = '';
+                
+                if (recentActivities.length === 0) {
+                    // Если нет активности, показываем сообщение
+                    activityContainer.innerHTML = `
+                        <div class="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400">
+                            <span>${translations[currentLang].noRecentActivity || 'Нет недавней активности'}</span>
+                        </div>
+                    `;
+                } else {
+                    // Отображаем последние действия
+                    recentActivities.forEach(activity => {
+                        const activityEl = document.createElement('div');
+                        activityEl.className = 'flex items-center gap-2 text-sm';
+                        const colorClass = activity.color === 'green-500' ? 'bg-green-500' : 
+                                          activity.color === 'blue-500' ? 'bg-blue-500' : 
+                                          'bg-purple-500';
+                        activityEl.innerHTML = `
+                            <div class="w-2 h-2 ${colorClass} rounded-full"></div>
+                            <span style="color: var(--text-secondary);">${activity.text}</span>
+                        `;
+                        activityContainer.appendChild(activityEl);
+                    });
+                }
+            } catch (e) {
+                logger.error('Error updating recent activity:', e);
             }
         }
 
