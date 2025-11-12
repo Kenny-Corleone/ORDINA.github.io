@@ -7973,7 +7973,75 @@
             };
         })();
         
+        // Перехватываем ошибки Angular приложения
+        (function() {
+            'use strict';
+            try {
+                // Перехватываем глобальный error handler Angular
+                const originalErrorHandler = window.onerror;
+                window.onerror = function(message, source, lineno, colno, error) {
+                    try {
+                        const msg = (message || '').toString();
+                        const src = (source || '').toString();
+                        
+                        if (msg.includes('addData') ||
+                            msg.includes('ERR_BLOCKED_BY_CLIENT') ||
+                            msg.includes('Cannot read properties of undefined') ||
+                            src.includes('hotjar') ||
+                            src.includes('fbevents') ||
+                            src.includes('adroll') ||
+                            src.includes('main-es2015')) {
+                            return true; // Подавляем ошибку
+                        }
+                    } catch (e) {
+                        // Игнорируем
+                    }
+                    
+                    if (originalErrorHandler) {
+                        return originalErrorHandler.apply(this, arguments);
+                    }
+                    return false;
+                };
+            } catch (e) {
+                // Игнорируем ошибки при установке обработчика
+            }
+        })();
+        
+        // Перехватываем ошибки через Performance API (для сетевых ошибок)
+        (function() {
+            'use strict';
+            try {
+                if (window.PerformanceObserver) {
+                    const observer = new PerformanceObserver(function(list) {
+                        list.getEntries().forEach(function(entry) {
+                            try {
+                                if (entry.initiatorType === 'script' || entry.initiatorType === 'link') {
+                                    const name = (entry.name || '').toLowerCase();
+                                    if (name.includes('hotjar') ||
+                                        name.includes('fbevents') ||
+                                        name.includes('adroll') ||
+                                        name.includes('roundtrip')) {
+                                        // Игнорируем ошибки загрузки трекеров
+                                    }
+                                }
+                            } catch (e) {
+                                // Игнорируем
+                            }
+                        });
+                    });
+                    try {
+                        observer.observe({ entryTypes: ['resource'] });
+                    } catch (e) {
+                        // PerformanceObserver может не поддерживать resource
+                    }
+                }
+            } catch (e) {
+                // Игнорируем ошибки при установке PerformanceObserver
+            }
+        })();
+        
         // Глобальная обработка ошибок для внешних скриптов (Angular, аналитика и др.)
+        // Перехватываем ошибки загрузки ресурсов (ERR_BLOCKED_BY_CLIENT)
         window.addEventListener('error', function(event) {
             try {
             // Игнорируем ошибки от внешних скриптов, которые не критичны для работы сайта
@@ -8017,6 +8085,29 @@
             }
         }, true);
         
+        // Дополнительный перехват для ошибок загрузки ресурсов (script, link, img)
+        document.addEventListener('error', function(event) {
+            try {
+                if (event.target) {
+                    const src = event.target.src || event.target.href || '';
+                    if (src.includes('hotjar') || 
+                        src.includes('static.hotjar') ||
+                        src.includes('fbevents') ||
+                        src.includes('connect.facebook') ||
+                        src.includes('roundtrip') ||
+                        src.includes('adroll') ||
+                        src.includes('s.adroll')) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                        event.stopImmediatePropagation();
+                        return false;
+                    }
+                }
+            } catch (e) {
+                // Игнорируем
+            }
+        }, true);
+        
         // Перехватываем unhandled promise rejections от внешних скриптов
         window.addEventListener('unhandledrejection', function(event) {
             try {
@@ -8052,15 +8143,18 @@
         (function() {
             try {
         const originalError = console.error;
+        const originalWarn = console.warn;
+        
         console.error = function(...args) {
             try {
-            const errorMsg = args.join(' ');
+                const errorMsg = args.join(' ').toLowerCase();
             // Фильтруем известные некритичные ошибки
-                if ((errorMsg.includes('addData') && errorMsg.includes('undefined')) ||
-                    errorMsg.includes('ERR_BLOCKED_BY_CLIENT') ||
-                    errorMsg.includes('ERR_ABORTED') ||
-                    errorMsg.includes('Chart is not defined') ||
-                    errorMsg.includes('Can not detect viewport width') ||
+                if ((errorMsg.includes('adddata') && errorMsg.includes('undefined')) ||
+                    errorMsg.includes('err_blocked_by_client') ||
+                    errorMsg.includes('err_aborted') ||
+                    errorMsg.includes('chart is not defined') ||
+                    errorMsg.includes('can not detect viewport width') ||
+                    errorMsg.includes('cannot read properties of undefined') ||
                 errorMsg.includes('main-es2015') ||
                     errorMsg.includes('polyfills-es2015') ||
                     errorMsg.includes('hotjar') ||
@@ -8078,6 +8172,27 @@
                 // Если что-то пошло не так, используем оригинальный метод
                 try {
                     originalError.apply(console, args);
+                } catch (e2) {
+                    // Игнорируем
+                }
+            }
+        };
+        
+        console.warn = function(...args) {
+            try {
+                const warnMsg = args.join(' ').toLowerCase();
+                // Фильтруем известные некритичные предупреждения
+                if (warnMsg.includes('err_blocked_by_client') ||
+                    warnMsg.includes('hotjar') ||
+                    warnMsg.includes('fbevents') ||
+                    warnMsg.includes('adroll') ||
+                    warnMsg.includes('can not detect viewport width')) {
+                    return;
+                }
+                originalWarn.apply(console, args);
+            } catch (e) {
+                try {
+                    originalWarn.apply(console, args);
                 } catch (e2) {
                     // Игнорируем
                 }
