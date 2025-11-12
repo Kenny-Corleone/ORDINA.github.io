@@ -1,74 +1,63 @@
-# ORDINA - .gitignore
+# Dependencies
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json
+yarn.lock
 
-# OS Files
-.DS_Store
-.DS_Store?
-._*
-.Spotlight-V100
-.Trashes
-ehthumbs.db
-Thumbs.db
-desktop.ini
+# Build outputs
+dist/
+build/
+*.min.js
+*.min.css
 
-# Editor Files
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# IDE
 .vscode/
 .idea/
 *.swp
 *.swo
 *~
-.project
-.settings/
-*.sublime-project
-*.sublime-workspace
+.DS_Store
+
+# OS
+Thumbs.db
+desktop.ini
 
 # Logs
+logs/
 *.log
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-lerna-debug.log*
 
-# Temporary Files
+# Temporary files
 *.tmp
 *.temp
+.cache/
+
+# Trash folder (contains old/unused files)
+Trash/
+
+# Source maps (if not needed)
+*.map
+
+# Backup files
 *.bak
 *.backup
-*~
+*.old
 
-# Node Modules (if using)
-node_modules/
-npm-debug.log
-yarn-error.log
-
-# Build Files (if using bundler)
-dist/
-build/
-.cache/
-.parcel-cache/
-
-# Environment Variables
-.env
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
-
-# Firebase
-.firebase/
-.firebaserc
-firebase-debug.log
-firestore-debug.log
-
-# Testing
+# Test coverage
 coverage/
 .nyc_output/
 
-# Misc
-*.orig
-.sass-cache/
-connect.lock
-typings/
+# Firebase
+.firebase/
+firebase-debug.log
+firestore-debug.log
 
-# Optional: Sort folder (development files)
-# Uncomment if you don't want to upload development files
-# sort/
+# Local development
+.local/
+

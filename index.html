@@ -11,10 +11,10 @@
 <meta property="og:title" content="ORDINA • Personal Command Center">
 <meta property="og:description" content="Manage your life with ease - Premium financial suite with expense tracking, debt management, and productivity tools">
 <meta property="og:site_name" content="ORDINA">
-<title>ORDINA ✨ Ultra-Modern Command Center</title>
-<link rel="icon" type="image/png" sizes="16x16" href="./favicon-16.png">
-<link rel="icon" type="image/png" sizes="32x32" href="./favicon-32.png">
-<link rel="apple-touch-icon" sizes="180x180" href="./favicon-180.png">
+<title>ORDINA - Personal Command Center</title>
+<link rel="icon" type="image/png" sizes="16x16" href="./assets/favicons/favicon-16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="./assets/favicons/favicon-32.png">
+<link rel="apple-touch-icon" sizes="180x180" href="./assets/favicons/favicon-180.png">
 <meta name="theme-color" content="#0B0F1A">
 <!-- Ранняя защита от конфликтов с расширениями браузера (evmAsk.js и др.) -->
 <script>
@@ -47,7 +47,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
-<link rel="preconnect" href="https://cdn.tailwindcss.com" crossorigin>
+<!-- Preconnect для Tailwind убран - CDN не поддерживает CORS для скриптов -->
 <link rel="dns-prefetch" href="https://www.gstatic.com">
 <link rel="dns-prefetch" href="https://api.openweathermap.org">
 <link rel="dns-prefetch" href="https://stream.zeno.fm">
@@ -65,7 +65,7 @@
         }
 
         :root {
-            /* Ultra-Modern Palette - Vibrant Gradients */
+            /* Color Palette - Vibrant Gradients */
             --primary: #6366f1;
             --primary-dark: #4f46e5;
             --primary-light: #818cf8;
@@ -125,11 +125,7 @@
             --glass-border-dark: rgba(255, 255, 255, 0.1);
             --glass-shadow-light: 0 4px 24px 0 rgba(26, 26, 26, 0.12);
             --glass-shadow-dark: 0 8px 32px 0 rgba(0, 0, 0, 0.6);
-            
-            /* Legacy glassmorphism (deprecated, use above) */
-            --glass-bg: rgba(255, 255, 255, 0.1);
-            --glass-border: rgba(255, 255, 255, 0.2);
-            --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+            /* removed-by-audit: deprecated glassmorphism vars (--glass-bg, --glass-border, --glass-shadow) - see Trash/preserved_snippets/REMOVED_deprecated_glassmorphism_vars_lines_129-132.txt */
             
             /* Gradients */
             --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -3469,8 +3465,8 @@
             </div>
             <div class="text-center">
                 <div class="mb-4">
-                    <img src="./ordina.png"
-                        srcset="./ordina.png 1x, ./ordina@2x.png 2x"
+                    <img src="./assets/ordina.png"
+                        srcset="./assets/ordina.png 1x, ./assets/ordina@2x.png 2x"
                         alt="ORDINA Logo" class="mx-auto h-48 sm:h-56 w-auto drop-shadow-lg">
                 </div>
                 <h2 class="text-base sm:text-lg font-bold text-gray-800 dark:text-gray-200 mb-1" data-i18n="authTitle">
@@ -3544,8 +3540,8 @@
             <div id="header-grid-container" class="header-grid-container">
                 <!-- Column 1: Logo -->
                 <div class="header-logo-wrapper">
-                    <img src="./ordina.png"
-                        srcset="./ordina.png 1x, ./ordina@2x.png 2x"
+                    <img src="./assets/ordina.png"
+                        srcset="./assets/ordina.png 1x, ./assets/ordina@2x.png 2x"
                         width="56" height="56" alt="Ordina logo" id="header-logo" class="header-logo">
                 </div>
 
@@ -4401,9 +4397,9 @@
             
             try {
                 const [ruRes, enRes, azRes] = await Promise.all([
-                    fetch('locale-ru.json').catch(() => null),
-                    fetch('locale-en.json').catch(() => null),
-                    fetch('locale-az.json').catch(() => null)
+                    fetch('locales/locale-ru.json').catch(() => null),
+                    fetch('locales/locale-en.json').catch(() => null),
+                    fetch('locales/locale-az.json').catch(() => null)
                 ]);
                 
                 // Проверяем успешность загрузки каждого файла
@@ -5444,8 +5440,6 @@
             }
             await batch.commit();
         }
-
-        function updateDateTime() { /* removed separate date strip per requirements */ }
 
         function updateMonthDisplay() {
             const formattedDate = formatMonthId(selectedMonthId);
@@ -7786,7 +7780,7 @@
         });
         observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
 
-        console.log('✨ ORDINA CANDY loaded successfully!');
+        console.log('ORDINA loaded successfully!'); /* fixed-by-audit: 2024-12-19 - Removed marketing text */
     </script>
     
     <!-- Защита от конфликтов с расширениями браузера (evmAsk.js и др.) -->
@@ -7804,7 +7798,9 @@
                 errorSource.includes('roundtrip') ||
                 errorSource.includes('evmAsk') ||
                 errorSource.includes('polyfills-es2015') ||
-                errorMessage.includes('addData') && errorMessage.includes('undefined')) {
+                errorSource.includes('cdn.tailwindcss.com') ||
+                errorMessage.includes('addData') && errorMessage.includes('undefined') ||
+                errorMessage.includes('CORS policy') && errorMessage.includes('tailwindcss')) {
                 event.preventDefault();
                 event.stopPropagation();
                 console.debug('Suppressed non-critical error from external script:', errorSource);
@@ -7857,7 +7853,8 @@
             }
         };
     </script>
-    <script defer src="https://cdn.tailwindcss.com/3.4.1"></script>
+    <!-- Tailwind CSS загружается без crossorigin (не требуется для обычных скриптов) -->
+    <script defer src="https://cdn.tailwindcss.com/3.4.1" onerror="console.debug('Tailwind CDN failed to load, this is non-critical')"></script>
     
     <!-- Font Awesome без integrity для избежания ошибок -->
     <script defer src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>

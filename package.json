@@ -6,7 +6,10 @@
   "scripts": {
     "start": "python -m http.server 8000",
     "dev": "python -m http.server 8000",
-    "serve": "npx http-server -p 8000 -c-1"
+    "serve": "npx http-server -p 8000 -c-1",
+    "lint": "echo 'Linting not configured. Use htmlhint, stylelint, eslint manually.'",
+    "test": "echo 'Tests not configured yet.'",
+    "build": "echo 'Static site - no build step required. Files are ready to deploy.'"
   },
   "keywords": [
     "finance",
