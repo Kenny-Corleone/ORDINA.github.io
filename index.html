@@ -21,25 +21,72 @@
     // Защита от переопределения ethereum (evmAsk.js и другие расширения)
     // Должна выполняться как можно раньше, до загрузки других скриптов
     (function() {
+        'use strict';
         try {
+            // Проверяем, существует ли уже ethereum
+            const existingEthereum = window.ethereum;
+            const existingDescriptor = Object.getOwnPropertyDescriptor(window, 'ethereum');
+            
+            // Если ethereum уже определен, защищаем его от переопределения
+            if (existingEthereum !== undefined || existingDescriptor) {
             // Сохраняем оригинальный defineProperty
             const originalDefineProperty = Object.defineProperty;
             
-            // Перехватываем попытки переопределения ethereum
+                // Перехватываем попытки переопределения ethereum через defineProperty
             Object.defineProperty = function(obj, prop, descriptor) {
-                // Если пытаются переопределить window.ethereum и оно уже определено
-                if (obj === window && prop === 'ethereum' && typeof window.ethereum !== 'undefined') {
-                    const existingDescriptor = Object.getOwnPropertyDescriptor(window, 'ethereum');
+                    try {
+                        // Если пытаются переопределить window.ethereum
+                        if (obj === window && prop === 'ethereum') {
+                            const currentDescriptor = Object.getOwnPropertyDescriptor(window, 'ethereum');
                     // Если свойство уже определено и не конфигурируемо, игнорируем попытку
-                    if (existingDescriptor && !existingDescriptor.configurable) {
-                        return window.ethereum; // Возвращаем существующее значение
+                            if (currentDescriptor && !currentDescriptor.configurable) {
+                                return existingEthereum || window.ethereum;
+                            }
+                            // Если свойство существует, но конфигурируемо, проверяем, не пытаемся ли мы его переопределить
+                            if (currentDescriptor && existingEthereum) {
+                                // Игнорируем попытку переопределения, возвращаем существующее значение
+                                return existingEthereum;
                     }
                 }
                 // Для всех остальных случаев используем оригинальный метод
                 return originalDefineProperty.apply(this, arguments);
-            };
+                    } catch (e) {
+                        // Если произошла ошибка, пробуем использовать оригинальный метод
+                        try {
+                            return originalDefineProperty.apply(this, arguments);
+                        } catch (e2) {
+                            // Если и это не сработало, возвращаем существующее значение для ethereum
+                            if (obj === window && prop === 'ethereum' && existingEthereum) {
+                                return existingEthereum;
+                            }
+                            throw e2;
+                        }
+                    }
+                };
+                
+                // Защита от прямого присваивания window.ethereum = ...
+                try {
+                    if (existingDescriptor && !existingDescriptor.configurable) {
+                        // Свойство уже защищено, ничего не делаем
+                    } else if (existingEthereum) {
+                        // Пытаемся сделать свойство неконфигурируемым, если возможно
+                        try {
+                            Object.defineProperty(window, 'ethereum', {
+                                value: existingEthereum,
+                                writable: false,
+                                configurable: false,
+                                enumerable: true
+                            });
+                        } catch (e) {
+                            // Если не удалось, оставляем как есть
+                        }
+                    }
         } catch (e) {
             // Игнорируем ошибки при попытке защиты
+                }
+            }
+        } catch (e) {
+            // Игнорируем ошибки при попытке защиты - приложение должно продолжать работать
         }
     })();
 </script>
@@ -47,14 +94,15 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
-<!-- Preconnect для Tailwind убран - CDN не поддерживает CORS для скриптов -->
+<!-- Preconnect для внешних ресурсов -->
 <link rel="dns-prefetch" href="https://www.gstatic.com">
 <link rel="dns-prefetch" href="https://api.openweathermap.org">
 <link rel="dns-prefetch" href="https://stream.zeno.fm">
 <link rel="dns-prefetch" href="https://api.allorigins.win">
 <!-- Preload критических ресурсов для ускорения загрузки -->
-<!-- Preload для Tailwind убран из-за CORS ограничений CDN -->
+<link rel="preload" href="./dist/tailwind.css" as="style">
 <link rel="preload" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" as="style">
+<link rel="stylesheet" href="./dist/tailwind.css">
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
 <noscript><link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet"></noscript>
     <style>
@@ -3467,7 +3515,7 @@
                 <div class="mb-4">
                     <img src="./assets/ordina.png"
                         srcset="./assets/ordina.png 1x, ./assets/ordina@2x.png 2x"
-                        alt="ORDINA Logo" class="mx-auto h-48 sm:h-56 w-auto drop-shadow-lg">
+                        alt="ORDINA Logo" class="mx-auto h-48 sm:h-56 w-auto drop-shadow-lg" loading="eager">
                 </div>
                 <h2 class="text-base sm:text-lg font-bold text-gray-800 dark:text-gray-200 mb-1" data-i18n="authTitle">
                     Войдите в свой аккаунт</h2>
@@ -3542,7 +3590,7 @@
                 <div class="header-logo-wrapper">
                     <img src="./assets/ordina.png"
                         srcset="./assets/ordina.png 1x, ./assets/ordina@2x.png 2x"
-                        width="56" height="56" alt="Ordina logo" id="header-logo" class="header-logo">
+                        width="56" height="56" alt="Ordina logo" id="header-logo" class="header-logo" loading="eager">
                 </div>
 
                 <!-- Column 2: Motto (Slogan) -->
@@ -4341,13 +4389,48 @@
             measurementId: "G-E1MWRNNKDM"
         };
 
+        // Обёртка для логирования в development режиме
+        const isDev = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+        const logger = {
+            debug: function(...args) {
+                if (isDev) console.debug(...args);
+            },
+            log: function(...args) {
+                if (isDev) console.log(...args);
+            },
+            error: function(...args) {
+                // Ошибки всегда логируем
+                console.error(...args);
+            },
+            warn: function(...args) {
+                if (isDev) console.warn(...args);
+            }
+        };
+        
+        // Безопасная функция для проверки существования объекта
+        function safeGet(obj, path, defaultValue = null) {
+            try {
+                const keys = path.split('.');
+                let result = obj;
+                for (const key of keys) {
+                    if (result == null || typeof result !== 'object') {
+                        return defaultValue;
+                    }
+                    result = result[key];
+                }
+                return result != null ? result : defaultValue;
+            } catch (e) {
+                return defaultValue;
+            }
+        }
+
         let app, db, auth;
         try {
             app = initializeApp(firebaseConfig);
             db = getFirestore(app);
             auth = getAuth(app);
         } catch (e) {
-            console.error("Firebase initialization error:", e);
+            logger.error("Firebase initialization error:", e);
             const lo = getCached('loading-overlay');
             if (lo) lo.classList.add('hidden');
             const appEl = getCached('app');
@@ -4390,7 +4473,7 @@
             
             // Если file:// протокол, сразу используем fallback переводы
             if (isFileProtocol) {
-                console.debug('File protocol detected, using inline translations');
+                logger.debug('File protocol detected, using inline translations');
                 useFallbackTranslations();
                 return;
             }
@@ -4417,7 +4500,7 @@
                     throw new Error('One or more translation files failed to load');
                 }
             } catch (error) {
-                console.debug('Error loading translations, using fallback:', error);
+                logger.debug('Error loading translations, using fallback:', error);
                 useFallbackTranslations();
             }
         }
@@ -4783,7 +4866,7 @@
         let currentLang = localStorage.getItem('appLanguage') || 'ru';
         
         // Load translations immediately (non-blocking)
-        loadTranslations().catch(err => console.error('Failed to load translations:', err));
+        loadTranslations().catch(err => logger.error('Failed to load translations:', err));
 
         function getTodayISOString() {
             const today = new Date();
@@ -5179,7 +5262,7 @@
                 } else { showLoginScreen(); }
             });
         } else {
-            console.error('Firebase Auth не инициализирован');
+            logger.error('Firebase Auth не инициализирован');
             showLoginScreen();
         }
 
@@ -5318,7 +5401,7 @@
                 await batch.commit();
                 localStorage.setItem(lastCheckKey, todayId);
             } catch (error) {
-                console.error("Error carrying over daily tasks:", error);
+                logger.error("Error carrying over daily tasks:", error);
                 showToast(translations[currentLang].toastError, 'error');
             }
         }
@@ -5390,12 +5473,12 @@
 
                 if (hasDuplicates) {
                     await batch.commit();
-                    console.log('Миграция: дубли задач очищены');
+                    logger.debug('Миграция: дубли задач очищены');
                 }
                 
                 localStorage.setItem(migrationKey, 'done');
             } catch (error) {
-                console.error("Error in migration:", error);
+                logger.error("Error in migration:", error);
             }
         }
 
@@ -5640,7 +5723,7 @@
                 // Автозапуск попапа отключен
                 // showToast(`${translations[currentLang].weatherUpdated || 'Weather updated for'} ${data.name}`, 'success');
             } catch (e) {
-                console.error('Weather error:', e);
+                logger.error('Weather error:', e);
                 const tempEl = document.getElementById('weather-temp-new');
                 const descEl = document.getElementById('weather-desc-new');
                 if (tempEl) tempEl.textContent = '--';
@@ -5953,7 +6036,7 @@
             
             // Тихо логируем ошибки RSS (не критично для работы приложения)
             if (lastError) {
-                console.debug('RSS parse error after all retries:', lastError.message || lastError);
+                logger.debug('RSS parse error after all retries:', lastError.message || lastError);
             }
             return [];
         }
@@ -5991,7 +6074,7 @@
                     } else {
                         // Тихо игнорируем ошибки для быстрой загрузки
                         if (result.reason) {
-                            console.debug(`Failed to load news from source ${urlsToFetch[index]}:`, result.reason);
+                            logger.debug(`Failed to load news from source ${urlsToFetch[index]}:`, result.reason);
                         }
                     }
                 });
@@ -6004,7 +6087,7 @@
                             allArticles.push(...articles);
                         }
                     } catch (e) {
-                        console.debug(`Source ${rssUrls[2]} failed:`, e);
+                        logger.debug(`Source ${rssUrls[2]} failed:`, e);
                     }
                 }
                 
@@ -6017,7 +6100,7 @@
                             allArticles.push(...articles);
                         }
                     } catch (e) {
-                        console.debug(`Fallback source failed:`, e);
+                        logger.debug(`Fallback source failed:`, e);
                     }
                 }
                 
@@ -6060,7 +6143,7 @@
                     }, 0);
                 }
             } catch (e) {
-                console.error('News fetch error:', e);
+                logger.error('News fetch error:', e);
                 newsResults.innerHTML = `
                     <div class="news-empty">
                         <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -6126,7 +6209,7 @@
                     <article class="news-item" onclick="window.open('${news.url}', '_blank', 'noopener,noreferrer')">
                         ${news.image ? `
                             <div class="news-item-image">
-                                <img src="${news.image}" alt="${cleanTitle}" 
+                                <img src="${news.image}" alt="${cleanTitle}" loading="lazy"
                                      onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
                                 <div class="news-item-image-placeholder" style="display:none;">
                                     <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -6680,7 +6763,7 @@
                     if (debtData.paidAmount > 0) { await updateDoc(newDocRef, { lastPaymentDate: Timestamp.now() }); await addDoc(collection(db, `users/${userId}/monthlyData/${currentMonthId}/expenses`), { name: `${translations[currentLang].addDebtPayment}: ${name}`, category: translations[currentLang].debtRepayments, amount: debtData.paidAmount, date: getTodayISOString(), debtPaymentId: newDocRef.id }); }
                 } else { await updateDoc(doc(debtsCol, id), debtData); }
                 form.dataset.originalPaid = "0"; showToast(translations[currentLang].toastSuccess);
-            } catch (error) { console.error("Error saving debt:", error); showToast(translations[currentLang].toastError, 'error'); }
+            } catch (error) { logger.error("Error saving debt:", error); showToast(translations[currentLang].toastError, 'error'); }
         }
         async function handleDebtPaymentFormSubmit(form) {
             try {
@@ -6698,7 +6781,7 @@
                     showToast(errorMsg, 'error');
                 }
             } catch (error) {
-                console.error("Error adding debt payment:", error);
+                logger.error("Error adding debt payment:", error);
                 const errorMsg = translations[currentLang]?.errorGeneric || 'Error';
                 showToast(`${errorMsg}: ${error.message}`, 'error');
             }
@@ -6712,7 +6795,7 @@
                 const taskData = { name: `${data.name}`, deadline, status: translations.ru.statusNotDone, recurringExpenseId: docRef.id, month: selectedMonthId, year: year, };
                 if (existingTasks.empty) await addDoc(monthlyTasksCol, taskData); else await updateDoc(existingTasks.docs[0].ref, taskData);
                 showToast(translations[currentLang].toastSuccess);
-            } catch (error) { console.error("Error saving recurring expense:", error); showToast(translations[currentLang].toastError, 'error'); }
+            } catch (error) { logger.error("Error saving recurring expense:", error); showToast(translations[currentLang].toastError, 'error'); }
         }
         async function handleExpenseFormSubmit(form) {
             try {
@@ -6763,7 +6846,7 @@
                 }
                 showToast(translations[currentLang].toastSuccess);
             } catch (error) {
-                console.error("Error saving expense:", error);
+                logger.error("Error saving expense:", error);
                 showToast(translations[currentLang].toastError, 'error');
             }
         }
@@ -6778,7 +6861,7 @@
                 }
                 showToast(translations[currentLang].toastSuccess); 
             }
-            catch (error) { console.error("Error saving task:", error); showToast(translations[currentLang].toastError, 'error'); }
+            catch (error) { logger.error("Error saving task:", error); showToast(translations[currentLang].toastError, 'error'); }
         };
         const handleDailyTaskFormSubmit = (form) => handleTaskSubmit(dailyTasksCol, form.querySelector('#daily-task-id').value, { name: form.querySelector('#daily-task-name').value, notes: form.querySelector('#daily-task-notes').value });
         const handleMonthlyTaskFormSubmit = (form) => handleTaskSubmit(monthlyTasksCol, form.querySelector('#monthly-task-id').value, { name: form.querySelector('#monthly-task-name').value, deadline: form.querySelector('#monthly-task-deadline').value, month: form.querySelector('#monthly-task-deadline').value.slice(0, 7), year: new Date(form.querySelector('#monthly-task-deadline').value).getFullYear() });
@@ -6813,7 +6896,7 @@
                 }
                 else { if (existingTaskDoc) await deleteDoc(existingTaskDoc.ref); }
                 showToast(translations[currentLang].toastSuccess);
-            } catch (error) { console.error("Error saving event:", error); showToast(translations[currentLang].toastError, 'error'); }
+            } catch (error) { logger.error("Error saving event:", error); showToast(translations[currentLang].toastError, 'error'); }
         };
         async function handleCategoryFormSubmit(form) { const nameInput = form.querySelector('#category-name'); const name = nameInput.value.trim(); if (name) { await addDoc(categoriesCol, { name: name, lang: currentLang }); nameInput.value = ''; showToast(translations[currentLang].toastSuccess); } }
 
@@ -6934,7 +7017,7 @@
                 
                 if (radioPlayer.paused) {
                     radioPlayer.play().catch(e => {
-                        console.error('Radio play error:', e);
+                        logger.error('Radio play error:', e);
                         isPlaying = false;
                     });
                     playIcon.classList.add('hidden');
@@ -6963,7 +7046,7 @@
             pauseIcon.classList.add('hidden');
             stopEqualizer();
             isPlaying = false;
-            console.error('Radio player error');
+            logger.error('Radio player error');
         });
 
         if (volumeSlider && radioPlayer) {
@@ -7780,13 +7863,82 @@
         });
         observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
 
-        console.log('ORDINA loaded successfully!'); /* fixed-by-audit: 2024-12-19 - Removed marketing text */
+        // ORDINA loaded successfully
     </script>
     
     <!-- Защита от конфликтов с расширениями браузера (evmAsk.js и др.) -->
     <script>
+        // Система очереди буферизации для аналитики
+        (function() {
+            'use strict';
+            const analyticsQueue = [];
+            const analyticsServices = {};
+            const isDev = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+            
+            // Безопасная обёртка для вызовов аналитики
+            window.safeAnalyticsCall = function(serviceName, methodName, ...args) {
+                try {
+                    const service = analyticsServices[serviceName];
+                    if (service && typeof service[methodName] === 'function') {
+                        service[methodName].apply(service, args);
+                        return true;
+                    } else {
+                        // Добавляем в очередь для последующей отправки
+                        analyticsQueue.push({
+                            service: serviceName,
+                            method: methodName,
+                            args: args,
+                            timestamp: Date.now()
+                        });
+                        return false;
+                    }
+                } catch (e) {
+                    if (isDev) {
+                        console.debug('Analytics call failed:', serviceName, methodName, e);
+                    }
+                    return false;
+                }
+            };
+            
+            // Регистрация аналитического сервиса
+            window.registerAnalyticsService = function(serviceName, serviceObject) {
+                try {
+                    if (serviceObject && typeof serviceObject === 'object') {
+                        analyticsServices[serviceName] = serviceObject;
+                        
+                        // Обрабатываем очередь для этого сервиса
+                        const queueToProcess = analyticsQueue.filter(item => item.service === serviceName);
+                        queueToProcess.forEach(item => {
+                            try {
+                                if (serviceObject[item.method] && typeof serviceObject[item.method] === 'function') {
+                                    serviceObject[item.method].apply(serviceObject, item.args);
+                                }
+                            } catch (e) {
+                                if (isDev) {
+                                    console.debug('Failed to process queued analytics call:', item, e);
+                                }
+                            }
+                        });
+                        
+                        // Удаляем обработанные элементы из очереди
+                        analyticsQueue.splice(0, queueToProcess.length);
+                    }
+                } catch (e) {
+                    if (isDev) {
+                        console.debug('Failed to register analytics service:', serviceName, e);
+                    }
+                }
+            };
+            
+            // Безопасный вызов addData для Hotjar и других сервисов
+            window.safeAddData = function(serviceName, data) {
+                return window.safeAnalyticsCall(serviceName, 'addData', data);
+            };
+        })();
+        
         // Глобальная обработка ошибок для внешних скриптов (Angular, аналитика и др.)
         window.addEventListener('error', function(event) {
+            try {
             // Игнорируем ошибки от внешних скриптов, которые не критичны для работы сайта
             const errorSource = event.filename || '';
             const errorMessage = event.message || '';
@@ -7799,17 +7951,20 @@
                 errorSource.includes('evmAsk') ||
                 errorSource.includes('polyfills-es2015') ||
                 errorSource.includes('cdn.tailwindcss.com') ||
-                errorMessage.includes('addData') && errorMessage.includes('undefined') ||
-                errorMessage.includes('CORS policy') && errorMessage.includes('tailwindcss')) {
+                    (errorMessage.includes('addData') && errorMessage.includes('undefined')) ||
+                    (errorMessage.includes('CORS policy') && errorMessage.includes('tailwindcss'))) {
                 event.preventDefault();
                 event.stopPropagation();
-                console.debug('Suppressed non-critical error from external script:', errorSource);
                 return false;
+                }
+            } catch (e) {
+                // Игнорируем ошибки в обработчике ошибок
             }
         }, true);
         
         // Перехватываем unhandled promise rejections от внешних скриптов
         window.addEventListener('unhandledrejection', function(event) {
+            try {
             const reason = event.reason;
             if (reason && typeof reason === 'object') {
                 const errorMsg = reason.message || reason.toString() || '';
@@ -7818,50 +7973,231 @@
                 // Подавляем ошибки от Angular и других внешних скриптов
                 if (errorMsg.includes('addData') || 
                     stack.includes('main-es2015') ||
-                    stack.includes('polyfills-es2015')) {
+                        stack.includes('polyfills-es2015') ||
+                        stack.includes('hotjar')) {
                     event.preventDefault();
-                    console.debug('Suppressed unhandled promise rejection from external script');
                     return false;
                 }
+                }
+            } catch (e) {
+                // Игнорируем ошибки в обработчике
             }
         });
         
         // Защита от ошибок при вызове методов несуществующих объектов
+        (function() {
+            try {
         const originalError = console.error;
         console.error = function(...args) {
+                    try {
             const errorMsg = args.join(' ');
             // Фильтруем известные некритичные ошибки
-            if (errorMsg.includes('addData') && errorMsg.includes('undefined') ||
+                        if ((errorMsg.includes('addData') && errorMsg.includes('undefined')) ||
                 errorMsg.includes('main-es2015') ||
-                errorMsg.includes('polyfills-es2015')) {
-                console.debug('Suppressed non-critical error:', errorMsg.substring(0, 100));
+                            errorMsg.includes('polyfills-es2015') ||
+                            errorMsg.includes('hotjar')) {
                 return;
             }
             originalError.apply(console, args);
-        };
-    </script>
-    
-    <!-- Tailwind CSS конфигурация должна быть ДО загрузки скрипта -->
-    <script>
-        if (typeof tailwind === 'undefined') {
-            window.tailwind = {};
-        }
-        tailwind.config = {
-            important: true,
-            corePlugins: {
-                preflight: true
+                    } catch (e) {
+                        // Если что-то пошло не так, используем оригинальный метод
+                        try {
+                            originalError.apply(console, args);
+                        } catch (e2) {
+                            // Игнорируем
+                        }
+                    }
+                };
+            } catch (e) {
+                // Игнорируем ошибки при переопределении console.error
             }
-        };
+        })();
     </script>
-    <!-- Tailwind CSS загружается без crossorigin (не требуется для обычных скриптов) -->
-    <script defer src="https://cdn.tailwindcss.com/3.4.1" onerror="console.debug('Tailwind CDN failed to load, this is non-critical')"></script>
     
-    <!-- Font Awesome без integrity для избежания ошибок -->
-    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <!-- Tailwind CSS загружается локально из dist/tailwind.css (см. head) -->
     
-    <!-- Остальные скрипты с defer для оптимизации -->
-    <script defer src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-    <script defer src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <!-- Система безопасной загрузки внешних скриптов -->
+    <script>
+        // Функция для безопасной загрузки внешних скриптов с обработкой блокировок
+        (function() {
+            'use strict';
+            const isDev = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+            
+            window.loadScriptSafely = function(src, options) {
+                options = options || {};
+                const timeout = options.timeout || 10000;
+                const onError = options.onError || function() {};
+                const onSuccess = options.onSuccess || function() {};
+                const lazy = options.lazy !== false; // По умолчанию ленивая загрузка
+                
+                return new Promise(function(resolve, reject) {
+                    // Если ленивая загрузка, используем requestIdleCallback или window.onload
+                    const loadScript = function() {
+                        try {
+                            // Проверяем, не загружен ли уже скрипт
+                            const existingScript = document.querySelector(`script[src="${src}"]`);
+                            if (existingScript) {
+                                resolve(existingScript);
+                                if (onSuccess) onSuccess();
+                                return;
+                            }
+                            
+                            const script = document.createElement('script');
+                            script.src = src;
+                            script.async = true;
+                            if (options.defer) script.defer = true;
+                            if (options.crossOrigin) script.crossOrigin = options.crossOrigin;
+                            if (options.referrerPolicy) script.referrerPolicy = options.referrerPolicy;
+                            
+                            let timeoutId;
+                            let resolved = false;
+                            
+                            const cleanup = function() {
+                                if (timeoutId) clearTimeout(timeoutId);
+                                script.onload = null;
+                                script.onerror = null;
+                            };
+                            
+                            script.onload = function() {
+                                if (resolved) return;
+                                resolved = true;
+                                cleanup();
+                                resolve(script);
+                                if (onSuccess) onSuccess();
+                            };
+                            
+                            script.onerror = function(e) {
+                                if (resolved) return;
+                                resolved = true;
+                                cleanup();
+                                
+                                // Удаляем скрипт из DOM при ошибке
+                                try {
+                                    if (script.parentNode) {
+                                        script.parentNode.removeChild(script);
+                                    }
+                                } catch (e2) {
+                                    // Игнорируем ошибки удаления
+                                }
+                                
+                                // Если это блокировка трекера, это не критично
+                                const isTracker = src.includes('hotjar') || 
+                                                 src.includes('fbevents') || 
+                                                 src.includes('google-analytics') ||
+                                                 src.includes('googletagmanager') ||
+                                                 src.includes('adroll');
+                                
+                                if (isTracker) {
+                                    // Для трекеров это не критично, просто игнорируем
+                                    if (isDev) {
+                                        console.debug('Tracker script blocked or failed to load:', src);
+                                    }
+                                    if (onError) onError(new Error('Script blocked or failed'));
+                                    resolve(null); // Разрешаем промис, но с null
+                                } else {
+                                    reject(new Error('Script failed to load: ' + src));
+                                    if (onError) onError(new Error('Script failed to load'));
+                                }
+                            };
+                            
+                            // Таймаут для загрузки
+                            timeoutId = setTimeout(function() {
+                                if (!resolved) {
+                                    resolved = true;
+                                    cleanup();
+                                    const isTracker = src.includes('hotjar') || 
+                                                     src.includes('fbevents') || 
+                                                     src.includes('google-analytics') ||
+                                                     src.includes('googletagmanager') ||
+                                                     src.includes('adroll');
+                                    
+                                    if (isTracker) {
+                                        if (isDev) {
+                                            console.debug('Tracker script timeout:', src);
+                                        }
+                                        if (onError) onError(new Error('Script timeout'));
+                                        resolve(null);
+                                    } else {
+                                        reject(new Error('Script timeout: ' + src));
+                                        if (onError) onError(new Error('Script timeout'));
+                                    }
+                                }
+                            }, timeout);
+                            
+                            document.head.appendChild(script);
+                        } catch (e) {
+                            reject(e);
+                            if (onError) onError(e);
+                        }
+                    };
+                    
+                    if (lazy) {
+                        // Используем requestIdleCallback для ленивой загрузки
+                        if (window.requestIdleCallback) {
+                            requestIdleCallback(loadScript, { timeout: 5000 });
+                        } else if (document.readyState === 'complete') {
+                            // Если страница уже загружена, загружаем сразу
+                            setTimeout(loadScript, 100);
+                        } else {
+                            // Иначе ждём загрузки страницы
+                            window.addEventListener('load', function() {
+                                setTimeout(loadScript, 1000);
+                            });
+                        }
+                    } else {
+                        loadScript();
+                    }
+                });
+            };
+        })();
+    </script>
+    
+    <!-- Font Awesome - безопасная загрузка -->
+    <script>
+        window.loadScriptSafely('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js', {
+            crossOrigin: 'anonymous',
+            referrerPolicy: 'no-referrer',
+            defer: true,
+            lazy: false // Font Awesome загружаем сразу, но безопасно
+        }).catch(function(e) {
+            // Font Awesome не критичен, приложение продолжит работать
+        });
+    </script>
+    
+    <!-- Не-критичные скрипты - ленивая загрузка -->
+    <script>
+        // Загружаем не-критичные скрипты после загрузки страницы
+        window.addEventListener('load', function() {
+            // Chart.js - загружаем только если используется
+            if (document.querySelector('[data-chart]') || document.getElementById('expense-chart')) {
+                window.loadScriptSafely('https://cdn.jsdelivr.net/npm/chart.js', {
+                    lazy: true,
+                    timeout: 5000
+                }).catch(function() {
+                    // Chart.js не критичен
+                });
+            }
+            
+            // GSAP - загружаем только если используется
+            if (document.querySelector('[data-gsap]') || document.querySelector('.gsap-animation')) {
+                window.loadScriptSafely('https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js', {
+                    lazy: true,
+                    timeout: 5000
+                }).catch(function() {
+                    // GSAP не критичен
+                });
+            }
+            
+            // Particles.js - загружаем только если используется
+            if (document.getElementById('background-animation')) {
+                window.loadScriptSafely('https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js', {
+                    lazy: true,
+                    timeout: 5000
+                }).catch(function() {
+                    // Particles.js не критичен
+                });
+            }
+        });
+    </script>
 </body>
 </html>

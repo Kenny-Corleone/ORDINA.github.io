@@ -9,7 +9,9 @@
     "serve": "npx http-server -p 8000 -c-1",
     "lint": "echo 'Linting not configured. Use htmlhint, stylelint, eslint manually.'",
     "test": "echo 'Tests not configured yet.'",
-    "build": "echo 'Static site - no build step required. Files are ready to deploy.'"
+    "build": "npm run build:css",
+    "build:css": "tailwindcss -i ./src/input.css -o ./dist/tailwind.css --minify",
+    "build:css:watch": "tailwindcss -i ./src/input.css -o ./dist/tailwind.css --watch"
   },
   "keywords": [
     "finance",
@@ -34,7 +36,11 @@
   },
   "homepage": "https://kenny-corleone.github.io/ORDINA.github.io/",
   "dependencies": {},
-  "devDependencies": {},
+  "devDependencies": {
+    "tailwindcss": "^3.4.1",
+    "postcss": "^8.4.35",
+    "autoprefixer": "^10.4.17"
+  },
   "engines": {
     "node": ">=14.0.0"
   },
