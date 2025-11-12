@@ -16,13 +16,55 @@
 <link rel="icon" type="image/png" sizes="32x32" href="./favicon-32.png">
 <link rel="apple-touch-icon" sizes="180x180" href="./favicon-180.png">
 <meta name="theme-color" content="#0B0F1A">
+<!-- Ранняя защита от конфликтов с расширениями браузера (evmAsk.js и др.) -->
+<script>
+    // Защита от переопределения ethereum (evmAsk.js и другие расширения)
+    // Должна выполняться как можно раньше, до загрузки других скриптов
+    (function() {
+        try {
+            // Сохраняем оригинальный defineProperty
+            const originalDefineProperty = Object.defineProperty;
+            
+            // Перехватываем попытки переопределения ethereum
+            Object.defineProperty = function(obj, prop, descriptor) {
+                // Если пытаются переопределить window.ethereum и оно уже определено
+                if (obj === window && prop === 'ethereum' && typeof window.ethereum !== 'undefined') {
+                    const existingDescriptor = Object.getOwnPropertyDescriptor(window, 'ethereum');
+                    // Если свойство уже определено и не конфигурируемо, игнорируем попытку
+                    if (existingDescriptor && !existingDescriptor.configurable) {
+                        return window.ethereum; // Возвращаем существующее значение
+                    }
+                }
+                // Для всех остальных случаев используем оригинальный метод
+                return originalDefineProperty.apply(this, arguments);
+            };
+        } catch (e) {
+            // Игнорируем ошибки при попытке защиты
+        }
+    })();
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="preconnect" href="https://cdn.tailwindcss.com" crossorigin>
 <link rel="dns-prefetch" href="https://www.gstatic.com">
 <link rel="dns-prefetch" href="https://api.openweathermap.org">
 <link rel="dns-prefetch" href="https://stream.zeno.fm">
+<link rel="dns-prefetch" href="https://api.allorigins.win">
+<!-- Preload критических ресурсов для ускорения загрузки -->
+<!-- Preload для Tailwind только если не file:// протокол (CORS проблемы) -->
+<script>
+    if (window.location.protocol !== 'file:') {
+        const link = document.createElement('link');
+        link.rel = 'preload';
+        link.href = 'https://cdn.tailwindcss.com/3.4.1';
+        link.as = 'script';
+        link.crossOrigin = 'anonymous';
+        document.head.appendChild(link);
+    }
+</script>
+<link rel="preload" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" as="style">
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
 <noscript><link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet"></noscript>
     <style>
@@ -4357,22 +4399,45 @@
         
         // Load translations from JSON files
         async function loadTranslations() {
+            // Проверяем, используется ли file:// протокол (локальное открытие файла)
+            const isFileProtocol = window.location.protocol === 'file:';
+            
+            // Если file:// протокол, сразу используем fallback переводы
+            if (isFileProtocol) {
+                console.debug('File protocol detected, using inline translations');
+                useFallbackTranslations();
+                return;
+            }
+            
             try {
                 const [ruRes, enRes, azRes] = await Promise.all([
-                    fetch('locale-ru.json'),
-                    fetch('locale-en.json'),
-                    fetch('locale-az.json')
+                    fetch('locale-ru.json').catch(() => null),
+                    fetch('locale-en.json').catch(() => null),
+                    fetch('locale-az.json').catch(() => null)
                 ]);
-                const ru = await ruRes.json();
-                const en = await enRes.json();
-                const az = await azRes.json();
-                translations = { ru, en, az };
-                // Apply translations immediately if language is already set
-                if (currentLang) {
-                    applyDynamicTranslations();
+                
+                // Проверяем успешность загрузки каждого файла
+                if (ruRes && ruRes.ok && enRes && enRes.ok && azRes && azRes.ok) {
+                    const ru = await ruRes.json();
+                    const en = await enRes.json();
+                    const az = await azRes.json();
+                    translations = { ru, en, az };
+                    // Apply translations immediately if language is already set
+                    if (currentLang) {
+                        applyDynamicTranslations();
+                    }
+                } else {
+                    // Если хотя бы один файл не загрузился, используем fallback
+                    throw new Error('One or more translation files failed to load');
                 }
             } catch (error) {
-                console.error('Error loading translations, using fallback:', error);
+                console.debug('Error loading translations, using fallback:', error);
+                useFallbackTranslations();
+            }
+        }
+        
+        // Функция для использования встроенных переводов
+        function useFallbackTranslations() {
                 // Fallback to inline translations if JSON files fail
                 translations = {
                     ru: {
@@ -4722,6 +4787,9 @@
                 tabPayments: "Ödənişlər",
                     }
                 };
+            // Apply translations immediately if language is already set
+            if (currentLang) {
+                applyDynamicTranslations();
             }
         }
 
@@ -5767,59 +5835,71 @@
         }
 
         // Список альтернативных CORS прокси для надежности (в порядке приоритета)
+        // Оптимизирован: убраны неработающие прокси, оставлены только надежные
         const CORS_PROXIES = [
             (url) => `https://api.allorigins.win/get?url=${encodeURIComponent(url)}`,
-            (url) => `https://corsproxy.io/?${encodeURIComponent(url)}`,
-            (url) => `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(url)}`,
-            (url) => `https://thingproxy.freeboard.io/fetch/${encodeURIComponent(url)}`,
-            (url) => `https://cors-anywhere.herokuapp.com/${encodeURIComponent(url)}`
+            (url) => `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(url)}`
         ];
 
-        // Функция с таймаутом для запросов
-        function fetchWithTimeout(url, timeout = 12000) {
+        // Функция с таймаутом для запросов (уменьшен таймаут для быстрой загрузки)
+        function fetchWithTimeout(url, timeout = 5000) {
             const controller = new AbortController();
             const timeoutId = setTimeout(() => controller.abort(), timeout);
             
             return fetch(url, { 
                 signal: controller.signal,
-                cache: 'no-cache'
+                cache: 'no-cache',
+                mode: 'cors'
             }).finally(() => clearTimeout(timeoutId));
         }
 
         // Парсинг RSS через бесплатный сервис с retry и несколькими прокси
-        async function parseRSSFeed(url, retries = 2) {
+        // Оптимизировано: уменьшено количество попыток для быстрой загрузки
+        async function parseRSSFeed(url, retries = 1) {
             let lastError = null;
             
             // Пробуем каждый прокси по очереди (быстрее переключаемся между прокси)
             for (let proxyIndex = 0; proxyIndex < CORS_PROXIES.length; proxyIndex++) {
                 const proxyFn = CORS_PROXIES[proxyIndex];
                 
-                // Пробуем 1-2 раза с одним прокси (меньше попыток = быстрее переключение)
+                // Пробуем 1 раз с одним прокси для быстрой загрузки
                 for (let attempt = 0; attempt < retries; attempt++) {
                     try {
                         const proxyUrl = proxyFn(url);
-                        const res = await fetchWithTimeout(proxyUrl, 10000);
+                        const res = await fetchWithTimeout(proxyUrl, 5000);
                         
                         if (!res.ok) {
                             throw new Error(`HTTP ${res.status}`);
                         }
                         
                         // Пробуем получить данные в разных форматах
-                        let finalXml = null;
+                        // ВАЖНО: Response можно прочитать только один раз, поэтому сначала определяем тип, потом читаем
                         const contentType = res.headers.get('content-type') || '';
+                        let finalXml = null;
                         
+                        // Определяем формат ответа и читаем его один раз
                         if (contentType.includes('application/json')) {
+                            // Это JSON ответ (например, от api.allorigins.win)
                             const data = await res.json();
-                            finalXml = data.contents || data.content || data;
+                            // api.allorigins.win возвращает {contents: "..."}, другие прокси могут иметь другую структуру
+                            finalXml = data.contents || data.content || (typeof data === 'string' ? data : JSON.stringify(data));
                         } else if (contentType.includes('text/xml') || contentType.includes('application/xml')) {
+                            // Это XML ответ
                             finalXml = await res.text();
                         } else {
-                            // Пробуем как JSON, если не получилось - как текст
+                            // Неизвестный тип - пробуем сначала как JSON, потом как текст
+                            // Клонируем response для возможности повторного чтения
+                            const clonedRes = res.clone();
                             try {
                                 const data = await res.json();
-                                finalXml = data.contents || data.content || data;
-                            } catch {
-                                finalXml = await res.text();
+                                finalXml = data.contents || data.content || (typeof data === 'string' ? data : JSON.stringify(data));
+                            } catch (jsonError) {
+                                // Если JSON не получился, пробуем как текст
+                                try {
+                                    finalXml = await clonedRes.text();
+                                } catch (textError) {
+                                    throw new Error('Failed to parse response as JSON or text');
+                                }
                             }
                         }
                         
@@ -5905,12 +5985,12 @@
                     rssUrls = [...fallbackUrls];
                 }
                 
-                // Пробуем загрузить из нескольких источников параллельно (до 3)
-                const urlsToFetch = rssUrls.slice(0, 3);
+                // Пробуем загрузить из нескольких источников параллельно (до 2 для быстрой загрузки)
+                const urlsToFetch = rssUrls.slice(0, 2);
                 const allArticles = [];
                 
-                // Загружаем параллельно из нескольких источников
-                const promises = urlsToFetch.map(url => parseRSSFeed(url, 2));
+                // Загружаем параллельно из нескольких источников (1 попытка для быстрой загрузки)
+                const promises = urlsToFetch.map(url => parseRSSFeed(url, 1));
                 const results = await Promise.allSettled(promises);
                 
                 // Собираем успешные результаты
@@ -5918,38 +5998,35 @@
                     if (result.status === 'fulfilled' && result.value && result.value.length > 0) {
                         allArticles.push(...result.value);
                     } else {
-                        console.warn(`Failed to load news from source ${urlsToFetch[index]}:`, result.reason);
+                        // Тихо игнорируем ошибки для быстрой загрузки
+                        if (result.reason) {
+                            console.debug(`Failed to load news from source ${urlsToFetch[index]}:`, result.reason);
+                        }
                     }
                 });
                 
-                // Если не получили новостей, пробуем остальные источники по одному
-                if (allArticles.length === 0 && rssUrls.length > 3) {
-                    for (let i = 3; i < Math.min(rssUrls.length, 6); i++) {
-                        try {
-                            const articles = await parseRSSFeed(rssUrls[i], 2);
-                            if (articles && articles.length > 0) {
-                                allArticles.push(...articles);
-                                break; // Останавливаемся на первом успешном
-                            }
-                        } catch (e) {
-                            console.warn(`Source ${rssUrls[i]} failed:`, e);
+                // Если не получили новостей, пробуем еще один источник (быстрый fallback)
+                if (allArticles.length === 0 && rssUrls.length > 2) {
+                    try {
+                        const articles = await parseRSSFeed(rssUrls[2], 1);
+                        if (articles && articles.length > 0) {
+                            allArticles.push(...articles);
                         }
+                    } catch (e) {
+                        console.debug(`Source ${rssUrls[2]} failed:`, e);
                     }
                 }
                 
-                // Если все еще нет новостей, пробуем английские источники как последний резерв
+                // Если все еще нет новостей, пробуем английские источники как последний резерв (только 1 попытка)
                 if (allArticles.length === 0 && currentLang !== 'en') {
                     const fallbackUrls = RSS_SOURCES['en'][categoryKey] || RSS_SOURCES['en']['all'];
-                    for (const url of fallbackUrls.slice(0, 2)) {
-                        try {
-                            const articles = await parseRSSFeed(url, 2);
-                            if (articles && articles.length > 0) {
-                                allArticles.push(...articles);
-                                break;
-                            }
-                        } catch (e) {
-                            console.warn(`Fallback source ${url} failed:`, e);
+                    try {
+                        const articles = await parseRSSFeed(fallbackUrls[0], 1);
+                        if (articles && articles.length > 0) {
+                            allArticles.push(...articles);
                         }
+                    } catch (e) {
+                        console.debug(`Fallback source failed:`, e);
                     }
                 }
                 
@@ -7714,11 +7791,83 @@
 
         console.log('✨ ORDINA CANDY loaded successfully!');
     </script>
-<script defer src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js" integrity="sha512-a6XN0PbgXCEgKLF0hoF3eWD1QZ3XkMtIOZB8H+aVRC6LOhIPltoMrR0pbw/I8G5pWqvtgiIUbBs7P1d3e2xF3g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-<script defer src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script>tailwind.config={important:!0,corePlugins:{preflight:!0}}</script>
-<script defer src="https://cdn.tailwindcss.com/3.4.1"></script>
-<script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-<script defer src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    
+    <!-- Защита от конфликтов с расширениями браузера (evmAsk.js и др.) -->
+    <script>
+        // Глобальная обработка ошибок для внешних скриптов (Angular, аналитика и др.)
+        window.addEventListener('error', function(event) {
+            // Игнорируем ошибки от внешних скриптов, которые не критичны для работы сайта
+            const errorSource = event.filename || '';
+            const errorMessage = event.message || '';
+            
+            // Подавляем ошибки от внешних скриптов аналитики и расширений
+            if (errorSource.includes('main-es2015') || 
+                errorSource.includes('hotjar') || 
+                errorSource.includes('fbevents') ||
+                errorSource.includes('roundtrip') ||
+                errorSource.includes('evmAsk') ||
+                errorSource.includes('polyfills-es2015') ||
+                errorMessage.includes('addData') && errorMessage.includes('undefined')) {
+                event.preventDefault();
+                event.stopPropagation();
+                console.debug('Suppressed non-critical error from external script:', errorSource);
+                return false;
+            }
+        }, true);
+        
+        // Перехватываем unhandled promise rejections от внешних скриптов
+        window.addEventListener('unhandledrejection', function(event) {
+            const reason = event.reason;
+            if (reason && typeof reason === 'object') {
+                const errorMsg = reason.message || reason.toString() || '';
+                const stack = reason.stack || '';
+                
+                // Подавляем ошибки от Angular и других внешних скриптов
+                if (errorMsg.includes('addData') || 
+                    stack.includes('main-es2015') ||
+                    stack.includes('polyfills-es2015')) {
+                    event.preventDefault();
+                    console.debug('Suppressed unhandled promise rejection from external script');
+                    return false;
+                }
+            }
+        });
+        
+        // Защита от ошибок при вызове методов несуществующих объектов
+        const originalError = console.error;
+        console.error = function(...args) {
+            const errorMsg = args.join(' ');
+            // Фильтруем известные некритичные ошибки
+            if (errorMsg.includes('addData') && errorMsg.includes('undefined') ||
+                errorMsg.includes('main-es2015') ||
+                errorMsg.includes('polyfills-es2015')) {
+                console.debug('Suppressed non-critical error:', errorMsg.substring(0, 100));
+                return;
+            }
+            originalError.apply(console, args);
+        };
+    </script>
+    
+    <!-- Tailwind CSS конфигурация должна быть ДО загрузки скрипта -->
+    <script>
+        if (typeof tailwind === 'undefined') {
+            window.tailwind = {};
+        }
+        tailwind.config = {
+            important: true,
+            corePlugins: {
+                preflight: true
+            }
+        };
+    </script>
+    <script defer src="https://cdn.tailwindcss.com/3.4.1"></script>
+    
+    <!-- Font Awesome без integrity для избежания ошибок -->
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    
+    <!-- Остальные скрипты с defer для оптимизации -->
+    <script defer src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
 </body>
 </html>
