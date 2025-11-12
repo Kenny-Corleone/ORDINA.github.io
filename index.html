@@ -102,7 +102,29 @@
 <!-- Preload критических ресурсов для ускорения загрузки -->
 <link rel="preload" href="./dist/tailwind.css" as="style">
 <link rel="preload" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" as="style">
-<link rel="stylesheet" href="./dist/tailwind.css">
+<link rel="stylesheet" href="./dist/tailwind.css" id="tailwind-css-link">
+<script>
+    // Fallback для tailwind.css если файл не загрузился
+    (function() {
+        const link = document.getElementById('tailwind-css-link');
+        if (link) {
+            link.onerror = function() {
+                this.onerror = null;
+                // Если локальный файл не загрузился, используем CDN как fallback
+                const fallbackScript = document.createElement('script');
+                fallbackScript.src = 'https://cdn.tailwindcss.com/3.4.1';
+                fallbackScript.defer = true;
+                document.head.appendChild(fallbackScript);
+            };
+            // Проверяем загрузку через небольшой таймаут
+            setTimeout(function() {
+                if (!link.sheet && !link.href.includes('cdn.tailwindcss')) {
+                    link.onerror();
+                }
+            }, 1000);
+        }
+    })();
+</script>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
 <noscript><link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet"></noscript>
     <style>
@@ -7939,23 +7961,34 @@
         // Глобальная обработка ошибок для внешних скриптов (Angular, аналитика и др.)
         window.addEventListener('error', function(event) {
             try {
-            // Игнорируем ошибки от внешних скриптов, которые не критичны для работы сайта
-            const errorSource = event.filename || '';
-            const errorMessage = event.message || '';
-            
-            // Подавляем ошибки от внешних скриптов аналитики и расширений
-            if (errorSource.includes('main-es2015') || 
-                errorSource.includes('hotjar') || 
-                errorSource.includes('fbevents') ||
-                errorSource.includes('roundtrip') ||
-                errorSource.includes('evmAsk') ||
-                errorSource.includes('polyfills-es2015') ||
-                errorSource.includes('cdn.tailwindcss.com') ||
+                // Игнорируем ошибки от внешних скриптов, которые не критичны для работы сайта
+                const errorSource = event.filename || event.target?.src || '';
+                const errorMessage = event.message || '';
+                const errorType = event.type || '';
+                
+                // Подавляем ошибки от внешних скриптов аналитики и расширений
+                const shouldSuppress = errorSource.includes('main-es2015') || 
+                    errorSource.includes('hotjar') || 
+                    errorSource.includes('static.hotjar') ||
+                    errorSource.includes('fbevents') ||
+                    errorSource.includes('connect.facebook') ||
+                    errorSource.includes('roundtrip') ||
+                    errorSource.includes('adroll') ||
+                    errorSource.includes('s.adroll') ||
+                    errorSource.includes('evmAsk') ||
+                    errorSource.includes('polyfills-es2015') ||
+                    errorSource.includes('cdn.tailwindcss.com') ||
+                    (errorSource.includes('dist/tailwind.css') && errorMessage.includes('404')) ||
+                    errorMessage.includes('ERR_BLOCKED_BY_CLIENT') ||
+                    errorMessage.includes('ERR_ABORTED') ||
                     (errorMessage.includes('addData') && errorMessage.includes('undefined')) ||
-                    (errorMessage.includes('CORS policy') && errorMessage.includes('tailwindcss'))) {
-                event.preventDefault();
-                event.stopPropagation();
-                return false;
+                    (errorMessage.includes('CORS policy') && errorMessage.includes('tailwindcss'));
+                
+                if (shouldSuppress) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                    event.stopImmediatePropagation();
+                    return false;
                 }
             } catch (e) {
                 // Игнорируем ошибки в обработчике ошибок
@@ -7965,19 +7998,25 @@
         // Перехватываем unhandled promise rejections от внешних скриптов
         window.addEventListener('unhandledrejection', function(event) {
             try {
-            const reason = event.reason;
-            if (reason && typeof reason === 'object') {
-                const errorMsg = reason.message || reason.toString() || '';
-                const stack = reason.stack || '';
-                
-                // Подавляем ошибки от Angular и других внешних скриптов
-                if (errorMsg.includes('addData') || 
-                    stack.includes('main-es2015') ||
+                const reason = event.reason;
+                if (reason && typeof reason === 'object') {
+                    const errorMsg = reason.message || reason.toString() || '';
+                    const stack = reason.stack || '';
+                    
+                    // Подавляем ошибки от Angular и других внешних скриптов
+                    if (errorMsg.includes('addData') || 
+                        errorMsg.includes('ERR_BLOCKED_BY_CLIENT') ||
+                        errorMsg.includes('ERR_ABORTED') ||
+                        stack.includes('main-es2015') ||
                         stack.includes('polyfills-es2015') ||
-                        stack.includes('hotjar')) {
-                    event.preventDefault();
-                    return false;
-                }
+                        stack.includes('hotjar') ||
+                        stack.includes('fbevents') ||
+                        stack.includes('adroll') ||
+                        stack.includes('roundtrip')) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                        return false;
+                    }
                 }
             } catch (e) {
                 // Игнорируем ошибки в обработчике
@@ -7989,25 +8028,33 @@
             try {
         const originalError = console.error;
         console.error = function(...args) {
-                    try {
-            const errorMsg = args.join(' ');
-            // Фильтруем известные некритичные ошибки
-                        if ((errorMsg.includes('addData') && errorMsg.includes('undefined')) ||
-                errorMsg.includes('main-es2015') ||
-                            errorMsg.includes('polyfills-es2015') ||
-                            errorMsg.includes('hotjar')) {
-                return;
+            try {
+                const errorMsg = args.join(' ');
+                // Фильтруем известные некритичные ошибки
+                if ((errorMsg.includes('addData') && errorMsg.includes('undefined')) ||
+                    errorMsg.includes('ERR_BLOCKED_BY_CLIENT') ||
+                    errorMsg.includes('ERR_ABORTED') ||
+                    errorMsg.includes('main-es2015') ||
+                    errorMsg.includes('polyfills-es2015') ||
+                    errorMsg.includes('hotjar') ||
+                    errorMsg.includes('fbevents') ||
+                    errorMsg.includes('adroll') ||
+                    errorMsg.includes('roundtrip') ||
+                    errorMsg.includes('static.hotjar') ||
+                    errorMsg.includes('connect.facebook') ||
+                    errorMsg.includes('s.adroll')) {
+                    return;
+                }
+                originalError.apply(console, args);
+            } catch (e) {
+                // Если что-то пошло не так, используем оригинальный метод
+                try {
+                    originalError.apply(console, args);
+                } catch (e2) {
+                    // Игнорируем
+                }
             }
-            originalError.apply(console, args);
-                    } catch (e) {
-                        // Если что-то пошло не так, используем оригинальный метод
-                        try {
-                            originalError.apply(console, args);
-                        } catch (e2) {
-                            // Игнорируем
-                        }
-                    }
-                };
+        };
             } catch (e) {
                 // Игнорируем ошибки при переопределении console.error
             }

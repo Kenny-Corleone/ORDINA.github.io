@@ -7,10 +7,10 @@ package-lock.json
 yarn.lock
 
 # Build outputs
-dist/
+# dist/ - НЕ игнорируем, нужен для деплоя tailwind.css
 build/
 *.min.js
-*.min.css
+# *.min.css - НЕ игнорируем, tailwind.css минифицирован
 
 # Environment variables
 .env
