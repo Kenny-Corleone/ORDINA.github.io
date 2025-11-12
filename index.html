@@ -6638,6 +6638,18 @@
             const sortedCategories = Object.entries(expensesByCategory).sort(([, a], [, b]) => b - a).slice(0, 7);
             const chartLabels = sortedCategories.map(item => item[0]);
             const chartData = sortedCategories.map(item => item[1]);
+            // Проверяем наличие Chart.js перед использованием
+            if (typeof Chart === 'undefined') {
+                // Chart.js еще не загружен, пропускаем создание графика
+                return;
+            }
+            
+            const chartElement = document.getElementById('expenses-chart');
+            if (!chartElement) {
+                return;
+            }
+            
+            try {
             if (expensesChart) expensesChart.destroy();
             const computedStyle = getComputedStyle(document.documentElement);
             const primaryColor = computedStyle.getPropertyValue('--primary').trim();
@@ -6646,7 +6658,7 @@
             const goldRgb = computedStyle.getPropertyValue('--gold-rgb').trim();
             const fontFamily = computedStyle.getPropertyValue('font-family') || "'Poppins', -apple-system, BlinkMacSystemFont, sans-serif";
             
-            expensesChart = new Chart(document.getElementById('expenses-chart').getContext('2d'), { 
+                expensesChart = new Chart(chartElement.getContext('2d'), { 
                 type: 'bar', 
                 data: { 
                     labels: chartLabels, 
@@ -6729,6 +6741,9 @@
                     } 
                 } 
             });
+            } catch (e) {
+                logger.error('Error creating chart:', e);
+            }
         }
 
         function showToast(message, type = 'success') {
@@ -7961,34 +7976,41 @@
         // Глобальная обработка ошибок для внешних скриптов (Angular, аналитика и др.)
         window.addEventListener('error', function(event) {
             try {
-                // Игнорируем ошибки от внешних скриптов, которые не критичны для работы сайта
-                const errorSource = event.filename || event.target?.src || '';
-                const errorMessage = event.message || '';
+            // Игнорируем ошибки от внешних скриптов, которые не критичны для работы сайта
+                // Получаем источник ошибки из разных мест
+                const errorSource = event.filename || 
+                    (event.target && (event.target.src || event.target.href)) || 
+                    (event.target && event.target.tagName && event.target.tagName.toLowerCase() === 'script' ? event.target.src : '') ||
+                    (event.target && event.target.tagName && event.target.tagName.toLowerCase() === 'link' ? event.target.href : '') ||
+                    '';
+                const errorMessage = (event.message || event.error?.message || '').toString();
                 const errorType = event.type || '';
-                
-                // Подавляем ошибки от внешних скриптов аналитики и расширений
+            
+            // Подавляем ошибки от внешних скриптов аналитики и расширений
                 const shouldSuppress = errorSource.includes('main-es2015') || 
-                    errorSource.includes('hotjar') || 
+                errorSource.includes('hotjar') || 
                     errorSource.includes('static.hotjar') ||
-                    errorSource.includes('fbevents') ||
+                errorSource.includes('fbevents') ||
                     errorSource.includes('connect.facebook') ||
-                    errorSource.includes('roundtrip') ||
+                errorSource.includes('roundtrip') ||
                     errorSource.includes('adroll') ||
                     errorSource.includes('s.adroll') ||
-                    errorSource.includes('evmAsk') ||
-                    errorSource.includes('polyfills-es2015') ||
-                    errorSource.includes('cdn.tailwindcss.com') ||
-                    (errorSource.includes('dist/tailwind.css') && errorMessage.includes('404')) ||
+                errorSource.includes('evmAsk') ||
+                errorSource.includes('polyfills-es2015') ||
+                    errorSource.includes('owl.carousel') ||
+                errorSource.includes('cdn.tailwindcss.com') ||
+                    (errorSource.includes('dist/tailwind.css') && (errorMessage.includes('404') || errorMessage.includes('ERR_ABORTED'))) ||
                     errorMessage.includes('ERR_BLOCKED_BY_CLIENT') ||
                     errorMessage.includes('ERR_ABORTED') ||
+                    errorMessage.includes('Can not detect viewport width') ||
                     (errorMessage.includes('addData') && errorMessage.includes('undefined')) ||
                     (errorMessage.includes('CORS policy') && errorMessage.includes('tailwindcss'));
                 
                 if (shouldSuppress) {
-                    event.preventDefault();
-                    event.stopPropagation();
+                event.preventDefault();
+                event.stopPropagation();
                     event.stopImmediatePropagation();
-                    return false;
+                return false;
                 }
             } catch (e) {
                 // Игнорируем ошибки в обработчике ошибок
@@ -7998,25 +8020,28 @@
         // Перехватываем unhandled promise rejections от внешних скриптов
         window.addEventListener('unhandledrejection', function(event) {
             try {
-                const reason = event.reason;
-                if (reason && typeof reason === 'object') {
-                    const errorMsg = reason.message || reason.toString() || '';
-                    const stack = reason.stack || '';
-                    
-                    // Подавляем ошибки от Angular и других внешних скриптов
-                    if (errorMsg.includes('addData') || 
+            const reason = event.reason;
+            if (reason && typeof reason === 'object') {
+                const errorMsg = reason.message || reason.toString() || '';
+                const stack = reason.stack || '';
+                
+                // Подавляем ошибки от Angular и других внешних скриптов
+                if (errorMsg.includes('addData') || 
                         errorMsg.includes('ERR_BLOCKED_BY_CLIENT') ||
                         errorMsg.includes('ERR_ABORTED') ||
-                        stack.includes('main-es2015') ||
+                        errorMsg.includes('Chart is not defined') ||
+                        errorMsg.includes('Can not detect viewport width') ||
+                    stack.includes('main-es2015') ||
                         stack.includes('polyfills-es2015') ||
                         stack.includes('hotjar') ||
                         stack.includes('fbevents') ||
                         stack.includes('adroll') ||
-                        stack.includes('roundtrip')) {
-                        event.preventDefault();
+                        stack.includes('roundtrip') ||
+                        stack.includes('owl.carousel')) {
+                    event.preventDefault();
                         event.stopPropagation();
-                        return false;
-                    }
+                    return false;
+                }
                 }
             } catch (e) {
                 // Игнорируем ошибки в обработчике
@@ -8029,12 +8054,14 @@
         const originalError = console.error;
         console.error = function(...args) {
             try {
-                const errorMsg = args.join(' ');
-                // Фильтруем известные некритичные ошибки
+            const errorMsg = args.join(' ');
+            // Фильтруем известные некритичные ошибки
                 if ((errorMsg.includes('addData') && errorMsg.includes('undefined')) ||
                     errorMsg.includes('ERR_BLOCKED_BY_CLIENT') ||
                     errorMsg.includes('ERR_ABORTED') ||
-                    errorMsg.includes('main-es2015') ||
+                    errorMsg.includes('Chart is not defined') ||
+                    errorMsg.includes('Can not detect viewport width') ||
+                errorMsg.includes('main-es2015') ||
                     errorMsg.includes('polyfills-es2015') ||
                     errorMsg.includes('hotjar') ||
                     errorMsg.includes('fbevents') ||
@@ -8042,10 +8069,11 @@
                     errorMsg.includes('roundtrip') ||
                     errorMsg.includes('static.hotjar') ||
                     errorMsg.includes('connect.facebook') ||
-                    errorMsg.includes('s.adroll')) {
-                    return;
-                }
-                originalError.apply(console, args);
+                    errorMsg.includes('s.adroll') ||
+                    errorMsg.includes('owl.carousel')) {
+                return;
+            }
+            originalError.apply(console, args);
             } catch (e) {
                 // Если что-то пошло не так, используем оригинальный метод
                 try {
@@ -8216,10 +8244,23 @@
         // Загружаем не-критичные скрипты после загрузки страницы
         window.addEventListener('load', function() {
             // Chart.js - загружаем только если используется
-            if (document.querySelector('[data-chart]') || document.getElementById('expense-chart')) {
+            if (document.querySelector('[data-chart]') || document.getElementById('expense-chart') || document.getElementById('expenses-chart')) {
                 window.loadScriptSafely('https://cdn.jsdelivr.net/npm/chart.js', {
-                    lazy: true,
+                    lazy: false, // Загружаем сразу, так как используется в updateDashboard
                     timeout: 5000
+                }).then(function() {
+                    // После загрузки Chart.js обновляем дашборд
+                    if (typeof updateDashboard === 'function') {
+                        setTimeout(function() {
+                            try {
+                                updateDashboard();
+                            } catch (e) {
+                                if (typeof logger !== 'undefined' && logger.error) {
+                                    logger.error('Error updating dashboard after Chart.js load:', e);
+                                }
+                            }
+                        }, 100);
+                    }
                 }).catch(function() {
                     // Chart.js не критичен
                 });
