@@ -34,22 +34,22 @@ export default defineConfig({
                 ],
             },
         }),
-        // Gzip compression
-        viteCompression({
-            verbose: true,
-            disable: false,
-            threshold: 10240, // Only compress files larger than 10kb
-            algorithm: 'gzip',
-            ext: '.gz',
-        }),
-        // Brotli compression (better than gzip)
-        viteCompression({
-            verbose: true,
-            disable: false,
-            threshold: 10240,
-            algorithm: 'brotliCompress',
-            ext: '.br',
-        }),
+        // Gzip compression - DISABLED due to path issues
+        // viteCompression({
+        //     verbose: true,
+        //     disable: false,
+        //     threshold: 10240,
+        //     algorithm: 'gzip',
+        //     ext: '.gz',
+        // }),
+        // Brotli compression - DISABLED due to path issues
+        // viteCompression({
+        //     verbose: true,
+        //     disable: false,
+        //     threshold: 10240,
+        //     algorithm: 'brotliCompress',
+        //     ext: '.br',
+        // }),
     ],
     resolve: {
         alias: {
