@@ -189,7 +189,7 @@ const detachListeners = () => {
 // ============================================================================
 
 const showApp = () => {
-    const loginScreen = document.getElementById('login-screen');
+    const loginScreen = document.getElementById('auth-container');
     const appScreen = document.getElementById('app');
     if (loginScreen) loginScreen.classList.add('hidden');
     if (appScreen) {
@@ -201,7 +201,7 @@ const showApp = () => {
 };
 
 const showLoginScreen = () => {
-    const loginScreen = document.getElementById('login-screen');
+    const loginScreen = document.getElementById('auth-container');
     const appScreen = document.getElementById('app');
     if (loginScreen) loginScreen.classList.remove('hidden');
     if (appScreen) appScreen.classList.add('hidden');
