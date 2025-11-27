@@ -20,6 +20,7 @@ build/
 # IDE
 .vscode/
 .idea/
+.kiro/
 *.swp
 *.swo
 *~
@@ -40,6 +41,16 @@ logs/
 
 # Trash folder (contains old/unused files)
 Trash/
+
+# Documentation and test files
+docs/
+*-report.md
+*-validation.md
+*-summary.md
+test-*.js
+measure-*.js
+calculate-*.js
+validate-*.js
 
 # Source maps (if not needed)
 *.map
