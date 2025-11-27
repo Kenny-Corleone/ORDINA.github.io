@@ -578,54 +578,73 @@ function renderChart() {
     const chartElement = document.getElementById('expenses-chart');
     if (!chartElement || typeof Chart === 'undefined') return;
 
-    const expensesByCategory = {};
-    allExpenses.forEach(doc => {
-        const e = doc.data();
-        expensesByCategory[e.category] = (expensesByCategory[e.category] || 0) + e.amount;
-    });
+    try {
+        const expensesByCategory = {};
+        allExpenses.forEach(doc => {
+            const e = doc.data();
+            expensesByCategory[e.category] = (expensesByCategory[e.category] || 0) + e.amount;
+        });
 
-    const sortedCategories = Object.entries(expensesByCategory).sort(([, a], [, b]) => b - a).slice(0, 7);
-    const chartLabels = sortedCategories.map(item => item[0]);
-    const chartData = sortedCategories.map(item => item[1]);
+        const sortedCategories = Object.entries(expensesByCategory).sort(([, a], [, b]) => b - a).slice(0, 7);
+        const chartLabels = sortedCategories.map(item => item[0]);
+        const chartData = sortedCategories.map(item => item[1]);
 
-    if (expensesChart) expensesChart.destroy();
-
-    const computedStyle = getComputedStyle(document.documentElement);
-    const primaryRgb = computedStyle.getPropertyValue('--primary-rgb').trim() || '99, 102, 241';
-    const goldRgb = computedStyle.getPropertyValue('--gold-rgb').trim() || '212, 175, 55';
-    const fontFamily = computedStyle.getPropertyValue('font-family') || "'Poppins', sans-serif";
-
-    expensesChart = new Chart(chartElement.getContext('2d'), {
-        type: 'bar',
-        data: {
-            labels: chartLabels,
-            datasets: [{
-                label: `${translations[currentLang].chartLabel}`,
-                data: chartData.map(amount => currentCurrency === 'USD' ? amount / exchangeRate : amount),
-                backgroundColor: [
-                    `rgba(${primaryRgb}, 0.7)`, 'rgba(239, 68, 68, 0.7)', `rgba(${goldRgb}, 0.7)`,
-                    'rgba(16, 185, 129, 0.7)', 'rgba(139, 92, 246, 0.7)', 'rgba(236, 72, 153, 0.7)', 'rgba(107, 114, 128, 0.7)'
-                ],
-                borderColor: [
-                    `rgba(${primaryRgb}, 1)`, 'rgba(239, 68, 68, 1)', `rgba(${goldRgb}, 1)`,
-                    'rgba(16, 185, 129, 1)', 'rgba(139, 92, 246, 1)', 'rgba(236, 72, 153, 1)', 'rgba(107, 114, 128, 1)'
-                ],
-                borderWidth: 2
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            font: { family: fontFamily, size: 12, weight: '500' },
-            scales: {
-                y: { beginAtZero: true, grid: { color: 'rgba(0, 0, 0, 0.05)' } },
-                x: { grid: { display: false } }
-            },
-            plugins: {
-                legend: { display: true, position: 'top', labels: { usePointStyle: true, pointStyle: 'circle' } }
+        // Safely destroy existing chart
+        if (expensesChart && typeof expensesChart.destroy === 'function') {
+            try {
+                expensesChart.destroy();
+            } catch (e) {
+                logger.warn('Error destroying chart:', e);
             }
         }
-    });
+
+        // Verify canvas context is available
+        const ctx = chartElement.getContext('2d');
+        if (!ctx) {
+            logger.warn('Cannot get 2d context from chart element');
+            return;
+        }
+
+        const computedStyle = getComputedStyle(document.documentElement);
+        const primaryRgb = computedStyle.getPropertyValue('--primary-rgb').trim() || '99, 102, 241';
+        const goldRgb = computedStyle.getPropertyValue('--gold-rgb').trim() || '212, 175, 55';
+        const fontFamily = computedStyle.getPropertyValue('font-family') || "'Poppins', sans-serif";
+
+        expensesChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: chartLabels,
+                datasets: [{
+                    label: `${translations[currentLang]?.chartLabel || 'Expenses'}`,
+                    data: chartData.map(amount => currentCurrency === 'USD' ? amount / exchangeRate : amount),
+                    backgroundColor: [
+                        `rgba(${primaryRgb}, 0.7)`, 'rgba(239, 68, 68, 0.7)', `rgba(${goldRgb}, 0.7)`,
+                        'rgba(16, 185, 129, 0.7)', 'rgba(139, 92, 246, 0.7)', 'rgba(236, 72, 153, 0.7)', 'rgba(107, 114, 128, 0.7)'
+                    ],
+                    borderColor: [
+                        `rgba(${primaryRgb}, 1)`, 'rgba(239, 68, 68, 1)', `rgba(${goldRgb}, 1)`,
+                        'rgba(16, 185, 129, 1)', 'rgba(139, 92, 246, 1)', 'rgba(236, 72, 153, 1)', 'rgba(107, 114, 128, 1)'
+                    ],
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                font: { family: fontFamily, size: 12, weight: '500' },
+                scales: {
+                    y: { beginAtZero: true, grid: { color: 'rgba(0, 0, 0, 0.05)' } },
+                    x: { grid: { display: false } }
+                },
+                plugins: {
+                    legend: { display: true, position: 'top', labels: { usePointStyle: true, pointStyle: 'circle' } }
+                }
+            }
+        });
+    } catch (error) {
+        logger.error('Error rendering chart:', error);
+        // Don't throw - allow app to continue functioning
+    }
 }
 
 function updateRecentActivity() {
