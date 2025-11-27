@@ -14,40 +14,63 @@
    cd ORDINA.github.io
    ```
 
-2. **Start local server**
+2. **Install dependencies**
    ```bash
-   npm start
-   # or
-   npm run serve
-   # or
-   python -m http.server 8000
+   npm install
    ```
 
-3. **Open in browser**
-   - Visit `http://localhost:8000`
+3. **Start development server**
+   ```bash
+   npm run dev
+   ```
+
+4. **Open in browser**
+   - Visit `http://localhost:3000`
+
+### Production Build
+
+```bash
+npm run build
+```
+
+This creates an optimized production build in the `dist/` folder.
 
 ### Deployment
 
-This is a static site that can be deployed to:
-- **GitHub Pages** (already configured)
-- **Netlify** - Drag and drop the folder
+This project is configured for **GitHub Pages** with automatic deployment via GitHub Actions.
+
+**Manual deployment options:**
+- **GitHub Pages** - Automatically deploys on push to `main`
+- **Netlify** - Connect your GitHub repo or drag and drop `dist/` folder
 - **Vercel** - Connect your GitHub repo
-- **Firebase Hosting** - Use `firebase deploy`
+- **Firebase Hosting** - Run `firebase deploy` after build
 
 ## 📁 Project Structure
 
 ```
-ORDINA2.1/
-├── index.html          # Main entry point
-├── assets/             # Images, icons, favicons
+ORDINA.github.io/
+├── index.html          # Main HTML entry point
+├── src/                # Source files
+│   ├── main.js         # JavaScript entry point
+│   ├── styles/         # CSS files
+│   └── js/             # JavaScript modules
+│       ├── app.js      # Main application logic
+│       ├── firebase.js # Firebase configuration
+│       ├── i18n.js     # Internationalization
+│       ├── utils.js    # Utility functions
+│       ├── weather.js  # Weather widget
+│       └── news.js     # News widget
+├── assets/             # Static assets
 │   ├── favicons/       # Favicon files
 │   └── *.png          # Logo files
 ├── locales/            # Translation files
 │   ├── locale-ru.json
 │   ├── locale-en.json
 │   └── locale-az.json
-├── docs/               # Documentation
-├── package.json        # Project configuration
+├── dist/               # Production build (generated)
+├── .github/            # GitHub Actions workflows
+├── package.json        # Project dependencies
+├── vite.config.js      # Vite configuration
 └── LICENSE            # MIT License
 ```
 
@@ -55,19 +78,20 @@ ORDINA2.1/
 
 ### Available Scripts
 
-- `npm start` - Start local development server (Python)
-- `npm run serve` - Start local server (Node.js)
-- `npm run lint` - Run linters (placeholder)
-- `npm run test` - Run tests (placeholder)
-- `npm run build` - Build for production (not required for static site)
+- `npm run dev` - Start Vite development server with hot reload
+- `npm run build` - Build optimized production bundle
+- `npm run preview` - Preview production build locally
 
 ### Tech Stack
 
+- **Vite** - Fast build tool and dev server
 - **HTML5** - Semantic markup
 - **CSS3** - Modern styling with CSS variables
-- **Vanilla JavaScript** - No framework dependencies
-- **Firebase** - Authentication and database
-- **Tailwind CSS** - Utility-first CSS (via CDN)
+- **Tailwind CSS** - Utility-first CSS framework
+- **Vanilla JavaScript** - ES6+ modules, no framework
+- **Firebase** - Authentication and Firestore database
+- **Chart.js** - Data visualization
+- **Particles.js** - Background animations
 
 ## 🌍 Localization
 
