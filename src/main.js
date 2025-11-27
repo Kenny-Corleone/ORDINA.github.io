@@ -1,9 +1,24 @@
 import './styles/main.css';
 import { app, db, auth } from './js/firebase.js';
 import { logger, $, loadScriptSafely } from './js/utils.js';
-import './js/app.js'; // We will put the main logic here
+import { initApp } from './js/app.js'; // Import initApp function
 
 console.log('App initialized');
+
+// Initialize the application
+initApp().catch(error => {
+    logger.error('Failed to initialize app:', error);
+    // Show error to user
+    const loadingOverlay = document.getElementById('loading-overlay');
+    if (loadingOverlay) {
+        loadingOverlay.innerHTML = `
+            <div class="text-center">
+                <p class="text-red-600 mb-4">Ошибка загрузки приложения</p>
+                <p class="text-sm text-gray-600">${error.message}</p>
+            </div>
+        `;
+    }
+});
 
 // Load external scripts safely with optimized loading strategy
 async function loadExternalScripts() {
