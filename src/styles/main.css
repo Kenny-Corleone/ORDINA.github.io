@@ -1618,18 +1618,60 @@
             .header-grid-container {
                 grid-template-columns: 1fr;
                 grid-template-rows: auto auto auto auto auto auto;
-                gap: clamp(8px, 2vw, 12px);
+                gap: clamp(14px, 4vw, 18px);
                 justify-items: center;
+                align-items: center;
+                padding-inline: clamp(16px, 5vw, 24px);
+                padding-block: clamp(12px, 3vw, 16px);
+                min-height: auto;
             }
 
-            .header-logo-wrapper,
+            .header-logo-wrapper {
+                width: clamp(160px, 40vw, 200px) !important;
+                height: clamp(75px, 18vw, 95px) !important;
+                justify-content: center;
+                margin: 0 auto;
+            }
+
             .header-motto,
             .header-weather-chip,
             .header-radio-chip,
             .header-datetime,
             .header-right-group {
                 width: 100%;
+                max-width: 100%;
                 justify-content: center;
+                margin: 0;
+            }
+
+            .header-motto {
+                text-align: center;
+                padding-left: 0;
+                padding-right: 0;
+                white-space: normal;
+                font-size: clamp(1.1rem, 5vw, 1.4rem);
+                line-height: 1.3;
+                word-wrap: break-word;
+            }
+
+            .header-radio-chip {
+                margin-left: 0;
+                max-width: 100%;
+                justify-content: center;
+                width: auto;
+                min-width: fit-content;
+            }
+
+            .header-datetime {
+                text-align: center;
+                padding: 0;
+                font-size: clamp(0.9rem, 3.5vw, 1.1rem);
+            }
+
+            .header-right-group {
+                justify-content: center;
+                gap: clamp(10px, 3vw, 14px);
+                flex-wrap: wrap;
             }
 
             /* Hide weather on very small screens */
@@ -1641,15 +1683,20 @@
         /* Tablet: Compact grid with all widgets in original order */
         @media (min-width: 481px) and (max-width: 768px) {
             .header-grid-container {
-                grid-template-columns: clamp(100px, 12vw, 120px) minmax(0, 1fr) auto auto auto auto;
+                grid-template-columns: clamp(130px, 14vw, 150px) minmax(0, 1fr) auto auto auto auto;
                 column-gap: clamp(6px, 1vw, 9px);
+            }
+
+            .header-logo-wrapper {
+                width: clamp(130px, 14vw, 150px);
+                height: clamp(60px, 7vw, 70px);
             }
         }
 
         /* Desktop: Full grid with original spacing and order */
         @media (min-width: 769px) {
             .header-grid-container {
-                grid-template-columns: clamp(120px, 12vw, 140px) minmax(0, 1fr) auto auto auto auto;
+                grid-template-columns: clamp(200px, 20vw, 240px) minmax(0, 1fr) auto auto auto auto;
                 column-gap: clamp(8px, 1vw, 10.8px);
             }
         }
@@ -1664,6 +1711,14 @@
             padding: 0;
             overflow: hidden;
             flex-shrink: 0;
+        }
+
+        /* Desktop: Larger logo */
+        @media (min-width: 769px) {
+            .header-logo-wrapper {
+                width: clamp(200px, 20vw, 240px);
+                height: clamp(95px, 10vw, 115px);
+            }
         }
 
         /* Logo Image - Fixed Size */
