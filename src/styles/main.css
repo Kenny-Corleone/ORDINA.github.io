@@ -1839,6 +1839,44 @@ textarea:focus {
     line-height: 1;
 }
 
+<<<<<<< Updated upstream
+=======
+.header-lang-toggle,
+.header-currency-btn {
+    width: clamp(28px, 3vw, 32px);
+    height: clamp(28px, 3vw, 32px);
+    min-width: var(--hit-target-min);
+    min-height: var(--hit-target-min);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: 1px solid transparent;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    color: var(--text-secondary);
+    flex-shrink: 0;
+    font-size: clamp(16px, 3.8vw, 22px);
+    line-height: 1;
+}
+
+.header-lang-toggle:hover,
+.header-currency-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 2px 8px rgba(244, 196, 48, 0.2);
+    border-color: var(--gold-primary);
+    color: var(--gold-primary);
+}
+
+@media (max-width: 480px) {
+    .header-right-group {
+        flex-wrap: wrap;
+        max-width: 100%;
+    }
+}
+
+>>>>>>> Stashed changes
 /* Fluid Icon Buttons - Responsive Sizing */
 .header-theme-btn,
 .header-logout-btn {

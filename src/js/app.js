@@ -1018,6 +1018,7 @@ function setupEventListeners() {
     }
 
     // Language Flags
+<<<<<<< Updated upstream
     $$('.header-lang-btn').forEach(btn => {
         // Set initial active state
         if (btn.dataset.lang === currentLang) {
@@ -1031,6 +1032,35 @@ function setupEventListeners() {
             if (lang === currentLang) return;
 
             setLanguage(lang, () => {
+=======
+    const flagByLang = { ru: '🇷🇺', en: '🇬🇧', az: '🇦🇿' };
+    const titleByLang = { ru: 'Русский', en: 'English', az: 'Azərbaycan' };
+
+    const updateLangToggleUI = () => {
+        const headerToggle = document.getElementById('lang-toggle-btn');
+        const loginToggle = document.getElementById('lang-toggle-login');
+        const flag = flagByLang[currentLang] || '🇷🇺';
+        const title = titleByLang[currentLang] || 'Русский';
+        if (headerToggle) { headerToggle.textContent = flag; headerToggle.title = title; }
+        if (loginToggle) { loginToggle.textContent = flag; loginToggle.title = title; }
+    };
+
+    updateLangToggleUI();
+
+    const cycleLang = (lang) => {
+        const order = ['az', 'en', 'ru'];
+        const idx = order.indexOf(lang);
+        return order[(idx + 1) % order.length];
+    };
+
+    const headerToggle = document.getElementById('lang-toggle-btn');
+    if (headerToggle) {
+        headerToggle.addEventListener('click', (e) => {
+            e.preventDefault();
+            const nextLang = cycleLang(currentLang);
+            setLanguage(nextLang, () => {
+                updateLangToggleUI();
+>>>>>>> Stashed changes
                 updateCurrencyButtons();
                 updateMonthDisplay();
                 renderCalendar();
@@ -1039,6 +1069,7 @@ function setupEventListeners() {
                 if (availableMonths.length > 0) {
                     renderMonthSelector(availableMonths);
                 }
+<<<<<<< Updated upstream
 
                 // Update active state
                 $$('.header-lang-btn').forEach(b => {
@@ -1076,6 +1107,24 @@ function setupEventListeners() {
             });
         }
     });
+=======
+            });
+        });
+    }
+
+    const loginToggle = document.getElementById('lang-toggle-login');
+    if (loginToggle) {
+        loginToggle.addEventListener('click', (e) => {
+            e.preventDefault();
+            const nextLang = cycleLang(currentLang);
+            setLanguage(nextLang, () => {
+                updateLangToggleUI();
+            });
+        });
+    }
+
+    // Removed individual login flag handlers in favor of single toggle
+>>>>>>> Stashed changes
 
     // Currency Toggle
     const currToggleBtn = document.getElementById('curr-toggle-btn');
