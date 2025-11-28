@@ -792,19 +792,39 @@ async function checkAndCarryOverDailyTasks(todayId) {
     const lastCheck = localStorage.getItem(lastCheckKey);
 
     if (lastCheck !== todayId) {
-        const q = query(dailyTasksCol, where("status", "==", translations.ru.statusNotDone), where("carriedOver", "==", false));
+        // Query all unfinished tasks, regardless of carriedOver status
+        const q = query(dailyTasksCol, where("status", "==", translations.ru.statusNotDone));
         const tasksSnapshot = await getDocs(q);
         const batch = writeBatch(db);
+        let hasUpdates = false;
 
         tasksSnapshot.forEach(doc => {
             const task = doc.data();
-            // Logic to check if task is from yesterday or older is simplified here
-            // In a real app, we'd check task.createdAt or similar
-            // Assuming we just carry over all not done tasks that are not yet carried over
-            batch.update(doc.ref, { carriedOver: true });
+            // Only carry over tasks from the past
+            if (task.date < todayId) {
+                const updates = {
+                    carriedOver: true,
+                    date: todayId // Move to today
+                };
+
+                // Save original date if not present
+                if (!task.originalDate) {
+                    updates.originalDate = task.date;
+                }
+
+                // Track first carry date for display if needed
+                if (!task.first_carry_date) {
+                    updates.first_carry_date = task.date;
+                }
+
+                batch.update(doc.ref, updates);
+                hasUpdates = true;
+            }
         });
 
-        await batch.commit();
+        if (hasUpdates) {
+            await batch.commit();
+        }
         localStorage.setItem(lastCheckKey, todayId);
     }
 }
@@ -1211,10 +1231,19 @@ async function handleFormSubmit(e) {
 // Form Handlers (Simplified)
 async function handleDebtForm(form) {
     const id = form.querySelector('#debt-id').value;
+    let totalAmount = parseFloat(form.querySelector('#debt-total').value);
+    let paidAmount = parseFloat(form.querySelector('#debt-paid').value);
+
+    // Convert to AZN if current currency is USD
+    if (currentCurrency === 'USD') {
+        totalAmount = totalAmount * exchangeRate;
+        paidAmount = paidAmount * exchangeRate;
+    }
+
     const data = {
         name: form.querySelector('#debt-name').value,
-        totalAmount: parseFloat(form.querySelector('#debt-total').value),
-        paidAmount: parseFloat(form.querySelector('#debt-paid').value),
+        totalAmount,
+        paidAmount,
         comment: form.querySelector('#debt-comment').value
     };
 
@@ -1227,10 +1256,17 @@ async function handleDebtForm(form) {
 
 async function handleExpenseForm(form) {
     const id = form.querySelector('#expense-id').value;
+    let amount = parseFloat(form.querySelector('#expense-amount').value);
+
+    // Convert to AZN if current currency is USD
+    if (currentCurrency === 'USD') {
+        amount = amount * exchangeRate;
+    }
+
     const data = {
         name: form.querySelector('#expense-name').value,
         category: form.querySelector('#expense-category').value,
-        amount: parseFloat(form.querySelector('#expense-amount').value),
+        amount,
         date: form.querySelector('#expense-date').value
     };
 
@@ -1284,9 +1320,16 @@ async function handleYearlyTaskForm(form) {
 
 async function handleRecurringExpenseForm(form) {
     const id = form.querySelector('#recurring-expense-id').value;
+    let amount = parseFloat(form.querySelector('#recurring-expense-amount').value);
+
+    // Convert to AZN if current currency is USD
+    if (currentCurrency === 'USD') {
+        amount = amount * exchangeRate;
+    }
+
     const data = {
         name: form.querySelector('#recurring-expense-name').value,
-        amount: parseFloat(form.querySelector('#recurring-expense-amount').value),
+        amount,
         dueDay: parseInt(form.querySelector('#recurring-expense-due-day').value),
         details: form.querySelector('#recurring-expense-details').value || ''
     };
@@ -1336,8 +1379,13 @@ async function handleCategoryForm(form) {
 
 async function handleDebtPaymentForm(form) {
     const debtId = form.querySelector('#debt-payment-id').value;
-    const amount = parseFloat(form.querySelector('#debt-payment-amount').value);
+    let amount = parseFloat(form.querySelector('#debt-payment-amount').value);
     if (!debtId || !amount) return;
+
+    // Convert to AZN if current currency is USD
+    if (currentCurrency === 'USD') {
+        amount = amount * exchangeRate;
+    }
 
     const debtDoc = await getDoc(doc(debtsCol, debtId));
     if (!debtDoc.exists()) return;
