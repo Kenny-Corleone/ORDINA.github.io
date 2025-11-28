@@ -54,19 +54,39 @@ const formatCurrency = (amount) => {
 
 const formatISODateForDisplay = (isoDate, options = {}) => {
     if (!isoDate) return '';
-    const date = new Date(isoDate);
 
-    // Use translations array for month names if available
-    if (translations[currentLang]?.months && !options.year && options.month !== 'long') {
+    // Parse ISO (YYYY-MM-DD) safely in local time to avoid UTC shift
+    let date;
+    const m = /^([0-9]{4})-([0-9]{2})-([0-9]{2})$/.exec(isoDate);
+    if (m) {
+        const y = Number(m[1]);
+        const mo = Number(m[2]) - 1;
+        const d = Number(m[3]);
+        date = new Date(y, mo, d, 12, 0, 0, 0); // midday to dodge DST edge cases
+    } else {
+        date = new Date(isoDate);
+    }
+
+    // Russian: always rely on locale for correct genitive month
+    if (currentLang === 'ru') {
+        const includeYear = options.year !== undefined;
+        const localeOpts = {
+            day: 'numeric',
+            month: options.month || 'long',
+            ...(includeYear ? { year: 'numeric' } : {})
+        };
+        return date.toLocaleDateString('ru-RU', localeOpts);
+    }
+
+    // For other languages, prefer translations if available and year omitted
+    if (translations[currentLang]?.months && options.year === undefined && options.month !== 'long') {
         const month = date.getMonth();
         const day = date.getDate();
         const monthName = translations[currentLang].months[month];
-        if (options.year === undefined) {
-            return `${day} ${monthName}`;
-        }
+        return `${day} ${monthName}`;
     }
 
-    // For full date with year, use translations if available
+    // If year requested and translations available
     if (translations[currentLang]?.months && options.year !== undefined) {
         const month = date.getMonth();
         const day = date.getDate();
@@ -75,8 +95,8 @@ const formatISODateForDisplay = (isoDate, options = {}) => {
         return `${day} ${monthName} ${year}`;
     }
 
-    // Fallback to toLocaleString
-    const locale = currentLang === 'ru' ? 'ru-RU' : (currentLang === 'az' ? 'az-Latn-AZ' : 'en-US');
+    // Fallback to locale for AZ/EN and others
+    const locale = currentLang === 'az' ? 'az-Latn-AZ' : 'en-US';
     const defaultOptions = { year: 'numeric', month: 'long', day: 'numeric' };
     return date.toLocaleDateString(locale, { ...defaultOptions, ...options });
 };
@@ -152,6 +172,7 @@ export async function initApp() {
             // Init widgets
             initWeatherNew();
             initNews();
+            scheduleMidnightRollover();
 
             // Init particles if available
             if (window.particlesJS) {
@@ -167,6 +188,35 @@ export async function initApp() {
 
     // Initialize currency display
     updateCurrencyButtons();
+}
+
+function scheduleMidnightRollover() {
+    const now = new Date();
+    const next = new Date(now);
+    next.setHours(24, 0, 0, 0);
+    const delay = next.getTime() - now.getTime();
+    setTimeout(async () => {
+        await onMidnightRollover();
+        scheduleMidnightRollover();
+    }, Math.max(1000, delay));
+    document.addEventListener('visibilitychange', async () => {
+        if (!document.hidden) {
+            const todayIdNow = getTodayISOString();
+            const todayLabel = document.getElementById('today-date');
+            if (todayLabel && todayLabel.textContent !== formatISODateForDisplay(todayIdNow, { year: undefined })) {
+                await onMidnightRollover();
+            }
+        }
+    });
+}
+
+async function onMidnightRollover() {
+    currentMonthId = new Date().toISOString().slice(0, 7);
+    updateMonthDisplay();
+    detachListeners();
+    attachListeners();
+    const todayId = getTodayISOString();
+    await checkAndCarryOverDailyTasks(todayId);
 }
 
 const setupCollections = () => {
@@ -448,6 +498,7 @@ function renderDailyTasks(docs) {
                     <td data-label="${translations[currentLang].name}" class="${s === translations.ru.statusDone ? 'line-through text-gray-500' : ''}">
                         ${t.name}${firstCarryDateStr}
                     </td>
+                    <td data-label="${translations[currentLang].date}">${formatISODateForDisplay(t.date, { year: undefined })}</td>
                     <td data-label="${translations[currentLang].status}">${createTaskStatusDropdown(t.id, s, 'dailyTasks')}</td>
                     <td data-label="${translations[currentLang].notes}">
                         <input type="text" class="editable-task-notes bg-transparent w-full p-1 border-b border-transparent focus:border-blue-500 outline-none" data-id="${t.id}" data-col="dailyTasks" value="${t.notes || ''}" placeholder="${translations[currentLang].placeholderComment}">
@@ -784,29 +835,55 @@ function updateRecentActivity() {
 
 async function checkAndCarryOverDailyTasks(todayId) {
     if (!userId) return;
-    const yesterday = new Date(todayId);
+    const today = new Date(`${todayId}T00:00:00`);
+    const yesterday = new Date(today);
     yesterday.setDate(yesterday.getDate() - 1);
     const yesterdayId = yesterday.toISOString().split('T')[0];
 
     const lastCheckKey = `lastDailyCheck_${userId}`;
     const lastCheck = localStorage.getItem(lastCheckKey);
 
-    if (lastCheck !== todayId) {
-        const q = query(dailyTasksCol, where("status", "==", translations.ru.statusNotDone), where("carriedOver", "==", false));
-        const tasksSnapshot = await getDocs(q);
-        const batch = writeBatch(db);
+    // Only run once per day
+    if (lastCheck === todayId) return;
 
-        tasksSnapshot.forEach(doc => {
-            const task = doc.data();
-            // Logic to check if task is from yesterday or older is simplified here
-            // In a real app, we'd check task.createdAt or similar
-            // Assuming we just carry over all not done tasks that are not yet carried over
-            batch.update(doc.ref, { carriedOver: true });
+    // Fetch not-done tasks that are from yesterday or earlier and not yet carried over
+    const q = query(dailyTasksCol, where("status", "==", translations.ru.statusNotDone));
+    const tasksSnapshot = await getDocs(q);
+
+    const batch = writeBatch(db);
+    const createCarryOver = [];
+
+    tasksSnapshot.forEach(snap => {
+        const task = snap.data();
+        const taskDateStr = task.date;
+        if (!taskDateStr) return;
+        // Carry over if task date is before today and task not yet marked as carriedOver
+        if (taskDateStr < todayId && !task.carriedOver) {
+            createCarryOver.push({ original: task });
+            // Do not mutate old task; keep history intact
+        }
+    });
+
+    // Create new tasks for today based on previous not-done tasks
+    createCarryOver.forEach(({ original }) => {
+        const newRef = doc(dailyTasksCol);
+        batch.set(newRef, {
+            name: original.name,
+            notes: original.notes || '',
+            status: translations.ru.statusNotDone,
+            date: todayId,
+            carriedOver: true,
+            originalDate: original.originalDate || original.date,
+            first_carry_date: original.first_carry_date || original.date,
+            updatedAt: Timestamp.now()
         });
+    });
 
+    if (createCarryOver.length > 0) {
         await batch.commit();
-        localStorage.setItem(lastCheckKey, todayId);
     }
+
+    localStorage.setItem(lastCheckKey, todayId);
 }
 
 async function checkAndCarryOverTasks() {
@@ -966,6 +1043,50 @@ function setupEventListeners() {
     // Theme Toggle
     const themeBtn = document.getElementById('theme-toggle');
     if (themeBtn) themeBtn.addEventListener('click', toggleTheme);
+
+    const mobileMenuToggle = document.getElementById('mobile-menu-toggle');
+    const miniSidebar = document.getElementById('mini-sidebar');
+    if (mobileMenuToggle && miniSidebar) {
+        mobileMenuToggle.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            miniSidebar.classList.toggle('hidden');
+        });
+    }
+
+    const mobileTabsToggle = document.getElementById('mobile-tabs-toggle');
+    const mobileTabsMenu = document.getElementById('mobile-tabs-menu');
+    if (mobileTabsToggle && mobileTabsMenu) {
+        mobileTabsToggle.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            const isHidden = mobileTabsMenu.classList.contains('hidden');
+            if (isHidden) {
+                mobileTabsMenu.classList.remove('hidden');
+                mobileTabsToggle.setAttribute('aria-expanded', 'true');
+            } else {
+                mobileTabsMenu.classList.add('hidden');
+                mobileTabsToggle.setAttribute('aria-expanded', 'false');
+            }
+        });
+
+        document.addEventListener('click', (e) => {
+            if (!mobileTabsMenu.classList.contains('hidden')) {
+                const within = mobileTabsMenu.contains(e.target) || mobileTabsToggle.contains(e.target);
+                if (!within) {
+                    mobileTabsMenu.classList.add('hidden');
+                    mobileTabsToggle.setAttribute('aria-expanded', 'false');
+                }
+            }
+        });
+
+        mobileTabsMenu.querySelectorAll('.tab-button').forEach(btn => {
+            btn.addEventListener('click', () => {
+                mobileTabsMenu.classList.add('hidden');
+                mobileTabsToggle.setAttribute('aria-expanded', 'false');
+            });
+        });
+    }
 
     // Radio Player
     const radioBtn = document.getElementById('radio-play-pause-btn');
