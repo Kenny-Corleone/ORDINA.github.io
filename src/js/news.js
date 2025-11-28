@@ -6,6 +6,7 @@ import { logger, showToast } from './utils.js';
 // ============================================================================
 
 let newsData = [];
+let visibleNewsCount = 10;
 let currentNewsCategory = 'all';
 let currentNewsSearch = '';
 
@@ -328,7 +329,8 @@ export async function fetchNews() {
             const dateB = new Date(b.publishedAt);
             return dateB - dateA;
         });
-        newsData = newsData.slice(0, 20);
+        // full dataset kept; rendering controls number of visible items
+        visibleNewsCount = 10;
 
         renderNews();
 
@@ -392,7 +394,8 @@ const renderNews = () => {
         return;
     }
 
-    newsResults.innerHTML = newsData.map((news) => {
+    const slice = newsData.slice(0, visibleNewsCount);
+    newsResults.innerHTML = slice.map((news) => {
         const date = new Date(news.publishedAt);
         const monthIndex = date.getMonth();
         const day = date.getDate();
@@ -444,6 +447,14 @@ const renderNews = () => {
             </article>
         `;
     }).join('');
+    const showMoreBtn = document.getElementById('news-show-more');
+    if (showMoreBtn) {
+        if (visibleNewsCount >= newsData.length) {
+            showMoreBtn.classList.add('hidden');
+        } else {
+            showMoreBtn.classList.remove('hidden');
+        }
+    }
 };
 
 export const initNews = () => {
@@ -478,7 +489,16 @@ export const initNews = () => {
 
     if (refreshBtn) {
         refreshBtn.addEventListener('click', () => {
+            visibleNewsCount = 10;
             fetchNews();
+        });
+    }
+
+    const showMoreBtn = document.getElementById('news-show-more');
+    if (showMoreBtn) {
+        showMoreBtn.addEventListener('click', () => {
+            visibleNewsCount += 10;
+            renderNews();
         });
     }
 

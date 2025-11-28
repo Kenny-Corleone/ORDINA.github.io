@@ -4067,3 +4067,5 @@ textarea:focus {
 .dark .text-gray-700 { color: #e2e8f0 !important; }
 .dark .bg-gray-200 { background: #334155 !important; }
 .dark .bg-gray-50 { background: #1f2937 !important; }
+#news-results.news-list { border: 1px solid #e0e0e0; max-height: 300px; overflow-y: auto; border-radius: 8px; }
+#news-show-more { margin-top: 8px; }

@@ -7,8 +7,11 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
+    "screenshots": "node scripts/screenshots.js",
     "lint": "echo 'Linting not configured. Use htmlhint, stylelint, eslint manually.'",
-    "test": "echo 'Tests not configured yet.'"
+    "test": "echo 'Tests not configured yet.'",
+    "test:hesab": "node tests/hesab.test.js",
+    "test:hesab:e2e": "node tests/hesab.e2e.js"
   },
   "keywords": [
     "finance",

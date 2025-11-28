@@ -1,6 +1,5 @@
 <h1 align="center">
-  <img src="https://raw.githubusercontent.com/Kenny-Corleone/ORDINA.github.io/main/assets/logo%20ORDINA.png" width="120" alt="ORDINA Logo"/><br>
-  ORDINA 1.0 — Pocket Life Assistant
+  <img src="https://raw.githubusercontent.com/Kenny-Corleone/ORDINA.github.io/main/assets/logo%20ORDINA.png" width="200" alt="ORDINA Logo"/>
 </h1>
 
 <p align="center">
@@ -8,12 +7,6 @@
   <img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="License"/>
   <img src="https://img.shields.io/badge/version-1.0.0-6A5ACD.svg" alt="Version"/>
 </p>
-
-<div align="center">
-  <a href="#en"><img src="https://img.shields.io/badge/lang-English-5F7FFF?style=for-the-badge" alt="English"/></a>
-  <a href="#ru"><img src="https://img.shields.io/badge/язык-Русский-6A5ACD?style=for-the-badge" alt="Русский"/></a>
-  <a href="#az"><img src="https://img.shields.io/badge/dil-Azərbaycan-00c6ff?style=for-the-badge" alt="Azərbaycan"/></a>
-</div>
 
 <a id="en"></a>
 
@@ -54,14 +47,50 @@
 
 ## Screenshots
 
-| Desktop Dashboard | Mobile View |
-|:--:|:--:|
-| <img src="assets/screenshots/desktop.png" alt="ORDINA Desktop"/> | <img src="assets/screenshots/mobile.png" alt="ORDINA Mobile"/> |
+<details>
+<summary>Dashboard & News</summary>
+
+<p>
+  <img src="assets/screenshots/news.png" alt="ORDINA Dashboard & News" width="100%" />
+</p>
+</details>
+
+<details>
+<summary>Expenses</summary>
+
+<p>
+  <img src="assets/screenshots/expenses.png" alt="ORDINA Expenses" width="100%" />
+</p>
+</details>
+
+<details>
+<summary>Debts</summary>
+
+<p>
+  <img src="assets/screenshots/debts.png" alt="ORDINA Debts" width="100%" />
+</p>
+</details>
+
+<details>
+<summary>Tasks</summary>
+
+<p>
+  <img src="assets/screenshots/tasks.png" alt="ORDINA Tasks" width="100%" />
+</p>
+</details>
+
+<details>
+<summary>Calendar</summary>
+
+<p>
+  <img src="assets/screenshots/calendar.png" alt="ORDINA Calendar" width="100%" />
+</p>
+</details>
 
 ## Support
 If you like the project — support development.
 
-<## Contributing
+## Contributing
 - Fork the repository
 - Create branch: `git checkout -b feature/AmazingFeature`
 - Commit: `git commit -m "Add AmazingFeature"`
@@ -77,8 +106,6 @@ MIT. See `LICENSE`.
 
 <p align="center">
   <a href="https://www.buymeacoffee.com/Ancl"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy me a tea" height="50"/></a>
-  <br/>
-  <a href="https://www.buymeacoffee.com/Ancl"><img src="https://img.shields.io/badge/Buy%20me%20a%20tea-5F7FFF?logo=buymeacoffee&logoColor=white" alt="Buy me a tea (fallback)"/></a>
 </p>
 
 ## FAQ
@@ -93,16 +120,4 @@ MIT. See `LICENSE`.
 - Issues: `https://github.com/Kenny-Corleone/ORDINA.github.io/issues`
 - Author: `https://github.com/Kenny-Corleone`
 
-<a id="ru"></a>
-
-## Русский (кратко)
-- Отслеживание расходов, долги, рекуррентные платежи, графики.
-- Календарь, задачи, напоминания, новости, погода, радио.
-- Тёмная тема, стеклянный дизайн, адаптивная верстка.
-
-<a id="az"></a>
-
-## Azərbaycan (qısa)
-- Xərclər, borclar, təkrarlanan ödənişlər, qrafiklər.
-- Təqvim, tapşırıqlar, xatırlatmalar, xəbərlər, hava, radio.
-- Qaranlıq mövzu, şüşə dizayn, adaptiv tərtibat.
+<!-- Single-language README: English only -->
