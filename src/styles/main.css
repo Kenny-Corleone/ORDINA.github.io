@@ -106,11 +106,15 @@
     --primary-color: var(--gold-light);
     --secondary-color: var(--gold-primary);
     --accent-color: var(--gold-primary);
-    --text-primary: var(--white-soft);
-    --text-secondary: #94a3b8;
-    --bg-primary: var(--graphite-deep);
-    --bg-secondary: var(--graphite-medium);
-    --border-color: rgba(var(--gold-rgb), 0.35);
+    --text-primary: #f1f5f9;
+    /* Changed from white-soft to slate-100 for better contrast */
+    --text-secondary: #cbd5e1;
+    /* Changed from slate-400 to slate-300 */
+    --bg-primary: #0f172a;
+    /* Deep slate */
+    --bg-secondary: #1e293b;
+    /* Slate 800 */
+    --border-color: rgba(212, 175, 55, 0.2);
     --shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
     --shadow-gold: 0 8px 32px rgba(var(--gold-rgb), 0.3);
 }
@@ -1299,21 +1303,28 @@ dialog[open] {
     color: var(--text-secondary) !important;
 }
 
-/* Premium Dark Text */
+/* Premium Dark Text - Fixed Readability */
 .dark .text-gray-900,
 .dark .text-gray-800,
-.dark .text-gray-700,
+.dark .text-gray-700 {
+    color: #f1f5f9 !important;
+    /* Slate 100 */
+}
+
 .dark .text-gray-600,
 .dark .text-gray-500 {
-    color: var(--gold-light) !important;
+    color: #cbd5e1 !important;
+    /* Slate 300 */
 }
 
 .dark .text-gray-400 {
-    color: #cbd5e1 !important;
+    color: #94a3b8 !important;
+    /* Slate 400 */
 }
 
 .dark .text-gray-300 {
-    color: #94a3b8 !important;
+    color: #64748b !important;
+    /* Slate 500 */
 }
 
 /* Premium Light Mode Borders */
@@ -1548,56 +1559,135 @@ textarea:focus {
 /* Header Grid - Preserve Original Widget Order: LOGO | MOTO | WEATHER | RADIO | DATETIME | RIGHT-ICONS */
 .header-grid-container {
     display: grid;
-    grid-template-columns: clamp(100px, 12vw, 140px) minmax(0, 1fr) auto auto auto auto;
     align-items: center;
-    column-gap: clamp(6px, 1vw, 10.8px);
     width: 100%;
     padding-inline: clamp(8px, 2vw, 16px);
     padding-block: clamp(4px, 0.8vw, 6px);
-    min-height: clamp(44px, 4.4vw, 52px);
+    min-height: clamp(50px, 5vw, 60px);
 }
 
-/* Старые мобильные стили удалены - используем новую систему */
-
-/* Tablet: Compact grid with all widgets in original order */
-@media (min-width: 481px) and (max-width: 768px) {
+/* Mobile Layout (Portrait) */
+@media (max-width: 480px) {
     .header-grid-container {
-        grid-template-columns: clamp(130px, 14vw, 150px) minmax(0, 1fr) auto auto auto auto;
-        column-gap: clamp(6px, 1vw, 9px);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 8px;
+    }
+
+    /* Hide motto and datetime on mobile */
+    .header-motto,
+    .header-datetime {
+        display: none !important;
+    }
+
+    /* Compact Weather - Icon & Temp only */
+    .header-weather-chip {
+        display: flex !important;
+        padding: 0 6px;
+        width: auto;
+        background: transparent;
+        border: none;
+        backdrop-filter: none;
+    }
+
+    .header-weather-chip .weather-city-compact {
+        display: none !important;
+    }
+
+    /* Compact Radio - Button only */
+    .header-radio-chip {
+        display: flex !important;
+        width: 32px;
+        padding: 0;
+        justify-content: center;
+        background: transparent;
+        border: none;
+        backdrop-filter: none;
+        margin-left: 0;
+    }
+
+    .header-radio-chip .radio-label-wrapper,
+    .header-radio-chip .radio-equalizer {
+        display: none !important;
     }
 
     .header-logo-wrapper {
-        width: clamp(130px, 14vw, 150px);
-        height: clamp(60px, 7vw, 70px);
+        width: auto;
+        max-width: 120px;
+        height: 40px;
+    }
+
+    .header-right-group {
+        gap: 4px;
     }
 }
 
-/* Desktop: Full grid with original spacing and order */
-@media (min-width: 769px) {
+/* Tablet Layout */
+@media (min-width: 481px) and (max-width: 1024px) {
     .header-grid-container {
-        grid-template-columns: clamp(200px, 20vw, 320px) minmax(0, 1fr) auto auto auto auto;
-        column-gap: clamp(8px, 1vw, 10.8px);
+        grid-template-columns: auto 1fr auto;
+        gap: 15px;
+    }
+
+    .header-motto {
+        display: none !important;
+    }
+
+    /* Show weather and radio if space permits, otherwise hide */
+    .header-weather-chip,
+    .header-radio-chip {
+        display: none;
+        /* Simplify for tablet too to avoid clutter */
+    }
+
+    .header-datetime {
+        display: none;
+    }
+}
+
+/* Desktop Layout */
+@media (min-width: 1025px) {
+    .header-grid-container {
+        grid-template-columns: 300px 1fr auto auto auto auto;
+        column-gap: 20px;
     }
 }
 
 /* B. Column 1: Logo */
+
 .header-logo-wrapper {
-    width: 120px;
-    height: 56.21px;
     display: flex;
     align-items: center;
     justify-content: flex-start;
     padding: 0;
-    overflow: hidden;
+    overflow: visible;
+    /* Allow logo to overflow if needed */
     flex-shrink: 0;
 }
 
 /* Desktop: Larger logo */
-@media (min-width: 769px) {
+@media (min-width: 1025px) {
     .header-logo-wrapper {
-        width: clamp(200px, 20vw, 320px);
-        height: clamp(95px, 10vw, 150px);
+        width: 300px;
+        height: 120px;
+        /* Increased height */
     }
+
+    .header-logo-wrapper img {
+        max-height: 100%;
+        width: auto;
+    }
+}
+
+/* Motto Styling */
+.header-motto {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size: clamp(0.8rem, 1vw, 1.1rem);
+    color: var(--text-secondary);
+    font-weight: 500;
 }
 
 /* Logo Image - Fixed Size */
