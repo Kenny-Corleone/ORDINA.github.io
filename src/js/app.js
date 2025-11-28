@@ -1017,141 +1017,90 @@ function setupEventListeners() {
         });
     }
 
-    // Language Menu
+    // Language Flags
+    // Language Dropdown
     const langTrigger = document.getElementById('lang-trigger');
     const langMenu = document.getElementById('lang-menu');
+    const currentLangFlag = document.getElementById('current-lang-flag');
 
     if (langTrigger && langMenu) {
+        // Toggle dropdown
         langTrigger.addEventListener('click', (e) => {
-            e.preventDefault();
             e.stopPropagation();
-            const isHidden = langMenu.getAttribute('aria-hidden') === 'true';
-            // Close currency menu if open
-            const currMenu = document.getElementById('curr-menu');
-            const currTrigger = document.getElementById('curr-trigger');
-            if (currMenu) {
-                currMenu.setAttribute('aria-hidden', 'true');
-                currMenu.classList.remove('open');
-            }
-            if (currTrigger) currTrigger.setAttribute('aria-expanded', 'false');
+            const expanded = langTrigger.getAttribute('aria-expanded') === 'true';
+            langTrigger.setAttribute('aria-expanded', !expanded);
+            langMenu.classList.toggle('hidden');
+        });
 
-            if (isHidden) {
-                langMenu.setAttribute('aria-hidden', 'false');
-                langMenu.classList.add('open');
-                langTrigger.setAttribute('aria-expanded', 'true');
-            } else {
-                langMenu.setAttribute('aria-hidden', 'true');
-                langMenu.classList.remove('open');
+        // Close when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!langTrigger.contains(e.target) && !langMenu.contains(e.target)) {
+                langMenu.classList.add('hidden');
                 langTrigger.setAttribute('aria-expanded', 'false');
             }
         });
 
+        // Handle language selection
         $$('.language-dropdown-item').forEach(item => {
             item.addEventListener('click', (e) => {
                 e.preventDefault();
-                e.stopPropagation();
                 const lang = e.currentTarget.dataset.lang;
+                if (lang === currentLang) {
+                    langMenu.classList.add('hidden');
+                    return;
+                }
+
                 setLanguage(lang, () => {
                     updateCurrencyButtons();
                     updateMonthDisplay();
                     renderCalendar();
-                    // Refresh news
                     initNews();
-                    // Refresh weather
                     initWeatherNew();
-                    // Refresh month selector with new language
                     if (availableMonths.length > 0) {
                         renderMonthSelector(availableMonths);
                     }
-                });
-                langMenu.setAttribute('aria-hidden', 'true');
-                langMenu.classList.remove('open');
-                langTrigger.setAttribute('aria-expanded', 'false');
 
-                // Update active state
-                $$('.language-dropdown-item').forEach(li => {
-                    li.classList.remove('active');
-                    li.setAttribute('aria-checked', 'false');
+                    // Update trigger flag
+                    const flagMap = { 'ru': '🇷🇺', 'en': '🇬🇧', 'az': '🇦🇿' };
+                    if (currentLangFlag) currentLangFlag.textContent = flagMap[lang] || '🇷🇺';
+
+                    langMenu.classList.add('hidden');
+                    langTrigger.setAttribute('aria-expanded', 'false');
                 });
-                e.currentTarget.classList.add('active');
-                e.currentTarget.setAttribute('aria-checked', 'true');
             });
         });
+
+        // Set initial flag
+        const flagMap = { 'ru': '🇷🇺', 'en': '🇬🇧', 'az': '🇦🇿' };
+        if (currentLangFlag) currentLangFlag.textContent = flagMap[currentLang] || '🇷🇺';
     }
 
-    // Currency Menu
-    const currTrigger = document.getElementById('curr-trigger');
-    const currMenu = document.getElementById('curr-menu');
+    // Currency Toggle
+    const currToggleBtn = document.getElementById('curr-toggle-btn');
 
-    if (currTrigger && currMenu) {
-        currTrigger.addEventListener('click', (e) => {
+    if (currToggleBtn) {
+        currToggleBtn.addEventListener('click', (e) => {
             e.preventDefault();
             e.stopPropagation();
-            const isHidden = currMenu.getAttribute('aria-hidden') === 'true';
-            // Close language menu if open
-            if (langMenu) {
-                langMenu.setAttribute('aria-hidden', 'true');
-                langMenu.classList.remove('open');
+
+            // Toggle currency
+            currentCurrency = currentCurrency === 'AZN' ? 'USD' : 'AZN';
+            localStorage.setItem('currency', currentCurrency);
+
+            // Update UI
+            updateCurrencyButtons();
+
+            // Refresh dashboard
+            if (userId) {
+                updateDashboard();
             }
-            if (langTrigger) langTrigger.setAttribute('aria-expanded', 'false');
 
-            if (isHidden) {
-                currMenu.setAttribute('aria-hidden', 'false');
-                currMenu.classList.add('open');
-                currTrigger.setAttribute('aria-expanded', 'true');
-            } else {
-                currMenu.setAttribute('aria-hidden', 'true');
-                currMenu.classList.remove('open');
-                currTrigger.setAttribute('aria-expanded', 'false');
-            }
-        });
-
-        $$('.currency-dropdown-item').forEach(item => {
-            item.addEventListener('click', (e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                const currency = e.currentTarget.dataset.currency;
-                currentCurrency = currency;
-                localStorage.setItem('currency', currency);
-                updateCurrencyButtons();
-                currMenu.setAttribute('aria-hidden', 'true');
-                currMenu.classList.remove('open');
-                currTrigger.setAttribute('aria-expanded', 'false');
-                currTrigger.textContent = currency === 'USD' ? '$' : '₼';
-
-                // Update active state
-                $$('.currency-dropdown-item').forEach(ci => {
-                    ci.classList.remove('active');
-                    ci.setAttribute('aria-checked', 'false');
-                });
-                e.currentTarget.classList.add('active');
-                e.currentTarget.setAttribute('aria-checked', 'true');
-
-                // Refresh dashboard to update currency
-                if (userId) {
-                    updateDashboard();
-                }
-            });
+            // Optional: Show toast
+            // showToast(`${translations[currentLang].currencyChanged || 'Currency changed to'} ${currentCurrency}`);
         });
     }
 
-    // Close dropdowns when clicking outside
-    document.addEventListener('click', (e) => {
-        if (langMenu && langTrigger) {
-            if (!langMenu.contains(e.target) && !langTrigger.contains(e.target)) {
-                langMenu.setAttribute('aria-hidden', 'true');
-                langMenu.classList.remove('open');
-                langTrigger.setAttribute('aria-expanded', 'false');
-            }
-        }
-        if (currMenu && currTrigger) {
-            if (!currMenu.contains(e.target) && !currTrigger.contains(e.target)) {
-                currMenu.setAttribute('aria-hidden', 'true');
-                currMenu.classList.remove('open');
-                currTrigger.setAttribute('aria-expanded', 'false');
-            }
-        }
-    }, true); // Use capture phase to handle clicks properly
+
 
     // Calculator button
     const calculatorBtn = document.getElementById('calculator-btn');
@@ -1597,18 +1546,12 @@ function updateThemeIcons() {
 function updateCurrencyButtons() {
     $$('.currency-symbol').forEach(el => el.textContent = currentCurrency);
 
-    // Update currency trigger button
-    const currTrigger = document.getElementById('curr-trigger');
-    if (currTrigger) {
-        currTrigger.textContent = currentCurrency === 'USD' ? '$' : '₼';
+    // Update currency toggle button
+    const currToggleBtn = document.getElementById('curr-toggle-btn');
+    if (currToggleBtn) {
+        currToggleBtn.textContent = currentCurrency === 'USD' ? '$' : '₼';
+        currToggleBtn.title = currentCurrency === 'USD' ? 'Switch to AZN' : 'Switch to USD';
     }
-
-    // Update active state in currency menu
-    $$('.currency-dropdown-item').forEach(item => {
-        const isActive = item.dataset.currency === currentCurrency;
-        item.classList.toggle('active', isActive);
-        item.setAttribute('aria-checked', isActive ? 'true' : 'false');
-    });
 }
 
 function renderCategoryDatalist(docs) {
