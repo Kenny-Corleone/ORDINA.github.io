@@ -55,7 +55,7 @@ const formatCurrency = (amount) => {
 const formatISODateForDisplay = (isoDate, options = {}) => {
     if (!isoDate) return '';
     const date = new Date(isoDate);
-    
+
     // Use translations array for month names if available
     if (translations[currentLang]?.months && !options.year && options.month !== 'long') {
         const month = date.getMonth();
@@ -65,7 +65,7 @@ const formatISODateForDisplay = (isoDate, options = {}) => {
             return `${day} ${monthName}`;
         }
     }
-    
+
     // For full date with year, use translations if available
     if (translations[currentLang]?.months && options.year !== undefined) {
         const month = date.getMonth();
@@ -74,7 +74,7 @@ const formatISODateForDisplay = (isoDate, options = {}) => {
         const monthName = translations[currentLang].months[month];
         return `${day} ${monthName} ${year}`;
     }
-    
+
     // Fallback to toLocaleString
     const locale = currentLang === 'ru' ? 'ru-RU' : (currentLang === 'az' ? 'az-Latn-AZ' : 'en-US');
     const defaultOptions = { year: 'numeric', month: 'long', day: 'numeric' };
@@ -84,12 +84,12 @@ const formatISODateForDisplay = (isoDate, options = {}) => {
 const formatMonthId = (monthId) => {
     const [year, month] = monthId.split('-');
     const monthNum = parseInt(month, 10) - 1; // 0-based index
-    
+
     // Use translations array if available
     if (translations[currentLang]?.months && translations[currentLang].months[monthNum]) {
         return `${translations[currentLang].months[monthNum]} ${year}`;
     }
-    
+
     // Fallback to toLocaleString
     const date = new Date(year, monthNum, 1);
     const locale = currentLang === 'ru' ? 'ru-RU' : (currentLang === 'az' ? 'az-Latn-AZ' : 'en-US');
@@ -164,7 +164,7 @@ export async function initApp() {
 
     setupEventListeners();
     setupTheme();
-    
+
     // Initialize currency display
     updateCurrencyButtons();
 }
@@ -204,19 +204,19 @@ const attachListeners = () => {
     unsubscribes.push(onSnapshot(query(expensesCol), (s) => { allExpenses = s.docs; renderExpenses(allExpenses); updateDashboard(); }));
     unsubscribes.push(onSnapshot(query(recurringExpensesCol), (s) => { allRecurringTemplates = s.docs.map((d) => ({ id: d.id, ...d.data() })); renderRecurringExpenses(); updateDashboard(); }));
     unsubscribes.push(onSnapshot(query(recurringExpenseStatusesCol), (s) => { currentMonthStatuses = {}; s.docs.forEach((d) => { currentMonthStatuses[d.id] = d.data().status; }); renderRecurringExpenses(); updateDashboard(); }));
-    unsubscribes.push(onSnapshot(query(monthlyDataCol), (s) => { 
-        const m = s.docs.map((d) => d.id); 
-        if (!m.includes(currentMonthId)) m.push(currentMonthId); 
-        m.sort().reverse(); 
+    unsubscribes.push(onSnapshot(query(monthlyDataCol), (s) => {
+        const m = s.docs.map((d) => d.id);
+        if (!m.includes(currentMonthId)) m.push(currentMonthId);
+        m.sort().reverse();
         availableMonths = m; // Store months for later use
-        renderMonthSelector(m); 
+        renderMonthSelector(m);
     }));
     unsubscribes.push(onSnapshot(query(categoriesCol), (s) => { const categories = s.docs.map((d) => ({ id: d.id, ...d.data() })); renderCategoryDatalist(s.docs); renderCategories(categories); }));
     // Filter daily tasks by today's date
     const todayId = getTodayISOString();
-    unsubscribes.push(onSnapshot(query(dailyTasksCol, where("date", "==", todayId)), (s) => { 
-        dailyTasks = s.docs.map((d) => ({ id: d.id, ...d.data() })); 
-        renderDailyTasks(dailyTasks); 
+    unsubscribes.push(onSnapshot(query(dailyTasksCol, where("date", "==", todayId)), (s) => {
+        dailyTasks = s.docs.map((d) => ({ id: d.id, ...d.data() }));
+        renderDailyTasks(dailyTasks);
     }));
     unsubscribes.push(onSnapshot(query(monthlyTasksCol, where("month", "==", selectedMonthId)), (s) => { monthlyTasks = s.docs.map((d) => ({ id: d.id, ...d.data() })); renderMonthlyTasks(monthlyTasks); updateDashboard(); }));
     unsubscribes.push(onSnapshot(query(yearlyTasksCol, where("year", "==", calendarDate.getFullYear())), (s) => { yearlyTasks = s.docs.map((d) => ({ id: d.id, ...d.data() })); renderYearlyTasks(yearlyTasks); updateDashboard(); }));
@@ -236,7 +236,7 @@ const showApp = () => {
     const loginScreen = document.getElementById('auth-container');
     const appScreen = document.getElementById('app');
     const loadingOverlay = document.getElementById('loading-overlay');
-    
+
     if (loadingOverlay) loadingOverlay.classList.add('hidden');
     if (loginScreen) loginScreen.classList.add('hidden');
     if (appScreen) {
@@ -251,7 +251,7 @@ const showLoginScreen = () => {
     const loginScreen = document.getElementById('auth-container');
     const appScreen = document.getElementById('app');
     const loadingOverlay = document.getElementById('loading-overlay');
-    
+
     if (loadingOverlay) loadingOverlay.classList.add('hidden');
     if (loginScreen) loginScreen.classList.remove('hidden');
     if (appScreen) appScreen.classList.add('hidden');
@@ -924,6 +924,12 @@ function setupEventListeners() {
         document.getElementById('yearly-task-modal-title').textContent = translations[currentLang].addTask;
     });
 
+    setupModal('recurring-expense-modal', 'add-recurring-expense-btn', () => {
+        document.getElementById('recurring-expense-form').reset();
+        document.getElementById('recurring-expense-id').value = '';
+        document.getElementById('recurring-expense-modal-title').textContent = translations[currentLang].addTemplate;
+    });
+
     setupModal('expense-modal', 'add-expense-btn', () => {
         document.getElementById('expense-form').reset();
         document.getElementById('expense-id').value = '';
@@ -962,7 +968,7 @@ function setupEventListeners() {
     const playIcon = document.getElementById('play-icon');
     const pauseIcon = document.getElementById('pause-icon');
     const equalizer = document.getElementById('equalizer');
-    
+
     if (radioBtn && radioPlayer) {
         // Initialize radio state
         const updateRadioUI = (isPlaying) => {
@@ -1009,7 +1015,7 @@ function setupEventListeners() {
     // Language Menu
     const langTrigger = document.getElementById('lang-trigger');
     const langMenu = document.getElementById('lang-menu');
-    
+
     if (langTrigger && langMenu) {
         langTrigger.addEventListener('click', (e) => {
             e.preventDefault();
@@ -1023,7 +1029,7 @@ function setupEventListeners() {
                 currMenu.classList.remove('open');
             }
             if (currTrigger) currTrigger.setAttribute('aria-expanded', 'false');
-            
+
             if (isHidden) {
                 langMenu.setAttribute('aria-hidden', 'false');
                 langMenu.classList.add('open');
@@ -1056,7 +1062,7 @@ function setupEventListeners() {
                 langMenu.setAttribute('aria-hidden', 'true');
                 langMenu.classList.remove('open');
                 langTrigger.setAttribute('aria-expanded', 'false');
-                
+
                 // Update active state
                 $$('.language-dropdown-item').forEach(li => {
                     li.classList.remove('active');
@@ -1071,7 +1077,7 @@ function setupEventListeners() {
     // Currency Menu
     const currTrigger = document.getElementById('curr-trigger');
     const currMenu = document.getElementById('curr-menu');
-    
+
     if (currTrigger && currMenu) {
         currTrigger.addEventListener('click', (e) => {
             e.preventDefault();
@@ -1083,7 +1089,7 @@ function setupEventListeners() {
                 langMenu.classList.remove('open');
             }
             if (langTrigger) langTrigger.setAttribute('aria-expanded', 'false');
-            
+
             if (isHidden) {
                 currMenu.setAttribute('aria-hidden', 'false');
                 currMenu.classList.add('open');
@@ -1107,7 +1113,7 @@ function setupEventListeners() {
                 currMenu.classList.remove('open');
                 currTrigger.setAttribute('aria-expanded', 'false');
                 currTrigger.textContent = currency === 'USD' ? '$' : '₼';
-                
+
                 // Update active state
                 $$('.currency-dropdown-item').forEach(ci => {
                     ci.classList.remove('active');
@@ -1115,7 +1121,7 @@ function setupEventListeners() {
                 });
                 e.currentTarget.classList.add('active');
                 e.currentTarget.setAttribute('aria-checked', 'true');
-                
+
                 // Refresh dashboard to update currency
                 if (userId) {
                     updateDashboard();
@@ -1448,13 +1454,13 @@ function updateThemeIcons() {
 
 function updateCurrencyButtons() {
     $$('.currency-symbol').forEach(el => el.textContent = currentCurrency);
-    
+
     // Update currency trigger button
     const currTrigger = document.getElementById('curr-trigger');
     if (currTrigger) {
         currTrigger.textContent = currentCurrency === 'USD' ? '$' : '₼';
     }
-    
+
     // Update active state in currency menu
     $$('.currency-dropdown-item').forEach(item => {
         const isActive = item.dataset.currency === currentCurrency;
