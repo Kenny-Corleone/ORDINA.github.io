@@ -31,50 +31,31 @@
 
 ---
 
-## 🚀 Overview
-- Personal web app that combines expense tracking, debt management, tasks and scheduling.
-- Elegant visual analytics with daily widgets (news, weather, radio).
-- Instant currency toggle (AZN/USD) and full localization: 🇬🇧 English, 🇷🇺 Русский, 🇦🇿 Azərbaycan.
+## ✨ Основные возможности
 
-## ✨ Features
-### 💰 Finance
-- Expense tracking and categorization
-- Debt manager and recurring payments
-- Visual analytics and charts
-- Currency switcher (AZN/USD)
+### 🧊 Стеклянный интерфейс  
+- мягкие блики и объём  
+- светлая и тёмная атмосфера  
+- чистые, аккуратные панели  
 
-### 📅 Productivity
-- Smart calendar and reminders
-- Task manager: daily, monthly, yearly
-- News feed and weather widget
-- AzerbaiJazz internet radio with equalizer
+### 💰 Финансовый модуль  
+- учёт расходов  
+- аналитика  
+- долговые записи  
+- рекуррентные платежи  
+- внутренняя валюта  
 
-### 🎨 UI/UX
-- Glassmorphism design with subtle highlights
-- Full dark mode
-- Responsive desktop/mobile navigation
-- Fluid typography
+### 📅 Управление жизнью  
+- задачи  
+- календарь  
+- напоминания  
+- распорядок дня  
 
-## 🛠️ Tech Stack
-- Frontend: `HTML5`, `Vanilla JS (ES6+)`
-- Styling: `Tailwind CSS`, custom CSS variables
-- Backend: `Firebase (Firestore, Auth)`
-- Build tool: `Vite`
-- Icons: `SVG`, emojis
-
-## 📦 Install & Run
-1. Open: `https://kenny-corleone.github.io/ORDINA.github.io/`
-2. Install PWA on first launch, or later via the in‑app icon.
-3. Sign up via email or Google.
-4. Put your life in order.
-
-## 📱 Screenshots
-
-<p align="center">
-  <img src="assets/screenshots/desktop.png" alt="ORDINA Desktop Screenshot"/>
-  <br/>
-  <img src="assets/screenshots/mobile.png" alt="ORDINA Mobile Screenshot"/>
- </p>
+### 📰 Информационный центр  
+- новости по категориям  
+- погода  
+- радио  
+- полезные ежедневные блоки  
 
 ---
 
@@ -95,77 +76,7 @@ MIT. See `LICENSE`.
 </p>
 
 <p align="center">
-  <a href="https://www.buymeacoffee.com/Ancl"><img src="https://img.buymeacoffee.com/button-api/?text=Buy%20me%20a%20tea&emoji=🍵&slug=Ancl&button_colour=5F7FFF&font_colour=ffffff&font_family=Cookie&outline_colour=000000&coffee_colour=FFDD00" alt="Buy me a tea"/></a>
-</p>
-
----
-
-<a id="русский"></a>
-<details>
-<summary>Русский</summary>
-
-<p align="center">
-  <img src="https://capsule-render.vercel.app/api?type=wave&color=0:5F7FFF,100:6A5ACD&height=120&section=header&text=ORDINA%201.0&fontSize=40&fontAlign=50&desc=Pocket%20Life%20Assistant&descAlign=50&descSize=15" alt="ORDINA Header RU"/>
-</p>
-
-<h2 align="center">Упорядочивай жизнь с удовольствием</h2>
-
-## Обзор
-- Веб‑приложение, сочетающее трекинг расходов, управление долгами, задачи и расписание.
-- Элегантная визуальная аналитика и удобные ежедневные виджеты (новости, погода, радио).
-- Мгновенная смена валюты (AZN/USD) и полноценная локализация.
-
-## Возможности
-### Финансы
-- Учёт и категоризация расходов
-- Менеджер долгов и рекуррентных платежей
-- Визуальная аналитика и графики
-- Переключатель валют (AZN/USD)
-
-### Продуктивность
-- Умный календарь и напоминания
-- Менеджер задач: день, месяц, год
-- Лента новостей и погодный виджет
-- Интернет‑радио AzerbaiJazz с эквалайзером
-
-### Интерфейс
-- Стеклянный дизайн с мягкими бликами
-- Полная тёмная тема
-- Адаптивная навигация (десктоп/мобильная)
-- Гибкая типографика
-
-## Технологии
-- Frontend: `HTML5`, `Vanilla JS (ES6+)`
-- Стили: `Tailwind CSS`, кастомные CSS‑переменные
-- Backend: `Firebase (Firestore, Auth)`
-- Сборка: `Vite`
-- Иконки: `SVG`, эмодзи
-
-## Установка и запуск
-1. Открой ссылку: `https://kenny-corleone.github.io/ORDINA.github.io/`
-2. Установи PWA‑приложение при первом запуске или через иконку внутри приложения.
-3. Зарегистрируйся по email или через Google.
-4. Приведи жизнь в порядок.
-
-## Скриншоты
-<p align="center">
-  <img src="assets/screenshots/desktop.png" alt="ORDINA Desktop"/>
-  <br/>
-  <img src="assets/screenshots/mobile.png" alt="ORDINA Mobile"/>
-</p>
-
-## Вклад
-- Форкни репозиторий
-- Создай ветку: `git checkout -b feature/AmazingFeature`
-- Закоммить: `git commit -m "Add AmazingFeature"`
-- Запушь: `git push origin feature/AmazingFeature`
-- Открой Pull Request
-
-## Лицензия
-MIT. См. `LICENSE`.
-
-<p align="center">
-  Сделано с ❤️ <a href="https://github.com/Kenny-Corleone">Kenny Corleone</a>
+  <img width="600" src="https://svgur.com/i/12pz.svg">
 </p>
 
 <p align="center">
