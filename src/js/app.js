@@ -241,6 +241,10 @@ const showApp = () => {
     if (loginScreen) loginScreen.classList.add('hidden');
     if (appScreen) {
         appScreen.classList.remove('hidden');
+        // Use setTimeout to allow the display change to take effect before changing opacity
+        setTimeout(() => {
+            appScreen.classList.remove('opacity-0');
+        }, 10);
         // Trigger a resize event to fix any layout issues
         window.dispatchEvent(new Event('resize'));
     }
