@@ -296,16 +296,7 @@
 
         /* Mobile-First Responsive Breakpoints */
         
-        /* Breakpoint 1: Small Phones (max-width: 480px) */
-        @media (max-width: 480px) {
-            body {
-                font-size: clamp(0.8125rem, 3vw, 0.9375rem);
-            }
-
-            #ordina-weather-widget {
-                display: none;
-            }
-        }
+        /* Старые мобильные стили удалены - используем новую систему */
 
         /* Breakpoint 2: Tablets (481px - 768px) */
         @media (min-width: 481px) and (max-width: 768px) {
@@ -1491,42 +1482,9 @@
            ============================================ */
 
         /* Container & Layout Adjustments - Mobile First */
-        @media (max-width: 768px) {
-            /* Weather widget responsive */
-            .weather-widget-new {
-                width: 100% !important;
-                max-width: 100% !important;
-                min-width: auto !important;
-            }
+        /* Старые мобильные стили удалены - используем новую систему */
 
-            /* Header responsive layout */
-            #fixed-header {
-                flex-wrap: wrap;
-                gap: clamp(0.375rem, 1vw, 0.5rem);
-            }
-
-            #ordina-weather-widget {
-                order: 2;
-                width: 100%;
-                margin: clamp(0.375rem, 1vw, 0.5rem) 0;
-            }
-        }
-
-        @media (max-width: 480px) {
-            #app {
-                padding: clamp(0.375rem, 1vw, 0.5rem) !important;
-            }
-
-            #fixed-header {
-                padding: clamp(0.25rem, 0.75vw, 0.375rem) clamp(0.375rem, 1vw, 0.5rem) !important;
-            }
-
-            /* Compact header controls */
-            #fixed-header .flex {
-                gap: clamp(0.25rem, 0.75vw, 0.375rem);
-            }
-
-            /* Stack stat cards vertically */
+        /* Старые мобильные стили удалены - используем новую систему */
             .stat-card {
                 flex: 1 1 100%;
                 max-width: 100%;
@@ -1613,72 +1571,7 @@
             min-height: clamp(44px, 4.4vw, 52px);
         }
 
-        /* Mobile: Stack vertically but preserve exact order */
-        @media (max-width: 480px) {
-            .header-grid-container {
-                grid-template-columns: 1fr;
-                grid-template-rows: auto auto auto auto auto auto;
-                gap: clamp(14px, 4vw, 18px);
-                justify-items: center;
-                align-items: center;
-                padding-inline: clamp(16px, 5vw, 24px);
-                padding-block: clamp(12px, 3vw, 16px);
-                min-height: auto;
-            }
-
-            .header-logo-wrapper {
-                width: clamp(160px, 40vw, 200px) !important;
-                height: clamp(75px, 18vw, 95px) !important;
-                justify-content: center;
-                margin: 0 auto;
-            }
-
-            .header-motto,
-            .header-weather-chip,
-            .header-radio-chip,
-            .header-datetime,
-            .header-right-group {
-                width: 100%;
-                max-width: 100%;
-                justify-content: center;
-                margin: 0;
-            }
-
-            .header-motto {
-                text-align: center;
-                padding-left: 0;
-                padding-right: 0;
-                white-space: normal;
-                font-size: clamp(1.1rem, 5vw, 1.4rem);
-                line-height: 1.3;
-                word-wrap: break-word;
-            }
-
-            .header-radio-chip {
-                margin-left: 0;
-                max-width: 100%;
-                justify-content: center;
-                width: auto;
-                min-width: fit-content;
-            }
-
-            .header-datetime {
-                text-align: center;
-                padding: 0;
-                font-size: clamp(0.9rem, 3.5vw, 1.1rem);
-            }
-
-            .header-right-group {
-                justify-content: center;
-                gap: clamp(10px, 3vw, 14px);
-                flex-wrap: wrap;
-            }
-
-            /* Hide weather on very small screens */
-            #ordina-weather-widget {
-                display: none;
-            }
-        }
+        /* Старые мобильные стили удалены - используем новую систему */
 
         /* Tablet: Compact grid with all widgets in original order */
         @media (min-width: 481px) and (max-width: 768px) {
@@ -1760,11 +1653,7 @@
             }
         }
         
-        @media (max-width: 480px) {
-            .header-motto {
-                font-size: clamp(0.92rem, 1.02vw, 1.12rem);
-            }
-        }
+        /* Старые мобильные стили удалены - используем новую систему */
 
         /* D. Column 3: Weather */
         .header-weather-chip {
@@ -2342,63 +2231,9 @@
             height: 4px;
         }
 
-        @media (max-width: 480px) {
-            .header-tabs-container {
-                gap: clamp(4px, 1vw, 6px);
-                overflow-x: auto;
-                padding-bottom: 4px;
-            }
-            .header-tabs-container .tab-button {
-                scroll-snap-align: start;
-                flex-shrink: 0;
-                font-size: clamp(0.75rem, 3vw, 0.875rem);
-                padding: clamp(0.375rem, 1.5vw, 0.5rem) clamp(0.5rem, 2vw, 0.75rem);
-            }
-            
-            /* Better mobile spacing for dashboard */
-            #dashboard-page {
-                padding: clamp(0.5rem, 2vw, 1rem) 0;
-            }
-            
-            /* Compact stat cards on mobile */
-            .stat-card {
-                padding: clamp(0.75rem, 2vw, 1rem) !important;
-                font-size: clamp(0.75rem, 2.5vw, 0.875rem) !important;
-            }
-            
-            /* Better mobile header */
-            #fixed-header {
-                padding: clamp(0.5rem, 2vw, 0.75rem) !important;
-            }
-        }
+        /* Старые мобильные стили удалены - используем новую систему */
 
-        /* G. Override old styles */
-        #ordina-weather-widget {
-            display: flex !important;
-        }
-
-        /* Hide old weather widget structure */
-        .weather-widget-new {
-            display: none !important;
-        }
-
-
-
-        /* Enhanced Responsive Design - Mobile First */
-        @media (max-width: 480px) {
-            .news-box {
-                padding: clamp(0.875rem, 2vw, 1rem);
-            }
-
-            .stat-card {
-                padding: clamp(1.125rem, 2.5vw, 1.25rem);
-            }
-
-            .tab-button {
-                padding: clamp(0.5rem, 1.25vw, 0.625rem) clamp(0.625rem, 1.5vw, 0.75rem);
-                font-size: clamp(0.8125rem, 1.75vw, 0.875rem);
-            }
-        }
+        /* Старые мобильные стили удалены - используем новую систему */
 
         @media (min-width: 481px) and (max-width: 768px) {
             .news-box {
@@ -2463,17 +2298,7 @@
         }
 
         /* Navigation Tabs Responsive */
-        @media (max-width: 480px) {
-            nav .flex {
-                gap: 0;
-            }
-
-            .tab-button {
-                padding: 0.5rem 0.5rem;
-                font-size: 0.875rem;
-                white-space: nowrap;
-            }
-        }
+        /* Старые мобильные стили удалены - используем новую систему */
 
         @media (min-width: 481px) and (max-width: 768px) {
             .tab-button {
@@ -3370,4 +3195,361 @@
 
         .luxury-pulse {
             animation: luxuryPulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+
+        /* ============================================
+           НОВАЯ СИСТЕМА МОБИЛЬНОЙ АДАПТАЦИИ
+           Полностью переработанная для мобильных устройств
+           ============================================ */
+
+        @media (max-width: 768px) {
+            /* Мобильная версия - полностью другой дизайн */
+            
+            /* Общие настройки для мобильных */
+            #app {
+                padding: 0.5rem !important;
+                max-width: 100% !important;
+            }
+
+            body {
+                font-size: 14px;
+            }
+
+            /* Мобильный Header - компактный вертикальный */
+            #fixed-header {
+                position: sticky;
+                top: 0;
+                z-index: 100;
+                padding: 0.75rem !important;
+                margin-bottom: 0.5rem;
+            }
+
+            .header-grid-container {
+                display: flex;
+                flex-direction: column;
+                gap: 0.75rem;
+                padding: 0.5rem;
+            }
+
+            /* Логотип на мобильных - компактный */
+            .header-logo-wrapper {
+                width: 100%;
+                max-width: 180px;
+                height: auto;
+                margin: 0 auto;
+                display: flex;
+                justify-content: center;
+            }
+
+            .header-logo-wrapper img {
+                width: 100%;
+                height: auto;
+                max-height: 80px;
+            }
+
+            /* Девиз на мобильных - под логотипом */
+            .header-motto {
+                text-align: center;
+                font-size: 1rem;
+                padding: 0.5rem 0;
+                white-space: normal;
+                line-height: 1.4;
+            }
+
+            /* Мобильная строка с виджетами - горизонтальная */
+            .mobile-widgets-row {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                gap: 0.5rem;
+                flex-wrap: wrap;
+                width: 100%;
+            }
+
+            /* Группировка виджетов в одну строку */
+            .header-weather-chip,
+            .header-radio-chip,
+            .header-datetime {
+                display: inline-flex;
+            }
+
+            /* Погода на мобильных - компактная, всегда видна */
+            #ordina-weather-widget {
+                display: flex !important;
+                align-items: center;
+                gap: 0.375rem;
+                padding: 0.5rem 0.75rem;
+                border-radius: 12px;
+                background: linear-gradient(135deg, rgba(248, 250, 252, 0.95) 0%, rgba(241, 245, 249, 0.9) 100%);
+                backdrop-filter: blur(12px);
+                border: 1px solid rgba(148, 163, 184, 0.25);
+                font-size: 0.875rem;
+                min-width: fit-content;
+                flex-shrink: 0;
+            }
+
+            .dark #ordina-weather-widget {
+                background: linear-gradient(135deg, rgba(15, 23, 42, 0.98) 0%, rgba(30, 41, 59, 0.95) 100%);
+                border-color: rgba(99, 102, 234, 0.3);
+            }
+
+            .header-weather-chip svg {
+                width: 18px;
+                height: 18px;
+            }
+
+            .weather-temp-compact {
+                font-weight: 600;
+                font-size: 0.875rem;
+            }
+
+            .weather-city-compact {
+                font-size: 0.75rem;
+                max-width: 80px;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+            }
+
+            /* Радио на мобильных - компактное */
+            .header-radio-chip {
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+                padding: 0.5rem 0.75rem;
+                border-radius: 12px;
+                background: linear-gradient(135deg, rgba(102, 126, 234, 0.15) 0%, rgba(118, 75, 162, 0.15) 100%);
+                backdrop-filter: blur(12px);
+                border: 1px solid rgba(102, 126, 234, 0.3);
+                min-width: fit-content;
+                flex-shrink: 0;
+            }
+
+            .radio-play-btn {
+                width: 32px;
+                height: 32px;
+                min-width: 32px;
+                min-height: 32px;
+            }
+
+            .radio-label-wrapper {
+                display: none; /* Скрываем текст на мобильных */
+            }
+
+            .radio-equalizer {
+                display: none; /* Скрываем эквалайзер на мобильных */
+            }
+
+            /* Дата/время на мобильных */
+            .header-datetime {
+                font-size: 0.75rem;
+                padding: 0.5rem;
+                text-align: center;
+            }
+
+            /* Правая группа иконок на мобильных */
+            .header-right-group {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                gap: 0.5rem;
+                flex-wrap: wrap;
+                width: 100%;
+            }
+
+            .header-theme-btn,
+            #lang-trigger,
+            #curr-trigger,
+            .header-logout-btn {
+                width: 40px;
+                height: 40px;
+                min-width: 40px;
+                min-height: 40px;
+            }
+
+            /* Навигация на мобильных - горизонтальная прокрутка */
+            .header-nav {
+                margin-top: 0.5rem;
+                padding-top: 0.5rem;
+            }
+
+            .header-tabs-container {
+                display: flex;
+                overflow-x: auto;
+                overflow-y: hidden;
+                gap: 0.5rem;
+                padding: 0.5rem 0;
+                -webkit-overflow-scrolling: touch;
+                scroll-snap-type: x mandatory;
+            }
+
+            .header-tabs-container::-webkit-scrollbar {
+                height: 3px;
+            }
+
+            .header-tabs-container::-webkit-scrollbar-thumb {
+                background: var(--accent-color);
+                border-radius: 3px;
+            }
+
+            .tab-button {
+                padding: 0.625rem 1rem;
+                font-size: 0.875rem;
+                white-space: nowrap;
+                flex-shrink: 0;
+                scroll-snap-align: start;
+                min-height: 44px;
+            }
+
+            /* Контент на мобильных */
+            .page-content {
+                padding: 0.75rem 0;
+            }
+
+            /* Заголовки на мобильных */
+            h2 {
+                font-size: 1.25rem !important;
+            }
+
+            /* Статистические карточки на мобильных - сетка 2x3 */
+            .stat-card {
+                flex: 1 1 calc(50% - 0.5rem) !important;
+                min-width: calc(50% - 0.5rem) !important;
+                padding: 1rem !important;
+                font-size: 0.875rem !important;
+            }
+
+            .stat-card h3 {
+                font-size: 0.75rem;
+                margin-bottom: 0.5rem;
+            }
+
+            .stat-card p {
+                font-size: 1rem;
+            }
+
+            /* Кнопки на мобильных */
+            .premium-btn,
+            .modern-btn {
+                padding: 0.75rem 1.25rem;
+                font-size: 0.875rem;
+                min-height: 44px;
+            }
+
+            /* Таблицы на мобильных - карточки */
+            .responsive-table {
+                display: block;
+            }
+
+            .responsive-table thead {
+                display: none;
+            }
+
+            .responsive-table tbody {
+                display: block;
+            }
+
+            .responsive-table tr {
+                display: block;
+                margin-bottom: 1rem;
+                border: 1px solid var(--border-color);
+                border-radius: 12px;
+                padding: 1rem;
+                background: var(--bg-primary);
+            }
+
+            .responsive-table td {
+                display: flex;
+                justify-content: space-between;
+                padding: 0.5rem 0;
+                border: none;
+            }
+
+            .responsive-table td::before {
+                content: attr(data-label);
+                font-weight: 600;
+                margin-right: 1rem;
+            }
+
+            /* Модальные окна на мобильных */
+            dialog {
+                max-width: 95vw;
+                margin: 1rem auto;
+                padding: 1rem;
+            }
+
+            /* Формы на мобильных */
+            input, select, textarea {
+                font-size: 16px; /* Предотвращает зум на iOS */
+                min-height: 44px;
+            }
+
+            /* Дашборд на мобильных */
+            #dashboard-page {
+                padding: 0.5rem 0;
+            }
+
+            #dashboard-page .flex {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            /* Новости на мобильных */
+            #news-widget {
+                margin-top: 1rem;
+            }
+
+            /* Календарь на мобильных */
+            #calendar-grid {
+                gap: 0.25rem;
+            }
+
+            .calendar-day {
+                min-height: 60px;
+                font-size: 0.75rem;
+                padding: 0.25rem;
+            }
+
+            /* Задачи на мобильных */
+            .task-tab-button {
+                padding: 0.75rem 1rem;
+                font-size: 0.875rem;
+            }
+        }
+
+        /* Очень маленькие экраны (до 480px) */
+        @media (max-width: 480px) {
+            #app {
+                padding: 0.25rem !important;
+            }
+
+            #fixed-header {
+                padding: 0.5rem !important;
+            }
+
+            .header-logo-wrapper {
+                max-width: 140px;
+            }
+
+            .header-logo-wrapper img {
+                max-height: 60px;
+            }
+
+            .header-motto {
+                font-size: 0.875rem;
+            }
+
+            .stat-card {
+                flex: 1 1 100% !important;
+                min-width: 100% !important;
+            }
+
+            .tab-button {
+                padding: 0.5rem 0.75rem;
+                font-size: 0.8125rem;
+            }
+
+            h2 {
+                font-size: 1.125rem !important;
+            }
         }
