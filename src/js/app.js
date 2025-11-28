@@ -33,6 +33,7 @@ let allRecurringTemplates = [];
 let currentMonthStatuses = {};
 let allExpenses = [];
 let dailyTasks = [];
+let currentDailyDate = null;
 let monthlyTasks = [];
 let yearlyTasks = [];
 let calendarEvents = [];
@@ -262,12 +263,10 @@ const attachListeners = () => {
         renderMonthSelector(m);
     }));
     unsubscribes.push(onSnapshot(query(categoriesCol), (s) => { const categories = s.docs.map((d) => ({ id: d.id, ...d.data() })); renderCategoryDatalist(s.docs); renderCategories(categories); }));
-    // Filter daily tasks by today's date
-    const todayId = getTodayISOString();
-    unsubscribes.push(onSnapshot(query(dailyTasksCol, where("date", "==", todayId)), (s) => {
-        dailyTasks = s.docs.map((d) => ({ id: d.id, ...d.data() }));
-        renderDailyTasks(dailyTasks);
-    }));
+    // Filter daily tasks by selected date (defaults to today)
+    const selectedDateId = currentDailyDate || getTodayISOString();
+    currentDailyDate = selectedDateId;
+    attachDailyTasksListener(selectedDateId);
     unsubscribes.push(onSnapshot(query(monthlyTasksCol, where("month", "==", selectedMonthId)), (s) => { monthlyTasks = s.docs.map((d) => ({ id: d.id, ...d.data() })); renderMonthlyTasks(monthlyTasks); updateDashboard(); }));
     unsubscribes.push(onSnapshot(query(yearlyTasksCol, where("year", "==", calendarDate.getFullYear())), (s) => { yearlyTasks = s.docs.map((d) => ({ id: d.id, ...d.data() })); renderYearlyTasks(yearlyTasks); updateDashboard(); }));
     unsubscribes.push(onSnapshot(query(calendarEventsCol), (s) => { calendarEvents = s.docs.map((d) => ({ id: d.id, ...d.data() })); renderCalendar(); }));
@@ -316,6 +315,16 @@ function updateMonthDisplay() {
     const todayDateEl = document.getElementById('today-date');
     if (recurringMonthNameEl) recurringMonthNameEl.textContent = formattedDate;
     if (todayDateEl) todayDateEl.textContent = formatISODateForDisplay(getTodayISOString(), { year: undefined });
+    const dailyDateInput = document.getElementById('daily-date-filter');
+    if (dailyDateInput) dailyDateInput.value = getTodayISOString();
+}
+
+function attachDailyTasksListener(dateId) {
+    const qDaily = query(dailyTasksCol, where("date", "==", dateId));
+    unsubscribes.push(onSnapshot(qDaily, (s) => {
+        dailyTasks = s.docs.map((d) => ({ id: d.id, ...d.data() }));
+        renderDailyTasks(dailyTasks);
+    }));
 }
 
 const renderMonthSelector = (months) => {
@@ -1029,6 +1038,16 @@ function setupEventListeners() {
     // Global Click Listener for dynamic elements
     document.getElementById('app').addEventListener('click', handleGlobalClick);
     document.getElementById('app').addEventListener('change', handleGlobalChange);
+
+    const dailyDateInput = document.getElementById('daily-date-filter');
+    if (dailyDateInput) {
+        dailyDateInput.addEventListener('change', (e) => {
+            const newDate = e.target.value;
+            if (!newDate || newDate === currentDailyDate) return;
+            currentDailyDate = newDate;
+            attachListeners();
+        });
+    }
 
     // Auth Forms
     const loginBtn = document.getElementById('login-btn');

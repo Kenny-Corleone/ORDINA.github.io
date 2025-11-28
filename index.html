@@ -372,7 +372,7 @@
             </nav>
             
         </div><!-- end of fixed-header -->
-        <div class="grid grid-cols-[96px,1fr] gap-2 sm:block">
+        <div class="grid grid-cols-[64px,1fr] gap-2 sm:block">
             <aside id="mini-sidebar" class="block sm:hidden flex flex-col gap-2 p-2">
                 <button data-tab="dashboard" class="tab-button tab-active text-xs px-2 py-2"
                     data-i18n="tabDashboard">Сводка</button>
@@ -679,6 +679,10 @@
                         <h3 class="text-xl font-semibold" data-i18n="taskTodayTitle">Задачи на сегодня</h3><button
                             id="add-daily-task-btn" class="bg-blue-600 text-white px-4 py-2 rounded-lg"
                             data-i18n="addTask">Добавить задачу</button>
+                    </div>
+                    <div class="mb-3">
+                        <label for="daily-date-filter" class="text-sm text-gray-600" data-i18n="date">Дата</label>
+                        <input type="date" id="daily-date-filter" class="bg-gray-50 border border-gray-300 rounded-lg w-full p-2.5" />
                     </div>
                     <div id="daily-tasks-table-wrapper"
                         class="bg-white rounded-lg shadow-sm overflow-x-auto md:bg-transparent md:shadow-none">

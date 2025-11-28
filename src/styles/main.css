@@ -1640,7 +1640,7 @@ textarea:focus {
             "weather weather"
             "radio radio"
             "time time";
-        row-gap: clamp(4px, 1.5vw, 8px);
+        row-gap: clamp(2px, 1vw, 6px);
     }
 }
 
@@ -1682,7 +1682,7 @@ textarea:focus {
 
 /* C. Column 2: Motto (Slogan) */
 .header-motto {
-    font-size: clamp(1.11rem, 1.23vw, 1.34rem);
+    font-size: clamp(1.0rem, 1.2vw, 1.2rem);
     line-height: 1.15;
     white-space: nowrap;
     overflow: hidden;
@@ -1921,9 +1921,17 @@ textarea:focus {
 }
 
 @media (max-width: 480px) {
+    .header-motto {
+        white-space: normal;
+        overflow: visible;
+        text-overflow: clip;
+        font-size: clamp(0.95rem, 4vw, 1.05rem);
+        padding-left: 6px;
+    }
     .header-right-group {
         flex-wrap: wrap;
         max-width: 100%;
+        gap: 6px;
     }
 }
 
