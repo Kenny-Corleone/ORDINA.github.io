@@ -241,10 +241,6 @@ const showApp = () => {
     if (loginScreen) loginScreen.classList.add('hidden');
     if (appScreen) {
         appScreen.classList.remove('hidden');
-        // Use setTimeout to allow the display change to take effect before changing opacity
-        setTimeout(() => {
-            appScreen.classList.remove('opacity-0');
-        }, 10);
         // Trigger a resize event to fix any layout issues
         window.dispatchEvent(new Event('resize'));
     }
@@ -1022,40 +1018,52 @@ function setupEventListeners() {
     }
 
     // Language Flags
+    $$('.header-lang-btn').forEach(btn => {
+        // Set initial active state
+        if (btn.dataset.lang === currentLang) {
+            btn.classList.remove('opacity-50');
+            btn.classList.add('opacity-100', 'scale-110');
+        }
 
-    // Language Dropdown
-    const langTrigger = document.getElementById('lang-trigger');
-    const langMenu = document.getElementById('lang-menu');
-    const currentLangFlag = document.getElementById('current-lang-flag');
+        btn.addEventListener('click', (e) => {
+            e.preventDefault();
+            const lang = e.currentTarget.dataset.lang;
+            if (lang === currentLang) return;
 
-    if (langTrigger && langMenu) {
-        // Toggle dropdown
-        langTrigger.addEventListener('click', (e) => {
-            e.stopPropagation();
-            const expanded = langTrigger.getAttribute('aria-expanded') === 'true';
-            langTrigger.setAttribute('aria-expanded', !expanded);
-            langMenu.classList.toggle('hidden');
-        });
-
-        // Close when clicking outside
-        document.addEventListener('click', (e) => {
-            if (!langTrigger.contains(e.target) && !langMenu.contains(e.target)) {
-                langMenu.classList.add('hidden');
-                langTrigger.setAttribute('aria-expanded', 'false');
-            }
-        });
-
-        // Handle language selection
-        $$('.language-dropdown-item').forEach(item => {
-            item.addEventListener('click', (e) => {
-                e.preventDefault();
-                const lang = e.currentTarget.dataset.lang;
-                if (lang === currentLang) {
-                    langMenu.classList.add('hidden');
-                    return;
+            setLanguage(lang, () => {
+                updateCurrencyButtons();
+                updateMonthDisplay();
+                renderCalendar();
+                initNews();
+                initWeatherNew();
+                if (availableMonths.length > 0) {
+                    renderMonthSelector(availableMonths);
                 }
 
-                setLanguage(lang, () => {
+                // Update active state
+                $$('.header-lang-btn').forEach(b => {
+                    b.classList.add('opacity-50');
+                    b.classList.remove('opacity-100', 'scale-110');
+                });
+                e.currentTarget.classList.remove('opacity-50');
+                e.currentTarget.classList.add('opacity-100', 'scale-110');
+            });
+        });
+    });
+
+    const langRuLogin = document.getElementById('lang-ru-login');
+    const langEnLogin = document.getElementById('lang-en-login');
+    const langAzLogin = document.getElementById('lang-az-login');
+    [
+        { el: langRuLogin, code: 'ru' },
+        { el: langEnLogin, code: 'en' },
+        { el: langAzLogin, code: 'az' },
+    ].forEach(({ el, code }) => {
+        if (el) {
+            el.addEventListener('click', (e) => {
+                e.preventDefault();
+                setLanguage(code, () => {
+                    applyDynamicTranslations();
                     updateCurrencyButtons();
                     updateMonthDisplay();
                     renderCalendar();
@@ -1064,24 +1072,10 @@ function setupEventListeners() {
                     if (availableMonths.length > 0) {
                         renderMonthSelector(availableMonths);
                     }
-
-                    // Update trigger flag
-                    const flagMap = { 'ru': '🇷🇺', 'en': '🇬🇧', 'az': '🇦🇿' };
-                    if (currentLangFlag) currentLangFlag.textContent = flagMap[lang] || '🇷🇺';
-
-                    langMenu.classList.add('hidden');
-                    langTrigger.setAttribute('aria-expanded', 'false');
                 });
             });
-        });
-
-        // Set initial flag
-        const flagMap = { 'ru': '🇷🇺', 'en': '🇬🇧', 'az': '🇦🇿' };
-        if (currentLangFlag) currentLangFlag.textContent = flagMap[currentLang] || '🇷🇺';
-    }
-
-    // Currency Toggle
-
+        }
+    });
 
     // Currency Toggle
     const currToggleBtn = document.getElementById('curr-toggle-btn');
@@ -1583,7 +1577,7 @@ function renderCategories(categories) {
 
 function initParticles() {
     // Particles config
-    particlesJS("background-animation", {
+    particlesJS("particles-js", {
         "particles": {
             "number": { "value": 80, "density": { "enable": true, "value_area": 800 } },
             "color": { "value": "#ffffff" },

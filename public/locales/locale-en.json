@@ -235,5 +235,10 @@
   "newsSearchPlaceholder": "Search...",
   "newsRefresh": "Refresh",
   "newsArticlesLoaded": "news articles loaded",
-  "newsError": "Failed to load news"
+  "newsError": "Failed to load news",
+  "weatherLoading": "Loading...",
+  "weatherError": "Loading error",
+  "weatherLocationError": "Geolocation unavailable",
+  "weatherLocationSuccess": "Location detected",
+  "weatherUpdated": "Weather updated for city"
 }
