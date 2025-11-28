@@ -2346,10 +2346,29 @@
             .header-tabs-container {
                 gap: clamp(4px, 1vw, 6px);
                 overflow-x: auto;
+                padding-bottom: 4px;
             }
             .header-tabs-container .tab-button {
                 scroll-snap-align: start;
                 flex-shrink: 0;
+                font-size: clamp(0.75rem, 3vw, 0.875rem);
+                padding: clamp(0.375rem, 1.5vw, 0.5rem) clamp(0.5rem, 2vw, 0.75rem);
+            }
+            
+            /* Better mobile spacing for dashboard */
+            #dashboard-page {
+                padding: clamp(0.5rem, 2vw, 1rem) 0;
+            }
+            
+            /* Compact stat cards on mobile */
+            .stat-card {
+                padding: clamp(0.75rem, 2vw, 1rem) !important;
+                font-size: clamp(0.75rem, 2.5vw, 0.875rem) !important;
+            }
+            
+            /* Better mobile header */
+            #fixed-header {
+                padding: clamp(0.5rem, 2vw, 0.75rem) !important;
             }
         }
 

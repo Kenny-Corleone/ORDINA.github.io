@@ -55,6 +55,27 @@ const formatCurrency = (amount) => {
 const formatISODateForDisplay = (isoDate, options = {}) => {
     if (!isoDate) return '';
     const date = new Date(isoDate);
+    
+    // Use translations array for month names if available
+    if (translations[currentLang]?.months && !options.year && options.month !== 'long') {
+        const month = date.getMonth();
+        const day = date.getDate();
+        const monthName = translations[currentLang].months[month];
+        if (options.year === undefined) {
+            return `${day} ${monthName}`;
+        }
+    }
+    
+    // For full date with year, use translations if available
+    if (translations[currentLang]?.months && options.year !== undefined) {
+        const month = date.getMonth();
+        const day = date.getDate();
+        const year = date.getFullYear();
+        const monthName = translations[currentLang].months[month];
+        return `${day} ${monthName} ${year}`;
+    }
+    
+    // Fallback to toLocaleString
     const locale = currentLang === 'ru' ? 'ru-RU' : (currentLang === 'az' ? 'az-Latn-AZ' : 'en-US');
     const defaultOptions = { year: 'numeric', month: 'long', day: 'numeric' };
     return date.toLocaleDateString(locale, { ...defaultOptions, ...options });
@@ -191,7 +212,12 @@ const attachListeners = () => {
         renderMonthSelector(m); 
     }));
     unsubscribes.push(onSnapshot(query(categoriesCol), (s) => { const categories = s.docs.map((d) => ({ id: d.id, ...d.data() })); renderCategoryDatalist(s.docs); renderCategories(categories); }));
-    unsubscribes.push(onSnapshot(query(dailyTasksCol), (s) => { dailyTasks = s.docs.map((d) => ({ id: d.id, ...d.data() })); renderDailyTasks(dailyTasks); }));
+    // Filter daily tasks by today's date
+    const todayId = getTodayISOString();
+    unsubscribes.push(onSnapshot(query(dailyTasksCol, where("date", "==", todayId)), (s) => { 
+        dailyTasks = s.docs.map((d) => ({ id: d.id, ...d.data() })); 
+        renderDailyTasks(dailyTasks); 
+    }));
     unsubscribes.push(onSnapshot(query(monthlyTasksCol, where("month", "==", selectedMonthId)), (s) => { monthlyTasks = s.docs.map((d) => ({ id: d.id, ...d.data() })); renderMonthlyTasks(monthlyTasks); updateDashboard(); }));
     unsubscribes.push(onSnapshot(query(yearlyTasksCol, where("year", "==", calendarDate.getFullYear())), (s) => { yearlyTasks = s.docs.map((d) => ({ id: d.id, ...d.data() })); renderYearlyTasks(yearlyTasks); updateDashboard(); }));
     unsubscribes.push(onSnapshot(query(calendarEventsCol), (s) => { calendarEvents = s.docs.map((d) => ({ id: d.id, ...d.data() })); renderCalendar(); }));
@@ -209,6 +235,9 @@ const detachListeners = () => {
 const showApp = () => {
     const loginScreen = document.getElementById('auth-container');
     const appScreen = document.getElementById('app');
+    const loadingOverlay = document.getElementById('loading-overlay');
+    
+    if (loadingOverlay) loadingOverlay.classList.add('hidden');
     if (loginScreen) loginScreen.classList.add('hidden');
     if (appScreen) {
         appScreen.classList.remove('hidden');
@@ -221,6 +250,9 @@ const showApp = () => {
 const showLoginScreen = () => {
     const loginScreen = document.getElementById('auth-container');
     const appScreen = document.getElementById('app');
+    const loadingOverlay = document.getElementById('loading-overlay');
+    
+    if (loadingOverlay) loadingOverlay.classList.add('hidden');
     if (loginScreen) loginScreen.classList.remove('hidden');
     if (appScreen) appScreen.classList.add('hidden');
 };
@@ -518,7 +550,9 @@ function renderCalendar() {
     const month = calendarDate.getMonth(), year = calendarDate.getFullYear();
     const monthName = translations[currentLang]?.months?.[month] || '';
 
-    monthYearEl.textContent = monthName ? `${monthName} ${year}` : calendarDate.toLocaleString(currentLang === 'ru' ? 'ru-RU' : (currentLang === 'az' ? 'az-Latn-AZ' : 'en-US'), { month: 'long', year: 'numeric' });
+    // Use translations array for month name
+    const monthNameFromTranslations = translations[currentLang]?.months?.[month];
+    monthYearEl.textContent = monthNameFromTranslations ? `${monthNameFromTranslations} ${year}` : (monthName ? `${monthName} ${year}` : calendarDate.toLocaleString(currentLang === 'ru' ? 'ru-RU' : (currentLang === 'az' ? 'az-Latn-AZ' : 'en-US'), { month: 'long', year: 'numeric' }));
     weekdaysEl.innerHTML = translations[currentLang].weekdays.map(day => `<div>${day}</div>`).join('');
 
     const firstDayOfMonth = new Date(year, month, 1).getDay();
@@ -1144,6 +1178,13 @@ async function handleFormSubmit(e) {
     try {
         if (id === 'debt-form') await handleDebtForm(form);
         else if (id === 'expense-form') await handleExpenseForm(form);
+        else if (id === 'daily-task-form') await handleDailyTaskForm(form);
+        else if (id === 'monthly-task-form') await handleMonthlyTaskForm(form);
+        else if (id === 'yearly-task-form') await handleYearlyTaskForm(form);
+        else if (id === 'recurring-expense-form') await handleRecurringExpenseForm(form);
+        else if (id === 'event-form') await handleEventForm(form);
+        else if (id === 'category-form') await handleCategoryForm(form);
+        else if (id === 'debt-payment-form') await handleDebtPaymentForm(form);
         // ... handle other forms
 
         const modal = form.closest('dialog');
@@ -1185,6 +1226,113 @@ async function handleExpenseForm(form) {
     // For now, assuming current month
     if (id) await updateDoc(doc(expensesCol, id), data);
     else await addDoc(expensesCol, data);
+}
+
+async function handleDailyTaskForm(form) {
+    const id = form.querySelector('#daily-task-id').value;
+    const todayId = getTodayISOString();
+    const data = {
+        name: form.querySelector('#daily-task-name').value,
+        notes: form.querySelector('#daily-task-notes').value || '',
+        status: translations.ru.statusNotDone,
+        date: todayId, // Always use today's date
+        carriedOver: false
+    };
+
+    if (id) await updateDoc(doc(dailyTasksCol, id), data);
+    else await addDoc(dailyTasksCol, data);
+}
+
+async function handleMonthlyTaskForm(form) {
+    const id = form.querySelector('#monthly-task-id').value;
+    const data = {
+        name: form.querySelector('#monthly-task-name').value,
+        deadline: form.querySelector('#monthly-task-deadline').value,
+        status: translations.ru.statusNotDone,
+        month: selectedMonthId
+    };
+
+    if (id) await updateDoc(doc(monthlyTasksCol, id), data);
+    else await addDoc(monthlyTasksCol, data);
+}
+
+async function handleYearlyTaskForm(form) {
+    const id = form.querySelector('#yearly-task-id').value;
+    const data = {
+        name: form.querySelector('#yearly-task-name').value,
+        deadline: form.querySelector('#yearly-task-deadline').value,
+        notes: form.querySelector('#yearly-task-notes').value || '',
+        status: translations.ru.statusNotDone,
+        year: calendarDate.getFullYear()
+    };
+
+    if (id) await updateDoc(doc(yearlyTasksCol, id), data);
+    else await addDoc(yearlyTasksCol, data);
+}
+
+async function handleRecurringExpenseForm(form) {
+    const id = form.querySelector('#recurring-expense-id').value;
+    const data = {
+        name: form.querySelector('#recurring-expense-name').value,
+        amount: parseFloat(form.querySelector('#recurring-expense-amount').value),
+        dueDay: parseInt(form.querySelector('#recurring-expense-due-day').value),
+        details: form.querySelector('#recurring-expense-details').value || ''
+    };
+
+    if (id) await updateDoc(doc(recurringExpensesCol, id), data);
+    else await addDoc(recurringExpensesCol, data);
+}
+
+async function handleEventForm(form) {
+    const id = form.querySelector('#event-id').value;
+    const category = form.querySelector('#event-category').value;
+    const eventDate = form.querySelector('#event-date').value;
+    let data = { date: eventDate, category };
+
+    // Handle different event categories
+    if (category === 'event') {
+        data.name = form.querySelector('#event-name-generic').value;
+    } else if (category === 'birthday') {
+        data.birthdayName = form.querySelector('#event-birthday-name').value;
+        data.birthYear = form.querySelector('#event-birthday-year').value || null;
+    } else if (category === 'meeting') {
+        data.meetingWith = form.querySelector('#event-meeting-with').value;
+        data.time = form.querySelector('#event-meeting-time').value || null;
+        data.place = form.querySelector('#event-meeting-place').value || null;
+    } else if (category === 'wedding') {
+        data.weddingNames = form.querySelector('#event-wedding-names').value;
+    }
+
+    if (id) await updateDoc(doc(calendarEventsCol, id), data);
+    else {
+        await addDoc(calendarEventsCol, data);
+        // Create task if checkbox is checked
+        if (form.querySelector('#event-create-task').checked) {
+            // Task creation logic would go here
+        }
+    }
+}
+
+async function handleCategoryForm(form) {
+    const name = form.querySelector('#category-name').value;
+    if (!name) return;
+    await addDoc(categoriesCol, { name, lang: currentLang });
+    // Refresh categories list
+    const snapshot = await getDocs(query(categoriesCol));
+    renderCategories(snapshot.docs.map(d => ({ id: d.id, ...d.data() })));
+}
+
+async function handleDebtPaymentForm(form) {
+    const debtId = form.querySelector('#debt-payment-id').value;
+    const amount = parseFloat(form.querySelector('#debt-payment-amount').value);
+    if (!debtId || !amount) return;
+
+    const debtDoc = await getDoc(doc(debtsCol, debtId));
+    if (!debtDoc.exists()) return;
+
+    const debt = debtDoc.data();
+    const newPaidAmount = (debt.paidAmount || 0) + amount;
+    await updateDoc(doc(debtsCol, debtId), { paidAmount: newPaidAmount });
 }
 
 // ... other handlers
