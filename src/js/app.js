@@ -54,39 +54,19 @@ const formatCurrency = (amount) => {
 
 const formatISODateForDisplay = (isoDate, options = {}) => {
     if (!isoDate) return '';
+    const date = new Date(isoDate);
 
-    // Parse ISO (YYYY-MM-DD) safely in local time to avoid UTC shift
-    let date;
-    const m = /^([0-9]{4})-([0-9]{2})-([0-9]{2})$/.exec(isoDate);
-    if (m) {
-        const y = Number(m[1]);
-        const mo = Number(m[2]) - 1;
-        const d = Number(m[3]);
-        date = new Date(y, mo, d, 12, 0, 0, 0); // midday to dodge DST edge cases
-    } else {
-        date = new Date(isoDate);
-    }
-
-    // Russian: always rely on locale for correct genitive month
-    if (currentLang === 'ru') {
-        const includeYear = options.year !== undefined;
-        const localeOpts = {
-            day: 'numeric',
-            month: options.month || 'long',
-            ...(includeYear ? { year: 'numeric' } : {})
-        };
-        return date.toLocaleDateString('ru-RU', localeOpts);
-    }
-
-    // For other languages, prefer translations if available and year omitted
-    if (translations[currentLang]?.months && options.year === undefined && options.month !== 'long') {
+    // Use translations array for month names if available
+    if (translations[currentLang]?.months && !options.year && options.month !== 'long') {
         const month = date.getMonth();
         const day = date.getDate();
         const monthName = translations[currentLang].months[month];
-        return `${day} ${monthName}`;
+        if (options.year === undefined) {
+            return `${day} ${monthName}`;
+        }
     }
 
-    // If year requested and translations available
+    // For full date with year, use translations if available
     if (translations[currentLang]?.months && options.year !== undefined) {
         const month = date.getMonth();
         const day = date.getDate();
@@ -95,8 +75,8 @@ const formatISODateForDisplay = (isoDate, options = {}) => {
         return `${day} ${monthName} ${year}`;
     }
 
-    // Fallback to locale for AZ/EN and others
-    const locale = currentLang === 'az' ? 'az-Latn-AZ' : 'en-US';
+    // Fallback to toLocaleString
+    const locale = currentLang === 'ru' ? 'ru-RU' : (currentLang === 'az' ? 'az-Latn-AZ' : 'en-US');
     const defaultOptions = { year: 'numeric', month: 'long', day: 'numeric' };
     return date.toLocaleDateString(locale, { ...defaultOptions, ...options });
 };
@@ -172,7 +152,6 @@ export async function initApp() {
             // Init widgets
             initWeatherNew();
             initNews();
-            scheduleMidnightRollover();
 
             // Init particles if available
             if (window.particlesJS) {
@@ -188,35 +167,6 @@ export async function initApp() {
 
     // Initialize currency display
     updateCurrencyButtons();
-}
-
-function scheduleMidnightRollover() {
-    const now = new Date();
-    const next = new Date(now);
-    next.setHours(24, 0, 0, 0);
-    const delay = next.getTime() - now.getTime();
-    setTimeout(async () => {
-        await onMidnightRollover();
-        scheduleMidnightRollover();
-    }, Math.max(1000, delay));
-    document.addEventListener('visibilitychange', async () => {
-        if (!document.hidden) {
-            const todayIdNow = getTodayISOString();
-            const todayLabel = document.getElementById('today-date');
-            if (todayLabel && todayLabel.textContent !== formatISODateForDisplay(todayIdNow, { year: undefined })) {
-                await onMidnightRollover();
-            }
-        }
-    });
-}
-
-async function onMidnightRollover() {
-    currentMonthId = new Date().toISOString().slice(0, 7);
-    updateMonthDisplay();
-    detachListeners();
-    attachListeners();
-    const todayId = getTodayISOString();
-    await checkAndCarryOverDailyTasks(todayId);
 }
 
 const setupCollections = () => {
@@ -498,7 +448,6 @@ function renderDailyTasks(docs) {
                     <td data-label="${translations[currentLang].name}" class="${s === translations.ru.statusDone ? 'line-through text-gray-500' : ''}">
                         ${t.name}${firstCarryDateStr}
                     </td>
-                    <td data-label="${translations[currentLang].date}">${formatISODateForDisplay(t.date, { year: undefined })}</td>
                     <td data-label="${translations[currentLang].status}">${createTaskStatusDropdown(t.id, s, 'dailyTasks')}</td>
                     <td data-label="${translations[currentLang].notes}">
                         <input type="text" class="editable-task-notes bg-transparent w-full p-1 border-b border-transparent focus:border-blue-500 outline-none" data-id="${t.id}" data-col="dailyTasks" value="${t.notes || ''}" placeholder="${translations[currentLang].placeholderComment}">
@@ -835,55 +784,49 @@ function updateRecentActivity() {
 
 async function checkAndCarryOverDailyTasks(todayId) {
     if (!userId) return;
-    const today = new Date(`${todayId}T00:00:00`);
-    const yesterday = new Date(today);
+    const yesterday = new Date(todayId);
     yesterday.setDate(yesterday.getDate() - 1);
     const yesterdayId = yesterday.toISOString().split('T')[0];
 
     const lastCheckKey = `lastDailyCheck_${userId}`;
     const lastCheck = localStorage.getItem(lastCheckKey);
 
-    // Only run once per day
-    if (lastCheck === todayId) return;
+    if (lastCheck !== todayId) {
+        // Query all unfinished tasks, regardless of carriedOver status
+        const q = query(dailyTasksCol, where("status", "==", translations.ru.statusNotDone));
+        const tasksSnapshot = await getDocs(q);
+        const batch = writeBatch(db);
+        let hasUpdates = false;
 
-    // Fetch not-done tasks that are from yesterday or earlier and not yet carried over
-    const q = query(dailyTasksCol, where("status", "==", translations.ru.statusNotDone));
-    const tasksSnapshot = await getDocs(q);
+        tasksSnapshot.forEach(doc => {
+            const task = doc.data();
+            // Only carry over tasks from the past
+            if (task.date < todayId) {
+                const updates = {
+                    carriedOver: true,
+                    date: todayId // Move to today
+                };
 
-    const batch = writeBatch(db);
-    const createCarryOver = [];
+                // Save original date if not present
+                if (!task.originalDate) {
+                    updates.originalDate = task.date;
+                }
 
-    tasksSnapshot.forEach(snap => {
-        const task = snap.data();
-        const taskDateStr = task.date;
-        if (!taskDateStr) return;
-        // Carry over if task date is before today and task not yet marked as carriedOver
-        if (taskDateStr < todayId && !task.carriedOver) {
-            createCarryOver.push({ original: task });
-            // Do not mutate old task; keep history intact
-        }
-    });
+                // Track first carry date for display if needed
+                if (!task.first_carry_date) {
+                    updates.first_carry_date = task.date;
+                }
 
-    // Create new tasks for today based on previous not-done tasks
-    createCarryOver.forEach(({ original }) => {
-        const newRef = doc(dailyTasksCol);
-        batch.set(newRef, {
-            name: original.name,
-            notes: original.notes || '',
-            status: translations.ru.statusNotDone,
-            date: todayId,
-            carriedOver: true,
-            originalDate: original.originalDate || original.date,
-            first_carry_date: original.first_carry_date || original.date,
-            updatedAt: Timestamp.now()
+                batch.update(doc.ref, updates);
+                hasUpdates = true;
+            }
         });
-    });
 
-    if (createCarryOver.length > 0) {
-        await batch.commit();
+        if (hasUpdates) {
+            await batch.commit();
+        }
+        localStorage.setItem(lastCheckKey, todayId);
     }
-
-    localStorage.setItem(lastCheckKey, todayId);
 }
 
 async function checkAndCarryOverTasks() {
@@ -1043,50 +986,6 @@ function setupEventListeners() {
     // Theme Toggle
     const themeBtn = document.getElementById('theme-toggle');
     if (themeBtn) themeBtn.addEventListener('click', toggleTheme);
-
-    const mobileMenuToggle = document.getElementById('mobile-menu-toggle');
-    const miniSidebar = document.getElementById('mini-sidebar');
-    if (mobileMenuToggle && miniSidebar) {
-        mobileMenuToggle.addEventListener('click', (e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            miniSidebar.classList.toggle('hidden');
-        });
-    }
-
-    const mobileTabsToggle = document.getElementById('mobile-tabs-toggle');
-    const mobileTabsMenu = document.getElementById('mobile-tabs-menu');
-    if (mobileTabsToggle && mobileTabsMenu) {
-        mobileTabsToggle.addEventListener('click', (e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            const isHidden = mobileTabsMenu.classList.contains('hidden');
-            if (isHidden) {
-                mobileTabsMenu.classList.remove('hidden');
-                mobileTabsToggle.setAttribute('aria-expanded', 'true');
-            } else {
-                mobileTabsMenu.classList.add('hidden');
-                mobileTabsToggle.setAttribute('aria-expanded', 'false');
-            }
-        });
-
-        document.addEventListener('click', (e) => {
-            if (!mobileTabsMenu.classList.contains('hidden')) {
-                const within = mobileTabsMenu.contains(e.target) || mobileTabsToggle.contains(e.target);
-                if (!within) {
-                    mobileTabsMenu.classList.add('hidden');
-                    mobileTabsToggle.setAttribute('aria-expanded', 'false');
-                }
-            }
-        });
-
-        mobileTabsMenu.querySelectorAll('.tab-button').forEach(btn => {
-            btn.addEventListener('click', () => {
-                mobileTabsMenu.classList.add('hidden');
-                mobileTabsToggle.setAttribute('aria-expanded', 'false');
-            });
-        });
-    }
 
     // Radio Player
     const radioBtn = document.getElementById('radio-play-pause-btn');
@@ -1332,10 +1231,19 @@ async function handleFormSubmit(e) {
 // Form Handlers (Simplified)
 async function handleDebtForm(form) {
     const id = form.querySelector('#debt-id').value;
+    let totalAmount = parseFloat(form.querySelector('#debt-total').value);
+    let paidAmount = parseFloat(form.querySelector('#debt-paid').value);
+
+    // Convert to AZN if current currency is USD
+    if (currentCurrency === 'USD') {
+        totalAmount = totalAmount * exchangeRate;
+        paidAmount = paidAmount * exchangeRate;
+    }
+
     const data = {
         name: form.querySelector('#debt-name').value,
-        totalAmount: parseFloat(form.querySelector('#debt-total').value),
-        paidAmount: parseFloat(form.querySelector('#debt-paid').value),
+        totalAmount,
+        paidAmount,
         comment: form.querySelector('#debt-comment').value
     };
 
@@ -1348,10 +1256,17 @@ async function handleDebtForm(form) {
 
 async function handleExpenseForm(form) {
     const id = form.querySelector('#expense-id').value;
+    let amount = parseFloat(form.querySelector('#expense-amount').value);
+
+    // Convert to AZN if current currency is USD
+    if (currentCurrency === 'USD') {
+        amount = amount * exchangeRate;
+    }
+
     const data = {
         name: form.querySelector('#expense-name').value,
         category: form.querySelector('#expense-category').value,
-        amount: parseFloat(form.querySelector('#expense-amount').value),
+        amount,
         date: form.querySelector('#expense-date').value
     };
 
@@ -1405,9 +1320,16 @@ async function handleYearlyTaskForm(form) {
 
 async function handleRecurringExpenseForm(form) {
     const id = form.querySelector('#recurring-expense-id').value;
+    let amount = parseFloat(form.querySelector('#recurring-expense-amount').value);
+
+    // Convert to AZN if current currency is USD
+    if (currentCurrency === 'USD') {
+        amount = amount * exchangeRate;
+    }
+
     const data = {
         name: form.querySelector('#recurring-expense-name').value,
-        amount: parseFloat(form.querySelector('#recurring-expense-amount').value),
+        amount,
         dueDay: parseInt(form.querySelector('#recurring-expense-due-day').value),
         details: form.querySelector('#recurring-expense-details').value || ''
     };
@@ -1457,8 +1379,13 @@ async function handleCategoryForm(form) {
 
 async function handleDebtPaymentForm(form) {
     const debtId = form.querySelector('#debt-payment-id').value;
-    const amount = parseFloat(form.querySelector('#debt-payment-amount').value);
+    let amount = parseFloat(form.querySelector('#debt-payment-amount').value);
     if (!debtId || !amount) return;
+
+    // Convert to AZN if current currency is USD
+    if (currentCurrency === 'USD') {
+        amount = amount * exchangeRate;
+    }
 
     const debtDoc = await getDoc(doc(debtsCol, debtId));
     if (!debtDoc.exists()) return;
