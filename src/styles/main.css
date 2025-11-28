@@ -3154,62 +3154,56 @@
                 font-size: 14px;
             }
 
-            /* Мобильный Header - компактный вертикальный */
+            /* Мобильный Header - компактный горизонтальный */
             #fixed-header {
                 position: sticky;
                 top: 0;
                 z-index: 100;
-                padding: 0.75rem !important;
+                padding: 0.5rem !important;
                 margin-bottom: 0.5rem;
             }
 
             .header-grid-container {
-                display: flex;
-                flex-direction: column;
-                gap: 0.75rem;
-                padding: 0.5rem;
+                display: grid;
+                grid-template-columns: 1fr auto;
+                align-items: center;
+                gap: 0.5rem;
+                padding: 0;
             }
 
-            /* Логотип на мобильных - компактный */
+            /* Логотип на мобильных - слева */
             .header-logo-wrapper {
-                width: 100%;
-                max-width: 180px;
+                grid-column: 1;
+                width: auto;
+                max-width: 140px;
                 height: auto;
-                margin: 0 auto;
+                margin: 0;
                 display: flex;
-                justify-content: center;
+                justify-content: flex-start;
             }
 
             .header-logo-wrapper img {
-                width: 100%;
-                height: auto;
-                max-height: 80px;
+                width: auto;
+                height: 40px; /* Фиксированная высота для лого */
+                max-height: 40px;
             }
 
-            /* Девиз на мобильных - под логотипом */
-            .header-motto {
-                text-align: center;
-                font-size: 1rem;
-                padding: 0.5rem 0;
-                white-space: normal;
-                line-height: 1.4;
-            }
-
-            /* Мобильная строка с виджетами - горизонтальная */
-            .mobile-widgets-row {
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                gap: 0.5rem;
-                flex-wrap: wrap;
-                width: 100%;
-            }
-
-            /* Группировка виджетов в одну строку */
+            /* Скрываем лишнее на мобильных для чистоты */
+            .header-motto,
             .header-weather-chip,
             .header-radio-chip,
             .header-datetime {
-                display: inline-flex;
+                display: none !important;
+            }
+
+            /* Правая группа иконок на мобильных - справа */
+            .header-right-group {
+                grid-column: 2;
+                display: flex;
+                justify-content: flex-end;
+                align-items: center;
+                gap: 0.25rem;
+                width: auto;
             }
 
             /* Погода на мобильных - компактная, всегда видна */

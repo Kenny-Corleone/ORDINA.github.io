@@ -905,7 +905,25 @@ function setupEventListeners() {
         document.getElementById('debt-id').value = '';
         document.getElementById('debt-modal-title').textContent = translations[currentLang].addDebt;
     });
-    // ... setup other modals (simplified)
+
+    setupModal('daily-task-modal', 'add-daily-task-btn', () => {
+        document.getElementById('daily-task-form').reset();
+        document.getElementById('daily-task-id').value = '';
+        document.getElementById('daily-task-modal-title').textContent = translations[currentLang].addTask;
+    });
+
+    setupModal('monthly-task-modal', 'add-monthly-task-btn', () => {
+        document.getElementById('monthly-task-form').reset();
+        document.getElementById('monthly-task-id').value = '';
+        document.getElementById('monthly-task-modal-title').textContent = translations[currentLang].addTask;
+    });
+
+    setupModal('yearly-task-modal', 'add-yearly-task-btn', () => {
+        document.getElementById('yearly-task-form').reset();
+        document.getElementById('yearly-task-id').value = '';
+        document.getElementById('yearly-task-modal-title').textContent = translations[currentLang].addTask;
+    });
+
     setupModal('expense-modal', 'add-expense-btn', () => {
         document.getElementById('expense-form').reset();
         document.getElementById('expense-id').value = '';
