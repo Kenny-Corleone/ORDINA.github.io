@@ -772,16 +772,11 @@
                 <div class="flex flex-col gap-4 bg-white dark:bg-gray-800 rounded-lg p-4 shadow-sm">
                     <div class="flex items-center justify-between">
                         <h3 class="text-lg font-semibold" style="color: var(--text-primary);">Платежи</h3>
-                        <div class="flex gap-2">
-                            <button id="open-payments-inline" class="modern-btn bg-gradient-to-r from-blue-600 to-blue-700 text-white px-4 md:px-6 py-2 text-sm md:text-base">Открыть внутри</button>
-                            <a href="https://hesab.az/" target="_blank" rel="noopener noreferrer"
-                               class="modern-btn bg-gradient-to-r from-indigo-600 to-indigo-700 text-white px-4 md:px-6 py-2 text-sm md:text-base">В новой вкладке</a>
-                        </div>
                     </div>
-                    <div id="payments-inline-wrapper" class="rounded-lg overflow-hidden border border-gray-200 dark:border-gray-700 hidden">
-                        <iframe id="payments-inline" src="" class="w-full" style="min-height: 70vh; background: #fff"></iframe>
+                    <div id="payments-inline-wrapper" class="rounded-lg overflow-hidden border border-gray-200 dark:border-gray-700">
+                        <iframe id="payments-inline" src="https://hesab.az/" class="w-full" style="min-height: 70vh; background: #fff"></iframe>
                     </div>
-                    <p id="payments-inline-msg" class="text-sm text-gray-600 dark:text-gray-400">Если сайт блокирует встроенное отображение, используйте кнопку «В новой вкладке».</p>
+                    <p id="payments-inline-msg" class="text-sm text-gray-600 dark:text-gray-400">Если сайт блокирует встроенное отображение, откройте в новой вкладке: <a href="https://hesab.az/" target="_blank" rel="noopener noreferrer" class="text-blue-600">hesab.az</a></p>
                 </div>
             </div>
 

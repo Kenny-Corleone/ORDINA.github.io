@@ -1355,7 +1355,7 @@ function setupEventListeners() {
             container.innerHTML = items.map((it, idx) => `
                 <div class="flex items-center justify-between p-2 bg-gray-50 dark:bg-gray-700 rounded">
                     <div class="flex items-center gap-3">
-                        <input type="checkbox" class="shop-check" data-index="${idx}"/>
+                        <label class="flex items-center gap-2 text-sm"><input type="checkbox" class="shop-check" data-index="${idx}"/><span>Куплено</span></label>
                         <span class="font-medium">${it.name}</span>
                         <span class="text-sm text-gray-500">× ${it.qty}</span>
                     </div>
@@ -1404,29 +1404,25 @@ function setupEventListeners() {
     }
 
     // Payments inline open (attempt iframe, fallback)
-    const openPaymentsInlineBtn = document.getElementById('open-payments-inline');
     const paymentsIframe = document.getElementById('payments-inline');
     const paymentsWrapper = document.getElementById('payments-inline-wrapper');
     const paymentsMsg = document.getElementById('payments-inline-msg');
-    if (openPaymentsInlineBtn && paymentsIframe && paymentsWrapper) {
-        openPaymentsInlineBtn.addEventListener('click', () => {
-            paymentsWrapper.classList.remove('hidden');
-            paymentsMsg.textContent = 'Загрузка...';
-            try {
-                paymentsIframe.src = 'https://hesab.az/';
-                // If blocked, the contentDocument will be null; use a timeout to show message
-                setTimeout(() => {
-                    const blocked = !paymentsIframe.contentDocument || paymentsIframe.contentDocument.body.innerHTML === '';
-                    if (blocked && paymentsMsg) {
-                        paymentsMsg.textContent = 'Сайт запрещает встроенное отображение. Используйте «В новой вкладке».';
-                    } else if (paymentsMsg) {
-                        paymentsMsg.textContent = '';
-                    }
-                }, 2000);
-            } catch (e) {
-                if (paymentsMsg) paymentsMsg.textContent = 'Не удалось открыть внутри. Используйте «В новой вкладке».';
-            }
-        });
+    if (paymentsIframe && paymentsWrapper) {
+        paymentsWrapper.classList.remove('hidden');
+        if (paymentsMsg) paymentsMsg.textContent = 'Загрузка...';
+        try {
+            paymentsIframe.src = 'https://hesab.az/';
+            setTimeout(() => {
+                const blocked = !paymentsIframe.contentDocument || paymentsIframe.contentDocument.body.innerHTML === '';
+                if (blocked && paymentsMsg) {
+                    paymentsMsg.textContent = 'Сайт запрещает встроенное отображение. Откройте в новой вкладке.';
+                } else if (paymentsMsg) {
+                    paymentsMsg.textContent = '';
+                }
+            }, 2000);
+        } catch (e) {
+            if (paymentsMsg) paymentsMsg.textContent = 'Не удалось открыть внутри. Откройте в новой вкладке.';
+        }
     }
 
     // Logout button

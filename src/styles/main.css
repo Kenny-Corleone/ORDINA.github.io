@@ -4044,3 +4044,16 @@ textarea:focus {
 @media (min-width: 641px) {
     .header-nav-mobile { display: none !important; }
 }
+/* Calculator Modal dark theme */
+.dark #calculator-modal .calc-btn { background: var(--bg-secondary); color: var(--white-pure); }
+.dark #calculator-modal .calc-op { background: var(--primary); color: var(--white-pure); }
+.dark #calculator-modal #calc-display { background: #0f172a; color: var(--white-pure); border-color: var(--glass-border-dark); }
+
+/* Shopping List Modal dark theme */
+.dark #shopping-list-modal input { background: #0f172a; color: var(--white-pure); border-color: var(--glass-border-dark); }
+.dark #shopping-list-modal .bg-gray-50 { background: #1f2937 !important; }
+.dark #shopping-list-modal .text-gray-500 { color: #cbd5e1 !important; }
+.dark #shopping-list-modal .text-red-600 { color: #f87171 !important; }
+
+/* Payments iframe wrapper */
+.dark #payments-inline-wrapper { border-color: var(--glass-border-dark); }
