@@ -132,3 +132,36 @@ function setupLazyLoading() {
 // Start loading scripts and setup lazy loading
 loadExternalScripts();
 setupLazyLoading();
+
+// PWA install prompt and Service Worker registration
+let deferredInstallPrompt = null;
+
+if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('./sw.js').catch(err => console.log('SW register error', err));
+}
+
+window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    deferredInstallPrompt = e;
+    const btn = document.getElementById('pwa-install-btn');
+    if (btn) btn.classList.remove('hidden');
+});
+
+window.addEventListener('appinstalled', () => {
+    const btn = document.getElementById('pwa-install-btn');
+    if (btn) btn.classList.add('hidden');
+    deferredInstallPrompt = null;
+});
+
+document.addEventListener('click', (ev) => {
+    const target = ev.target.closest('#pwa-install-btn');
+    if (!target) return;
+    if (deferredInstallPrompt) {
+        deferredInstallPrompt.prompt();
+        deferredInstallPrompt.userChoice.finally(() => {
+            const btn = document.getElementById('pwa-install-btn');
+            if (btn) btn.classList.add('hidden');
+            deferredInstallPrompt = null;
+        });
+    }
+});
