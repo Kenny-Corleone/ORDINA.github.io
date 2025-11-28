@@ -1018,7 +1018,7 @@ function setupEventListeners() {
     }
 
     // Language Flags
-<<<<<<< HEAD
+
     // Language Dropdown
     const langTrigger = document.getElementById('lang-trigger');
     const langMenu = document.getElementById('lang-menu');
@@ -1077,61 +1077,7 @@ function setupEventListeners() {
     }
 
     // Currency Toggle
-    const currToggleBtn = document.getElementById('curr-toggle-btn');
 
-    if (currToggleBtn) {
-        currToggleBtn.addEventListener('click', (e) => {
-            e.preventDefault();
-            e.stopPropagation();
-
-            // Toggle currency
-            currentCurrency = currentCurrency === 'AZN' ? 'USD' : 'AZN';
-            localStorage.setItem('currency', currentCurrency);
-
-            // Update UI
-            updateCurrencyButtons();
-
-            // Refresh dashboard
-            if (userId) {
-                updateDashboard();
-            }
-
-            // Optional: Show toast
-            // showToast(`${translations[currentLang].currencyChanged || 'Currency changed to'} ${currentCurrency}`);
-=======
-    $$('.header-lang-btn').forEach(btn => {
-        // Set initial active state
-        if (btn.dataset.lang === currentLang) {
-            btn.classList.remove('opacity-50');
-            btn.classList.add('opacity-100', 'scale-110');
-        }
-
-        btn.addEventListener('click', (e) => {
-            e.preventDefault();
-            const lang = e.currentTarget.dataset.lang;
-            if (lang === currentLang) return;
-
-            setLanguage(lang, () => {
-                updateCurrencyButtons();
-                updateMonthDisplay();
-                renderCalendar();
-                initNews();
-                initWeatherNew();
-                if (availableMonths.length > 0) {
-                    renderMonthSelector(availableMonths);
-                }
-
-                // Update active state
-                $$('.header-lang-btn').forEach(b => {
-                    b.classList.add('opacity-50');
-                    b.classList.remove('opacity-100', 'scale-110');
-                });
-                e.currentTarget.classList.remove('opacity-50');
-                e.currentTarget.classList.add('opacity-100', 'scale-110');
-            });
->>>>>>> de1efd9bf639012aff002b45a46c1166fbe8bf7f
-        });
-    });
 
     // Currency Toggle
     const currToggleBtn = document.getElementById('curr-toggle-btn');
