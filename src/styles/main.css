@@ -1802,11 +1802,9 @@ textarea:focus {
         justify-content: center;
     }
 
-    .radio-label-wrapper {
-        display: block;
-    }
+    .radio-label-wrapper,
     .radio-equalizer {
-        display: flex;
+        display: none;
     }
 }
 
@@ -1832,11 +1830,6 @@ textarea:focus {
     align-items: center;
     gap: clamp(8px, 0.8vw, 10px);
     flex-shrink: 0;
-}
-
-.header-lang-btn {
-    font-size: clamp(14px, 3.5vw, 20px);
-    line-height: 1;
 }
 
 /* Fluid Icon Buttons - Responsive Sizing */
@@ -3150,10 +3143,6 @@ textarea:focus {
         max-width: 1800px;
         margin: 0 auto;
     }
-}
-
-#mini-sidebar {
-    height: calc(100vh - 64px);
 }
 
 /* Flexible gap system */

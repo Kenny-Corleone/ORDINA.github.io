@@ -1051,32 +1051,6 @@ function setupEventListeners() {
         });
     });
 
-    const langRuLogin = document.getElementById('lang-ru-login');
-    const langEnLogin = document.getElementById('lang-en-login');
-    const langAzLogin = document.getElementById('lang-az-login');
-    [
-        { el: langRuLogin, code: 'ru' },
-        { el: langEnLogin, code: 'en' },
-        { el: langAzLogin, code: 'az' },
-    ].forEach(({ el, code }) => {
-        if (el) {
-            el.addEventListener('click', (e) => {
-                e.preventDefault();
-                setLanguage(code, () => {
-                    applyDynamicTranslations();
-                    updateCurrencyButtons();
-                    updateMonthDisplay();
-                    renderCalendar();
-                    initNews();
-                    initWeatherNew();
-                    if (availableMonths.length > 0) {
-                        renderMonthSelector(availableMonths);
-                    }
-                });
-            });
-        }
-    });
-
     // Currency Toggle
     const currToggleBtn = document.getElementById('curr-toggle-btn');
 
