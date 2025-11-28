@@ -263,8 +263,9 @@ const attachListeners = () => {
         renderMonthSelector(m);
     }));
     unsubscribes.push(onSnapshot(query(categoriesCol), (s) => { const categories = s.docs.map((d) => ({ id: d.id, ...d.data() })); renderCategoryDatalist(s.docs); renderCategories(categories); }));
-    // Filter daily tasks by selected date (defaults to today)
-    const selectedDateId = currentDailyDate || getTodayISOString();
+    // Filter daily tasks by selected date (defaults to today, restore from localStorage if available)
+    const savedDailyDate = localStorage.getItem(`selectedDailyDate_${userId}`);
+    const selectedDateId = savedDailyDate || currentDailyDate || getTodayISOString();
     currentDailyDate = selectedDateId;
     attachDailyTasksListener(selectedDateId);
     unsubscribes.push(onSnapshot(query(monthlyTasksCol, where("month", "==", selectedMonthId)), (s) => { monthlyTasks = s.docs.map((d) => ({ id: d.id, ...d.data() })); renderMonthlyTasks(monthlyTasks); updateDashboard(); }));
@@ -316,7 +317,7 @@ function updateMonthDisplay() {
     if (recurringMonthNameEl) recurringMonthNameEl.textContent = formattedDate;
     if (todayDateEl) todayDateEl.textContent = formatISODateForDisplay(getTodayISOString(), { year: undefined });
     const dailyDateInput = document.getElementById('daily-date-filter');
-    if (dailyDateInput) dailyDateInput.value = getTodayISOString();
+    if (dailyDateInput) dailyDateInput.value = (currentDailyDate || getTodayISOString());
 }
 
 function attachDailyTasksListener(dateId) {
@@ -1045,6 +1046,9 @@ function setupEventListeners() {
             const newDate = e.target.value;
             if (!newDate || newDate === currentDailyDate) return;
             currentDailyDate = newDate;
+            if (userId) {
+                try { localStorage.setItem(`selectedDailyDate_${userId}`, newDate); } catch {}
+            }
             attachListeners();
         });
     }
@@ -1382,12 +1386,13 @@ async function handleExpenseForm(form) {
 
 async function handleDailyTaskForm(form) {
     const id = form.querySelector('#daily-task-id').value;
-    const todayId = getTodayISOString();
+    const selectedInputDate = document.getElementById('daily-date-filter')?.value;
+    const effectiveDate = selectedInputDate || currentDailyDate || getTodayISOString();
     const data = {
         name: form.querySelector('#daily-task-name').value,
         notes: form.querySelector('#daily-task-notes').value || '',
         status: translations.ru.statusNotDone,
-        date: todayId, // Always use today's date
+        date: effectiveDate,
         carriedOver: false
     };
 
