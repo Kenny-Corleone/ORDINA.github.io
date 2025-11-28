@@ -4057,3 +4057,13 @@ textarea:focus {
 
 /* Payments iframe wrapper */
 .dark #payments-inline-wrapper { border-color: var(--glass-border-dark); }
+.dark dialog { background: #0b1220; color: var(--white-pure); }
+.dark dialog h3 { color: var(--white-pure); }
+.dark dialog .cancel-btn { color: #cbd5e1; }
+.dark .modern-btn { color: var(--white-pure); box-shadow: 0 2px 8px rgba(0,0,0,0.35); }
+.dark input::placeholder { color: #94a3b8; }
+.dark input, .dark textarea, .dark select { background: #0f172a; color: var(--white-pure); border-color: var(--glass-border-dark); }
+.dark .text-gray-600 { color: #cbd5e1 !important; }
+.dark .text-gray-700 { color: #e2e8f0 !important; }
+.dark .bg-gray-200 { background: #334155 !important; }
+.dark .bg-gray-50 { background: #1f2937 !important; }

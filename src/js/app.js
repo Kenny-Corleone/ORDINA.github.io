@@ -1357,6 +1357,7 @@ function setupEventListeners() {
                     <div class="flex items-center gap-3">
                         <label class="flex items-center gap-2 text-sm"><input type="checkbox" class="shop-check" data-index="${idx}"/><span>Куплено</span></label>
                         <span class="font-medium">${it.name}</span>
+                        <span class="text-xs px-2 py-0.5 rounded bg-gray-200 dark:bg-gray-600 text-gray-700 dark:text-gray-200">Не куплено</span>
                         <span class="text-sm text-gray-500">× ${it.qty}</span>
                     </div>
                     <button class="shop-del text-red-600" data-index="${idx}" title="Удалить">🗑️</button>

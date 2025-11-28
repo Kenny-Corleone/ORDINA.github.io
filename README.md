@@ -22,21 +22,35 @@
 - News, weather and internet radio for focus.
 - Full localization (EN/RU/AZ) and currency toggle (AZN/USD).
 
+## Quick Start
+1. Open `https://kenny-corleone.github.io/ORDINA.github.io/`
+2. Install PWA on first launch or via in‑app icon
+3. Sign up via email or Google
+4. Start with the dashboard and add the first expense
+
 ## Features
 - Finance: expense tracking, debts, recurring payments, charts, AZN/USD.
 - Productivity: smart calendar, tasks (daily/monthly/yearly), reminders.
 - Lifestyle: curated news, weather widget, AzerbaiJazz radio with equalizer.
 - UI/UX: glassmorphism, dark mode, responsive layout, fluid typography.
 
+## Installation
+1. No installation required — runs in browser
+2. Optional: install as PWA for native‑like experience
+3. Login via email or Google
+
+## Usage
+- Dashboard: overview of expenses, tasks and widgets
+- Expenses: add, categorize, analyze with charts
+- Debts: track who owes you and who you owe
+- Recurring: configure monthly payments and reminders
+- Tasks & Calendar: plan day/month/year with notifications
+- News & Weather: stay updated with curated feed and local weather
+- Radio: focus with AzerbaiJazz and equalizer
+
 ## Tech Stack
 - `HTML5`, `Vanilla JS (ES6+)`, `Tailwind CSS`, `CSS Variables`
 - `Firebase (Firestore, Auth)`, `Vite`, `SVG`
-
-## Install & Run
-1. Open `https://kenny-corleone.github.io/ORDINA.github.io/`
-2. Install PWA on first launch or via in‑app icon
-3. Sign up via email or Google
-4. Put your life in order
 
 ## Screenshots
 
@@ -44,7 +58,10 @@
 |:--:|:--:|
 | <img src="assets/screenshots/desktop.png" alt="ORDINA Desktop"/> | <img src="assets/screenshots/mobile.png" alt="ORDINA Mobile"/> |
 
-## Contributing
+## Support
+If you like the project — support development.
+
+<## Contributing
 - Fork the repository
 - Create branch: `git checkout -b feature/AmazingFeature`
 - Commit: `git commit -m "Add AmazingFeature"`
@@ -63,6 +80,18 @@ MIT. See `LICENSE`.
   <br/>
   <a href="https://www.buymeacoffee.com/Ancl"><img src="https://img.shields.io/badge/Buy%20me%20a%20tea-5F7FFF?logo=buymeacoffee&logoColor=white" alt="Buy me a tea (fallback)"/></a>
 </p>
+
+## FAQ
+- How do I enable dark mode?
+  - Uses system preference; toggle in app settings
+- How to sync data across devices?
+  - Sign in with the same account; data stored in Firebase
+- Why `hesab.az` may not open inside?
+  - Some sites restrict embedding; app shows a fallback link
+
+## Contacts
+- Issues: `https://github.com/Kenny-Corleone/ORDINA.github.io/issues`
+- Author: `https://github.com/Kenny-Corleone`
 
 <a id="ru"></a>
 
