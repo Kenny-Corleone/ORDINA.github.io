@@ -1696,7 +1696,7 @@
         /* Desktop: Full grid with original spacing and order */
         @media (min-width: 769px) {
             .header-grid-container {
-                grid-template-columns: clamp(200px, 20vw, 240px) minmax(0, 1fr) auto auto auto auto;
+                grid-template-columns: clamp(200px, 20vw, 320px) minmax(0, 1fr) auto auto auto auto;
                 column-gap: clamp(8px, 1vw, 10.8px);
             }
         }
@@ -1716,8 +1716,8 @@
         /* Desktop: Larger logo */
         @media (min-width: 769px) {
             .header-logo-wrapper {
-                width: clamp(200px, 20vw, 240px);
-                height: clamp(95px, 10vw, 115px);
+                width: clamp(200px, 20vw, 320px);
+                height: clamp(95px, 10vw, 150px);
             }
         }
 

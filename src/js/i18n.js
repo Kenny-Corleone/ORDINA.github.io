@@ -286,7 +286,7 @@ const useFallbackTranslations = () => {
         },
         az: {
             appTitle: "ORDINA", appSubtitle: "Həyatını asanlıqla idarə et",
-            tabDashboard: "Ümumi", tabDebts: "Borclar", tabRecurringExpenses: "Aylıq xərclər", tabMonthlyExpenses: "Aylıq xərclər", tabTasks: "Tapşırıqlar", tabCalendar: "Təqvim",
+            tabDashboard: "Ümumi", tabDebts: "Borclar", tabRecurringExpenses: "Aylıq xərclər", tabMonthlyExpenses: "Cari ayın xərci", tabTasks: "Tapşırıqlar", tabCalendar: "Təqvim",
             dashboardTitle: "Aylıq ümumi", loading: "Məlumatlar yüklənir...",
             dashRecurringPaid: "Aylıq (ödənilmiş)", dashRecurringRemaining: "Aylıq (qalan)", dashMonthlyExpenses: "Aylıq xərclər", dashTotalDebt: "Ümumi borc qalığı", dashTopCategories: "Əsas xərc kateqoriyaları",
             debtsTitle: "Bütün borclar", addDebt: "Borç əlavə et", debtName: "Borç (Ad)", amount: "Məbləğ", paid: "Ödənilmiş", remaining: "Qalan", lastPaymentDate: "Son ödəniş tarixi", comments: "Şərhlər", actions: "Əməлијјатлар", emptyDebts: "Borclar siyahısı boşdur. Başlamaq üçün 'Borç əlavə et' düyməsini basın.",

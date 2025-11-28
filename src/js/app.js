@@ -134,6 +134,9 @@ export async function initApp() {
 
     setupEventListeners();
     setupTheme();
+    
+    // Initialize currency display
+    updateCurrencyButtons();
 }
 
 const setupCollections = () => {
@@ -886,28 +889,180 @@ function setupEventListeners() {
     const themeBtn = document.getElementById('theme-toggle');
     if (themeBtn) themeBtn.addEventListener('click', toggleTheme);
 
+    // Radio Player
+    const radioBtn = document.getElementById('radio-play-pause-btn');
+    const radioPlayer = document.getElementById('radio-player');
+    const playIcon = document.getElementById('play-icon');
+    const pauseIcon = document.getElementById('pause-icon');
+    const equalizer = document.getElementById('equalizer');
+    
+    if (radioBtn && radioPlayer) {
+        // Initialize radio state
+        const updateRadioUI = (isPlaying) => {
+            if (isPlaying) {
+                playIcon?.classList.add('hidden');
+                pauseIcon?.classList.remove('hidden');
+                equalizer?.classList.remove('paused');
+            } else {
+                playIcon?.classList.remove('hidden');
+                pauseIcon?.classList.add('hidden');
+                equalizer?.classList.add('paused');
+            }
+        };
+
+        radioBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            if (radioPlayer.paused) {
+                radioPlayer.play().catch(err => {
+                    logger.error('Radio play error:', err);
+                    showToast('Не удалось воспроизвести радио', 'error');
+                });
+            } else {
+                radioPlayer.pause();
+            }
+        });
+
+        radioPlayer.addEventListener('play', () => updateRadioUI(true));
+        radioPlayer.addEventListener('pause', () => updateRadioUI(false));
+        radioPlayer.addEventListener('error', () => {
+            updateRadioUI(false);
+            logger.error('Radio player error');
+        });
+
+        // Keyboard shortcut (Space key)
+        document.addEventListener('keydown', (e) => {
+            if (e.code === 'Space' && e.target.tagName !== 'INPUT' && e.target.tagName !== 'TEXTAREA') {
+                e.preventDefault();
+                radioBtn.click();
+            }
+        });
+    }
+
     // Language Menu
-    const langBtn = document.getElementById('language-btn');
-    if (langBtn) langBtn.addEventListener('click', () => {
-        const menu = document.getElementById('lang-menu');
-        if (menu) menu.classList.toggle('hidden');
+    const langTrigger = document.getElementById('lang-trigger');
+    const langMenu = document.getElementById('lang-menu');
+    
+    if (langTrigger && langMenu) {
+        langTrigger.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            const isHidden = langMenu.classList.contains('hidden');
+            // Close currency menu if open
+            const currMenu = document.getElementById('curr-menu');
+            if (currMenu) currMenu.classList.add('hidden');
+            
+            if (isHidden) {
+                langMenu.classList.remove('hidden');
+                langTrigger.setAttribute('aria-expanded', 'true');
+            } else {
+                langMenu.classList.add('hidden');
+                langTrigger.setAttribute('aria-expanded', 'false');
+            }
+        });
+
+        $$('.language-dropdown-item').forEach(item => {
+            item.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                const lang = e.currentTarget.dataset.lang;
+                setLanguage(lang, () => {
+                    updateCurrencyButtons();
+                    updateMonthDisplay();
+                    renderCalendar();
+                    // Refresh news
+                    initNews();
+                    // Refresh weather
+                    initWeatherNew();
+                });
+                langMenu.classList.add('hidden');
+                langTrigger.setAttribute('aria-expanded', 'false');
+                
+                // Update active state
+                $$('.language-dropdown-item').forEach(li => {
+                    li.classList.remove('active');
+                    li.setAttribute('aria-checked', 'false');
+                });
+                e.currentTarget.classList.add('active');
+                e.currentTarget.setAttribute('aria-checked', 'true');
+            });
+        });
+    }
+
+    // Currency Menu
+    const currTrigger = document.getElementById('curr-trigger');
+    const currMenu = document.getElementById('curr-menu');
+    
+    if (currTrigger && currMenu) {
+        currTrigger.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            const isHidden = currMenu.classList.contains('hidden');
+            // Close language menu if open
+            if (langMenu) langMenu.classList.add('hidden');
+            if (langTrigger) langTrigger.setAttribute('aria-expanded', 'false');
+            
+            if (isHidden) {
+                currMenu.classList.remove('hidden');
+                currTrigger.setAttribute('aria-expanded', 'true');
+            } else {
+                currMenu.classList.add('hidden');
+                currTrigger.setAttribute('aria-expanded', 'false');
+            }
+        });
+
+        $$('.currency-dropdown-item').forEach(item => {
+            item.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                const currency = e.currentTarget.dataset.currency;
+                currentCurrency = currency;
+                localStorage.setItem('currency', currency);
+                updateCurrencyButtons();
+                currMenu.classList.add('hidden');
+                currTrigger.setAttribute('aria-expanded', 'false');
+                currTrigger.textContent = currency === 'USD' ? '$' : '₼';
+                
+                // Update active state
+                $$('.currency-dropdown-item').forEach(ci => {
+                    ci.classList.remove('active');
+                    ci.setAttribute('aria-checked', 'false');
+                });
+                e.currentTarget.classList.add('active');
+                e.currentTarget.setAttribute('aria-checked', 'true');
+                
+                // Refresh dashboard to update currency
+                if (userId) {
+                    updateDashboard();
+                }
+            });
+        });
+    }
+
+    // Close dropdowns when clicking outside
+    document.addEventListener('click', (e) => {
+        if (langMenu && !langMenu.contains(e.target) && langTrigger && !langTrigger.contains(e.target)) {
+            langMenu.classList.add('hidden');
+            if (langTrigger) langTrigger.setAttribute('aria-expanded', 'false');
+        }
+        if (currMenu && !currMenu.contains(e.target) && currTrigger && !currTrigger.contains(e.target)) {
+            currMenu.classList.add('hidden');
+            if (currTrigger) currTrigger.setAttribute('aria-expanded', 'false');
+        }
     });
 
-    $$('.language-dropdown-item').forEach(item => {
-        item.addEventListener('click', (e) => {
-            const lang = e.currentTarget.dataset.lang;
-            setLanguage(lang, () => {
-                updateCurrencyButtons();
-                updateMonthDisplay();
-                renderCalendar();
-                // Refresh news
-                initNews();
-                // Refresh weather
-                initWeatherNew();
-            });
-            document.getElementById('lang-menu').classList.add('hidden');
+    // Logout button
+    const logoutBtn = document.getElementById('logout-btn');
+    if (logoutBtn) {
+        logoutBtn.addEventListener('click', async () => {
+            try {
+                await signOut(auth);
+            } catch (error) {
+                logger.error('Logout error:', error);
+                showToast('Ошибка при выходе', 'error');
+            }
         });
-    });
+    }
 }
 
 function setupModal(modalId, openBtnId, resetFn) {
@@ -1070,6 +1225,19 @@ function updateThemeIcons() {
 
 function updateCurrencyButtons() {
     $$('.currency-symbol').forEach(el => el.textContent = currentCurrency);
+    
+    // Update currency trigger button
+    const currTrigger = document.getElementById('curr-trigger');
+    if (currTrigger) {
+        currTrigger.textContent = currentCurrency === 'USD' ? '$' : '₼';
+    }
+    
+    // Update active state in currency menu
+    $$('.currency-dropdown-item').forEach(item => {
+        const isActive = item.dataset.currency === currentCurrency;
+        item.classList.toggle('active', isActive);
+        item.setAttribute('aria-checked', isActive ? 'true' : 'false');
+    });
 }
 
 function renderCategoryDatalist(docs) {
