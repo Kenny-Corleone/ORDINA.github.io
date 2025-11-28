@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 
-const localesDir = path.join('c:\\Users\\ANCL\\Desktop\\ORDINA 2.1\\locales');
+const localesDir = path.join(__dirname, 'public', 'locales');
 const files = ['locale-en.json', 'locale-ru.json', 'locale-az.json'];
 
 const contents = {};
