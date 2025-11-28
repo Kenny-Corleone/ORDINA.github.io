@@ -36,6 +36,7 @@ let dailyTasks = [];
 let monthlyTasks = [];
 let yearlyTasks = [];
 let calendarEvents = [];
+let availableMonths = []; // Store available months for month selector
 
 // Currency settings
 let currentCurrency = localStorage.getItem('currency') || 'AZN';
@@ -61,7 +62,15 @@ const formatISODateForDisplay = (isoDate, options = {}) => {
 
 const formatMonthId = (monthId) => {
     const [year, month] = monthId.split('-');
-    const date = new Date(year, month - 1, 1);
+    const monthNum = parseInt(month, 10) - 1; // 0-based index
+    
+    // Use translations array if available
+    if (translations[currentLang]?.months && translations[currentLang].months[monthNum]) {
+        return `${translations[currentLang].months[monthNum]} ${year}`;
+    }
+    
+    // Fallback to toLocaleString
+    const date = new Date(year, monthNum, 1);
     const locale = currentLang === 'ru' ? 'ru-RU' : (currentLang === 'az' ? 'az-Latn-AZ' : 'en-US');
     return date.toLocaleString(locale, { month: 'long', year: 'numeric' });
 };
@@ -174,7 +183,13 @@ const attachListeners = () => {
     unsubscribes.push(onSnapshot(query(expensesCol), (s) => { allExpenses = s.docs; renderExpenses(allExpenses); updateDashboard(); }));
     unsubscribes.push(onSnapshot(query(recurringExpensesCol), (s) => { allRecurringTemplates = s.docs.map((d) => ({ id: d.id, ...d.data() })); renderRecurringExpenses(); updateDashboard(); }));
     unsubscribes.push(onSnapshot(query(recurringExpenseStatusesCol), (s) => { currentMonthStatuses = {}; s.docs.forEach((d) => { currentMonthStatuses[d.id] = d.data().status; }); renderRecurringExpenses(); updateDashboard(); }));
-    unsubscribes.push(onSnapshot(query(monthlyDataCol), (s) => { const m = s.docs.map((d) => d.id); if (!m.includes(currentMonthId)) m.push(currentMonthId); m.sort().reverse(); renderMonthSelector(m); }));
+    unsubscribes.push(onSnapshot(query(monthlyDataCol), (s) => { 
+        const m = s.docs.map((d) => d.id); 
+        if (!m.includes(currentMonthId)) m.push(currentMonthId); 
+        m.sort().reverse(); 
+        availableMonths = m; // Store months for later use
+        renderMonthSelector(m); 
+    }));
     unsubscribes.push(onSnapshot(query(categoriesCol), (s) => { const categories = s.docs.map((d) => ({ id: d.id, ...d.data() })); renderCategoryDatalist(s.docs); renderCategories(categories); }));
     unsubscribes.push(onSnapshot(query(dailyTasksCol), (s) => { dailyTasks = s.docs.map((d) => ({ id: d.id, ...d.data() })); renderDailyTasks(dailyTasks); }));
     unsubscribes.push(onSnapshot(query(monthlyTasksCol, where("month", "==", selectedMonthId)), (s) => { monthlyTasks = s.docs.map((d) => ({ id: d.id, ...d.data() })); renderMonthlyTasks(monthlyTasks); updateDashboard(); }));
@@ -947,16 +962,23 @@ function setupEventListeners() {
         langTrigger.addEventListener('click', (e) => {
             e.preventDefault();
             e.stopPropagation();
-            const isHidden = langMenu.classList.contains('hidden');
+            const isHidden = langMenu.getAttribute('aria-hidden') === 'true';
             // Close currency menu if open
             const currMenu = document.getElementById('curr-menu');
-            if (currMenu) currMenu.classList.add('hidden');
+            const currTrigger = document.getElementById('curr-trigger');
+            if (currMenu) {
+                currMenu.setAttribute('aria-hidden', 'true');
+                currMenu.classList.remove('open');
+            }
+            if (currTrigger) currTrigger.setAttribute('aria-expanded', 'false');
             
             if (isHidden) {
-                langMenu.classList.remove('hidden');
+                langMenu.setAttribute('aria-hidden', 'false');
+                langMenu.classList.add('open');
                 langTrigger.setAttribute('aria-expanded', 'true');
             } else {
-                langMenu.classList.add('hidden');
+                langMenu.setAttribute('aria-hidden', 'true');
+                langMenu.classList.remove('open');
                 langTrigger.setAttribute('aria-expanded', 'false');
             }
         });
@@ -974,8 +996,13 @@ function setupEventListeners() {
                     initNews();
                     // Refresh weather
                     initWeatherNew();
+                    // Refresh month selector with new language
+                    if (availableMonths.length > 0) {
+                        renderMonthSelector(availableMonths);
+                    }
                 });
-                langMenu.classList.add('hidden');
+                langMenu.setAttribute('aria-hidden', 'true');
+                langMenu.classList.remove('open');
                 langTrigger.setAttribute('aria-expanded', 'false');
                 
                 // Update active state
@@ -997,16 +1024,21 @@ function setupEventListeners() {
         currTrigger.addEventListener('click', (e) => {
             e.preventDefault();
             e.stopPropagation();
-            const isHidden = currMenu.classList.contains('hidden');
+            const isHidden = currMenu.getAttribute('aria-hidden') === 'true';
             // Close language menu if open
-            if (langMenu) langMenu.classList.add('hidden');
+            if (langMenu) {
+                langMenu.setAttribute('aria-hidden', 'true');
+                langMenu.classList.remove('open');
+            }
             if (langTrigger) langTrigger.setAttribute('aria-expanded', 'false');
             
             if (isHidden) {
-                currMenu.classList.remove('hidden');
+                currMenu.setAttribute('aria-hidden', 'false');
+                currMenu.classList.add('open');
                 currTrigger.setAttribute('aria-expanded', 'true');
             } else {
-                currMenu.classList.add('hidden');
+                currMenu.setAttribute('aria-hidden', 'true');
+                currMenu.classList.remove('open');
                 currTrigger.setAttribute('aria-expanded', 'false');
             }
         });
@@ -1019,7 +1051,8 @@ function setupEventListeners() {
                 currentCurrency = currency;
                 localStorage.setItem('currency', currency);
                 updateCurrencyButtons();
-                currMenu.classList.add('hidden');
+                currMenu.setAttribute('aria-hidden', 'true');
+                currMenu.classList.remove('open');
                 currTrigger.setAttribute('aria-expanded', 'false');
                 currTrigger.textContent = currency === 'USD' ? '$' : '₼';
                 
@@ -1041,15 +1074,39 @@ function setupEventListeners() {
 
     // Close dropdowns when clicking outside
     document.addEventListener('click', (e) => {
-        if (langMenu && !langMenu.contains(e.target) && langTrigger && !langTrigger.contains(e.target)) {
-            langMenu.classList.add('hidden');
-            if (langTrigger) langTrigger.setAttribute('aria-expanded', 'false');
+        if (langMenu && langTrigger) {
+            if (!langMenu.contains(e.target) && !langTrigger.contains(e.target)) {
+                langMenu.setAttribute('aria-hidden', 'true');
+                langMenu.classList.remove('open');
+                langTrigger.setAttribute('aria-expanded', 'false');
+            }
         }
-        if (currMenu && !currMenu.contains(e.target) && currTrigger && !currTrigger.contains(e.target)) {
-            currMenu.classList.add('hidden');
-            if (currTrigger) currTrigger.setAttribute('aria-expanded', 'false');
+        if (currMenu && currTrigger) {
+            if (!currMenu.contains(e.target) && !currTrigger.contains(e.target)) {
+                currMenu.setAttribute('aria-hidden', 'true');
+                currMenu.classList.remove('open');
+                currTrigger.setAttribute('aria-expanded', 'false');
+            }
         }
-    });
+    }, true); // Use capture phase to handle clicks properly
+
+    // Calculator button
+    const calculatorBtn = document.getElementById('calculator-btn');
+    if (calculatorBtn) {
+        calculatorBtn.addEventListener('click', () => {
+            // Open system calculator or show calculator modal
+            alert('Калькулятор будет реализован позже');
+        });
+    }
+
+    // Shopping list button
+    const shoppingListBtn = document.getElementById('shopping-list-btn');
+    if (shoppingListBtn) {
+        shoppingListBtn.addEventListener('click', () => {
+            // Open shopping list modal or show shopping list
+            alert('Список покупок будет реализован позже');
+        });
+    }
 
     // Logout button
     const logoutBtn = document.getElementById('logout-btn');
