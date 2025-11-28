@@ -140,10 +140,11 @@ const getRSSSourcesForLanguage = (lang, category = 'all') => {
 
 const CORS_PROXIES = [
     (url) => `https://api.allorigins.win/get?url=${encodeURIComponent(url)}`,
-    (url) => `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(url)}`
+    (url) => `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(url)}`,
+    (url) => `https://r.jina.ai/http/${url.replace(/^https?:\/\//, '')}`
 ];
 
-const fetchWithTimeout = (url, timeout = 5000) => {
+const fetchWithTimeout = (url, timeout = 12000) => {
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), timeout);
 
@@ -154,7 +155,7 @@ const fetchWithTimeout = (url, timeout = 5000) => {
     }).finally(() => clearTimeout(timeoutId));
 };
 
-async function parseRSSFeed(url, retries = 1) {
+async function parseRSSFeed(url, retries = 2) {
     let lastError = null;
 
     for (let proxyIndex = 0; proxyIndex < CORS_PROXIES.length; proxyIndex++) {
@@ -163,7 +164,7 @@ async function parseRSSFeed(url, retries = 1) {
         for (let attempt = 0; attempt < retries; attempt++) {
             try {
                 const proxyUrl = proxyFn(url);
-                const res = await fetchWithTimeout(proxyUrl, 5000);
+                const res = await fetchWithTimeout(proxyUrl, 12000);
 
                 if (!res.ok) {
                     if (res.status === 400) {

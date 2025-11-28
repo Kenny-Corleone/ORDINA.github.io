@@ -291,6 +291,8 @@ const showApp = () => {
     if (loginScreen) loginScreen.classList.add('hidden');
     if (appScreen) {
         appScreen.classList.remove('hidden');
+        appScreen.classList.remove('opacity-0');
+        appScreen.style.opacity = '1';
         // Trigger a resize event to fix any layout issues
         window.dispatchEvent(new Event('resize'));
     }

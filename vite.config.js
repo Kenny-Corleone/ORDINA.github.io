@@ -3,8 +3,8 @@ import path from 'path';
 import viteImagemin from 'vite-plugin-imagemin';
 import viteCompression from 'vite-plugin-compression';
 
-export default defineConfig({
-    base: '/ORDINA.github.io/', // Important for GitHub Pages
+export default defineConfig(({ mode }) => ({
+    base: mode === 'production' ? '/ORDINA.github.io/' : '/',
     plugins: [
         viteImagemin({
             gifsicle: {
@@ -126,5 +126,8 @@ export default defineConfig({
     server: {
         port: 3000,
         open: true,
+        hmr: {
+            clientPort: 3000,
+        },
     },
-});
+}));

@@ -33,6 +33,7 @@
   },
   "homepage": "https://kenny-corleone.github.io/ORDINA.github.io/",
   "devDependencies": {
+    "@tailwindcss/vite": "^4.1.17",
     "autoprefixer": "^10.4.17",
     "playwright": "^1.57.0",
     "postcss": "^8.4.35",
