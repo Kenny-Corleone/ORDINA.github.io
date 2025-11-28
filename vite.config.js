@@ -4,7 +4,7 @@ import viteImagemin from 'vite-plugin-imagemin';
 import viteCompression from 'vite-plugin-compression';
 
 export default defineConfig({
-    base: './', // Relative base path for better compatibility
+    base: '/ORDINA.github.io/', // Important for GitHub Pages
     plugins: [
         viteImagemin({
             gifsicle: {
