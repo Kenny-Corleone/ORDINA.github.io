@@ -3549,7 +3549,7 @@ dialog .flex.justify-end {
     padding: 0.5rem 0;
     -webkit-overflow-scrolling: touch;
 }
-}
+
 
 /* Dark Mode Fixes */
 .dark .stat-card {
@@ -4030,201 +4030,6 @@ dialog .flex.justify-end {
         justify-self: end;
     }
 
-    .dark .header-radio-chip {
-        background: rgba(0, 0, 0, 0.3) !important;
-        border-color: rgba(255, 255, 255, 0.05) !important;
-    }
-
-<<<<<<< HEAD
-}
-
-tr {
-    margin-bottom: 1rem;
-    border: 1px solid var(--glass-border-light);
-    border-radius: 12px;
-    background: var(--glass-bg-light);
-    padding: 1rem;
-    box-shadow: var(--glass-shadow-light);
-}
-
-td {
-    border: none;
-    position: relative;
-    padding-left: 50%;
-    padding-top: 0.5rem;
-    padding-bottom: 0.5rem;
-    text-align: right;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-td:before {
-    content: attr(data-label);
-    position: absolute;
-    left: 0;
-    width: 45%;
-    padding-right: 10px;
-    white-space: nowrap;
-    text-align: left;
-    font-weight: 600;
-    color: var(--text-secondary);
-}
-
-/* Modals - Full Screen on Mobile */
-dialog {
-    max-width: 100vw !important;
-    width: 100% !important;
-    height: 100% !important;
-    max-height: 100vh !important;
-    border-radius: 0 !important;
-    margin: 0 !important;
-    padding: 1rem !important;
-}
-
-dialog form {
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-}
-
-dialog .flex.justify-end {
-    margin-top: auto;
-    padding-top: 1rem;
-}
-
-/* Task Tabs - Scrollable */
-.task-tabs-container {
-    overflow-x: auto;
-    white-space: nowrap;
-    padding-bottom: 0.5rem;
-}
-
-/* Navigation Tabs */
-.header-tabs-container {
-    display: flex;
-    overflow-x: auto;
-    gap: 0.5rem;
-    padding: 0.5rem 0;
-    -webkit-overflow-scrolling: touch;
-}
-}
-
-/* Dark Mode Fixes */
-.dark .stat-card {
-    background: var(--glass-bg-dark);
-    border-color: var(--glass-border-dark);
-    color: var(--text-primary);
-}
-
-.dark tr {
-    background: var(--glass-bg-dark);
-    border-color: var(--glass-border-dark);
-}
-
-.dark td:before {
-    color: var(--text-secondary);
-}
-
-/* Ensure text readability in dark mode */
-.dark input,
-.dark select,
-.dark textarea {
-    background-color: rgba(30, 41, 59, 0.8);
-    color: var(--white-soft);
-    border-color: rgba(255, 255, 255, 0.1);
-}
-
-.dark input::placeholder {
-    color: rgba(255, 255, 255, 0.4);
-}
-
-/* ============================================
-   NEW UI FIXES (Step 124)
-   ============================================ */
-
-/* 1. Mobile Header - 2 Row Grid for Weather/Radio Visibility */
-@media (max-width: 480px) {
-    .header-grid-container {
-        display: grid !important;
-        grid-template-columns: 1fr auto !important;
-        grid-template-rows: auto auto !important;
-        gap: 8px !important;
-        padding-bottom: 8px !important;
-        height: auto !important;
-        min-height: auto !important;
-    }
-
-    /* Row 1: Logo (Left) and Right Icons (Right) */
-    .header-logo-wrapper {
-        grid-column: 1;
-        grid-row: 1;
-        width: auto !important;
-        max-width: 140px !important;
-        height: 40px !important;
-        justify-self: start;
-        margin: 0 !important;
-    }
-
-    .header-right-group {
-        grid-column: 2;
-        grid-row: 1;
-        gap: 4px;
-        justify-self: end;
-    }
-
-    /* Row 2: Weather (Left) and Radio (Right) */
-    .header-weather-chip {
-        grid-column: 1;
-        grid-row: 2;
-        display: flex !important;
-        padding: 0 8px !important;
-        width: auto !important;
-        height: 32px !important;
-        background: rgba(255, 255, 255, 0.5) !important;
-        border: 1px solid rgba(0, 0, 0, 0.05) !important;
-        backdrop-filter: blur(4px) !important;
-        justify-self: start;
-        margin: 0 !important;
-    }
-
-    .dark .header-weather-chip {
-        background: rgba(0, 0, 0, 0.3) !important;
-        border-color: rgba(255, 255, 255, 0.05) !important;
-    }
-
-    .header-weather-chip .weather-city-compact {
-        display: none !important;
-    }
-
-    .header-radio-chip {
-        grid-column: 2;
-        grid-row: 2;
-        display: flex !important;
-        width: auto !important;
-        height: 32px !important;
-        padding: 0 8px !important;
-        justify-content: flex-end !important;
-        background: rgba(255, 255, 255, 0.5) !important;
-        border: 1px solid rgba(0, 0, 0, 0.05) !important;
-        backdrop-filter: blur(4px) !important;
-        margin-left: 0 !important;
-        justify-self: end;
-    }
-
-    .dark .header-radio-chip {
-        background: rgba(0, 0, 0, 0.3) !important;
-        border-color: rgba(255, 255, 255, 0.05) !important;
-    }
-
-=======
->>>>>>> de1efd9bf639012aff002b45a46c1166fbe8bf7f
-    .header-radio-chip .radio-label-wrapper,
-    .header-radio-chip .radio-equalizer {
-        display: none !important;
-    }
-
-    /* Hide motto and datetime on mobile */
     .header-motto,
     .header-datetime {
         display: none !important;
@@ -4256,7 +4061,7 @@ dialog .flex.justify-end {
 
 .dark .responsive-table tr:hover {
     background: linear-gradient(135deg, rgba(30, 41, 59, 0.95) 0%, rgba(15, 23, 42, 0.9) 100%) !important;
-<<<<<<< HEAD
+
 }
 
 /* ============================================
@@ -4507,6 +4312,5 @@ dialog .flex.justify-end {
 
 .dark .responsive-table tr:hover {
     background: linear-gradient(135deg, rgba(30, 41, 59, 0.95) 0%, rgba(15, 23, 42, 0.9) 100%) !important;
-=======
->>>>>>> de1efd9bf639012aff002b45a46c1166fbe8bf7f
+
 }
