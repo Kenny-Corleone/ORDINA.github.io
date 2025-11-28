@@ -1037,7 +1037,6 @@ function setupEventListeners() {
         const idx = order.indexOf(lang);
         return order[(idx + 1) % order.length];
     };
-<<<<<<< HEAD
     const cyclePrevLang = (lang) => {
         const order = ['az', 'en', 'ru'];
         const idx = order.indexOf(lang);
@@ -1076,10 +1075,6 @@ function setupEventListeners() {
             setLanguage(nextLang, () => { updateLangToggleUI(); });
         });
     };
-
-=======
-
->>>>>>> 37b738b73c4e4d6e42353b4b1443732b2ab13993
     const headerToggle = document.getElementById('lang-toggle-btn');
     if (headerToggle) {
         headerToggle.addEventListener('click', (e) => {
@@ -1097,10 +1092,7 @@ function setupEventListeners() {
                 }
             });
         });
-<<<<<<< HEAD
         addLongPressCycle(headerToggle);
-=======
->>>>>>> 37b738b73c4e4d6e42353b4b1443732b2ab13993
     }
 
     const loginToggle = document.getElementById('lang-toggle-login');
@@ -1112,10 +1104,7 @@ function setupEventListeners() {
                 updateLangToggleUI();
             });
         });
-<<<<<<< HEAD
         addLongPressCycle(loginToggle, true);
-=======
->>>>>>> 37b738b73c4e4d6e42353b4b1443732b2ab13993
     }
 
     // Removed individual login flag handlers in favor of single toggle
