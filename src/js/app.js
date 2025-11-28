@@ -1284,19 +1284,148 @@ function setupEventListeners() {
 
     // Calculator button
     const calculatorBtn = document.getElementById('calculator-btn');
-    if (calculatorBtn) {
+    const calculatorModal = document.getElementById('calculator-modal');
+    if (calculatorBtn && calculatorModal) {
         calculatorBtn.addEventListener('click', () => {
-            // Open system calculator or show calculator modal
-            alert('Калькулятор будет реализован позже');
+            const display = document.getElementById('calc-display');
+            if (display) display.value = '';
+            calculatorModal.showModal();
         });
+
+        const display = document.getElementById('calc-display');
+        let expr = '';
+        const setDisplay = () => { if (display) display.value = expr.replace(/\*/g, '×').replace(/\//g, '÷'); };
+
+        document.querySelectorAll('#calculator-modal .calc-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const val = btn.getAttribute('data-val');
+                if (!val) return;
+                expr += val;
+                setDisplay();
+            });
+        });
+        document.querySelectorAll('#calculator-modal .calc-op').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const op = btn.getAttribute('data-op');
+                if (!op) return;
+                if (expr === '' && op !== '-') return;
+                expr += op;
+                setDisplay();
+            });
+        });
+        const clearBtn = document.getElementById('calc-clear');
+        const backBtn = document.getElementById('calc-back');
+        const eqBtn = document.getElementById('calc-eq');
+        if (clearBtn) clearBtn.addEventListener('click', () => { expr = ''; setDisplay(); });
+        if (backBtn) backBtn.addEventListener('click', () => { expr = expr.slice(0, -1); setDisplay(); });
+        if (eqBtn) eqBtn.addEventListener('click', () => {
+            try {
+                // sanitize expression: only digits, operators and dot
+                const safe = expr.replace(/[^0-9+\-*/.]/g, '');
+                const result = Function(`return (${safe || '0'})`)();
+                expr = String(result);
+                setDisplay();
+            } catch (e) {
+                showToast('Ошибка выражения', 'error');
+            }
+        });
+        const calcCancel = calculatorModal.querySelector('.cancel-btn');
+        if (calcCancel) calcCancel.addEventListener('click', () => calculatorModal.close());
     }
 
     // Shopping list button
     const shoppingListBtn = document.getElementById('shopping-list-btn');
-    if (shoppingListBtn) {
+    const shoppingModal = document.getElementById('shopping-list-modal');
+    if (shoppingListBtn && shoppingModal) {
+        const storageKey = () => userId ? `shopping_list_${userId}` : 'shopping_list_local';
+        const loadList = () => {
+            try { return JSON.parse(localStorage.getItem(storageKey()) || '[]'); } catch { return []; }
+        };
+        const saveList = (items) => {
+            try { localStorage.setItem(storageKey(), JSON.stringify(items)); } catch {}
+        };
+        const renderList = () => {
+            const container = document.getElementById('shopping-list');
+            const items = loadList().filter(i => !i.bought);
+            if (!container) return;
+            if (items.length === 0) {
+                container.innerHTML = '<div class="text-sm text-gray-500">Список пуст</div>';
+                return;
+            }
+            container.innerHTML = items.map((it, idx) => `
+                <div class="flex items-center justify-between p-2 bg-gray-50 dark:bg-gray-700 rounded">
+                    <div class="flex items-center gap-3">
+                        <input type="checkbox" class="shop-check" data-index="${idx}"/>
+                        <span class="font-medium">${it.name}</span>
+                        <span class="text-sm text-gray-500">× ${it.qty}</span>
+                    </div>
+                    <button class="shop-del text-red-600" data-index="${idx}" title="Удалить">🗑️</button>
+                </div>
+            `).join('');
+        };
+
         shoppingListBtn.addEventListener('click', () => {
-            // Open shopping list modal or show shopping list
-            alert('Список покупок будет реализован позже');
+            renderList();
+            shoppingModal.showModal();
+        });
+
+        const form = document.getElementById('shopping-form');
+        if (form) form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const name = document.getElementById('shop-name')?.value?.trim();
+            const qtyInput = document.getElementById('shop-qty');
+            const qty = parseInt(qtyInput?.value || '1', 10) || 1;
+            if (!name) return;
+            const items = loadList();
+            items.push({ name, qty, bought: false });
+            saveList(items);
+            form.reset();
+            renderList();
+        });
+
+        const listEl = document.getElementById('shopping-list');
+        if (listEl) listEl.addEventListener('click', (e) => {
+            const target = e.target;
+            if (target.classList.contains('shop-check')) {
+                const idx = parseInt(target.getAttribute('data-index'), 10);
+                const items = loadList();
+                if (items[idx]) { items[idx].bought = true; saveList(items); renderList(); }
+            } else if (target.classList.contains('shop-del')) {
+                const idx = parseInt(target.getAttribute('data-index'), 10);
+                const items = loadList();
+                items.splice(idx, 1);
+                saveList(items);
+                renderList();
+            }
+        });
+
+        const cancelBtn = shoppingModal.querySelector('.cancel-btn');
+        if (cancelBtn) cancelBtn.addEventListener('click', () => shoppingModal.close());
+    }
+
+    // Payments inline open (attempt iframe, fallback)
+    const openPaymentsInlineBtn = document.getElementById('open-payments-inline');
+    const paymentsIframe = document.getElementById('payments-inline');
+    const paymentsWrapper = document.getElementById('payments-inline-wrapper');
+    const paymentsMsg = document.getElementById('payments-inline-msg');
+    if (openPaymentsInlineBtn && paymentsIframe && paymentsWrapper) {
+        openPaymentsInlineBtn.addEventListener('click', () => {
+            paymentsWrapper.classList.remove('hidden');
+            paymentsMsg.textContent = 'Загрузка...';
+            try {
+                paymentsIframe.src = 'https://hesab.az/';
+                // If blocked, the contentDocument will be null; use a timeout to show message
+                setTimeout(() => {
+                    const blocked = !paymentsIframe.contentDocument || paymentsIframe.contentDocument.body.innerHTML === '';
+                    if (blocked && paymentsMsg) {
+                        paymentsMsg.textContent = 'Сайт запрещает встроенное отображение. Используйте «В новой вкладке».';
+                    } else if (paymentsMsg) {
+                        paymentsMsg.textContent = '';
+                    }
+                }, 2000);
+            } catch (e) {
+                if (paymentsMsg) paymentsMsg.textContent = 'Не удалось открыть внутри. Используйте «В новой вкладке».';
+            }
         });
     }
 

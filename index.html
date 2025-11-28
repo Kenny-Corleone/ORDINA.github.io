@@ -769,15 +769,19 @@
             </div>
 
             <div id="payments-page" class="page-content hidden">
-                <div class="flex items-center justify-between bg-white dark:bg-gray-800 rounded-lg p-4 shadow-sm">
-                    <div>
+                <div class="flex flex-col gap-4 bg-white dark:bg-gray-800 rounded-lg p-4 shadow-sm">
+                    <div class="flex items-center justify-between">
                         <h3 class="text-lg font-semibold" style="color: var(--text-primary);">Платежи</h3>
-                        <p class="text-sm text-gray-600 dark:text-gray-400">Сайт hesab.az запрещает встраивание в iframe. Откройте в новой вкладке.</p>
+                        <div class="flex gap-2">
+                            <button id="open-payments-inline" class="modern-btn bg-gradient-to-r from-blue-600 to-blue-700 text-white px-4 md:px-6 py-2 text-sm md:text-base">Открыть внутри</button>
+                            <a href="https://hesab.az/" target="_blank" rel="noopener noreferrer"
+                               class="modern-btn bg-gradient-to-r from-indigo-600 to-indigo-700 text-white px-4 md:px-6 py-2 text-sm md:text-base">В новой вкладке</a>
+                        </div>
                     </div>
-                    <a href="https://hesab.az/" target="_blank" rel="noopener noreferrer"
-                       class="modern-btn bg-gradient-to-r from-blue-600 to-blue-700 text-white px-4 md:px-6 py-3 text-sm md:text-base">
-                        Открыть hesab.az
-                    </a>
+                    <div id="payments-inline-wrapper" class="rounded-lg overflow-hidden border border-gray-200 dark:border-gray-700 hidden">
+                        <iframe id="payments-inline" src="" class="w-full" style="min-height: 70vh; background: #fff"></iframe>
+                    </div>
+                    <p id="payments-inline-msg" class="text-sm text-gray-600 dark:text-gray-400">Если сайт блокирует встроенное отображение, используйте кнопку «В новой вкладке».</p>
                 </div>
             </div>
 
@@ -1005,6 +1009,55 @@
             <div id="category-list" class="space-y-2 max-h-60 overflow-y-auto"></div>
             <div class="flex justify-end mt-6"><button type="button"
                     class="cancel-btn text-gray-600 hover:text-gray-900" data-i18n="close">Закрыть</button></div>
+        </div>
+    </dialog>
+
+    <!-- Calculator Modal -->
+    <dialog id="calculator-modal" class="p-0 rounded-lg shadow-xl w-full max-w-sm">
+        <div class="p-6">
+            <h3 class="text-xl font-semibold mb-4">Калькулятор</h3>
+            <div class="mb-3"><input id="calc-display" type="text" class="bg-gray-50 border border-gray-300 rounded-lg w-full p-2.5 text-right font-mono" readonly></div>
+            <div class="grid grid-cols-4 gap-2">
+                <button class="calc-btn bg-gray-200 rounded-lg p-2" data-val="7">7</button>
+                <button class="calc-btn bg-gray-200 rounded-lg p-2" data-val="8">8</button>
+                <button class="calc-btn bg-gray-200 rounded-lg p-2" data-val="9">9</button>
+                <button class="calc-op bg-blue-600 text-white rounded-lg p-2" data-op="/">÷</button>
+                <button class="calc-btn bg-gray-200 rounded-lg p-2" data-val="4">4</button>
+                <button class="calc-btn bg-gray-200 rounded-lg p-2" data-val="5">5</button>
+                <button class="calc-btn bg-gray-200 rounded-lg p-2" data-val="6">6</button>
+                <button class="calc-op bg-blue-600 text-white rounded-lg p-2" data-op="*">×</button>
+                <button class="calc-btn bg-gray-200 rounded-lg p-2" data-val="1">1</button>
+                <button class="calc-btn bg-gray-200 rounded-lg p-2" data-val="2">2</button>
+                <button class="calc-btn bg-gray-200 rounded-lg p-2" data-val="3">3</button>
+                <button class="calc-op bg-blue-600 text-white rounded-lg p-2" data-op="-">−</button>
+                <button class="calc-btn bg-gray-200 rounded-lg p-2" data-val="0">0</button>
+                <button class="calc-btn bg-gray-200 rounded-lg p-2" data-val="," disabled>,</button>
+                <button class="calc-btn bg-gray-200 rounded-lg p-2" data-val=".">.</button>
+                <button class="calc-op bg-blue-600 text-white rounded-lg p-2" data-op="+">+</button>
+            </div>
+            <div class="grid grid-cols-3 gap-2 mt-3">
+                <button id="calc-clear" class="bg-red-600 text-white rounded-lg p-2">C</button>
+                <button id="calc-back" class="bg-gray-300 rounded-lg p-2">⌫</button>
+                <button id="calc-eq" class="bg-green-600 text-white rounded-lg p-2">=</button>
+            </div>
+            <div class="flex justify-end gap-4 mt-6"><button type="button" class="cancel-btn text-gray-600 hover:text-gray-900">Закрыть</button></div>
+        </div>
+    </dialog>
+
+    <!-- Shopping List Modal -->
+    <dialog id="shopping-list-modal" class="p-0 rounded-lg shadow-xl w-full max-w-md">
+        <div class="p-6">
+            <h3 class="text-xl font-semibold mb-4">Список покупок</h3>
+            <form id="shopping-form" class="mb-4">
+                <div class="grid grid-cols-3 gap-2">
+                    <input type="text" id="shop-name" placeholder="Наименование" class="bg-gray-50 border border-gray-300 rounded-lg w-full p-2.5" required>
+                    <input type="number" id="shop-qty" placeholder="Кол-во" min="1" class="bg-gray-50 border border-gray-300 rounded-lg w-full p-2.5" required>
+                    <button type="submit" class="bg-blue-600 text-white px-4 rounded-lg">Добавить</button>
+                </div>
+            </form>
+            <div id="shopping-list" class="space-y-2 max-h-64 overflow-y-auto"></div>
+            <p class="text-xs text-gray-500 mt-2">Купленные позиции исчезают из списка. Остальные сохраняются.</p>
+            <div class="flex justify-end gap-4 mt-6"><button type="button" class="cancel-btn text-gray-600 hover:text-gray-900">Закрыть</button></div>
         </div>
     </dialog>
 
