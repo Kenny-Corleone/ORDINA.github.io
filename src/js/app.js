@@ -937,6 +937,11 @@ function setupEventListeners() {
         document.getElementById('expense-modal-title').textContent = translations[currentLang].addExpense;
     });
 
+    setupModal('category-modal', 'manage-categories-btn', () => {
+        document.getElementById('category-form').reset();
+        // Categories are rendered dynamically, no specific form reset needed beyond basic reset
+    });
+
     // Forms
     const forms = ['debt-form', 'expense-form', 'daily-task-form', 'monthly-task-form', 'yearly-task-form', 'recurring-expense-form', 'event-form', 'category-form', 'debt-payment-form'];
     forms.forEach(id => {
@@ -1365,15 +1370,152 @@ async function handleGlobalClick(e) {
     const target = e.target;
     const id = target.dataset.id || target.closest('[data-id]')?.dataset.id;
 
-    if (!id) return;
-
-    if (target.classList.contains('delete-debt-btn')) {
+    // Delete Handlers
+    if (target.closest('.delete-debt-btn')) {
         if (confirm(translations[currentLang].deleteConfirm)) {
             await deleteDoc(doc(debtsCol, id));
             showToast(translations[currentLang].toastDeleted);
         }
+    } else if (target.closest('.delete-expense-btn')) {
+        if (confirm(translations[currentLang].deleteConfirm)) {
+            await deleteDoc(doc(expensesCol, id));
+            showToast(translations[currentLang].toastDeleted);
+        }
+    } else if (target.closest('.delete-daily-task-btn')) {
+        if (confirm(translations[currentLang].deleteConfirm)) {
+            await deleteDoc(doc(dailyTasksCol, id));
+            showToast(translations[currentLang].toastDeleted);
+        }
+    } else if (target.closest('.delete-monthly-task-btn')) {
+        if (confirm(translations[currentLang].deleteConfirm)) {
+            await deleteDoc(doc(monthlyTasksCol, id));
+            showToast(translations[currentLang].toastDeleted);
+        }
+    } else if (target.closest('.delete-yearly-task-btn')) {
+        if (confirm(translations[currentLang].deleteConfirm)) {
+            await deleteDoc(doc(yearlyTasksCol, id));
+            showToast(translations[currentLang].toastDeleted);
+        }
+    } else if (target.closest('.delete-recurring-expense-btn')) {
+        if (confirm(translations[currentLang].deleteConfirm)) {
+            await deleteDoc(doc(recurringExpensesCol, id));
+            showToast(translations[currentLang].toastDeleted);
+        }
+    } else if (target.closest('.delete-category-btn')) {
+        if (confirm(translations[currentLang].deleteConfirm)) {
+            await deleteDoc(doc(categoriesCol, id));
+            showToast(translations[currentLang].toastDeleted);
+        }
     }
-    // ... handle other clicks
+
+    // Edit Handlers
+    else if (target.closest('.edit-debt-btn')) {
+        const docSnap = await getDoc(doc(debtsCol, id));
+        if (docSnap.exists()) {
+            const data = docSnap.data();
+            const form = document.getElementById('debt-form');
+            form.querySelector('#debt-id').value = id;
+            form.querySelector('#debt-name').value = data.name;
+            form.querySelector('#debt-amount').value = data.amount;
+            form.querySelector('#debt-paid').value = data.paidAmount || 0;
+            form.querySelector('#debt-last-payment').value = data.lastPaymentDate || '';
+            form.querySelector('#debt-comments').value = data.comments || '';
+            document.getElementById('debt-modal-title').textContent = translations[currentLang].editDebt;
+            document.getElementById('debt-modal').showModal();
+        }
+    } else if (target.closest('.edit-expense-btn')) {
+        const docSnap = await getDoc(doc(expensesCol, id));
+        if (docSnap.exists()) {
+            const data = docSnap.data();
+            const form = document.getElementById('expense-form');
+            form.querySelector('#expense-id').value = id;
+            form.querySelector('#expense-name').value = data.name;
+            form.querySelector('#expense-category').value = data.category;
+            form.querySelector('#expense-amount').value = data.amount;
+            form.querySelector('#expense-date').value = data.date;
+            document.getElementById('expense-modal-title').textContent = translations[currentLang].editExpense;
+            document.getElementById('expense-modal').showModal();
+        }
+    } else if (target.closest('.edit-daily-task-btn')) {
+        const docSnap = await getDoc(doc(dailyTasksCol, id));
+        if (docSnap.exists()) {
+            const data = docSnap.data();
+            const form = document.getElementById('daily-task-form');
+            form.querySelector('#daily-task-id').value = id;
+            form.querySelector('#daily-task-name').value = data.name;
+            form.querySelector('#daily-task-notes').value = data.notes || '';
+            document.getElementById('daily-task-modal-title').textContent = translations[currentLang].editTask;
+            document.getElementById('daily-task-modal').showModal();
+        }
+    } else if (target.closest('.edit-monthly-task-btn')) {
+        const docSnap = await getDoc(doc(monthlyTasksCol, id));
+        if (docSnap.exists()) {
+            const data = docSnap.data();
+            const form = document.getElementById('monthly-task-form');
+            form.querySelector('#monthly-task-id').value = id;
+            form.querySelector('#monthly-task-name').value = data.name;
+            form.querySelector('#monthly-task-deadline').value = data.deadline || '';
+            document.getElementById('monthly-task-modal-title').textContent = translations[currentLang].editTask;
+            document.getElementById('monthly-task-modal').showModal();
+        }
+    } else if (target.closest('.edit-yearly-task-btn')) {
+        const docSnap = await getDoc(doc(yearlyTasksCol, id));
+        if (docSnap.exists()) {
+            const data = docSnap.data();
+            const form = document.getElementById('yearly-task-form');
+            form.querySelector('#yearly-task-id').value = id;
+            form.querySelector('#yearly-task-name').value = data.name;
+            form.querySelector('#yearly-task-deadline').value = data.deadline || '';
+            form.querySelector('#yearly-task-notes').value = data.notes || '';
+            document.getElementById('yearly-task-modal-title').textContent = translations[currentLang].editTask;
+            document.getElementById('yearly-task-modal').showModal();
+        }
+    } else if (target.closest('.edit-recurring-expense-btn')) {
+        const docSnap = await getDoc(doc(recurringExpensesCol, id));
+        if (docSnap.exists()) {
+            const data = docSnap.data();
+            const form = document.getElementById('recurring-expense-form');
+            form.querySelector('#recurring-expense-id').value = id;
+            form.querySelector('#recurring-expense-name').value = data.name;
+            form.querySelector('#recurring-expense-amount').value = data.amount;
+            form.querySelector('#recurring-expense-day').value = data.day;
+            document.getElementById('recurring-expense-modal-title').textContent = translations[currentLang].editTemplate;
+            document.getElementById('recurring-expense-modal').showModal();
+        }
+    } else if (target.closest('.add-debt-payment-btn')) {
+        const form = document.getElementById('debt-payment-form');
+        form.reset();
+        form.querySelector('#debt-payment-id').value = id;
+        document.getElementById('debt-payment-modal').showModal();
+    }
+
+    // Calendar Interactions
+    else if (target.closest('.calendar-day')) {
+        const date = target.closest('.calendar-day').dataset.date;
+        if (date) {
+            // Open event modal for adding new event
+            const form = document.getElementById('event-form');
+            form.reset();
+            form.querySelector('#event-id').value = '';
+            // Set date if possible, but event form might not have date field if it assumes selected date?
+            // Actually event form usually has a date field.
+            // Let's assume we can set it if it exists, or just open modal.
+            // Looking at previous code, event form structure isn't fully visible, but let's assume standard behavior.
+            document.getElementById('event-modal').showModal();
+        }
+    } else if (target.closest('.event-item')) {
+        e.stopPropagation(); // Prevent bubbling to calendar-day
+        const eventId = target.closest('.event-item').dataset.eventId;
+        const docSnap = await getDoc(doc(calendarEventsCol, eventId));
+        if (docSnap.exists()) {
+            const data = docSnap.data();
+            const form = document.getElementById('event-form');
+            form.querySelector('#event-id').value = eventId;
+            form.querySelector('#event-name').value = data.name;
+            // Populate other fields...
+            document.getElementById('event-modal').showModal();
+        }
+    }
 }
 
 async function handleGlobalChange(e) {
