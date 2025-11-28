@@ -241,10 +241,6 @@ const showApp = () => {
     if (loginScreen) loginScreen.classList.add('hidden');
     if (appScreen) {
         appScreen.classList.remove('hidden');
-        // Use setTimeout to allow the display change to take effect before changing opacity
-        setTimeout(() => {
-            appScreen.classList.remove('opacity-0');
-        }, 10);
         // Trigger a resize event to fix any layout issues
         window.dispatchEvent(new Event('resize'));
     }
@@ -1022,40 +1018,40 @@ function setupEventListeners() {
     }
 
     // Language Flags
+    const flagByLang = { ru: '🇷🇺', en: '🇬🇧', az: '🇦🇿' };
+    const titleByLang = { ru: 'Русский', en: 'English', az: 'Azərbaycan' };
 
-    // Language Dropdown
-    const langTrigger = document.getElementById('lang-trigger');
-    const langMenu = document.getElementById('lang-menu');
-    const currentLangFlag = document.getElementById('current-lang-flag');
+    const updateLangToggleUI = () => {
+        const headerToggle = document.getElementById('lang-toggle-btn');
+        const loginToggle = document.getElementById('lang-toggle-login');
+        const flag = flagByLang[currentLang] || '🇷🇺';
+        const title = titleByLang[currentLang] || 'Русский';
+        if (headerToggle) { headerToggle.textContent = flag; headerToggle.title = title; }
+        if (loginToggle) { loginToggle.textContent = flag; loginToggle.title = title; }
+    };
 
-    if (langTrigger && langMenu) {
-        // Toggle dropdown
-        langTrigger.addEventListener('click', (e) => {
-            e.stopPropagation();
-            const expanded = langTrigger.getAttribute('aria-expanded') === 'true';
-            langTrigger.setAttribute('aria-expanded', !expanded);
-            langMenu.classList.toggle('hidden');
-        });
+    updateLangToggleUI();
 
-        // Close when clicking outside
-        document.addEventListener('click', (e) => {
-            if (!langTrigger.contains(e.target) && !langMenu.contains(e.target)) {
-                langMenu.classList.add('hidden');
-                langTrigger.setAttribute('aria-expanded', 'false');
-            }
-        });
+    const cycleLang = (lang) => {
+        const order = ['az', 'en', 'ru'];
+        const idx = order.indexOf(lang);
+        return order[(idx + 1) % order.length];
+    };
+    const cyclePrevLang = (lang) => {
+        const order = ['az', 'en', 'ru'];
+        const idx = order.indexOf(lang);
+        return order[(idx - 1 + order.length) % order.length];
+    };
 
-        // Handle language selection
-        $$('.language-dropdown-item').forEach(item => {
-            item.addEventListener('click', (e) => {
-                e.preventDefault();
-                const lang = e.currentTarget.dataset.lang;
-                if (lang === currentLang) {
-                    langMenu.classList.add('hidden');
-                    return;
-                }
-
-                setLanguage(lang, () => {
+    const addLongPressCycle = (el, backwardsOnly = false) => {
+        if (!el) return;
+        let pressTimer = null;
+        const start = (e) => {
+            e.preventDefault();
+            pressTimer = setTimeout(() => {
+                const nextLang = backwardsOnly ? cyclePrevLang(currentLang) : cyclePrevLang(currentLang);
+                setLanguage(nextLang, () => {
+                    updateLangToggleUI();
                     updateCurrencyButtons();
                     updateMonthDisplay();
                     renderCalendar();
@@ -1064,24 +1060,55 @@ function setupEventListeners() {
                     if (availableMonths.length > 0) {
                         renderMonthSelector(availableMonths);
                     }
-
-                    // Update trigger flag
-                    const flagMap = { 'ru': '🇷🇺', 'en': '🇬🇧', 'az': '🇦🇿' };
-                    if (currentLangFlag) currentLangFlag.textContent = flagMap[lang] || '🇷🇺';
-
-                    langMenu.classList.add('hidden');
-                    langTrigger.setAttribute('aria-expanded', 'false');
                 });
+            }, 450);
+        };
+        const cancel = () => { if (pressTimer) { clearTimeout(pressTimer); pressTimer = null; } };
+        el.addEventListener('pointerdown', start);
+        el.addEventListener('pointerup', cancel);
+        el.addEventListener('pointerleave', cancel);
+        el.addEventListener('touchstart', start, { passive: false });
+        el.addEventListener('touchend', cancel);
+        el.addEventListener('contextmenu', (e) => {
+            e.preventDefault();
+            const nextLang = cyclePrevLang(currentLang);
+            setLanguage(nextLang, () => { updateLangToggleUI(); });
+        });
+    };
+
+    const headerToggle = document.getElementById('lang-toggle-btn');
+    if (headerToggle) {
+        headerToggle.addEventListener('click', (e) => {
+            e.preventDefault();
+            const nextLang = cycleLang(currentLang);
+            setLanguage(nextLang, () => {
+                updateLangToggleUI();
+                updateCurrencyButtons();
+                updateMonthDisplay();
+                renderCalendar();
+                initNews();
+                initWeatherNew();
+                if (availableMonths.length > 0) {
+                    renderMonthSelector(availableMonths);
+                }
             });
         });
-
-        // Set initial flag
-        const flagMap = { 'ru': '🇷🇺', 'en': '🇬🇧', 'az': '🇦🇿' };
-        if (currentLangFlag) currentLangFlag.textContent = flagMap[currentLang] || '🇷🇺';
+        addLongPressCycle(headerToggle);
     }
 
-    // Currency Toggle
+    const loginToggle = document.getElementById('lang-toggle-login');
+    if (loginToggle) {
+        loginToggle.addEventListener('click', (e) => {
+            e.preventDefault();
+            const nextLang = cycleLang(currentLang);
+            setLanguage(nextLang, () => {
+                updateLangToggleUI();
+            });
+        });
+        addLongPressCycle(loginToggle, true);
+    }
 
+    // Removed individual login flag handlers in favor of single toggle
 
     // Currency Toggle
     const currToggleBtn = document.getElementById('curr-toggle-btn');
@@ -1583,7 +1610,7 @@ function renderCategories(categories) {
 
 function initParticles() {
     // Particles config
-    particlesJS("background-animation", {
+    particlesJS("particles-js", {
         "particles": {
             "number": { "value": 80, "density": { "enable": true, "value_area": 800 } },
             "color": { "value": "#ffffff" },
