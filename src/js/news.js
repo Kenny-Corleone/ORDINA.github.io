@@ -6,7 +6,7 @@ import { logger, showToast } from './utils.js';
 // ============================================================================
 
 let newsData = [];
-let visibleNewsCount = 10;
+let visibleNewsCount = 50;
 let currentNewsCategory = 'all';
 let currentNewsSearch = '';
 

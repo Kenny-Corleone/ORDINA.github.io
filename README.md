@@ -1,7 +1,7 @@
 <h1 align="center">
-  <img src="https://raw.githubusercontent.com/Kenny-Corleone/ORDINA.github.io/main/assets/logo%20ORDINA.png" width="250" alt="ORDINA Logo"/>
+  <img src="https://raw.githubusercontent.com/Kenny-Corleone/ORDINA.github.io/main/assets/logo%20ORDINA.png" width="300" alt="ORDINA Logo"/>
   <br>
-  <span style="font-family: 'Poppins', sans-serif; font-weight: 300; font-size: 1.8em; letter-spacing: 0.1em; color: #6366f1;">Life Order Assistant</span>
+  <span style="font-family: 'Poppins', sans-serif; font-weight: 300; font-size: 2em; letter-spacing: 0.1em; color: #6366f1;">Life Order Assistant</span>
 </h1>
 
 <p align="center">
@@ -26,44 +26,6 @@
 2. Install as PWA for the best experience.
 3. Sign in with Google or Email.
 4. Start organizing your life!
-
-## 📸 Gallery
-
-<details>
-<summary><strong>📊 Dashboard & News</strong></summary>
-<p align="center">
-  <img src="assets/screenshots/dashboard_real.png" alt="Dashboard" width="100%" style="border-radius: 10px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); margin-bottom: 10px;">
-  <img src="assets/screenshots/news_real.png" alt="News Widget" width="100%" style="border-radius: 10px; box-shadow: 0 4px 20px rgba(0,0,0,0.1);">
-</p>
-</details>
-
-<details>
-<summary><strong>💸 Expenses Management</strong></summary>
-<p align="center">
-  <img src="assets/screenshots/expenses_real.png" alt="Expenses Module" width="100%" style="border-radius: 10px; box-shadow: 0 4px 20px rgba(0,0,0,0.1);">
-</p>
-</details>
-
-<details>
-<summary><strong>🤝 Debts Tracker</strong></summary>
-<p align="center">
-  <img src="assets/screenshots/debts_real.png" alt="Debts Module" width="100%" style="border-radius: 10px; box-shadow: 0 4px 20px rgba(0,0,0,0.1);">
-</p>
-</details>
-
-<details>
-<summary><strong>📝 Tasks & Planning</strong></summary>
-<p align="center">
-  <img src="assets/screenshots/tasks_real.png" alt="Tasks Module" width="100%" style="border-radius: 10px; box-shadow: 0 4px 20px rgba(0,0,0,0.1);">
-</p>
-</details>
-
-<details>
-<summary><strong>📅 Smart Calendar</strong></summary>
-<p align="center">
-  <img src="assets/screenshots/calendar_real.png" alt="Calendar Module" width="100%" style="border-radius: 10px; box-shadow: 0 4px 20px rgba(0,0,0,0.1);">
-</p>
-</details>
 
 ## 🛠️ Tech Stack
 - **Frontend**: HTML5, Vanilla JS (ES6+), Tailwind CSS
@@ -92,7 +54,5 @@ Distributed under the MIT License. See `LICENSE` for more information.
 </p>
 
 <p align="center">
-  <a href="https://www.buymeacoffee.com/Ancl" title="Support the project">
-    <img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy me a tea" height="50"/>
-  </a>
+<a href="https://www.buymeacoffee.com/Ancl"><img src="https://img.buymeacoffee.com/button-api/?text=Buy me a beer&emoji=🍺&slug=Ancl&button_colour=5F7FFF&font_colour=ffffff&font_family=Poppins&outline_colour=000000&coffee_colour=FFDD00" /></a>
 </p>
