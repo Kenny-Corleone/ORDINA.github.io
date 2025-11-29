@@ -7,8 +7,11 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
+    "screenshots": "node scripts/screenshots.js",
     "lint": "echo 'Linting not configured. Use htmlhint, stylelint, eslint manually.'",
-    "test": "echo 'Tests not configured yet.'"
+    "test": "echo 'Tests not configured yet.'",
+    "test:hesab": "node tests/hesab.test.js",
+    "test:hesab:e2e": "node tests/hesab.e2e.js"
   },
   "keywords": [
     "finance",
@@ -33,7 +36,9 @@
   },
   "homepage": "https://kenny-corleone.github.io/ORDINA.github.io/",
   "devDependencies": {
+    "@tailwindcss/vite": "^4.1.17",
     "autoprefixer": "^10.4.17",
+    "playwright": "^1.57.0",
     "postcss": "^8.4.35",
     "tailwindcss": "^3.4.1",
     "terser": "^5.36.0",
@@ -42,7 +47,7 @@
     "vite-plugin-imagemin": "^0.6.1"
   },
   "engines": {
-    "node": ">=20.0.0"
+    "node": "20.19.x"
   },
   "browserslist": [
     "> 1%",

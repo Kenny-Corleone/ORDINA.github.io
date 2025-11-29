@@ -1,6 +1,6 @@
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
-import { getFirestore } from "firebase/firestore";
+import { initializeFirestore } from "firebase/firestore";
 
 const firebaseConfig = {
     apiKey: "AIzaSyDi0cFirxRJ9eC6mvy1WEDpB9MPzDDac3g",
@@ -16,7 +16,10 @@ let app, db, auth;
 
 try {
     app = initializeApp(firebaseConfig);
-    db = getFirestore(app);
+    db = initializeFirestore(app, {
+        experimentalAutoDetectLongPolling: true,
+        useFetchStreams: false
+    });
     auth = getAuth(app);
 } catch (e) {
     console.error("Firebase initialization error:", e);

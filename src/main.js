@@ -1,4 +1,11 @@
 import './styles/main.css';
+if (!Promise.allSettled) {
+  Promise.allSettled = function (promises) {
+    return Promise.all(promises.map(p => Promise.resolve(p)
+      .then(value => ({ status: 'fulfilled', value }))
+      .catch(reason => ({ status: 'rejected', reason }))));
+  };
+}
 import { app, db, auth } from './js/firebase.js';
 import { logger, $, loadScriptSafely } from './js/utils.js';
 import { initApp } from './js/app.js'; // Import initApp function
@@ -137,7 +144,14 @@ setupLazyLoading();
 let deferredInstallPrompt = null;
 
 if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('./sw.js').catch(err => console.log('SW register error', err));
+    if (import.meta.env.PROD) {
+        navigator.serviceWorker.register('/sw.js').catch(err => console.log('SW register error', err));
+    } else {
+        navigator.serviceWorker.getRegistrations().then(regs => regs.forEach(r => r.unregister())).catch(() => {});
+        if ('caches' in window) {
+            caches.keys().then(keys => Promise.all(keys.map(k => caches.delete(k)))).catch(() => {});
+        }
+    }
 }
 
 window.addEventListener('beforeinstallprompt', (e) => {
