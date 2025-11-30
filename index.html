@@ -16,7 +16,7 @@
         content="Manage your life with ease - Premium financial suite with expense tracking, debt management, and productivity tools">
     <meta property="og:site_name" content="ORDINA">
     <title>ORDINA - Personal Command Center</title>
-    <base href="/ORDINA.github.io/">
+    <!-- base href="/ORDINA.github.io/" removed for local dev compatibility -->
     <link rel="icon" type="image/png" sizes="16x16" href="./assets/favicons/favicon-16.png">
     <link rel="icon" type="image/png" sizes="32x32" href="./assets/favicons/favicon-32.png">
     <link rel="apple-touch-icon" sizes="180x180" href="./assets/favicons/favicon-180.png">
@@ -1006,350 +1006,363 @@
             </div>
 
             <!-- Footer with Buy Me a Coffee -->
-            <footer class="mt-8 mb-4 text-center">
-                <div class="flex justify-center items-center">
-                    <a href="https://www.buymeacoffee.com/Ancl" target="_blank" rel="noopener noreferrer"
-                        class="hover:scale-105 transition-transform duration-300">
-                        <img src="https://img.buymeacoffee.com/button-api/?text=Buy me a beer&emoji=🍺&slug=Ancl&button_colour=5F7FFF&font_colour=ffffff&font_family=Poppins&outline_colour=000000&coffee_colour=FFDD00"
-                            alt="Buy me a beer" />
+            <footer class="mt-8 mb-4 text-center pb-6 text-gray-500 text-sm relative z-10">
+                <p>&copy; 2025 ORDINA. All rights reserved.</p>
+                <div class="flex justify-center items-center gap-4 mt-4">
+                    <a href="https://www.buymeacoffee.com/ordina" target="_blank" rel="noopener noreferrer"
+                        class="inline-flex items-center gap-2 text-yellow-600 hover:text-yellow-700 transition-colors font-medium">
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                            <path
+                                d="M20.216 6.415l-.132-.666c-.119-.596-.385-1.135-.77-1.566-.551-.615-1.295-.95-2.091-.95H10.6c-.439 0-.878.11-1.286.321C9.032 3.298 8.711 3.006 8.322 2.76c-.636-.401-1.379-.549-2.116-.42L3.482 2.87c-.736.129-1.37.545-1.771 1.177-.4.633-.551 1.374-.422 2.11l.666 3.77c.129.736.545 1.37 1.177 1.771.633.4 1.374.551 2.11.422l.277-.049c.264 1.83 1.84 3.243 3.755 3.243h.004c1.916 0 3.492-1.414 3.756-3.244l.276.049c.736.129 1.375-.02 1.776-.422.4-.401.551-1.141.422-1.877l-.666-3.77c-.129-.736-.545-1.37-1.177-1.771-.39-.248-.83-.374-1.272-.374zm-5.48 7.62c-1.33 0-2.466-.92-2.73-2.188l-1.014.179c-.06.34-.148.667-.261.983l1.594 9.016c.129.736.545 1.37 1.177 1.771.633.4 1.374.551 2.11.422l2.724-.481c.736-.129 1.37-.545 1.771-1.177.4-.633.551-1.374.422-2.11l-1.594-9.016c-.113-.316-.201-.643-.261-.983l-1.014-.179c-.264 1.268-1.4 2.188-2.73 2.188zm-8.39-9.96c.264-.047.53.008.758.152.228.144.377.371.423.635l.666 3.77c.046.264-.008.53-.152.758-.144.228-.371.377-.635.423l-2.724.481c-.264.047-.53-.008-.758-.152-.228-.144-.377-.371-.423-.635l-.666-3.77c-.046-.264.008-.53.152-.758.144-.228.371-.377.635-.423l2.724-.481zm12.37 3.05c.264-.047.53.008.758.152.228.144.377.371.423.635l.666 3.77c.046.264-.008.53-.152.758-.144.228-.371-.377-.635-.423l-2.724.481c-.264.047-.53-.008-.758-.152-.228-.144-.377-.371-.423-.635l-.666-3.77c-.046-.264.008-.53.152-.758.144-.228.371-.377.635-.423l2.724-.481z" />
+                        </svg>
+                        <span data-i18n="buyMeBeer">Buy me a beer</span>
                     </a>
-                    <!-- PWA Install Button -->
-                    <button id="pwa-install-btn" class="pwa-install-btn-footer" title="Установить приложение"
-                        aria-label="Установить приложение">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-                            <polyline points="7 10 12 15 17 10" />
-                            <line x1="12" y1="15" x2="12" y2="3" />
+                    <button id="pwa-install-btn-footer"
+                        class="pwa-install-btn-footer hidden flex items-center gap-2 bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-4 py-2 rounded-full shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-0.5 active:translate-y-0">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
                         </svg>
                         <span class="pwa-btn-text">Install App</span>
                     </button>
                 </div>
-                <p class="text-xs text-gray-400 mt-2">© 2025 ORDINA. All rights reserved.</p>
             </footer>
-        </div>
 
-        <!-- Модальные окна -->
-        <dialog id="debt-modal" class="p-0 rounded-lg shadow-xl w-full max-w-md">
-            <div class="p-6">
-                <h3 id="debt-modal-title" class="text-xl font-semibold mb-4" data-i18n="addDebt"></h3>
-                <form id="debt-form" data-original-paid="0"><input type="hidden" id="debt-id">
-                    <div class="mb-4"><label for="debt-name" class="block mb-2 text-sm font-medium"
-                            data-i18n="debtorName">Имя должника/Название</label><input type="text" id="debt-name"
-                            class="bg-gray-50 border border-gray-300 rounded-lg w-full p-2.5" required></div>
-                    <div class="mb-4"><label for="debt-total" class="block mb-2 text-sm font-medium"><span
-                                data-i18n="totalAmount"></span> (<span class="currency-symbol">AZN</span>)</label><input
-                            type="number" id="debt-total" step="0.01"
-                            class="bg-gray-50 border border-gray-300 rounded-lg w-full p-2.5" required></div>
-                    <div class="mb-4"><label for="debt-paid" class="block mb-2 text-sm font-medium"><span
-                                data-i18n="paidAmount"></span> (<span class="currency-symbol">AZN</span>)</label><input
-                            type="number" id="debt-paid" step="0.01"
-                            class="bg-gray-50 border border-gray-300 rounded-lg w-full p-2.5" required value="0"></div>
-                    <div class="mb-4"><label for="debt-comment" class="block mb-2 text-sm font-medium"
-                            data-i18n="comment">Комментарий</label><textarea id="debt-comment" rows="3"
-                            class="bg-gray-50 border border-gray-300 rounded-lg w-full p-2.5"></textarea></div>
-                    <div class="flex justify-end gap-4 mt-6"><button type="button"
-                            class="cancel-btn text-gray-600 hover:text-gray-900"
-                            data-i18n="cancel">Отмена</button><button type="submit"
-                            class="bg-blue-600 text-white px-5 py-2.5 rounded-lg hover:bg-blue-700"
-                            data-i18n="save">Сохранить</button></div>
-                </form>
-            </div>
-        </dialog>
-        <dialog id="debt-payment-modal" class="p-0 rounded-lg shadow-xl w-full max-w-md">
-            <div class="p-6">
-                <h3 class="text-xl font-semibold mb-4" data-i18n="addDebtPayment">Добавить платеж по долгу</h3>
-                <form id="debt-payment-form"><input type="hidden" id="debt-payment-id">
-                    <div class="mb-4"><label for="debt-payment-amount" class="block mb-2 text-sm font-medium"><span
-                                data-i18n="paymentAmount"></span> (<span
-                                class="currency-symbol">AZN</span>)</label><input type="number" id="debt-payment-amount"
-                            step="0.01" class="bg-gray-50 border border-gray-300 rounded-lg w-full p-2.5" required>
-                    </div>
-                    <div class="flex justify-end gap-4 mt-6"><button type="button"
-                            class="cancel-btn text-gray-600 hover:text-gray-900"
-                            data-i18n="cancel">Отмена</button><button type="submit"
-                            class="bg-blue-600 text-white px-5 py-2.5 rounded-lg hover:bg-blue-700"
-                            data-i18n="add">Добавить</button></div>
-                </form>
-            </div>
-        </dialog>
-        <dialog id="recurring-expense-modal" class="p-0 rounded-lg shadow-xl w-full max-w-md">
-            <div class="p-6">
-                <h3 id="recurring-expense-modal-title" class="text-xl font-semibold mb-4" data-i18n="addTemplate"></h3>
-                <form id="recurring-expense-form"><input type="hidden" id="recurring-expense-id">
-                    <div class="mb-4"><label for="recurring-expense-name" class="block mb-2 text-sm font-medium"
-                            data-i18n="name">Наименование</label><input type="text" id="recurring-expense-name"
-                            class="bg-gray-50 border border-gray-300 rounded-lg w-full p-2.5" required></div>
-                    <div class="mb-4"><label for="recurring-expense-amount" class="block mb-2 text-sm font-medium"><span
-                                data-i18n="amount"></span> (<span class="currency-symbol">AZN</span>)</label><input
-                            type="number" id="recurring-expense-amount" step="0.01"
-                            class="bg-gray-50 border border-gray-300 rounded-lg w-full p-2.5" required></div>
-                    <div class="mb-4"><label for="recurring-expense-due-day" class="block mb-2 text-sm font-medium"
-                            data-i18n="paymentDayNum">День оплаты (1-31)</label><input type="number"
-                            id="recurring-expense-due-day" min="1" max="31"
-                            class="bg-gray-50 border border-gray-300 rounded-lg w-full p-2.5" required></div>
-                    <div class="mb-4"><label for="recurring-expense-details" class="block mb-2 text-sm font-medium"
-                            data-i18n="details">Детали</label><textarea id="recurring-expense-details" rows="3"
-                            class="bg-gray-50 border border-gray-300 rounded-lg w-full p-2.5"></textarea></div>
-                    <div class="flex justify-end gap-4 mt-6"><button type="button"
-                            class="cancel-btn text-gray-600 hover:text-gray-900"
-                            data-i18n="cancel">Отмена</button><button type="submit"
-                            class="bg-blue-600 text-white px-5 py-2.5 rounded-lg hover:bg-blue-700"
-                            data-i18n="save">Сохранить</button></div>
-                </form>
-            </div>
-        </dialog>
-        <dialog id="expense-modal" class="p-0 rounded-lg shadow-xl w-full max-w-md">
-            <div class="p-6">
-                <h3 id="expense-modal-title" class="text-xl font-semibold mb-4" data-i18n="addExpense"></h3>
-                <form id="expense-form"><input type="hidden" id="expense-id">
-                    <div class="mb-4"><label for="expense-name" class="block mb-2 text-sm font-medium"
-                            data-i18n="name">Наименование</label><input type="text" id="expense-name"
-                            class="bg-gray-50 border border-gray-300 rounded-lg w-full p-2.5" required></div>
-                    <div class="mb-4"><label for="expense-category" class="block mb-2 text-sm font-medium"
-                            data-i18n="category">Категория</label><input type="text" id="expense-category"
-                            list="expense-categories-list"
-                            class="bg-gray-50 border border-gray-300 rounded-lg w-full p-2.5" required><datalist
-                            id="expense-categories-list"></datalist></div>
-                    <div class="mb-4"><label for="expense-amount" class="block mb-2 text-sm font-medium"><span
-                                data-i18n="amount"></span> (<span class="currency-symbol">AZN</span>)</label><input
-                            type="number" id="expense-amount" step="0.01"
-                            class="bg-gray-50 border border-gray-300 rounded-lg w-full p-2.5" required></div>
-                    <div class="mb-4"><label for="expense-date" class="block mb-2 text-sm font-medium"
-                            data-i18n="date">Дата</label><input type="date" id="expense-date"
-                            class="bg-gray-50 border border-gray-300 rounded-lg w-full p-2.5" required></div>
-                    <div class="flex justify-end gap-4 mt-6"><button type="button"
-                            class="cancel-btn text-gray-600 hover:text-gray-900"
-                            data-i18n="cancel">Отмена</button><button type="submit"
-                            class="bg-blue-600 text-white px-5 py-2.5 rounded-lg hover:bg-blue-700"
-                            data-i18n="save">Сохранить</button></div>
-                </form>
-            </div>
-        </dialog>
-        <dialog id="daily-task-modal" class="p-0 rounded-lg shadow-xl w-full max-w-md">
-            <div class="p-6">
-                <h3 id="daily-task-modal-title" class="text-xl font-semibold mb-4"></h3>
-                <form id="daily-task-form"><input type="hidden" id="daily-task-id">
-                    <div class="mb-4"><label for="daily-task-name" class="block mb-2 text-sm font-medium"
-                            data-i18n="name">Имя</label><input type="text" id="daily-task-name"
-                            class="bg-gray-50 border border-gray-300 rounded-lg w-full p-2.5" required></div>
-                    <div class="mb-4"><label for="daily-task-notes" class="block mb-2 text-sm font-medium"
-                            data-i18n="notes">Заметки</label><textarea id="daily-task-notes" rows="3"
-                            class="bg-gray-50 border border-gray-300 rounded-lg w-full p-2.5"></textarea></div>
-                    <div class="flex justify-end gap-4 mt-6"><button type="button"
-                            class="cancel-btn text-gray-600 hover:text-gray-900"
-                            data-i18n="cancel">Отмена</button><button type="submit"
-                            class="bg-blue-600 text-white px-5 py-2.5 rounded-lg hover:bg-blue-700"
-                            data-i18n="save">Сохранить</button></div>
-                </form>
-            </div>
-        </dialog>
-        <dialog id="monthly-task-modal" class="p-0 rounded-lg shadow-xl w-full max-w-md">
-            <div class="p-6">
-                <h3 id="monthly-task-modal-title" class="text-xl font-semibold mb-4"></h3>
-                <form id="monthly-task-form"><input type="hidden" id="monthly-task-id">
-                    <div class="mb-4"><label for="monthly-task-name" class="block mb-2 text-sm font-medium"
-                            data-i18n="name">Имя</label><input type="text" id="monthly-task-name"
-                            class="bg-gray-50 border border-gray-300 rounded-lg w-full p-2.5" required></div>
-                    <div class="mb-4"><label for="monthly-task-deadline" class="block mb-2 text-sm font-medium"
-                            data-i18n="deadline">Дедлайн</label><input type="date" id="monthly-task-deadline"
-                            class="bg-gray-50 border border-gray-300 rounded-lg w-full p-2.5" required></div>
-                    <div class="flex justify-end gap-4 mt-6"><button type="button"
-                            class="cancel-btn text-gray-600 hover:text-gray-900"
-                            data-i18n="cancel">Отмена</button><button type="submit"
-                            class="bg-blue-600 text-white px-5 py-2.5 rounded-lg hover:bg-blue-700"
-                            data-i18n="save">Сохранить</button></div>
-                </form>
-            </div>
-        </dialog>
-        <dialog id="yearly-task-modal" class="p-0 rounded-lg shadow-xl w-full max-w-md">
-            <div class="p-6">
-                <h3 id="yearly-task-modal-title" class="text-xl font-semibold mb-4"></h3>
-                <form id="yearly-task-form"><input type="hidden" id="yearly-task-id">
-                    <div class="mb-4"><label for="yearly-task-name" class="block mb-2 text-sm font-medium"
-                            data-i18n="name">Имя</label><input type="text" id="yearly-task-name"
-                            class="bg-gray-50 border border-gray-300 rounded-lg w-full p-2.5" required></div>
-                    <div class="mb-4"><label for="yearly-task-deadline" class="block mb-2 text-sm font-medium"
-                            data-i18n="deadline">Дедлайн</label><input type="date" id="yearly-task-deadline"
-                            class="bg-gray-50 border border-gray-300 rounded-lg w-full p-2.5" required></div>
-                    <div class="mb-4"><label for="yearly-task-notes" class="block mb-2 text-sm font-medium"
-                            data-i18n="notes">Заметки</label><textarea id="yearly-task-notes" rows="3"
-                            class="bg-gray-50 border border-gray-300 rounded-lg w-full p-2.5"></textarea></div>
-                    <div class="flex justify-end gap-4 mt-6"><button type="button"
-                            class="cancel-btn text-gray-600 hover:text-gray-900"
-                            data-i18n="cancel">Отмена</button><button type="submit"
-                            class="bg-blue-600 text-white px-5 py-2.5 rounded-lg hover:bg-blue-700"
-                            data-i18n="save">Сохранить</button></div>
-                </form>
-            </div>
-        </dialog>
-        <dialog id="event-modal" class="p-0 rounded-lg shadow-xl w-full max-w-md">
-            <div class="p-6">
-                <h3 id="event-modal-title" class="text-xl font-semibold mb-4"></h3>
-                <form id="event-form"><input type="hidden" id="event-id">
-                    <div class="mb-4"><label for="event-category" class="block mb-2 text-sm font-medium"
-                            data-i18n="category">Категория</label><select id="event-category"
-                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
-                            <option value="event" data-i18n="categoryEvent">Событие</option>
-                            <option value="birthday" data-i18n="categoryBirthday">День рождения</option>
-                            <option value="meeting" data-i18n="categoryMeeting">Встреча</option>
-                            <option value="wedding" data-i18n="categoryWedding">Свадьба</option>
-                        </select></div>
-                    <div id="event-fields-event" class="event-category-fields">
-                        <div class="mb-4"><label for="event-name-generic" class="block mb-2 text-sm font-medium"
-                                data-i18n="eventName">Название события</label><input type="text" id="event-name-generic"
-                                class="bg-gray-50 border border-gray-300 rounded-lg w-full p-2.5"></div>
-                    </div>
-                    <div id="event-fields-birthday" class="event-category-fields hidden">
-                        <div class="mb-4"><label for="event-birthday-name" class="block mb-2 text-sm font-medium"
-                                data-i18n="birthdayName">Имя именинника</label><input type="text"
-                                id="event-birthday-name"
-                                class="bg-gray-50 border border-gray-300 rounded-lg w-full p-2.5"></div>
-                        <div class="mb-4"><label for="event-birthday-year" class="block mb-2 text-sm font-medium"
-                                data-i18n="birthYear">Год рождения (опционально)</label><input type="number"
-                                id="event-birthday-year" data-placeholder-i18n="placeholderBirthYear"
-                                class="bg-gray-50 border border-gray-300 rounded-lg w-full p-2.5"></div>
-                    </div>
-                    <div id="event-fields-meeting" class="event-category-fields hidden">
-                        <div class="mb-4"><label for="event-meeting-with" class="block mb-2 text-sm font-medium"
-                                data-i18n="meetingWith">С кем</label><input type="text" id="event-meeting-with"
-                                class="bg-gray-50 border border-gray-300 rounded-lg w-full p-2.5"></div>
-                        <div class="grid grid-cols-2 gap-4">
-                            <div><label for="event-meeting-time" class="block mb-2 text-sm font-medium"
-                                    data-i18n="time">Время (опц.)</label><input type="time" id="event-meeting-time"
-                                    class="bg-gray-50 border border-gray-300 rounded-lg w-full p-2.5"></div>
-                            <div><label for="event-meeting-place" class="block mb-2 text-sm font-medium"
-                                    data-i18n="place">Место (опц.)</label><input type="text" id="event-meeting-place"
-                                    class="bg-gray-50 border border-gray-300 rounded-lg w-full p-2.5"></div>
+            <!-- Модальные окна -->
+            <dialog id="debt-modal" class="p-0 rounded-lg shadow-xl w-full max-w-md">
+                <div class="p-6">
+                    <h3 id="debt-modal-title" class="text-xl font-semibold mb-4" data-i18n="addDebt"></h3>
+                    <form id="debt-form" data-original-paid="0"><input type="hidden" id="debt-id">
+                        <div class="mb-4"><label for="debt-name" class="block mb-2 text-sm font-medium"
+                                data-i18n="debtorName">Имя должника/Название</label><input type="text" id="debt-name"
+                                class="bg-gray-50 border border-gray-300 rounded-lg w-full p-2.5" required></div>
+                        <div class="mb-4"><label for="debt-total" class="block mb-2 text-sm font-medium"><span
+                                    data-i18n="totalAmount"></span> (<span
+                                    class="currency-symbol">AZN</span>)</label><input type="number" id="debt-total"
+                                step="0.01" class="bg-gray-50 border border-gray-300 rounded-lg w-full p-2.5" required>
                         </div>
-                    </div>
-                    <div id="event-fields-wedding" class="event-category-fields hidden">
-                        <div class="mb-4"><label for="event-wedding-names" class="block mb-2 text-sm font-medium"
-                                data-i18n="weddingNames">Имена пары</label><input type="text" id="event-wedding-names"
-                                class="bg-gray-50 border border-gray-300 rounded-lg w-full p-2.5"></div>
-                    </div>
-                    <div class="mb-4"><label for="event-date" class="block mb-2 text-sm font-medium"
-                            data-i18n="date">Дата</label><input type="date" id="event-date"
-                            class="bg-gray-50 border border-gray-300 rounded-lg w-full p-2.5" required></div>
-                    <div class="flex items-center mb-4"><input id="event-create-task" type="checkbox" checked
-                            class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"><label
-                            for="event-create-task" class="ml-2 text-sm font-medium text-gray-900"
-                            data-i18n="createTaskForEvent">Создать задачу для этого события</label></div>
-                    <div class="flex justify-between items-center mt-6"><button type="button" id="delete-event-btn"
-                            class="text-red-600 hover:text-red-800 hidden" data-i18n="delete">Удалить</button>
-                        <div class="flex justify-end gap-4"><button type="button"
+                        <div class="mb-4"><label for="debt-paid" class="block mb-2 text-sm font-medium"><span
+                                    data-i18n="paidAmount"></span> (<span
+                                    class="currency-symbol">AZN</span>)</label><input type="number" id="debt-paid"
+                                step="0.01" class="bg-gray-50 border border-gray-300 rounded-lg w-full p-2.5" required
+                                value="0"></div>
+                        <div class="mb-4"><label for="debt-comment" class="block mb-2 text-sm font-medium"
+                                data-i18n="comment">Комментарий</label><textarea id="debt-comment" rows="3"
+                                class="bg-gray-50 border border-gray-300 rounded-lg w-full p-2.5"></textarea></div>
+                        <div class="flex justify-end gap-4 mt-6"><button type="button"
                                 class="cancel-btn text-gray-600 hover:text-gray-900"
                                 data-i18n="cancel">Отмена</button><button type="submit"
                                 class="bg-blue-600 text-white px-5 py-2.5 rounded-lg hover:bg-blue-700"
                                 data-i18n="save">Сохранить</button></div>
+                    </form>
+                </div>
+            </dialog>
+            <dialog id="debt-payment-modal" class="p-0 rounded-lg shadow-xl w-full max-w-md">
+                <div class="p-6">
+                    <h3 class="text-xl font-semibold mb-4" data-i18n="addDebtPayment">Добавить платеж по долгу</h3>
+                    <form id="debt-payment-form"><input type="hidden" id="debt-payment-id">
+                        <div class="mb-4"><label for="debt-payment-amount" class="block mb-2 text-sm font-medium"><span
+                                    data-i18n="paymentAmount"></span>
+                                (<span class="currency-symbol">AZN</span>)</label><input type="number"
+                                id="debt-payment-amount" step="0.01"
+                                class="bg-gray-50 border border-gray-300 rounded-lg w-full p-2.5" required>
+                        </div>
+                        <div class="flex justify-end gap-4 mt-6"><button type="button"
+                                class="cancel-btn text-gray-600 hover:text-gray-900"
+                                data-i18n="cancel">Отмена</button><button type="submit"
+                                class="bg-blue-600 text-white px-5 py-2.5 rounded-lg hover:bg-blue-700"
+                                data-i18n="add">Добавить</button></div>
+                    </form>
+                </div>
+            </dialog>
+            <dialog id="recurring-expense-modal" class="p-0 rounded-lg shadow-xl w-full max-w-md">
+                <div class="p-6">
+                    <h3 id="recurring-expense-modal-title" class="text-xl font-semibold mb-4" data-i18n="addTemplate">
+                    </h3>
+                    <form id="recurring-expense-form"><input type="hidden" id="recurring-expense-id">
+                        <div class="mb-4"><label for="recurring-expense-name" class="block mb-2 text-sm font-medium"
+                                data-i18n="name">Наименование</label><input type="text" id="recurring-expense-name"
+                                class="bg-gray-50 border border-gray-300 rounded-lg w-full p-2.5" required></div>
+                        <div class="mb-4"><label for="recurring-expense-amount"
+                                class="block mb-2 text-sm font-medium"><span data-i18n="amount"></span> (<span
+                                    class="currency-symbol">AZN</span>)</label><input type="number"
+                                id="recurring-expense-amount" step="0.01"
+                                class="bg-gray-50 border border-gray-300 rounded-lg w-full p-2.5" required></div>
+                        <div class="mb-4"><label for="recurring-expense-due-day" class="block mb-2 text-sm font-medium"
+                                data-i18n="paymentDayNum">День оплаты
+                                (1-31)</label><input type="number" id="recurring-expense-due-day" min="1" max="31"
+                                class="bg-gray-50 border border-gray-300 rounded-lg w-full p-2.5" required></div>
+                        <div class="mb-4"><label for="recurring-expense-details" class="block mb-2 text-sm font-medium"
+                                data-i18n="details">Детали</label><textarea id="recurring-expense-details" rows="3"
+                                class="bg-gray-50 border border-gray-300 rounded-lg w-full p-2.5"></textarea></div>
+                        <div class="flex justify-end gap-4 mt-6"><button type="button"
+                                class="cancel-btn text-gray-600 hover:text-gray-900"
+                                data-i18n="cancel">Отмена</button><button type="submit"
+                                class="bg-blue-600 text-white px-5 py-2.5 rounded-lg hover:bg-blue-700"
+                                data-i18n="save">Сохранить</button></div>
+                    </form>
+                </div>
+            </dialog>
+            <dialog id="expense-modal" class="p-0 rounded-lg shadow-xl w-full max-w-md">
+                <div class="p-6">
+                    <h3 id="expense-modal-title" class="text-xl font-semibold mb-4" data-i18n="addExpense"></h3>
+                    <form id="expense-form"><input type="hidden" id="expense-id">
+                        <div class="mb-4"><label for="expense-name" class="block mb-2 text-sm font-medium"
+                                data-i18n="name">Наименование</label><input type="text" id="expense-name"
+                                class="bg-gray-50 border border-gray-300 rounded-lg w-full p-2.5" required></div>
+                        <div class="mb-4"><label for="expense-category" class="block mb-2 text-sm font-medium"
+                                data-i18n="category">Категория</label><input type="text" id="expense-category"
+                                list="expense-categories-list"
+                                class="bg-gray-50 border border-gray-300 rounded-lg w-full p-2.5" required><datalist
+                                id="expense-categories-list"></datalist></div>
+                        <div class="mb-4"><label for="expense-amount" class="block mb-2 text-sm font-medium"><span
+                                    data-i18n="amount"></span> (<span class="currency-symbol">AZN</span>)</label><input
+                                type="number" id="expense-amount" step="0.01"
+                                class="bg-gray-50 border border-gray-300 rounded-lg w-full p-2.5" required></div>
+                        <div class="mb-4"><label for="expense-date" class="block mb-2 text-sm font-medium"
+                                data-i18n="date">Дата</label><input type="date" id="expense-date"
+                                class="bg-gray-50 border border-gray-300 rounded-lg w-full p-2.5" required></div>
+                        <div class="flex justify-end gap-4 mt-6"><button type="button"
+                                class="cancel-btn text-gray-600 hover:text-gray-900"
+                                data-i18n="cancel">Отмена</button><button type="submit"
+                                class="bg-blue-600 text-white px-5 py-2.5 rounded-lg hover:bg-blue-700"
+                                data-i18n="save">Сохранить</button></div>
+                    </form>
+                </div>
+            </dialog>
+            <dialog id="daily-task-modal" class="p-0 rounded-lg shadow-xl w-full max-w-md">
+                <div class="p-6">
+                    <h3 id="daily-task-modal-title" class="text-xl font-semibold mb-4"></h3>
+                    <form id="daily-task-form"><input type="hidden" id="daily-task-id">
+                        <div class="mb-4"><label for="daily-task-name" class="block mb-2 text-sm font-medium"
+                                data-i18n="name">Имя</label><input type="text" id="daily-task-name"
+                                class="bg-gray-50 border border-gray-300 rounded-lg w-full p-2.5" required></div>
+                        <div class="mb-4"><label for="daily-task-notes" class="block mb-2 text-sm font-medium"
+                                data-i18n="notes">Заметки</label><textarea id="daily-task-notes" rows="3"
+                                class="bg-gray-50 border border-gray-300 rounded-lg w-full p-2.5"></textarea></div>
+                        <div class="flex justify-end gap-4 mt-6"><button type="button"
+                                class="cancel-btn text-gray-600 hover:text-gray-900"
+                                data-i18n="cancel">Отмена</button><button type="submit"
+                                class="bg-blue-600 text-white px-5 py-2.5 rounded-lg hover:bg-blue-700"
+                                data-i18n="save">Сохранить</button></div>
+                    </form>
+                </div>
+            </dialog>
+            <dialog id="monthly-task-modal" class="p-0 rounded-lg shadow-xl w-full max-w-md">
+                <div class="p-6">
+                    <h3 id="monthly-task-modal-title" class="text-xl font-semibold mb-4"></h3>
+                    <form id="monthly-task-form"><input type="hidden" id="monthly-task-id">
+                        <div class="mb-4"><label for="monthly-task-name" class="block mb-2 text-sm font-medium"
+                                data-i18n="name">Имя</label><input type="text" id="monthly-task-name"
+                                class="bg-gray-50 border border-gray-300 rounded-lg w-full p-2.5" required></div>
+                        <div class="mb-4"><label for="monthly-task-deadline" class="block mb-2 text-sm font-medium"
+                                data-i18n="deadline">Дедлайн</label><input type="date" id="monthly-task-deadline"
+                                class="bg-gray-50 border border-gray-300 rounded-lg w-full p-2.5" required></div>
+                        <div class="flex justify-end gap-4 mt-6"><button type="button"
+                                class="cancel-btn text-gray-600 hover:text-gray-900"
+                                data-i18n="cancel">Отмена</button><button type="submit"
+                                class="bg-blue-600 text-white px-5 py-2.5 rounded-lg hover:bg-blue-700"
+                                data-i18n="save">Сохранить</button></div>
+                    </form>
+                </div>
+            </dialog>
+            <dialog id="yearly-task-modal" class="p-0 rounded-lg shadow-xl w-full max-w-md">
+                <div class="p-6">
+                    <h3 id="yearly-task-modal-title" class="text-xl font-semibold mb-4"></h3>
+                    <form id="yearly-task-form"><input type="hidden" id="yearly-task-id">
+                        <div class="mb-4"><label for="yearly-task-name" class="block mb-2 text-sm font-medium"
+                                data-i18n="name">Имя</label><input type="text" id="yearly-task-name"
+                                class="bg-gray-50 border border-gray-300 rounded-lg w-full p-2.5" required></div>
+                        <div class="mb-4"><label for="yearly-task-deadline" class="block mb-2 text-sm font-medium"
+                                data-i18n="deadline">Дедлайн</label><input type="date" id="yearly-task-deadline"
+                                class="bg-gray-50 border border-gray-300 rounded-lg w-full p-2.5" required></div>
+                        <div class="mb-4"><label for="yearly-task-notes" class="block mb-2 text-sm font-medium"
+                                data-i18n="notes">Заметки</label><textarea id="yearly-task-notes" rows="3"
+                                class="bg-gray-50 border border-gray-300 rounded-lg w-full p-2.5"></textarea></div>
+                        <div class="flex justify-end gap-4 mt-6"><button type="button"
+                                class="cancel-btn text-gray-600 hover:text-gray-900"
+                                data-i18n="cancel">Отмена</button><button type="submit"
+                                class="bg-blue-600 text-white px-5 py-2.5 rounded-lg hover:bg-blue-700"
+                                data-i18n="save">Сохранить</button></div>
+                    </form>
+                </div>
+            </dialog>
+            <dialog id="event-modal" class="p-0 rounded-lg shadow-xl w-full max-w-md">
+                <div class="p-6">
+                    <h3 id="event-modal-title" class="text-xl font-semibold mb-4"></h3>
+                    <form id="event-form"><input type="hidden" id="event-id">
+                        <div class="mb-4"><label for="event-category" class="block mb-2 text-sm font-medium"
+                                data-i18n="category">Категория</label><select id="event-category"
+                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                                <option value="event" data-i18n="categoryEvent">Событие</option>
+                                <option value="birthday" data-i18n="categoryBirthday">День рождения</option>
+                                <option value="meeting" data-i18n="categoryMeeting">Встреча</option>
+                                <option value="wedding" data-i18n="categoryWedding">Свадьба</option>
+                            </select></div>
+                        <div id="event-fields-event" class="event-category-fields">
+                            <div class="mb-4"><label for="event-name-generic" class="block mb-2 text-sm font-medium"
+                                    data-i18n="eventName">Название события</label><input type="text"
+                                    id="event-name-generic"
+                                    class="bg-gray-50 border border-gray-300 rounded-lg w-full p-2.5"></div>
+                        </div>
+                        <div id="event-fields-birthday" class="event-category-fields hidden">
+                            <div class="mb-4"><label for="event-birthday-name" class="block mb-2 text-sm font-medium"
+                                    data-i18n="birthdayName">Имя
+                                    именинника</label><input type="text" id="event-birthday-name"
+                                    class="bg-gray-50 border border-gray-300 rounded-lg w-full p-2.5"></div>
+                            <div class="mb-4"><label for="event-birthday-year" class="block mb-2 text-sm font-medium"
+                                    data-i18n="birthYear">Год рождения
+                                    (опционально)</label><input type="number" id="event-birthday-year"
+                                    data-placeholder-i18n="placeholderBirthYear"
+                                    class="bg-gray-50 border border-gray-300 rounded-lg w-full p-2.5"></div>
+                        </div>
+                        <div id="event-fields-meeting" class="event-category-fields hidden">
+                            <div class="mb-4"><label for="event-meeting-with" class="block mb-2 text-sm font-medium"
+                                    data-i18n="meetingWith">С кем</label><input type="text" id="event-meeting-with"
+                                    class="bg-gray-50 border border-gray-300 rounded-lg w-full p-2.5"></div>
+                            <div class="grid grid-cols-2 gap-4">
+                                <div><label for="event-meeting-time" class="block mb-2 text-sm font-medium"
+                                        data-i18n="time">Время (опц.)</label><input type="time" id="event-meeting-time"
+                                        class="bg-gray-50 border border-gray-300 rounded-lg w-full p-2.5"></div>
+                                <div><label for="event-meeting-place" class="block mb-2 text-sm font-medium"
+                                        data-i18n="place">Место (опц.)</label><input type="text"
+                                        id="event-meeting-place"
+                                        class="bg-gray-50 border border-gray-300 rounded-lg w-full p-2.5"></div>
+                            </div>
+                        </div>
+                        <div id="event-fields-wedding" class="event-category-fields hidden">
+                            <div class="mb-4"><label for="event-wedding-names" class="block mb-2 text-sm font-medium"
+                                    data-i18n="weddingNames">Имена
+                                    пары</label><input type="text" id="event-wedding-names"
+                                    class="bg-gray-50 border border-gray-300 rounded-lg w-full p-2.5"></div>
+                        </div>
+                        <div class="mb-4"><label for="event-date" class="block mb-2 text-sm font-medium"
+                                data-i18n="date">Дата</label><input type="date" id="event-date"
+                                class="bg-gray-50 border border-gray-300 rounded-lg w-full p-2.5" required></div>
+                        <div class="flex items-center mb-4"><input id="event-create-task" type="checkbox" checked
+                                class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"><label
+                                for="event-create-task" class="ml-2 text-sm font-medium text-gray-900"
+                                data-i18n="createTaskForEvent">Создать задачу для этого события</label></div>
+                        <div class="flex justify-between items-center mt-6"><button type="button" id="delete-event-btn"
+                                class="text-red-600 hover:text-red-800 hidden" data-i18n="delete">Удалить</button>
+                            <div class="flex justify-end gap-4"><button type="button"
+                                    class="cancel-btn text-gray-600 hover:text-gray-900"
+                                    data-i18n="cancel">Отмена</button><button type="submit"
+                                    class="bg-blue-600 text-white px-5 py-2.5 rounded-lg hover:bg-blue-700"
+                                    data-i18n="save">Сохранить</button></div>
+                        </div>
+                    </form>
+                </div>
+            </dialog>
+            <dialog id="category-modal" class="p-0 rounded-lg shadow-xl w-full max-w-md">
+                <div class="p-6">
+                    <h3 class="text-xl font-semibold mb-4" data-i18n="manageCategoriesTitle">Управление категориями
+                    </h3>
+                    <form id="category-form" class="mb-4">
+                        <div class="flex gap-2"><input type="text" id="category-name"
+                                data-placeholder-i18n="placeholderNewCategory"
+                                class="flex-grow bg-gray-50 border border-gray-300 rounded-lg w-full p-2.5"
+                                required><button type="submit"
+                                class="bg-blue-600 text-white px-5 py-2.5 rounded-lg hover:bg-blue-700"
+                                data-i18n="add">Добавить</button></div>
+                    </form>
+                    <div id="category-list" class="space-y-2 max-h-60 overflow-y-auto"></div>
+                    <div class="flex justify-end mt-6"><button type="button"
+                            class="cancel-btn text-gray-600 hover:text-gray-900" data-i18n="close">Закрыть</button>
                     </div>
-                </form>
-            </div>
-        </dialog>
-        <dialog id="category-modal" class="p-0 rounded-lg shadow-xl w-full max-w-md">
-            <div class="p-6">
-                <h3 class="text-xl font-semibold mb-4" data-i18n="manageCategoriesTitle">Управление категориями</h3>
-                <form id="category-form" class="mb-4">
-                    <div class="flex gap-2"><input type="text" id="category-name"
-                            data-placeholder-i18n="placeholderNewCategory"
-                            class="flex-grow bg-gray-50 border border-gray-300 rounded-lg w-full p-2.5" required><button
-                            type="submit" class="bg-blue-600 text-white px-5 py-2.5 rounded-lg hover:bg-blue-700"
-                            data-i18n="add">Добавить</button></div>
-                </form>
-                <div id="category-list" class="space-y-2 max-h-60 overflow-y-auto"></div>
-                <div class="flex justify-end mt-6"><button type="button"
-                        class="cancel-btn text-gray-600 hover:text-gray-900" data-i18n="close">Закрыть</button></div>
-            </div>
-        </dialog>
+                </div>
+            </dialog>
 
-        <!-- Calculator Modal -->
-        <dialog id="calculator-modal" class="p-0 rounded-lg shadow-xl w-full max-w-sm">
-            <div class="p-6">
-                <h3 class="text-xl font-semibold mb-4">Калькулятор</h3>
-                <div class="mb-3"><input id="calc-display" type="text"
-                        class="bg-gray-50 border border-gray-300 rounded-lg w-full p-2.5 text-right font-mono" readonly>
-                </div>
-                <div class="grid grid-cols-4 gap-2">
-                    <button class="calc-btn bg-gray-200 rounded-lg p-2" data-val="7">7</button>
-                    <button class="calc-btn bg-gray-200 rounded-lg p-2" data-val="8">8</button>
-                    <button class="calc-btn bg-gray-200 rounded-lg p-2" data-val="9">9</button>
-                    <button class="calc-op bg-blue-600 text-white rounded-lg p-2" data-op="/">÷</button>
-                    <button class="calc-btn bg-gray-200 rounded-lg p-2" data-val="4">4</button>
-                    <button class="calc-btn bg-gray-200 rounded-lg p-2" data-val="5">5</button>
-                    <button class="calc-btn bg-gray-200 rounded-lg p-2" data-val="6">6</button>
-                    <button class="calc-op bg-blue-600 text-white rounded-lg p-2" data-op="*">×</button>
-                    <button class="calc-btn bg-gray-200 rounded-lg p-2" data-val="1">1</button>
-                    <button class="calc-btn bg-gray-200 rounded-lg p-2" data-val="2">2</button>
-                    <button class="calc-btn bg-gray-200 rounded-lg p-2" data-val="3">3</button>
-                    <button class="calc-op bg-blue-600 text-white rounded-lg p-2" data-op="-">−</button>
-                    <button class="calc-btn bg-gray-200 rounded-lg p-2" data-val="0">0</button>
-                    <button class="calc-btn bg-gray-200 rounded-lg p-2" data-val="," disabled>,</button>
-                    <button class="calc-btn bg-gray-200 rounded-lg p-2" data-val=".">.</button>
-                    <button class="calc-op bg-blue-600 text-white rounded-lg p-2" data-op="+">+</button>
-                </div>
-                <div class="grid grid-cols-3 gap-2 mt-3">
-                    <button id="calc-clear" class="bg-red-600 text-white rounded-lg p-2">C</button>
-                    <button id="calc-back" class="bg-gray-300 rounded-lg p-2">⌫</button>
-                    <button id="calc-eq" class="bg-green-600 text-white rounded-lg p-2">=</button>
-                </div>
-                <div class="flex justify-end gap-4 mt-6"><button type="button"
-                        class="cancel-btn text-gray-600 hover:text-gray-900">Закрыть</button></div>
-            </div>
-        </dialog>
-
-        <!-- Shopping List Modal -->
-        <dialog id="shopping-list-modal" class="p-0 rounded-lg shadow-xl w-full max-w-md">
-            <div class="p-6">
-                <h3 class="text-xl font-semibold mb-4">Список покупок</h3>
-                <form id="shopping-form" class="mb-4">
-                    <div class="grid grid-cols-3 gap-2">
-                        <input type="text" id="shop-name" placeholder="Наименование"
-                            class="bg-gray-50 border border-gray-300 rounded-lg w-full p-2.5" required>
-                        <input type="number" id="shop-qty" placeholder="Кол-во" min="1"
-                            class="bg-gray-50 border border-gray-300 rounded-lg w-full p-2.5" required>
-                        <button type="submit" class="bg-blue-600 text-white px-4 rounded-lg">Добавить</button>
+            <!-- Calculator Modal -->
+            <dialog id="calculator-modal" class="p-0 rounded-lg shadow-xl w-full max-w-sm">
+                <div class="p-6">
+                    <h3 class="text-xl font-semibold mb-4">Калькулятор</h3>
+                    <div class="mb-3"><input id="calc-display" type="text"
+                            class="bg-gray-50 border border-gray-300 rounded-lg w-full p-2.5 text-right font-mono"
+                            readonly>
                     </div>
-                </form>
-                <div id="shopping-list" class="space-y-2 max-h-64 overflow-y-auto"></div>
-                <p class="text-xs text-gray-500 mt-2">Купленные позиции исчезают из списка. Остальные сохраняются.</p>
-                <div class="flex justify-end gap-4 mt-6"><button type="button"
-                        class="cancel-btn text-gray-600 hover:text-gray-900">Закрыть</button></div>
-            </div>
-        </dialog>
+                    <div class="grid grid-cols-4 gap-2">
+                        <button class="calc-btn bg-gray-200 rounded-lg p-2" data-val="7">7</button>
+                        <button class="calc-btn bg-gray-200 rounded-lg p-2" data-val="8">8</button>
+                        <button class="calc-btn bg-gray-200 rounded-lg p-2" data-val="9">9</button>
+                        <button class="calc-op bg-blue-600 text-white rounded-lg p-2" data-op="/">÷</button>
+                        <button class="calc-btn bg-gray-200 rounded-lg p-2" data-val="4">4</button>
+                        <button class="calc-btn bg-gray-200 rounded-lg p-2" data-val="5">5</button>
+                        <button class="calc-btn bg-gray-200 rounded-lg p-2" data-val="6">6</button>
+                        <button class="calc-op bg-blue-600 text-white rounded-lg p-2" data-op="*">×</button>
+                        <button class="calc-btn bg-gray-200 rounded-lg p-2" data-val="1">1</button>
+                        <button class="calc-btn bg-gray-200 rounded-lg p-2" data-val="2">2</button>
+                        <button class="calc-btn bg-gray-200 rounded-lg p-2" data-val="3">3</button>
+                        <button class="calc-op bg-blue-600 text-white rounded-lg p-2" data-op="-">−</button>
+                        <button class="calc-btn bg-gray-200 rounded-lg p-2" data-val="0">0</button>
+                        <button class="calc-btn bg-gray-200 rounded-lg p-2" data-val="," disabled>,</button>
+                        <button class="calc-btn bg-gray-200 rounded-lg p-2" data-val=".">.</button>
+                        <button class="calc-op bg-blue-600 text-white rounded-lg p-2" data-op="+">+</button>
+                    </div>
+                    <div class="grid grid-cols-3 gap-2 mt-3">
+                        <button id="calc-clear" class="bg-red-600 text-white rounded-lg p-2">C</button>
+                        <button id="calc-back" class="bg-gray-300 rounded-lg p-2">⌫</button>
+                        <button id="calc-eq" class="bg-green-600 text-white rounded-lg p-2">=</button>
+                    </div>
+                    <div class="flex justify-end gap-4 mt-6"><button type="button"
+                            class="cancel-btn text-gray-600 hover:text-gray-900">Закрыть</button></div>
+                </div>
+            </dialog>
 
-        <!-- Custom Confirm Modal -->
-        <dialog id="confirm-modal" class="p-0 rounded-lg shadow-xl w-full max-w-sm">
-            <div class="p-6 text-center">
-                <svg class="mx-auto mb-4 text-gray-400 w-12 h-12" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
-                    fill="none" viewBox="0 0 20 20">
-                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M10 11V6m0 8h.01M19 10a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
-                </svg>
-                <p id="confirm-modal-text" class="mb-5 text-lg font-normal text-gray-600"></p>
-                <button id="confirm-modal-yes" type="button" data-i18n="confirmYes"
-                    class="text-white bg-red-600 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center me-2">
-                    Да, удалить
-                </button>
-                <button id="confirm-modal-no" type="button" data-i18n="confirmNo"
-                    class="text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-200 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10">
-                    Нет, отмена
-                </button>
-            </div>
-        </dialog>
+            <!-- Shopping List Modal -->
+            <dialog id="shopping-list-modal" class="p-0 rounded-lg shadow-xl w-full max-w-md">
+                <div class="p-6">
+                    <h3 class="text-xl font-semibold mb-4">Список покупок</h3>
+                    <form id="shopping-form" class="mb-4">
+                        <div class="grid grid-cols-3 gap-2">
+                            <input type="text" id="shop-name" placeholder="Наименование"
+                                class="bg-gray-50 border border-gray-300 rounded-lg w-full p-2.5" required>
+                            <input type="number" id="shop-qty" placeholder="Кол-во" min="1"
+                                class="bg-gray-50 border border-gray-300 rounded-lg w-full p-2.5" required>
+                            <button type="submit" class="bg-blue-600 text-white px-4 rounded-lg">Добавить</button>
+                        </div>
+                    </form>
+                    <div id="shopping-list" class="space-y-2 max-h-64 overflow-y-auto"></div>
+                    <p class="text-xs text-gray-500 mt-2">Купленные позиции исчезают из списка. Остальные
+                        сохраняются.</p>
+                    <div class="flex justify-end gap-4 mt-6"><button type="button"
+                            class="cancel-btn text-gray-600 hover:text-gray-900">Закрыть</button></div>
+                </div>
+            </dialog>
 
-        <!-- Toast Container -->
-        <div id="toast-container"></div>
-        <script>
-            if ('serviceWorker' in navigator && location.hostname === 'localhost') {
-                navigator.serviceWorker.getRegistrations().then(rs => rs.forEach(r => r.unregister())).catch(() => { });
-                if ('caches' in window) {
-                    caches.keys().then(keys => Promise.all(keys.map(k => caches.delete(k)))).catch(() => { });
+            <!-- Custom Confirm Modal -->
+            <dialog id="confirm-modal" class="p-0 rounded-lg shadow-xl w-full max-w-sm">
+                <div class="p-6 text-center">
+                    <svg class="mx-auto mb-4 text-gray-400 w-12 h-12" aria-hidden="true"
+                        xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M10 11V6m0 8h.01M19 10a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                    </svg>
+                    <p id="confirm-modal-text" class="mb-5 text-lg font-normal text-gray-600"></p>
+                    <button id="confirm-modal-yes" type="button" data-i18n="confirmYes"
+                        class="text-white bg-red-600 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center me-2">
+                        Да, удалить
+                    </button>
+                    <button id="confirm-modal-no" type="button" data-i18n="confirmNo"
+                        class="text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-200 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10">
+                        Нет, отмена
+                    </button>
+                </div>
+            </dialog>
+
+            <!-- Toast Container -->
+            <div id="toast-container"></div>
+            <script>
+                if ('serviceWorker' in navigator && location.hostname === 'localhost') {
+                    navigator.serviceWorker.getRegistrations().then(rs => rs.forEach(r => r.unregister())).catch(() => { });
+                    if ('caches' in window) {
+                        caches.keys().then(keys => Promise.all(keys.map(k => caches.delete(k)))).catch(() => { });
+                    }
                 }
-            }
-        </script>
-        <script type="module" src="/src/main.js"></script>
-        <!-- Font Awesome - безопасная загрузка -->
-        <!-- External scripts are now loaded via src/main.js -->
+            </script>
+            <script type="module" src="./src/main.js"></script>
+            <!-- Font Awesome - безопасная загрузка -->
+            <!-- External scripts are now loaded via src/main.js -->
     </body>
 
 </html>

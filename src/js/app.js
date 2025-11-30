@@ -136,10 +136,16 @@ const createEmptyState = (messageKey) => `
 
 // Utility function to handle empty state rendering
 const handleEmptyState = (tableWrapper, emptyState, messageKey) => {
+     console.log('handleEmptyState called for:', messageKey);
      if (tableWrapper) tableWrapper.classList.add('hidden');
      if (emptyState) {
+          const msg = translations[currentLang][messageKey];
+          console.log('Message for key:', messageKey, 'is:', msg);
           emptyState.innerHTML = createEmptyState(messageKey);
           emptyState.classList.remove('hidden');
+          console.log('emptyState classes:', emptyState.classList.toString());
+     } else {
+          console.error('emptyState element not found');
      }
 };
 
@@ -244,6 +250,7 @@ const setupCollections = () => {
 };
 
 const attachListeners = () => {
+     console.log('attachListeners called. userId:', userId);
      if (!userId || !currentMonthId || !selectedMonthId) return;
      detachListeners();
 
@@ -347,42 +354,49 @@ const renderMonthSelector = (months) => {
 // ============================================================================
 
 const renderDebts = (docs) => {
+     console.log('renderDebts called with docs:', docs.length);
      if (!userId) return;
      const tableWrapper = document.getElementById('debts-table-wrapper');
      const tableBody = document.getElementById('debts-table');
      const emptyState = document.getElementById('debts-empty');
 
-     if (docs.length === 0) {
+     if (!docs || docs.length === 0) {
           handleEmptyState(tableWrapper, emptyState, 'emptyDebts');
           return;
      }
 
      handleNonEmptyState(tableWrapper, emptyState);
      if (tableBody) {
-          tableBody.innerHTML = docs.map((doc) => {
-               const debt = doc.data();
-               const id = doc.id;
-               const remaining = (debt.totalAmount || 0) - (debt.paidAmount || 0);
-               const colorClass = remaining <= 0 ? 'text-green-600' : (debt.paidAmount > 0 ? 'text-yellow-600' : 'text-red-600');
-               const lastPaymentDate = debt.lastPaymentDate ? formatISODateForDisplay(debt.lastPaymentDate.toDate().toISOString().split('T')[0]) : '—';
+          try {
+               tableBody.innerHTML = docs.map((doc) => {
+                    const debt = doc.data();
+                    if (!debt) return '';
+                    const id = doc.id;
+                    const remaining = (debt.totalAmount || 0) - (debt.paidAmount || 0);
+                    const colorClass = remaining <= 0 ? 'text-green-600' : (debt.paidAmount > 0 ? 'text-yellow-600' : 'text-red-600');
+                    const lastPaymentDate = debt.lastPaymentDate ? formatISODateForDisplay(debt.lastPaymentDate.toDate().toISOString().split('T')[0]) : '—';
 
-               return `
+                    return `
                 <tr class="border-b hover:bg-gray-50 md:border-b-0 dark:hover:bg-gray-700 dark:border-gray-700">
-                    <td data-label="${translations[currentLang].debtName}" class="font-medium">${debt.name}</td>
-                    <td data-label="${translations[currentLang].amount}">${formatCurrency(debt.totalAmount)}</td>
-                    <td data-label="${translations[currentLang].paid}">${formatCurrency(debt.paidAmount)}</td>
-                    <td data-label="${translations[currentLang].remaining}" class="font-bold ${colorClass}">${formatCurrency(remaining)}</td>
-                    <td data-label="${translations[currentLang].lastPaymentDate}">${lastPaymentDate}</td>
-                    <td data-label="${translations[currentLang].comments}">
-                        <input type="text" class="editable-debt-comment bg-transparent w-full p-1 border-b border-transparent focus:border-blue-500 outline-none" data-id="${id}" value="${debt.comment || ''}" placeholder="${translations[currentLang].placeholderComment}">
+                    <td data-label="${translations[currentLang]?.debtName || 'Debt Name'}" class="font-medium">${debt.name || '—'}</td>
+                    <td data-label="${translations[currentLang]?.amount || 'Amount'}">${formatCurrency(debt.totalAmount)}</td>
+                    <td data-label="${translations[currentLang]?.paid || 'Paid'}">${formatCurrency(debt.paidAmount)}</td>
+                    <td data-label="${translations[currentLang]?.remaining || 'Remaining'}" class="font-bold ${colorClass}">${formatCurrency(remaining)}</td>
+                    <td data-label="${translations[currentLang]?.lastPaymentDate || 'Last Payment'}">${lastPaymentDate}</td>
+                    <td data-label="${translations[currentLang]?.comments || 'Comments'}">
+                        <input type="text" class="editable-debt-comment bg-transparent w-full p-1 border-b border-transparent focus:border-blue-500 outline-none" data-id="${id}" value="${debt.comment || ''}" placeholder="${translations[currentLang]?.placeholderComment || 'Comment'}">
                     </td>
-                    <td data-label="${translations[currentLang].actions}" class="flex gap-2">
-                        <button data-id="${id}" class="add-debt-payment-btn text-green-600 hover:text-green-800" title="${translations[currentLang].addDebtPayment}">➕</button>
-                        <button data-id="${id}" class="edit-debt-btn text-blue-600 hover:text-blue-800" title="${translations[currentLang].editDebt}">✏️</button>
-                        <button data-id="${id}" class="delete-debt-btn text-red-600 hover:text-red-800" title="${translations[currentLang].delete}">🗑️</button>
+                    <td data-label="${translations[currentLang]?.actions || 'Actions'}" class="flex gap-2">
+                        <button data-id="${id}" class="add-debt-payment-btn text-green-600 hover:text-green-800" title="${translations[currentLang]?.addDebtPayment || 'Add Payment'}">➕</button>
+                        <button data-id="${id}" class="edit-debt-btn text-blue-600 hover:text-blue-800" title="${translations[currentLang]?.editDebt || 'Edit'}">✏️</button>
+                        <button data-id="${id}" class="delete-debt-btn text-red-600 hover:text-red-800" title="${translations[currentLang]?.delete || 'Delete'}">🗑️</button>
                     </td>
                 </tr>`;
-          }).join('');
+               }).join('');
+          } catch (e) {
+               logger.error('Error rendering debts:', e);
+               handleEmptyState(tableWrapper, emptyState, 'errorLoadingData');
+          }
      }
 };
 
@@ -392,7 +406,7 @@ const renderRecurringExpenses = () => {
      const tableBody = document.getElementById('recurring-expenses-table');
      const emptyState = document.getElementById('recurring-expenses-empty');
 
-     if (allRecurringTemplates.length === 0) {
+     if (!allRecurringTemplates || allRecurringTemplates.length === 0) {
           handleEmptyState(tableWrapper, emptyState, 'emptyRecurring');
           return;
      }
@@ -402,29 +416,35 @@ const renderRecurringExpenses = () => {
      const todayDay = new Date(`${getTodayISOString()}T00:00:00`).getDate();
 
      if (tableBody) {
-          tableBody.innerHTML = allRecurringTemplates.map((template) => {
-               const status = currentMonthStatuses[template.id] || translations.ru.unpaidStatus;
-               const isOverdue = status === translations.ru.unpaidStatus && template.dueDay < todayDay && selectedMonthId === currentMonthId;
-               const isPaid = status === translations.ru.paidStatus;
+          try {
+               tableBody.innerHTML = allRecurringTemplates.map((template) => {
+                    if (!template) return '';
+                    const status = currentMonthStatuses[template.id] || translations.ru.unpaidStatus;
+                    const isOverdue = status === translations.ru.unpaidStatus && template.dueDay < todayDay && selectedMonthId === currentMonthId;
+                    const isPaid = status === translations.ru.paidStatus;
 
-               return `
+                    return `
                 <tr class="border-b hover:bg-gray-50 ${isOverdue ? 'bg-red-50 dark:bg-red-900/20' : ''} md:border-b-0 dark:hover:bg-gray-700 dark:border-gray-700">
-                    <td data-label="${translations[currentLang].name}" class="font-medium">${template.name}</td>
-                    <td data-label="${translations[currentLang].amount}">${formatCurrency(template.amount)}</td>
-                    <td data-label="${translations[currentLang].paymentDay}">${template.dueDay || '—'}</td>
-                    <td data-label="${translations[currentLang].status}">
+                    <td data-label="${translations[currentLang]?.name || 'Name'}" class="font-medium">${template.name || '—'}</td>
+                    <td data-label="${translations[currentLang]?.amount || 'Amount'}">${formatCurrency(template.amount)}</td>
+                    <td data-label="${translations[currentLang]?.paymentDay || 'Day'}">${template.dueDay || '—'}</td>
+                    <td data-label="${translations[currentLang]?.status || 'Status'}">
                         <select data-id="${template.id}" class="recurring-status-select p-1 rounded-md border-0 ring-1 ring-inset ring-gray-300 ${isPaid ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}">
-                            <option value="${translations.ru.unpaidStatus}" ${!isPaid ? 'selected' : ''}>${translations[currentLang].unpaidStatus}</option>
-                            <option value="${translations.ru.paidStatus}" ${isPaid ? 'selected' : ''}>${translations[currentLang].paidStatus}</option>
+                            <option value="${translations.ru.unpaidStatus}" ${!isPaid ? 'selected' : ''}>${translations[currentLang]?.unpaidStatus || 'Unpaid'}</option>
+                            <option value="${translations.ru.paidStatus}" ${isPaid ? 'selected' : ''}>${translations[currentLang]?.paidStatus || 'Paid'}</option>
                         </select>
                     </td>
-                    <td data-label="${translations[currentLang].details}">${template.details || '—'}</td>
-                    <td data-label="${translations[currentLang].templateActions}" class="flex gap-2">
+                    <td data-label="${translations[currentLang]?.details || 'Details'}">${template.details || '—'}</td>
+                    <td data-label="${translations[currentLang]?.templateActions || 'Actions'}" class="flex gap-2">
                         <button data-id="${template.id}" class="edit-recurring-expense-btn text-blue-600 hover:text-blue-800">✏️</button>
                         <button data-id="${template.id}" class="delete-recurring-expense-btn text-red-600 hover:text-red-800">🗑️</button>
                     </td>
                 </tr>`;
-          }).join('');
+               }).join('');
+          } catch (e) {
+               logger.error('Error rendering recurring expenses:', e);
+               handleEmptyState(tableWrapper, emptyState, 'errorLoadingData');
+          }
      }
 };
 
@@ -434,7 +454,7 @@ const renderExpenses = (docs) => {
      const tableBody = document.getElementById('expenses-table');
      const emptyState = document.getElementById('expenses-empty');
 
-     if (docs.length === 0) {
+     if (!docs || docs.length === 0) {
           handleEmptyState(tableWrapper, emptyState, 'emptyExpenses');
           return;
      }
@@ -448,22 +468,28 @@ const renderExpenses = (docs) => {
      });
 
      if (tableBody) {
-          tableBody.innerHTML = sortedDocs.map((doc) => {
-               const expense = doc.data();
-               const id = doc.id;
-               const actionsHtml = (!expense.recurringExpenseId && !expense.debtPaymentId) ?
-                    `<button data-id="${id}" class="edit-expense-btn text-blue-600 hover:text-blue-800" title="${translations[currentLang].editExpense}">✏️</button>
-                 <button data-id="${id}" class="delete-expense-btn text-red-600 hover:text-red-800" title="${translations[currentLang].delete}">🗑️</button>` : '';
+          try {
+               tableBody.innerHTML = sortedDocs.map((doc) => {
+                    const expense = doc.data();
+                    if (!expense) return '';
+                    const id = doc.id;
+                    const actionsHtml = (!expense.recurringExpenseId && !expense.debtPaymentId) ?
+                         `<button data-id="${id}" class="edit-expense-btn text-blue-600 hover:text-blue-800" title="${translations[currentLang]?.editExpense || 'Edit'}">✏️</button>
+                 <button data-id="${id}" class="delete-expense-btn text-red-600 hover:text-red-800" title="${translations[currentLang]?.delete || 'Delete'}">🗑️</button>` : '';
 
-               return `
+                    return `
                 <tr class="border-b hover:bg-gray-50 md:border-b-0 dark:hover:bg-gray-700 dark:border-gray-700">
-                    <td data-label="${translations[currentLang].name}" class="font-medium">${expense.name}</td>
-                    <td data-label="${translations[currentLang].category}">${expense.category}</td>
-                    <td data-label="${translations[currentLang].amount}">${formatCurrency(expense.amount)}</td>
-                    <td data-label="${translations[currentLang].date}">${formatISODateForDisplay(expense.date)}</td>
-                    <td data-label="${translations[currentLang].actions}" class="flex gap-2">${actionsHtml}</td>
+                    <td data-label="${translations[currentLang]?.name || 'Name'}" class="font-medium">${expense.name || '—'}</td>
+                    <td data-label="${translations[currentLang]?.category || 'Category'}">${expense.category || '—'}</td>
+                    <td data-label="${translations[currentLang]?.amount || 'Amount'}">${formatCurrency(expense.amount)}</td>
+                    <td data-label="${translations[currentLang]?.date || 'Date'}">${formatISODateForDisplay(expense.date)}</td>
+                    <td data-label="${translations[currentLang]?.actions || 'Actions'}" class="flex gap-2">${actionsHtml}</td>
                 </tr>`;
-          }).join('');
+               }).join('');
+          } catch (e) {
+               logger.error('Error rendering expenses:', e);
+               handleEmptyState(tableWrapper, emptyState, 'errorLoadingData');
+          }
      }
 };
 

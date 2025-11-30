@@ -457,7 +457,12 @@ const renderNews = () => {
     }
 };
 
+let isNewsInitialized = false;
+
 export const initNews = () => {
+    if (isNewsInitialized) return;
+    isNewsInitialized = true;
+
     const categorySelect = document.getElementById('news-category');
     const searchInput = document.getElementById('news-search');
     const refreshBtn = document.getElementById('news-refresh');
