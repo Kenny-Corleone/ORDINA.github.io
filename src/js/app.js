@@ -10,7 +10,7 @@ import {
 import { logger, safeGet, $, $$, getCached, showToast } from './utils.js';
 import { translations, currentLang, loadTranslations, setLanguage, applyDynamicTranslations } from './i18n.js';
 import { initWeatherNew } from './weather.js';
-import { initNews } from './news.js';
+import { initNews } from './news.js?v=2.2.1';
 
 // ============================================================================
 // STATE MANAGEMENT
@@ -160,6 +160,7 @@ const handleNonEmptyState = (tableWrapper, emptyState) => {
 // ============================================================================
 
 export async function initApp() {
+     console.log('ORDINA App Initializing - Version 2.2.3 (Fixes Applied)');
      await loadTranslations();
 
      // Auth Listener
@@ -716,8 +717,32 @@ function updateDashboard() {
 
      renderChart();
      updateRecentActivity();
-     renderDashboardTasks();
+     if (typeof renderDashboardTasks === 'function') {
+          renderDashboardTasks(dailyTasks);
+     } else {
+          console.warn('renderDashboardTasks function missing in this build');
+     }
      updateDashboardClock();
+}
+
+function renderDashboardTasks(tasks) {
+     const list = document.getElementById('dashboard-tasks-list-top');
+     if (!list) return;
+
+     // Filter tasks that are not 'Done'
+     const activeTasks = (tasks || []).filter(t => t.status !== (translations['ru']?.statusDone || 'Выполнено'));
+
+     if (activeTasks.length === 0) {
+          list.innerHTML = `<div class="text-gray-400 text-center py-1 text-[10px]">${translations[currentLang]?.noTasks || 'No tasks'}</div>`;
+          return;
+     }
+
+     list.innerHTML = activeTasks.slice(0, 5).map(t => `
+       <div class="flex items-center justify-between p-1 bg-gray-50 dark:bg-gray-700/50 rounded hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors cursor-pointer" onclick="document.querySelector('[data-tab=\\'tasks\\']').click()">
+           <span class="truncate pr-2 text-xs">${t.name}</span>
+           <span class="text-[9px] px-1 bg-blue-100 text-blue-800 rounded dark:bg-blue-900 dark:text-blue-200">Today</span>
+       </div>
+   `).join('');
 }
 
 let clockInterval;

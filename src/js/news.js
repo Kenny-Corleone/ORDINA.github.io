@@ -141,8 +141,7 @@ const getRSSSourcesForLanguage = (lang, category = 'all') => {
 
 const CORS_PROXIES = [
     (url) => `https://api.allorigins.win/get?url=${encodeURIComponent(url)}`,
-    (url) => `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(url)}`,
-    (url) => `https://r.jina.ai/http/${url.replace(/^https?:\/\//, '')}`
+    (url) => `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(url)}`
 ];
 
 const fetchWithTimeout = (url, timeout = 12000) => {
@@ -330,7 +329,7 @@ export async function fetchNews() {
             return dateB - dateA;
         });
         // full dataset kept; rendering controls number of visible items
-        visibleNewsCount = 10;
+        visibleNewsCount = 30;
 
         renderNews();
 

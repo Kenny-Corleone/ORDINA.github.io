@@ -8,9 +8,52 @@ if (!Promise.allSettled) {
 }
 import { app, db, auth } from './js/firebase.js';
 import { logger, $, loadScriptSafely } from './js/utils.js';
-import { initApp } from './js/app.js'; // Import initApp function
+import { initApp } from './js/app.js?v=2.2.1'; // Import initApp function
 
 
+
+// Open Browser Modal
+window.openBrowserModal = (url) => {
+    const modal = document.getElementById('browser-modal');
+    const iframe = document.getElementById('browser-modal-frame');
+    const loader = document.getElementById('browser-modal-loader');
+    const urlSpan = document.getElementById('browser-modal-url');
+    const externalLink = document.getElementById('browser-modal-external');
+
+    if (!modal || !iframe) return;
+
+    // Reset state
+    if (loader) loader.classList.remove('opacity-0', 'pointer-events-none');
+    iframe.src = 'about:blank'; // Clear previous content
+
+    // Set URL
+    if (urlSpan) urlSpan.textContent = url.replace(/^https?:\/\//, '');
+    if (externalLink) {
+        externalLink.href = url;
+        // Make sure external link works if iframe fails
+        externalLink.onclick = (e) => {
+            e.stopPropagation();
+            return true;
+        };
+    }
+
+    // Load URL
+    setTimeout(() => {
+        iframe.src = url;
+    }, 50);
+
+    iframe.onload = () => {
+        if (loader) loader.classList.add('opacity-0', 'pointer-events-none');
+    };
+
+    iframe.onerror = () => {
+        if (loader) loader.classList.add('opacity-0', 'pointer-events-none');
+        // Show error/fallback in iframe if possible, or toast
+        showToast('Не удалось загрузить страницу. Попробуйте открыть в новом окне.', 'warning');
+    };
+
+    modal.showModal();
+};
 
 // Initialize the application
 initApp().catch(error => {
