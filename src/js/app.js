@@ -339,7 +339,7 @@ const attachListeners = () => {
      
      isAttachingListeners = true;
      try {
-          detachListeners();
+     detachListeners();
 
      // Re-setup monthly collections if month changed
      const userDoc = doc(db, "users", userId);
@@ -1098,12 +1098,12 @@ function setupEventListeners() {
                
                isMonthChanging = true;
                try {
-                    selectedMonthId = e.target.value;
-                    const [year, month] = selectedMonthId.split('-').map(Number);
-                    calendarDate = new Date(year, month - 1, 1);
-                    // await ensureRecurringTasksForMonth(selectedMonthId); // Implement if needed
-                    updateMonthDisplay();
-                    attachListeners();
+               selectedMonthId = e.target.value;
+               const [year, month] = selectedMonthId.split('-').map(Number);
+               calendarDate = new Date(year, month - 1, 1);
+               // await ensureRecurringTasksForMonth(selectedMonthId); // Implement if needed
+               updateMonthDisplay();
+               attachListeners();
                } finally {
                     isMonthChanging = false;
                }
@@ -1461,7 +1461,7 @@ function setupEventListeners() {
                     const evaluation = safeEvaluateExpression(expr || '0');
                     if (evaluation.valid && evaluation.result !== undefined) {
                          expr = String(evaluation.result);
-                         setDisplay();
+                    setDisplay();
                     } else {
                          showToast(translations[currentLang]?.calcError || evaluation.error || 'Ошибка выражения', 'error');
                     }
@@ -2013,8 +2013,8 @@ async function handleGlobalClick(e) {
      if (target.closest('.delete-debt-btn')) {
           if (confirm(translations[currentLang].deleteConfirm)) {
                try {
-                    await deleteDoc(doc(debtsCol, id));
-                    showToast(translations[currentLang].toastDeleted);
+               await deleteDoc(doc(debtsCol, id));
+               showToast(translations[currentLang].toastDeleted);
                } catch (error) {
                     handleError(error, { module: 'app', action: 'deleteDebt' });
                }
@@ -2022,8 +2022,8 @@ async function handleGlobalClick(e) {
      } else if (target.closest('.delete-expense-btn')) {
           if (confirm(translations[currentLang].deleteConfirm)) {
                try {
-                    await deleteDoc(doc(expensesCol, id));
-                    showToast(translations[currentLang].toastDeleted);
+               await deleteDoc(doc(expensesCol, id));
+               showToast(translations[currentLang].toastDeleted);
                } catch (error) {
                     handleError(error, { module: 'app', action: 'deleteExpense' });
                }
@@ -2031,8 +2031,8 @@ async function handleGlobalClick(e) {
      } else if (target.closest('.delete-daily-task-btn')) {
           if (confirm(translations[currentLang].deleteConfirm)) {
                try {
-                    await deleteDoc(doc(dailyTasksCol, id));
-                    showToast(translations[currentLang].toastDeleted);
+               await deleteDoc(doc(dailyTasksCol, id));
+               showToast(translations[currentLang].toastDeleted);
                } catch (error) {
                     handleError(error, { module: 'app', action: 'deleteDailyTask' });
                }
@@ -2040,8 +2040,8 @@ async function handleGlobalClick(e) {
      } else if (target.closest('.delete-monthly-task-btn')) {
           if (confirm(translations[currentLang].deleteConfirm)) {
                try {
-                    await deleteDoc(doc(monthlyTasksCol, id));
-                    showToast(translations[currentLang].toastDeleted);
+               await deleteDoc(doc(monthlyTasksCol, id));
+               showToast(translations[currentLang].toastDeleted);
                } catch (error) {
                     handleError(error, { module: 'app', action: 'deleteMonthlyTask' });
                }
@@ -2049,8 +2049,8 @@ async function handleGlobalClick(e) {
      } else if (target.closest('.delete-yearly-task-btn')) {
           if (confirm(translations[currentLang].deleteConfirm)) {
                try {
-                    await deleteDoc(doc(yearlyTasksCol, id));
-                    showToast(translations[currentLang].toastDeleted);
+               await deleteDoc(doc(yearlyTasksCol, id));
+               showToast(translations[currentLang].toastDeleted);
                } catch (error) {
                     handleError(error, { module: 'app', action: 'deleteYearlyTask' });
                }
@@ -2058,8 +2058,8 @@ async function handleGlobalClick(e) {
      } else if (target.closest('.delete-recurring-expense-btn')) {
           if (confirm(translations[currentLang].deleteConfirm)) {
                try {
-                    await deleteDoc(doc(recurringExpensesCol, id));
-                    showToast(translations[currentLang].toastDeleted);
+               await deleteDoc(doc(recurringExpensesCol, id));
+               showToast(translations[currentLang].toastDeleted);
                } catch (error) {
                     handleError(error, { module: 'app', action: 'deleteRecurringExpense' });
                }
@@ -2067,8 +2067,8 @@ async function handleGlobalClick(e) {
      } else if (target.closest('.delete-category-btn')) {
           if (confirm(translations[currentLang].deleteConfirm)) {
                try {
-                    await deleteDoc(doc(categoriesCol, id));
-                    showToast(translations[currentLang].toastDeleted);
+               await deleteDoc(doc(categoriesCol, id));
+               showToast(translations[currentLang].toastDeleted);
                } catch (error) {
                     handleError(error, { module: 'app', action: 'deleteCategory' });
                }
@@ -2078,27 +2078,27 @@ async function handleGlobalClick(e) {
      // Edit Handlers
      else if (target.closest('.edit-debt-btn')) {
           try {
-               const docSnap = await getDoc(doc(debtsCol, id));
-               if (docSnap.exists()) {
-                    const data = docSnap.data();
-                    const form = document.getElementById('debt-form');
-                    form.querySelector('#debt-id').value = id;
-                    form.querySelector('#debt-name').value = data.name;
+          const docSnap = await getDoc(doc(debtsCol, id));
+          if (docSnap.exists()) {
+               const data = docSnap.data();
+               const form = document.getElementById('debt-form');
+               form.querySelector('#debt-id').value = id;
+               form.querySelector('#debt-name').value = data.name;
                     form.querySelector('#debt-total').value = data.totalAmount;
-                    form.querySelector('#debt-paid').value = data.paidAmount || 0;
+               form.querySelector('#debt-paid').value = data.paidAmount || 0;
                     form.querySelector('#debt-comment').value = data.comment || '';
-                    document.getElementById('debt-modal-title').textContent = translations[currentLang].editDebt;
-                    document.getElementById('debt-modal').showModal();
+               document.getElementById('debt-modal-title').textContent = translations[currentLang].editDebt;
+               document.getElementById('debt-modal').showModal();
                }
           } catch (error) {
                handleError(error, { module: 'app', action: 'editDebt' });
           }
      } else if (target.closest('.edit-expense-btn')) {
           try {
-               const docSnap = await getDoc(doc(expensesCol, id));
-               if (docSnap.exists()) {
-                    const data = docSnap.data();
-                    const form = document.getElementById('expense-form');
+          const docSnap = await getDoc(doc(expensesCol, id));
+          if (docSnap.exists()) {
+               const data = docSnap.data();
+               const form = document.getElementById('expense-form');
                     const modal = document.getElementById('expense-modal');
                     const modalTitle = document.getElementById('expense-modal-title');
                     if (form && modal && modalTitle) {
@@ -2121,25 +2121,25 @@ async function handleGlobalClick(e) {
           }
      } else if (target.closest('.edit-daily-task-btn')) {
           try {
-               const docSnap = await getDoc(doc(dailyTasksCol, id));
-               if (docSnap.exists()) {
-                    const data = docSnap.data();
-                    const form = document.getElementById('daily-task-form');
-                    form.querySelector('#daily-task-id').value = id;
-                    form.querySelector('#daily-task-name').value = data.name;
-                    form.querySelector('#daily-task-notes').value = data.notes || '';
-                    document.getElementById('daily-task-modal-title').textContent = translations[currentLang].editTask;
-                    document.getElementById('daily-task-modal').showModal();
+          const docSnap = await getDoc(doc(dailyTasksCol, id));
+          if (docSnap.exists()) {
+               const data = docSnap.data();
+               const form = document.getElementById('daily-task-form');
+               form.querySelector('#daily-task-id').value = id;
+               form.querySelector('#daily-task-name').value = data.name;
+               form.querySelector('#daily-task-notes').value = data.notes || '';
+               document.getElementById('daily-task-modal-title').textContent = translations[currentLang].editTask;
+               document.getElementById('daily-task-modal').showModal();
                }
           } catch (error) {
                handleError(error, { module: 'app', action: 'editDailyTask' });
           }
      } else if (target.closest('.edit-monthly-task-btn')) {
           try {
-               const docSnap = await getDoc(doc(monthlyTasksCol, id));
-               if (docSnap.exists()) {
-                    const data = docSnap.data();
-                    const form = document.getElementById('monthly-task-form');
+          const docSnap = await getDoc(doc(monthlyTasksCol, id));
+          if (docSnap.exists()) {
+               const data = docSnap.data();
+               const form = document.getElementById('monthly-task-form');
                     const modal = document.getElementById('monthly-task-modal');
                     const modalTitle = document.getElementById('monthly-task-modal-title');
                     if (form && modal && modalTitle) {
@@ -2158,26 +2158,26 @@ async function handleGlobalClick(e) {
           }
      } else if (target.closest('.edit-yearly-task-btn')) {
           try {
-               const docSnap = await getDoc(doc(yearlyTasksCol, id));
-               if (docSnap.exists()) {
-                    const data = docSnap.data();
-                    const form = document.getElementById('yearly-task-form');
-                    form.querySelector('#yearly-task-id').value = id;
-                    form.querySelector('#yearly-task-name').value = data.name;
-                    form.querySelector('#yearly-task-deadline').value = data.deadline || '';
-                    form.querySelector('#yearly-task-notes').value = data.notes || '';
-                    document.getElementById('yearly-task-modal-title').textContent = translations[currentLang].editTask;
-                    document.getElementById('yearly-task-modal').showModal();
+          const docSnap = await getDoc(doc(yearlyTasksCol, id));
+          if (docSnap.exists()) {
+               const data = docSnap.data();
+               const form = document.getElementById('yearly-task-form');
+               form.querySelector('#yearly-task-id').value = id;
+               form.querySelector('#yearly-task-name').value = data.name;
+               form.querySelector('#yearly-task-deadline').value = data.deadline || '';
+               form.querySelector('#yearly-task-notes').value = data.notes || '';
+               document.getElementById('yearly-task-modal-title').textContent = translations[currentLang].editTask;
+               document.getElementById('yearly-task-modal').showModal();
                }
           } catch (error) {
                handleError(error, { module: 'app', action: 'editYearlyTask' });
           }
      } else if (target.closest('.edit-recurring-expense-btn')) {
           try {
-               const docSnap = await getDoc(doc(recurringExpensesCol, id));
-               if (docSnap.exists()) {
-                    const data = docSnap.data();
-                    const form = document.getElementById('recurring-expense-form');
+          const docSnap = await getDoc(doc(recurringExpensesCol, id));
+          if (docSnap.exists()) {
+               const data = docSnap.data();
+               const form = document.getElementById('recurring-expense-form');
                     const modal = document.getElementById('recurring-expense-modal');
                     const modalTitle = document.getElementById('recurring-expense-modal-title');
                     if (form && modal && modalTitle) {
@@ -2211,13 +2211,13 @@ async function handleGlobalClick(e) {
                const form = document.getElementById('event-form');
                const modal = document.getElementById('event-modal');
                if (form && modal) {
-                    form.reset();
+               form.reset();
                     const idInput = form.querySelector('#event-id');
                     if (idInput) idInput.value = '';
-                    // Set date if possible, but event form might not have date field if it assumes selected date?
-                    // Actually event form usually has a date field.
-                    // Let's assume we can set it if it exists, or just open modal.
-                    // Looking at previous code, event form structure isn't fully visible, but let's assume standard behavior.
+               // Set date if possible, but event form might not have date field if it assumes selected date?
+               // Actually event form usually has a date field.
+               // Let's assume we can set it if it exists, or just open modal.
+               // Looking at previous code, event form structure isn't fully visible, but let's assume standard behavior.
                     modal.showModal();
                }
           }
@@ -2234,7 +2234,7 @@ async function handleGlobalClick(e) {
                     const nameInput = form.querySelector('#event-name');
                     if (idInput) idInput.value = eventId;
                     if (nameInput) nameInput.value = data.name || '';
-                    // Populate other fields...
+               // Populate other fields...
                     modal.showModal();
                }
           }

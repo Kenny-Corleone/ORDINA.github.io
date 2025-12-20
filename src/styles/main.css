@@ -70,24 +70,28 @@
     --primary-color: var(--primary);
     --secondary-color: var(--secondary);
     --accent-color: var(--accent);
-    --text-primary: #1a1a1a;
-    --text-secondary: #4a5568;
-    --bg-primary: #f5f3f0;
-    --bg-secondary: #ebe8e3;
-    --bg-tertiary: #e0ddd8;
-    --border-color: rgba(74, 85, 104, 0.2);
-    --border-hover: rgba(74, 85, 104, 0.35);
-    --shadow: 0 4px 12px rgba(26, 26, 26, 0.1);
-    --shadow-hover: 0 8px 24px rgba(26, 26, 26, 0.15);
-    --shadow-gold: 0 8px 32px rgba(var(--primary-rgb), 0.25);
+    /* Мягкие, приглушенные цвета текста */
+    --text-primary: #2d3748;
+    --text-secondary: #718096;
+    /* Мягкие, приглушенные фоновые цвета - менее яркие */
+    --bg-primary: #f7fafc;
+    --bg-secondary: #edf2f7;
+    --bg-tertiary: #e2e8f0;
+    /* Мягкие границы */
+    --border-color: rgba(113, 128, 150, 0.15);
+    --border-hover: rgba(113, 128, 150, 0.25);
+    /* Мягкие тени */
+    --shadow: 0 2px 8px rgba(45, 55, 72, 0.06);
+    --shadow-hover: 0 4px 16px rgba(45, 55, 72, 0.08);
+    --shadow-gold: 0 4px 20px rgba(var(--primary-rgb), 0.15);
 
-    /* Unified Glassmorphism Tokens */
-    --glass-blur: blur(20px) saturate(180%);
-    --glass-bg-light: rgba(245, 243, 240, 0.95);
+    /* Unified Glassmorphism Tokens - более мягкие */
+    --glass-blur: blur(20px) saturate(120%);
+    --glass-bg-light: rgba(255, 255, 255, 0.85);
     --glass-bg-dark: rgba(15, 23, 42, 0.4);
-    --glass-border-light: rgba(74, 85, 104, 0.25);
+    --glass-border-light: rgba(113, 128, 150, 0.12);
     --glass-border-dark: rgba(255, 255, 255, 0.1);
-    --glass-shadow-light: 0 4px 24px 0 rgba(26, 26, 26, 0.12);
+    --glass-shadow-light: 0 2px 16px 0 rgba(45, 55, 72, 0.08);
     --glass-shadow-dark: 0 8px 32px 0 rgba(0, 0, 0, 0.6);
 
     /* Gradients */
@@ -97,12 +101,12 @@
     --gradient-warm: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
     --gradient-cool: linear-gradient(135deg, #30cfd0 0%, #330867 100%);
 
-    /* Card Gradients */
-    --card-gradient-light: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(248, 249, 250, 0.9) 100%);
+    /* Card Gradients - более мягкие и менее яркие */
+    --card-gradient-light: linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(247, 250, 252, 0.85) 100%);
     --card-gradient-dark: linear-gradient(135deg, rgba(26, 41, 66, 0.95) 0%, rgba(10, 22, 40, 0.9) 100%);
-    --shadow-card-light: 0 4px 20px rgba(0, 0, 0, 0.06);
+    --shadow-card-light: 0 2px 12px rgba(45, 55, 72, 0.05);
     --shadow-card-dark: 0 4px 20px rgba(0, 0, 0, 0.4);
-    --border-gold: rgba(212, 175, 55, 0.3);
+    --border-gold: rgba(212, 175, 55, 0.2);
 
     /* Unified Border Radius */
     --card-radius-xl: 20px;
@@ -382,7 +386,7 @@ img {
 
 body {
     font-family: 'Poppins', -apple-system, BlinkMacSystemFont, sans-serif;
-    background: linear-gradient(135deg, #f5f3f0 0%, #f0ede8 20%, #ebe8e3 40%, #e6e3de 60%, #f0ede8 80%, #f5f3f0 100%);
+    background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 20%, #e2e8f0 40%, #edf2f7 60%, #f7fafc 80%, #f7fafc 100%);
     background-size: 400% 400%;
     animation: gradientShift 30s ease infinite;
     color: var(--text-primary);
@@ -595,11 +599,10 @@ h6 {
 }
 
 .premium-card:hover {
-    transform: translateY(-8px) scale(1.02);
-    border-color: rgba(var(--gold-rgb), 0.3);
-    box-shadow: 0 12px 40px 0 rgba(var(--gold-rgb), 0.15),
-        0 0 0 1px rgba(var(--gold-rgb), 0.2) inset,
-        0 0 30px rgba(var(--gold-rgb), 0.1);
+    transform: translateY(-4px) scale(1.01);
+    border-color: rgba(var(--gold-rgb), 0.2);
+    box-shadow: 0 8px 24px 0 rgba(45, 55, 72, 0.1),
+        0 0 0 1px rgba(var(--gold-rgb), 0.15) inset;
 }
 
 .premium-card:hover::before {
@@ -4506,9 +4509,8 @@ main.main-content {
 #news-widget {
     display: flex !important;
     flex-direction: column !important;
-    min-height: 800px !important;
     height: 100% !important;
-    /* Убеждаемся, что виджет растягивается на всю доступную высоту */
+    /* Виджет растягивается на высоту левой колонки (активности) */
 }
 
 #news-results {
@@ -4683,9 +4685,8 @@ canvas#expense-chart {
 #news-widget {
     display: flex !important;
     flex-direction: column !important;
-    min-height: 800px !important;
     height: 100% !important;
-    /* Убеждаемся, что виджет растягивается на всю доступную высоту */
+    /* Виджет растягивается на высоту левой колонки (активности) */
 }
 
 #news-results {
