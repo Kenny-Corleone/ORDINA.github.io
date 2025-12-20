@@ -1,4 +1,4 @@
-import { logger } from '../utils.js';
+import { logger, escapeHtml, escapeHtmlAttr } from '../utils.js';
 import { translations, currentLang } from '../i18n.js';
 
 // Utility functions (will be passed from app.js)
@@ -36,19 +36,19 @@ export function renderRecurringExpenses(allRecurringTemplates, currentMonthStatu
 
                 return `
             <tr class="border-b hover:bg-gray-50 ${isOverdue ? 'bg-red-50 dark:bg-red-900/20' : ''} md:border-b-0 dark:hover:bg-gray-700 dark:border-gray-700">
-                <td data-label="${translations[currentLang]?.name || 'Name'}" class="font-medium">${template.name || '—'}</td>
-                <td data-label="${translations[currentLang]?.amount || 'Amount'}">${formatCurrency(template.amount)}</td>
-                <td data-label="${translations[currentLang]?.paymentDay || 'Day'}">${template.dueDay || '—'}</td>
-                <td data-label="${translations[currentLang]?.status || 'Status'}">
-                    <select data-id="${template.id}" class="recurring-status-select p-1 rounded-md border-0 ring-1 ring-inset ring-gray-300 ${isPaid ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}">
-                        <option value="${translations.ru.unpaidStatus}" ${!isPaid ? 'selected' : ''}>${translations[currentLang]?.unpaidStatus || 'Unpaid'}</option>
-                        <option value="${translations.ru.paidStatus}" ${isPaid ? 'selected' : ''}>${translations[currentLang]?.paidStatus || 'Paid'}</option>
+                <td data-label="${escapeHtmlAttr(translations[currentLang]?.name || 'Name')}" class="font-medium">${escapeHtml(template.name || '—')}</td>
+                <td data-label="${escapeHtmlAttr(translations[currentLang]?.amount || 'Amount')}">${formatCurrency(template.amount)}</td>
+                <td data-label="${escapeHtmlAttr(translations[currentLang]?.paymentDay || 'Day')}">${escapeHtml(template.dueDay || '—')}</td>
+                <td data-label="${escapeHtmlAttr(translations[currentLang]?.status || 'Status')}">
+                    <select data-id="${escapeHtmlAttr(template.id)}" class="recurring-status-select p-1 rounded-md border-0 ring-1 ring-inset ring-gray-300 ${isPaid ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}">
+                        <option value="${escapeHtmlAttr(translations.ru.unpaidStatus)}" ${!isPaid ? 'selected' : ''}>${escapeHtml(translations[currentLang]?.unpaidStatus || 'Unpaid')}</option>
+                        <option value="${escapeHtmlAttr(translations.ru.paidStatus)}" ${isPaid ? 'selected' : ''}>${escapeHtml(translations[currentLang]?.paidStatus || 'Paid')}</option>
                     </select>
                 </td>
-                <td data-label="${translations[currentLang]?.details || 'Details'}">${template.details || '—'}</td>
-                <td data-label="${translations[currentLang]?.templateActions || 'Actions'}" class="flex gap-2">
-                    <button data-id="${template.id}" class="edit-recurring-expense-btn text-blue-600 hover:text-blue-800">✏️</button>
-                    <button data-id="${template.id}" class="delete-recurring-expense-btn text-red-600 hover:text-red-800">🗑️</button>
+                <td data-label="${escapeHtmlAttr(translations[currentLang]?.details || 'Details')}">${escapeHtml(template.details || '—')}</td>
+                <td data-label="${escapeHtmlAttr(translations[currentLang]?.templateActions || 'Actions')}" class="flex gap-2">
+                    <button data-id="${escapeHtmlAttr(template.id)}" class="edit-recurring-expense-btn text-blue-600 hover:text-blue-800">✏️</button>
+                    <button data-id="${escapeHtmlAttr(template.id)}" class="delete-recurring-expense-btn text-red-600 hover:text-red-800">🗑️</button>
                 </td>
             </tr>`;
             }).join('');

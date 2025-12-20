@@ -1,4 +1,4 @@
-import { logger } from '../utils.js';
+import { logger, escapeHtml, escapeHtmlAttr } from '../utils.js';
 import { translations, currentLang } from '../i18n.js';
 
 // Utility functions (will be passed from app.js)
@@ -37,16 +37,16 @@ export function renderExpenses(docs, userId, selectedMonthId) {
                 if (!expense) return '';
                 const id = doc.id;
                 const actionsHtml = (!expense.recurringExpenseId && !expense.debtPaymentId) ?
-                     `<button data-id="${id}" class="edit-expense-btn text-blue-600 hover:text-blue-800" title="${translations[currentLang]?.editExpense || 'Edit'}">✏️</button>
-             <button data-id="${id}" class="delete-expense-btn text-red-600 hover:text-red-800" title="${translations[currentLang]?.delete || 'Delete'}">🗑️</button>` : '';
+                     `<button data-id="${escapeHtmlAttr(id)}" class="edit-expense-btn text-blue-600 hover:text-blue-800" title="${escapeHtmlAttr(translations[currentLang]?.editExpense || 'Edit')}">✏️</button>
+             <button data-id="${escapeHtmlAttr(id)}" class="delete-expense-btn text-red-600 hover:text-red-800" title="${escapeHtmlAttr(translations[currentLang]?.delete || 'Delete')}">🗑️</button>` : '';
 
                 return `
             <tr class="border-b hover:bg-gray-50 md:border-b-0 dark:hover:bg-gray-700 dark:border-gray-700">
-                <td data-label="${translations[currentLang]?.name || 'Name'}" class="font-medium">${expense.name || '—'}</td>
-                <td data-label="${translations[currentLang]?.category || 'Category'}">${expense.category || '—'}</td>
-                <td data-label="${translations[currentLang]?.amount || 'Amount'}">${formatCurrency(expense.amount)}</td>
-                <td data-label="${translations[currentLang]?.date || 'Date'}">${formatISODateForDisplay(expense.date)}</td>
-                <td data-label="${translations[currentLang]?.actions || 'Actions'}" class="flex gap-2">${actionsHtml}</td>
+                <td data-label="${escapeHtmlAttr(translations[currentLang]?.name || 'Name')}" class="font-medium">${escapeHtml(expense.name || '—')}</td>
+                <td data-label="${escapeHtmlAttr(translations[currentLang]?.category || 'Category')}">${escapeHtml(expense.category || '—')}</td>
+                <td data-label="${escapeHtmlAttr(translations[currentLang]?.amount || 'Amount')}">${formatCurrency(expense.amount)}</td>
+                <td data-label="${escapeHtmlAttr(translations[currentLang]?.date || 'Date')}">${escapeHtml(formatISODateForDisplay(expense.date))}</td>
+                <td data-label="${escapeHtmlAttr(translations[currentLang]?.actions || 'Actions')}" class="flex gap-2">${actionsHtml}</td>
             </tr>`;
             }).join('');
         } catch (e) {

@@ -408,11 +408,23 @@ const renderNews = () => {
             minute: '2-digit'
         });
 
-        const cleanTitle = news.title.replace(/'/g, '&#39;').replace(/"/g, '&quot;');
-        const cleanDesc = (news.desc || '').substring(0, 120).replace(/'/g, '&#39;').replace(/"/g, '&quot;');
+        // Use proper HTML escaping
+        const cleanTitle = news.title
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#39;');
+        const cleanDesc = (news.desc || '')
+            .substring(0, 120)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#39;');
 
         return `
-            <article class="news-item" onclick="window.open('${news.url}', '_blank', 'noopener,noreferrer')">
+            <article class="news-item" data-news-url="${news.url.replace(/"/g, '&quot;')}" onclick="const url = this.dataset.newsUrl; if (url) window.open(url, '_blank', 'noopener,noreferrer')">
                 ${news.image ? `
                     <div class="news-item-image">
                         <img src="${news.image}" alt="${cleanTitle}" loading="lazy"

@@ -1,0 +1,48 @@
+/* ============================================================================
+   TABLET DEVICE STYLES (769-1024px)
+   ============================================================================ */
+
+/* Layout для планшетов */
+.device-tablet #app {
+    padding: 1rem;
+}
+
+.device-tablet .main-content {
+    max-width: 100%;
+}
+
+.device-tablet .header-nav {
+    display: none !important;
+}
+
+/* Уменьшаем высоту dashboard header на планшетах */
+.device-tablet #dashboard-page > div.grid:first-child {
+    margin-bottom: 1rem !important;
+    gap: 1rem !important;
+    padding: 0.5rem 0 !important;
+    min-height: auto !important;
+}
+
+/* Dashboard fixes для tablet */
+.device-tablet #dashboard-page > div.grid:first-child {
+    margin-bottom: 1rem !important;
+    gap: 1rem !important;
+    padding: 0.5rem 0 !important;
+}
+
+/* Grid оптимизации для планшетов */
+.device-tablet .grid-cols-2 {
+    grid-template-columns: repeat(2, 1fr);
+}
+
+/* Spacing для планшетов */
+.device-tablet .premium-card {
+    padding: 1.25rem;
+    margin-bottom: 1.25rem;
+}
+
+/* Typography для планшетов */
+.device-tablet {
+    font-size: 15px;
+}
+

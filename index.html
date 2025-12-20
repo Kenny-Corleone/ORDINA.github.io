@@ -239,7 +239,7 @@
 
     <div id="app" class="max-w-7xl mx-auto p-2 sm:p-4 md:p-6 relative opacity-0 transition-opacity duration-300 hidden">
         <!-- Fixed header wrapper to keep top bar, logo, and navigation static on scroll -->
-        <div id="fixed-header" class="sticky top-0 z-[100] premium-card" style="position: sticky; top: 0;">
+        <div id="fixed-header" class="sticky top-0 z-[100] premium-card bg-gray-50 dark:bg-gray-900 transition-colors duration-300 shadow-md">
             <!-- Grid Layout: 5 Columns: LOGO | MOTO | WEATHER | RADIO | RIGHT-ICONS -->
             <div id="header-grid-container" class="header-grid-container">
                 <!-- Column 1: Logo -->
@@ -340,7 +340,7 @@
                         </button>
                     </div>
 
-                    <button id="mobile-menu-toggle" class="header-theme-btn" aria-label="Меню" title="Меню">
+                    <button id="mobile-menu-toggle" class="header-theme-btn device-mobile:block hidden" aria-label="Меню" title="Меню">
                         <svg class="header-icon-20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                             stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <line x1="3" y1="6" x2="21" y2="6" />
@@ -360,8 +360,8 @@
                     </button>
                 </div>
             </div>
-            <!-- Navigation - Компактная -->
-            <nav class="header-nav border-t w-full">
+            <!-- Navigation - Desktop only (horizontal) -->
+            <nav id="header-nav" class="header-nav border-t w-full device-desktop:block hidden">
                 <div class="header-tabs-container flex w-full">
                     <button data-tab="dashboard"
                         class="tab-button tab-active flex-1 text-center py-3 px-1 text-sm sm:text-base font-semibold transition-colors hover:bg-gray-50 dark:hover:bg-gray-800"
@@ -388,22 +388,9 @@
             </nav>
 
         </div><!-- end of fixed-header -->
-        <div class="grid grid-cols-[64px,1fr] gap-2 sm:block">
-            <aside id="mini-sidebar" class="block sm:hidden flex flex-col gap-2 p-2">
-                <button data-tab="dashboard" class="tab-button tab-active text-xs px-2 py-2"
-                    data-i18n="tabDashboard">Сводка</button>
-                <button data-tab="debts" class="tab-button text-xs px-2 py-2" data-i18n="tabDebts">Долги</button>
-                <button data-tab="recurring-expenses" class="tab-button text-xs px-2 py-2"
-                    data-i18n="tabRecurringExpenses">Ежемесячные</button>
-                <button data-tab="expenses" class="tab-button text-xs px-2 py-2"
-                    data-i18n="tabMonthlyExpenses">Расходы</button>
-                <button data-tab="tasks" class="tab-button text-xs px-2 py-2" data-i18n="tabTasks">Задачи</button>
-                <button data-tab="calendar" class="tab-button text-xs px-2 py-2"
-                    data-i18n="tabCalendar">Календарь</button>
-                <button data-tab="payments" class="tab-button text-xs px-2 py-2" data-i18n="tabPayments">Оплата</button>
-            </aside>
-
-            <main class="col-start-2 sm:col-start-auto">
+        
+        <!-- Main content area -->
+        <main class="main-content">
                 <div id="dashboard-page" class="page-content">
                     <!-- Dashboard Header: Title | Date/Time | Selector -->
                     <div class="grid grid-cols-1 lg:grid-cols-3 items-center mb-6 gap-4">

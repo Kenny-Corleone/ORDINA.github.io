@@ -16,7 +16,7 @@ export let currentLang = localStorage.getItem('appLanguage') || 'ru';
 // ============================================================================
 
 export async function loadTranslations() {
-    console.log('i18n.js: loadTranslations called (New Version)');
+    logger.debug('i18n.js: loadTranslations called (New Version)');
     // Translations are already loaded via import
     if (currentLang) {
         applyDynamicTranslations();
@@ -80,5 +80,16 @@ export const setLanguage = (lang, callback) => {
     localStorage.setItem('appLanguage', lang);
     document.documentElement.lang = lang;
     applyDynamicTranslations();
+    
+    // Обновляем переводы в мобильной боковой панели
+    // Используем динамический импорт, чтобы избежать циклических зависимостей
+    setTimeout(() => {
+        import('./responsive.js').then(module => {
+            if (module && module.updateMobileSidebarTranslations) {
+                module.updateMobileSidebarTranslations();
+            }
+        }).catch(() => {});
+    }, 0);
+    
     if (callback) callback();
 };

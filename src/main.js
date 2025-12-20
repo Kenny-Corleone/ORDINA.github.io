@@ -1,4 +1,9 @@
 import './styles/main.css';
+import './styles/responsive.css';
+import './styles/device-mobile.css';
+import './styles/device-tablet.css';
+import './styles/device-desktop.css';
+import './styles/dashboard-fixes.css';
 if (!Promise.allSettled) {
     Promise.allSettled = function (promises) {
         return Promise.all(promises.map(p => Promise.resolve(p)
@@ -151,9 +156,17 @@ async function loadExternalScripts() {
 }
 
 // Implement lazy loading for images
+let imageObserver = null;
+
 function setupLazyLoading() {
     if ('IntersectionObserver' in window) {
-        const imageObserver = new IntersectionObserver((entries, observer) => {
+        // Очищаем предыдущий observer, если он существует
+        if (imageObserver) {
+            imageObserver.disconnect();
+            imageObserver = null;
+        }
+        
+        imageObserver = new IntersectionObserver((entries, observer) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
                     const img = entry.target;
@@ -177,6 +190,21 @@ function setupLazyLoading() {
             imageObserver.observe(img);
         });
     }
+}
+
+// Функция очистки image observer
+function cleanupLazyLoading() {
+    if (imageObserver) {
+        imageObserver.disconnect();
+        imageObserver = null;
+    }
+}
+
+// Очистка при выгрузке страницы
+if (typeof window !== 'undefined') {
+    window.addEventListener('beforeunload', () => {
+        cleanupLazyLoading();
+    });
 }
 
 // Start loading scripts and setup lazy loading
@@ -211,14 +239,22 @@ window.addEventListener('appinstalled', () => {
 });
 
 document.addEventListener('click', (ev) => {
-    const target = ev.target.closest('#pwa-install-btn-footer');
+    const target = ev.target.closest('#pwa-install-btn-footer') || ev.target.closest('.pwa-install-btn-footer');
     if (!target) return;
+    ev.preventDefault();
+    ev.stopPropagation();
     if (deferredInstallPrompt) {
         deferredInstallPrompt.prompt();
-        deferredInstallPrompt.userChoice.finally(() => {
+        deferredInstallPrompt.userChoice.then((choiceResult) => {
+            logger.info('User response to install prompt:', choiceResult.outcome);
             const btn = document.getElementById('pwa-install-btn-footer');
             if (btn) btn.classList.add('hidden');
             deferredInstallPrompt = null;
+        }).catch((err) => {
+            logger.error('Error handling install prompt:', err);
+            deferredInstallPrompt = null;
         });
+    } else {
+        logger.warn('PWA install prompt not available');
     }
 });

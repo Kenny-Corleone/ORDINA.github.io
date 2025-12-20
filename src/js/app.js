@@ -7,10 +7,14 @@ import {
      onAuthStateChanged, signInWithEmailAndPassword,
      createUserWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, signOut
 } from "firebase/auth";
-import { logger, safeGet, $, $$, getCached, showToast } from './utils.js';
+import { logger, $, $$, getCached, showToast, escapeHtml, escapeHtmlAttr, validateString, validateNumber, validateDate, validateDayOfMonth, safeEvaluateExpression, handleError, debounce, throttle } from './utils.js';
 import { translations, currentLang, loadTranslations, setLanguage, applyDynamicTranslations } from './i18n.js';
 import { initWeatherNew } from './weather.js';
 import { initNews } from './news.js?v=2.2.1';
+import { renderDebts as renderDebtsModule, initDebtsModule } from './tabs/debts.js';
+import { renderExpenses as renderExpensesModule, initExpensesModule } from './tabs/expenses.js';
+import { renderRecurringExpenses as renderRecurringExpensesModule, initRecurringExpensesModule } from './tabs/recurring-expenses.js';
+import { initResponsiveSystem, toggleMobileSidebar, isMobile } from './responsive.js';
 
 // ============================================================================
 // STATE MANAGEMENT
@@ -26,6 +30,11 @@ let expensesChart = null;
 // Firestore collections
 let debtsCol, recurringExpensesCol, recurringExpenseStatusesCol, expensesCol, dailyTasksCol, monthlyTasksCol, yearlyTasksCol, categoriesCol, calendarEventsCol, monthlyDataCol;
 let unsubscribes = [];
+
+// Флаги для предотвращения race conditions
+let isAttachingListeners = false;
+let isCarryingOverTasks = false;
+let isMonthChanging = false;
 
 // Application data
 let allDebts = [];
@@ -47,9 +56,16 @@ let exchangeRate = 1.7;
 // UTILITY FUNCTIONS
 // ============================================================================
 const formatCurrency = (amount) => {
-     if (typeof amount !== 'number') amount = 0;
+     // Обработка невалидных значений
+     if (typeof amount !== 'number' || isNaN(amount) || !isFinite(amount)) {
+          amount = 0;
+     }
      const value = currentCurrency === 'USD' ? amount / exchangeRate : amount;
-     const symbol = currentCurrency === 'USD' ? '$' : 'AZN';
+     const symbol = currentCurrency === 'USD' ? '$' : '₼';
+     // Проверка на Infinity и NaN после вычислений
+     if (!isFinite(value) || isNaN(value)) {
+          return `0.00 ${symbol}`;
+     }
      return `${value.toFixed(2)} ${symbol}`;
 };
 
@@ -63,9 +79,27 @@ const formatISODateForDisplay = (isoDate, options = {}) => {
           const y = Number(m[1]);
           const mo = Number(m[2]) - 1;
           const d = Number(m[3]);
+          
+          // Валидация даты
+          if (y < 1900 || y > 2100 || mo < 0 || mo > 11 || d < 1 || d > 31) {
+               logger.warn('Invalid date values:', { y, mo, d });
+               return isoDate; // Возвращаем исходную строку при ошибке
+          }
+          
           date = new Date(y, mo, d, 12, 0, 0, 0); // midday to dodge DST edge cases
+          
+          // Проверка валидности созданной даты
+          if (date.getFullYear() !== y || date.getMonth() !== mo || date.getDate() !== d) {
+               logger.warn('Invalid date created:', isoDate);
+               return isoDate; // Возвращаем исходную строку при ошибке
+          }
      } else {
           date = new Date(isoDate);
+          // Проверка валидности даты
+          if (isNaN(date.getTime())) {
+               logger.warn('Invalid date string:', isoDate);
+               return isoDate; // Возвращаем исходную строку при ошибке
+          }
      }
 
      // Russian: always rely on locale for correct genitive month
@@ -136,16 +170,14 @@ const createEmptyState = (messageKey) => `
 
 // Utility function to handle empty state rendering
 const handleEmptyState = (tableWrapper, emptyState, messageKey) => {
-     console.log('handleEmptyState called for:', messageKey);
      if (tableWrapper) tableWrapper.classList.add('hidden');
      if (emptyState) {
           const msg = translations[currentLang][messageKey];
-          console.log('Message for key:', messageKey, 'is:', msg);
+          // logger.debug('Message for key:', messageKey, 'is:', msg);
           emptyState.innerHTML = createEmptyState(messageKey);
           emptyState.classList.remove('hidden');
-          console.log('emptyState classes:', emptyState.classList.toString());
      } else {
-          console.error('emptyState element not found');
+          logger.error('emptyState element not found');
      }
 };
 
@@ -160,11 +192,12 @@ const handleNonEmptyState = (tableWrapper, emptyState) => {
 // ============================================================================
 
 export async function initApp() {
-     console.log('ORDINA App Initializing - Version 2.2.3 (Fixes Applied)');
+     logger.info('ORDINA App Initializing - Version 2.2.3');
      await loadTranslations();
 
      // Auth Listener
      onAuthStateChanged(auth, async (user) => {
+          try {
           if (user) {
                userId = user.uid;
                setupCollections();
@@ -188,11 +221,22 @@ export async function initApp() {
                }
           } else {
                showLoginScreen();
+               }
+          } catch (error) {
+               handleError(error, {
+                    module: 'app',
+                    action: 'onAuthStateChanged',
+                    showToUser: true,
+                    userMessage: translations[currentLang]?.toastError || 'Произошла ошибка'
+               });
           }
      });
 
      setupEventListeners();
      setupTheme();
+     
+     // Initialize responsive system
+     initResponsiveSystem();
 
      // Initialize currency display
      updateCurrencyButtons();
@@ -202,15 +246,31 @@ export async function initApp() {
 }
 
 function scheduleMidnightRollover() {
+     // Очищаем предыдущий таймер, если он существует
+     if (midnightRolloverTimeout) {
+          clearTimeout(midnightRolloverTimeout);
+          midnightRolloverTimeout = null;
+     }
+     
+     // Удаляем предыдущий обработчик, если он существует
+     if (visibilityChangeHandler) {
+          document.removeEventListener('visibilitychange', visibilityChangeHandler);
+          visibilityChangeHandler = null;
+     }
+     
      const now = new Date();
      const next = new Date(now);
      next.setHours(24, 0, 0, 0);
      const delay = next.getTime() - now.getTime();
-     setTimeout(async () => {
+     
+     midnightRolloverTimeout = setTimeout(async () => {
+          midnightRolloverTimeout = null;
           await onMidnightRollover();
           scheduleMidnightRollover();
      }, Math.max(1000, delay));
-     document.addEventListener('visibilitychange', async () => {
+     
+     // Создаем обработчик только один раз
+     visibilityChangeHandler = async () => {
           if (!document.hidden) {
                const todayIdNow = getTodayISOString();
                const todayLabel = document.getElementById('today-date');
@@ -218,7 +278,20 @@ function scheduleMidnightRollover() {
                     await onMidnightRollover();
                }
           }
-     });
+     };
+     document.addEventListener('visibilitychange', visibilityChangeHandler);
+}
+
+// Функция очистки midnight rollover
+function cleanupMidnightRollover() {
+     if (midnightRolloverTimeout) {
+          clearTimeout(midnightRolloverTimeout);
+          midnightRolloverTimeout = null;
+     }
+     if (visibilityChangeHandler) {
+          document.removeEventListener('visibilitychange', visibilityChangeHandler);
+          visibilityChangeHandler = null;
+     }
 }
 
 async function onMidnightRollover() {
@@ -247,13 +320,26 @@ const setupCollections = () => {
      expensesCol = collection(monthDoc, "expenses");
      monthlyTasksCol = collection(monthDoc, "tasks");
 
+     // Initialize tab modules with utilities
+     initDebtsModule({ formatCurrency, formatISODateForDisplay, handleEmptyState, handleNonEmptyState });
+     initExpensesModule({ formatCurrency, formatISODateForDisplay, handleEmptyState, handleNonEmptyState });
+     initRecurringExpensesModule({ formatCurrency, handleEmptyState, handleNonEmptyState, getTodayISOString });
+
      attachListeners();
 };
 
 const attachListeners = () => {
-     console.log('attachListeners called. userId:', userId);
      if (!userId || !currentMonthId || !selectedMonthId) return;
-     detachListeners();
+     
+     // Предотвращаем race condition при одновременных вызовах
+     if (isAttachingListeners) {
+          logger.warn('attachListeners already in progress, skipping');
+          return;
+     }
+     
+     isAttachingListeners = true;
+     try {
+          detachListeners();
 
      // Re-setup monthly collections if month changed
      const userDoc = doc(db, "users", userId);
@@ -262,10 +348,13 @@ const attachListeners = () => {
      expensesCol = collection(monthDoc, "expenses");
      monthlyTasksCol = collection(monthDoc, "tasks");
 
-     unsubscribes.push(onSnapshot(query(debtsCol), (s) => { allDebts = s.docs; renderDebts(allDebts); updateDashboard(); }));
-     unsubscribes.push(onSnapshot(query(expensesCol), (s) => { allExpenses = s.docs; renderExpenses(allExpenses); updateDashboard(); }));
-     unsubscribes.push(onSnapshot(query(recurringExpensesCol), (s) => { allRecurringTemplates = s.docs.map((d) => ({ id: d.id, ...d.data() })); renderRecurringExpenses(); updateDashboard(); }));
-     unsubscribes.push(onSnapshot(query(recurringExpenseStatusesCol), (s) => { currentMonthStatuses = {}; s.docs.forEach((d) => { currentMonthStatuses[d.id] = d.data().status; }); renderRecurringExpenses(); updateDashboard(); }));
+     // Debounced версия updateDashboard для предотвращения частых обновлений
+     const debouncedUpdateDashboard = debounce(updateDashboard, 300);
+     
+     unsubscribes.push(onSnapshot(query(debtsCol), (s) => { allDebts = s.docs; renderDebtsModule(allDebts, userId); debouncedUpdateDashboard(); }));
+     unsubscribes.push(onSnapshot(query(expensesCol), (s) => { allExpenses = s.docs; renderExpensesModule(allExpenses, userId, selectedMonthId); debouncedUpdateDashboard(); }));
+     unsubscribes.push(onSnapshot(query(recurringExpensesCol), (s) => { allRecurringTemplates = s.docs.map((d) => ({ id: d.id, ...d.data() })); renderRecurringExpensesModule(allRecurringTemplates, currentMonthStatuses, selectedMonthId, currentMonthId, userId); debouncedUpdateDashboard(); }));
+     unsubscribes.push(onSnapshot(query(recurringExpenseStatusesCol), (s) => { currentMonthStatuses = {}; s.docs.forEach((d) => { currentMonthStatuses[d.id] = d.data().status; }); renderRecurringExpensesModule(allRecurringTemplates, currentMonthStatuses, selectedMonthId, currentMonthId, userId); debouncedUpdateDashboard(); }));
      unsubscribes.push(onSnapshot(query(monthlyDataCol), (s) => {
           const m = s.docs.map((d) => d.id);
           if (!m.includes(currentMonthId)) m.push(currentMonthId);
@@ -282,10 +371,22 @@ const attachListeners = () => {
      unsubscribes.push(onSnapshot(query(monthlyTasksCol, where("month", "==", selectedMonthId)), (s) => { monthlyTasks = s.docs.map((d) => ({ id: d.id, ...d.data() })); renderMonthlyTasks(monthlyTasks); updateDashboard(); }));
      unsubscribes.push(onSnapshot(query(yearlyTasksCol, where("year", "==", calendarDate.getFullYear())), (s) => { yearlyTasks = s.docs.map((d) => ({ id: d.id, ...d.data() })); renderYearlyTasks(yearlyTasks); updateDashboard(); }));
      unsubscribes.push(onSnapshot(query(calendarEventsCol), (s) => { calendarEvents = s.docs.map((d) => ({ id: d.id, ...d.data() })); renderCalendar(); }));
+     } finally {
+          isAttachingListeners = false;
+     }
 };
 
 const detachListeners = () => {
-     unsubscribes.forEach((unsub) => unsub());
+     // Очищаем все подписки Firestore
+     unsubscribes.forEach((unsub) => {
+          try {
+               if (typeof unsub === 'function') {
+                    unsub();
+               }
+          } catch (error) {
+               logger.warn('Error unsubscribing:', error);
+          }
+     });
      unsubscribes = [];
 };
 
@@ -314,6 +415,11 @@ const showLoginScreen = () => {
      const loginScreen = document.getElementById('auth-container');
      const appScreen = document.getElementById('app');
      const loadingOverlay = document.getElementById('loading-overlay');
+
+     // Очищаем все ресурсы при выходе
+     cleanupClockInterval();
+     cleanupMidnightRollover();
+     detachListeners();
 
      if (loadingOverlay) loadingOverlay.classList.add('hidden');
      if (loginScreen) loginScreen.classList.remove('hidden');
@@ -353,146 +459,8 @@ const renderMonthSelector = (months) => {
 // ============================================================================
 // RENDER FUNCTIONS
 // ============================================================================
-
-const renderDebts = (docs) => {
-     console.log('renderDebts called with docs:', docs.length);
-     if (!userId) return;
-     const tableWrapper = document.getElementById('debts-table-wrapper');
-     const tableBody = document.getElementById('debts-table');
-     const emptyState = document.getElementById('debts-empty');
-
-     if (!docs || docs.length === 0) {
-          handleEmptyState(tableWrapper, emptyState, 'emptyDebts');
-          return;
-     }
-
-     handleNonEmptyState(tableWrapper, emptyState);
-     if (tableBody) {
-          try {
-               tableBody.innerHTML = docs.map((doc) => {
-                    const debt = doc.data();
-                    if (!debt) return '';
-                    const id = doc.id;
-                    const remaining = (debt.totalAmount || 0) - (debt.paidAmount || 0);
-                    const colorClass = remaining <= 0 ? 'text-green-600' : (debt.paidAmount > 0 ? 'text-yellow-600' : 'text-red-600');
-                    const lastPaymentDate = debt.lastPaymentDate ? formatISODateForDisplay(debt.lastPaymentDate.toDate().toISOString().split('T')[0]) : '—';
-
-                    return `
-                <tr class="border-b hover:bg-gray-50 md:border-b-0 dark:hover:bg-gray-700 dark:border-gray-700">
-                    <td data-label="${translations[currentLang]?.debtName || 'Debt Name'}" class="font-medium">${debt.name || '—'}</td>
-                    <td data-label="${translations[currentLang]?.amount || 'Amount'}">${formatCurrency(debt.totalAmount)}</td>
-                    <td data-label="${translations[currentLang]?.paid || 'Paid'}">${formatCurrency(debt.paidAmount)}</td>
-                    <td data-label="${translations[currentLang]?.remaining || 'Remaining'}" class="font-bold ${colorClass}">${formatCurrency(remaining)}</td>
-                    <td data-label="${translations[currentLang]?.lastPaymentDate || 'Last Payment'}">${lastPaymentDate}</td>
-                    <td data-label="${translations[currentLang]?.comments || 'Comments'}">
-                        <input type="text" class="editable-debt-comment bg-transparent w-full p-1 border-b border-transparent focus:border-blue-500 outline-none" data-id="${id}" value="${debt.comment || ''}" placeholder="${translations[currentLang]?.placeholderComment || 'Comment'}">
-                    </td>
-                    <td data-label="${translations[currentLang]?.actions || 'Actions'}" class="flex gap-2">
-                        <button data-id="${id}" class="add-debt-payment-btn text-green-600 hover:text-green-800" title="${translations[currentLang]?.addDebtPayment || 'Add Payment'}">➕</button>
-                        <button data-id="${id}" class="edit-debt-btn text-blue-600 hover:text-blue-800" title="${translations[currentLang]?.editDebt || 'Edit'}">✏️</button>
-                        <button data-id="${id}" class="delete-debt-btn text-red-600 hover:text-red-800" title="${translations[currentLang]?.delete || 'Delete'}">🗑️</button>
-                    </td>
-                </tr>`;
-               }).join('');
-          } catch (e) {
-               logger.error('Error rendering debts:', e);
-               handleEmptyState(tableWrapper, emptyState, 'errorLoadingData');
-          }
-     }
-};
-
-const renderRecurringExpenses = () => {
-     if (!userId || !selectedMonthId) return;
-     const tableWrapper = document.getElementById('recurring-expenses-table-wrapper');
-     const tableBody = document.getElementById('recurring-expenses-table');
-     const emptyState = document.getElementById('recurring-expenses-empty');
-
-     if (!allRecurringTemplates || allRecurringTemplates.length === 0) {
-          handleEmptyState(tableWrapper, emptyState, 'emptyRecurring');
-          return;
-     }
-
-     handleNonEmptyState(tableWrapper, emptyState);
-
-     const todayDay = new Date(`${getTodayISOString()}T00:00:00`).getDate();
-
-     if (tableBody) {
-          try {
-               tableBody.innerHTML = allRecurringTemplates.map((template) => {
-                    if (!template) return '';
-                    const status = currentMonthStatuses[template.id] || translations.ru.unpaidStatus;
-                    const isOverdue = status === translations.ru.unpaidStatus && template.dueDay < todayDay && selectedMonthId === currentMonthId;
-                    const isPaid = status === translations.ru.paidStatus;
-
-                    return `
-                <tr class="border-b hover:bg-gray-50 ${isOverdue ? 'bg-red-50 dark:bg-red-900/20' : ''} md:border-b-0 dark:hover:bg-gray-700 dark:border-gray-700">
-                    <td data-label="${translations[currentLang]?.name || 'Name'}" class="font-medium">${template.name || '—'}</td>
-                    <td data-label="${translations[currentLang]?.amount || 'Amount'}">${formatCurrency(template.amount)}</td>
-                    <td data-label="${translations[currentLang]?.paymentDay || 'Day'}">${template.dueDay || '—'}</td>
-                    <td data-label="${translations[currentLang]?.status || 'Status'}">
-                        <select data-id="${template.id}" class="recurring-status-select p-1 rounded-md border-0 ring-1 ring-inset ring-gray-300 ${isPaid ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}">
-                            <option value="${translations.ru.unpaidStatus}" ${!isPaid ? 'selected' : ''}>${translations[currentLang]?.unpaidStatus || 'Unpaid'}</option>
-                            <option value="${translations.ru.paidStatus}" ${isPaid ? 'selected' : ''}>${translations[currentLang]?.paidStatus || 'Paid'}</option>
-                        </select>
-                    </td>
-                    <td data-label="${translations[currentLang]?.details || 'Details'}">${template.details || '—'}</td>
-                    <td data-label="${translations[currentLang]?.templateActions || 'Actions'}" class="flex gap-2">
-                        <button data-id="${template.id}" class="edit-recurring-expense-btn text-blue-600 hover:text-blue-800">✏️</button>
-                        <button data-id="${template.id}" class="delete-recurring-expense-btn text-red-600 hover:text-red-800">🗑️</button>
-                    </td>
-                </tr>`;
-               }).join('');
-          } catch (e) {
-               logger.error('Error rendering recurring expenses:', e);
-               handleEmptyState(tableWrapper, emptyState, 'errorLoadingData');
-          }
-     }
-};
-
-const renderExpenses = (docs) => {
-     if (!userId || !selectedMonthId) return;
-     const tableWrapper = document.getElementById('expenses-table-wrapper');
-     const tableBody = document.getElementById('expenses-table');
-     const emptyState = document.getElementById('expenses-empty');
-
-     if (!docs || docs.length === 0) {
-          handleEmptyState(tableWrapper, emptyState, 'emptyExpenses');
-          return;
-     }
-
-     handleNonEmptyState(tableWrapper, emptyState);
-
-     const sortedDocs = [...docs].sort((a, b) => {
-          const dateA = a.data()?.date || '';
-          const dateB = b.data()?.date || '';
-          return dateB.localeCompare ? dateB.localeCompare(dateA) : dateB > dateA ? -1 : 1;
-     });
-
-     if (tableBody) {
-          try {
-               tableBody.innerHTML = sortedDocs.map((doc) => {
-                    const expense = doc.data();
-                    if (!expense) return '';
-                    const id = doc.id;
-                    const actionsHtml = (!expense.recurringExpenseId && !expense.debtPaymentId) ?
-                         `<button data-id="${id}" class="edit-expense-btn text-blue-600 hover:text-blue-800" title="${translations[currentLang]?.editExpense || 'Edit'}">✏️</button>
-                 <button data-id="${id}" class="delete-expense-btn text-red-600 hover:text-red-800" title="${translations[currentLang]?.delete || 'Delete'}">🗑️</button>` : '';
-
-                    return `
-                <tr class="border-b hover:bg-gray-50 md:border-b-0 dark:hover:bg-gray-700 dark:border-gray-700">
-                    <td data-label="${translations[currentLang]?.name || 'Name'}" class="font-medium">${expense.name || '—'}</td>
-                    <td data-label="${translations[currentLang]?.category || 'Category'}">${expense.category || '—'}</td>
-                    <td data-label="${translations[currentLang]?.amount || 'Amount'}">${formatCurrency(expense.amount)}</td>
-                    <td data-label="${translations[currentLang]?.date || 'Date'}">${formatISODateForDisplay(expense.date)}</td>
-                    <td data-label="${translations[currentLang]?.actions || 'Actions'}" class="flex gap-2">${actionsHtml}</td>
-                </tr>`;
-               }).join('');
-          } catch (e) {
-               logger.error('Error rendering expenses:', e);
-               handleEmptyState(tableWrapper, emptyState, 'errorLoadingData');
-          }
-     }
-};
+// Note: renderDebts, renderExpenses, and renderRecurringExpenses are now imported from tabs modules
+// to avoid code duplication. They are initialized in setupCollections().
 
 const createTaskStatusDropdown = (id, status, colName) => {
      const t = translations[currentLang];
@@ -503,9 +471,9 @@ const createTaskStatusDropdown = (id, status, colName) => {
           [ruT.statusSkipped]: { text: t.statusSkipped, class: 'bg-gray-100 text-gray-800' }
      };
      const currentStatus = status || ruT.statusNotDone;
-     let selectHTML = `<select data-id="${id}" data-col="${colName}" class="task-status-select p-1 rounded-md border-0 ring-1 ring-inset ring-gray-300 ${options[currentStatus]?.class || ''}">`;
+     let selectHTML = `<select data-id="${escapeHtmlAttr(id)}" data-col="${escapeHtmlAttr(colName)}" class="task-status-select p-1 rounded-md border-0 ring-1 ring-inset ring-gray-300 ${options[currentStatus]?.class || ''}">`;
      for (const [value, { text }] of Object.entries(options)) {
-          selectHTML += `<option value="${value}" ${currentStatus === value ? 'selected' : ''}>${text}</option>`;
+          selectHTML += `<option value="${escapeHtmlAttr(value)}" ${currentStatus === value ? 'selected' : ''}>${escapeHtml(text)}</option>`;
      }
      selectHTML += `</select>`;
      return selectHTML;
@@ -537,17 +505,17 @@ function renderDailyTasks(docs) {
 
                return `
                 <tr class="md:border-b-0 ${t.carriedOver ? 'bg-blue-50 dark:bg-blue-900/20' : ''} dark:border-gray-700">
-                    <td data-label="${translations[currentLang].name}" class="${s === translations.ru.statusDone ? 'line-through text-gray-500' : ''}">
-                        ${t.name}${firstCarryDateStr}
+                    <td data-label="${escapeHtmlAttr(translations[currentLang].name)}" class="${s === translations.ru.statusDone ? 'line-through text-gray-500' : ''}">
+                        ${escapeHtml(t.name)}${escapeHtml(firstCarryDateStr)}
                     </td>
-                    <td data-label="${translations[currentLang].date}">${formatISODateForDisplay(t.date, { year: undefined })}</td>
-                    <td data-label="${translations[currentLang].status}">${createTaskStatusDropdown(t.id, s, 'dailyTasks')}</td>
-                    <td data-label="${translations[currentLang].notes}">
-                        <input type="text" class="editable-task-notes bg-transparent w-full p-1 border-b border-transparent focus:border-blue-500 outline-none" data-id="${t.id}" data-col="dailyTasks" value="${t.notes || ''}" placeholder="${translations[currentLang].placeholderComment}">
+                    <td data-label="${escapeHtmlAttr(translations[currentLang].date)}">${escapeHtml(formatISODateForDisplay(t.date, { year: undefined }))}</td>
+                    <td data-label="${escapeHtmlAttr(translations[currentLang].status)}">${createTaskStatusDropdown(t.id, s, 'dailyTasks')}</td>
+                    <td data-label="${escapeHtmlAttr(translations[currentLang].notes)}">
+                        <input type="text" class="editable-task-notes bg-transparent w-full p-1 border-b border-transparent focus:border-blue-500 outline-none" data-id="${escapeHtmlAttr(t.id)}" data-col="dailyTasks" value="${escapeHtmlAttr(t.notes || '')}" placeholder="${escapeHtmlAttr(translations[currentLang].placeholderComment)}">
                     </td>
-                    <td data-label="${translations[currentLang].actions}" class="flex gap-2">
-                        <button data-id="${t.id}" class="edit-daily-task-btn text-blue-600 hover:text-blue-800">✏️</button>
-                        <button data-id="${t.id}" class="delete-daily-task-btn text-red-600 hover:text-red-800">🗑️</button>
+                    <td data-label="${escapeHtmlAttr(translations[currentLang].actions)}" class="flex gap-2">
+                        <button data-id="${escapeHtmlAttr(t.id)}" class="edit-daily-task-btn text-blue-600 hover:text-blue-800">✏️</button>
+                        <button data-id="${escapeHtmlAttr(t.id)}" class="delete-daily-task-btn text-red-600 hover:text-red-800">🗑️</button>
                     </td>
                 </tr>`;
           }).join('');
@@ -583,13 +551,13 @@ function renderMonthlyTasks(docs) {
                const s = t.status;
                return `
                 <tr class="md:border-b-0 ${t.carriedOver ? 'bg-yellow-50 dark:bg-yellow-900/20' : ''} dark:border-gray-700">
-                    <td data-label="${translations[currentLang].name}" class="${s === translations.ru.statusDone ? 'line-through text-gray-500' : ''}">${t.name}</td>
-                    <td data-label="${translations[currentLang].deadline}">${formatISODateForDisplay(t.deadline)}</td>
-                    <td data-label="${translations[currentLang].status}">${createTaskStatusDropdown(id, s, 'monthlyTasks')}</td>
-                    <td data-label="${translations[currentLang].actions}" class="flex gap-2">
+                    <td data-label="${escapeHtmlAttr(translations[currentLang].name)}" class="${s === translations.ru.statusDone ? 'line-through text-gray-500' : ''}">${escapeHtml(t.name)}</td>
+                    <td data-label="${escapeHtmlAttr(translations[currentLang].deadline)}">${escapeHtml(formatISODateForDisplay(t.deadline))}</td>
+                    <td data-label="${escapeHtmlAttr(translations[currentLang].status)}">${createTaskStatusDropdown(id, s, 'monthlyTasks')}</td>
+                    <td data-label="${escapeHtmlAttr(translations[currentLang].actions)}" class="flex gap-2">
                         ${!t.recurringExpenseId && !t.fromCalendar ?
-                         `<button data-id="${id}" class="edit-monthly-task-btn text-blue-600 hover:text-blue-800">✏️</button>
-                             <button data-id="${id}" class="delete-monthly-task-btn text-red-600 hover:text-red-800">🗑️</button>` : ''}
+                         `<button data-id="${escapeHtmlAttr(id)}" class="edit-monthly-task-btn text-blue-600 hover:text-blue-800">✏️</button>
+                             <button data-id="${escapeHtmlAttr(id)}" class="delete-monthly-task-btn text-red-600 hover:text-red-800">🗑️</button>` : ''}
                     </td>
                 </tr>`;
           }).join('');
@@ -619,15 +587,15 @@ function renderYearlyTasks(docs) {
                const s = t.status;
                return `
                 <tr class="md:border-b-0 dark:border-gray-700">
-                    <td data-label="${translations[currentLang].name}" class="${s === translations.ru.statusDone ? 'line-through text-gray-500' : ''}">${t.name}</td>
-                    <td data-label="${translations[currentLang].deadline}">${formatISODateForDisplay(t.deadline, { year: 'numeric' })}</td>
-                    <td data-label="${translations[currentLang].status}">${createTaskStatusDropdown(id, s, 'yearlyTasks')}</td>
-                    <td data-label="${translations[currentLang].notes}">
-                        <input type="text" class="editable-task-notes bg-transparent w-full p-1 border-b border-transparent focus:border-blue-500 outline-none" data-id="${id}" data-col="yearlyTasks" value="${t.notes || ''}" placeholder="${translations[currentLang].placeholderComment}">
+                    <td data-label="${escapeHtmlAttr(translations[currentLang].name)}" class="${s === translations.ru.statusDone ? 'line-through text-gray-500' : ''}">${escapeHtml(t.name)}</td>
+                    <td data-label="${escapeHtmlAttr(translations[currentLang].deadline)}">${escapeHtml(formatISODateForDisplay(t.deadline, { year: 'numeric' }))}</td>
+                    <td data-label="${escapeHtmlAttr(translations[currentLang].status)}">${createTaskStatusDropdown(id, s, 'yearlyTasks')}</td>
+                    <td data-label="${escapeHtmlAttr(translations[currentLang].notes)}">
+                        <input type="text" class="editable-task-notes bg-transparent w-full p-1 border-b border-transparent focus:border-blue-500 outline-none" data-id="${escapeHtmlAttr(id)}" data-col="yearlyTasks" value="${escapeHtmlAttr(t.notes || '')}" placeholder="${escapeHtmlAttr(translations[currentLang].placeholderComment)}">
                     </td>
-                    <td data-label="${translations[currentLang].actions}" class="flex gap-2">
-                        <button data-id="${id}" class="edit-yearly-task-btn text-blue-600 hover:text-blue-800">✏️</button>
-                        <button data-id="${id}" class="delete-yearly-task-btn text-red-600 hover:text-red-800">🗑️</button>
+                    <td data-label="${escapeHtmlAttr(translations[currentLang].actions)}" class="flex gap-2">
+                        <button data-id="${escapeHtmlAttr(id)}" class="edit-yearly-task-btn text-blue-600 hover:text-blue-800">✏️</button>
+                        <button data-id="${escapeHtmlAttr(id)}" class="delete-yearly-task-btn text-red-600 hover:text-red-800">🗑️</button>
                     </td>
                 </tr>`;
           }).join('');
@@ -696,10 +664,36 @@ function updateDashboard() {
      if (dashboardLoading) dashboardLoading.classList.add('hidden');
      if (dashboardContent) dashboardContent.classList.remove('hidden');
 
-     const totalRecurringPaid = allRecurringTemplates.filter(t => currentMonthStatuses[t.id] === translations.ru.paidStatus).reduce((s, t) => s + (t.amount || 0), 0);
-     const totalRecurringRemaining = allRecurringTemplates.filter(t => (currentMonthStatuses[t.id] || translations.ru.unpaidStatus) === translations.ru.unpaidStatus).reduce((s, t) => s + (t.amount || 0), 0);
-     const allMonthlyExpensesTotal = allExpenses.reduce((sum, doc) => sum + (doc.data().amount || 0), 0);
-     const totalDebtRemaining = allDebts.reduce((s, d) => s + ((d.data().totalAmount || 0) - (d.data().paidAmount || 0)), 0);
+     // Безопасные финансовые расчеты с проверкой на NaN и Infinity
+     const safeAdd = (a, b) => {
+          const numA = typeof a === 'number' && isFinite(a) ? a : 0;
+          const numB = typeof b === 'number' && isFinite(b) ? b : 0;
+          const result = numA + numB;
+          return isFinite(result) ? result : 0;
+     };
+     
+     const safeSubtract = (a, b) => {
+          const numA = typeof a === 'number' && isFinite(a) ? a : 0;
+          const numB = typeof b === 'number' && isFinite(b) ? b : 0;
+          const result = numA - numB;
+          return isFinite(result) ? result : 0;
+     };
+     
+     const totalRecurringPaid = allRecurringTemplates
+          .filter(t => currentMonthStatuses[t.id] === translations.ru.paidStatus)
+          .reduce((s, t) => safeAdd(s, t.amount || 0), 0);
+     const totalRecurringRemaining = allRecurringTemplates
+          .filter(t => (currentMonthStatuses[t.id] || translations.ru.unpaidStatus) === translations.ru.unpaidStatus)
+          .reduce((s, t) => safeAdd(s, t.amount || 0), 0);
+     const allMonthlyExpensesTotal = allExpenses.reduce((sum, doc) => {
+          const amount = doc.data().amount;
+          return safeAdd(sum, amount || 0);
+     }, 0);
+     const totalDebtRemaining = allDebts.reduce((s, d) => {
+          const total = d.data().totalAmount || 0;
+          const paid = d.data().paidAmount || 0;
+          return safeAdd(s, safeSubtract(total, paid));
+     }, 0);
 
      const elPaid = document.getElementById('total-recurring-paid');
      const elRemaining = document.getElementById('total-recurring-remaining');
@@ -720,7 +714,7 @@ function updateDashboard() {
      if (typeof renderDashboardTasks === 'function') {
           renderDashboardTasks(dailyTasks);
      } else {
-          console.warn('renderDashboardTasks function missing in this build');
+          logger.warn('renderDashboardTasks function missing in this build');
      }
      updateDashboardClock();
 }
@@ -733,26 +727,33 @@ function renderDashboardTasks(tasks) {
      const activeTasks = (tasks || []).filter(t => t.status !== (translations['ru']?.statusDone || 'Выполнено'));
 
      if (activeTasks.length === 0) {
-          list.innerHTML = `<div class="text-gray-400 text-center py-1 text-[10px]">${translations[currentLang]?.noTasks || 'No tasks'}</div>`;
+          list.innerHTML = `<div class="text-gray-400 text-center py-1 text-[10px]">${escapeHtml(translations[currentLang]?.noTasks || 'No tasks')}</div>`;
           return;
      }
 
      list.innerHTML = activeTasks.slice(0, 5).map(t => `
        <div class="flex items-center justify-between p-1 bg-gray-50 dark:bg-gray-700/50 rounded hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors cursor-pointer" onclick="document.querySelector('[data-tab=\\'tasks\\']').click()">
-           <span class="truncate pr-2 text-xs">${t.name}</span>
+           <span class="truncate pr-2 text-xs">${escapeHtml(t.name)}</span>
            <span class="text-[9px] px-1 bg-blue-100 text-blue-800 rounded dark:bg-blue-900 dark:text-blue-200">Today</span>
        </div>
    `).join('');
 }
 
-let clockInterval;
+let clockInterval = null;
+let midnightRolloverTimeout = null;
+let visibilityChangeHandler = null;
+
 function updateDashboardClock() {
      const timeEl = document.getElementById('dash-time');
      const dateEl = document.getElementById('dash-date');
 
      if (!timeEl || !dateEl) return;
 
-     if (clockInterval) clearInterval(clockInterval);
+     // Очищаем предыдущий interval перед созданием нового
+     if (clockInterval) {
+          clearInterval(clockInterval);
+          clockInterval = null;
+     }
 
      const update = () => {
           const now = new Date();
@@ -762,6 +763,14 @@ function updateDashboardClock() {
 
      update();
      clockInterval = setInterval(update, 1000);
+}
+
+// Функция очистки clock interval
+function cleanupClockInterval() {
+     if (clockInterval) {
+          clearInterval(clockInterval);
+          clockInterval = null;
+     }
 }
 
 function renderChart() {
@@ -897,7 +906,7 @@ function updateRecentActivity() {
      if (recentActivities.length === 0) {
           activityContainer.innerHTML = `
             <div class="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400">
-                <span>${translations[currentLang].noRecentActivity || 'Нет недавней активности'}</span>
+                <span>${escapeHtml(translations[currentLang].noRecentActivity || 'Нет недавней активности')}</span>
             </div>
         `;
      } else {
@@ -909,7 +918,7 @@ function updateRecentActivity() {
                          'bg-purple-500';
                activityEl.innerHTML = `
                 <div class="w-2 h-2 ${colorClass} rounded-full"></div>
-                <span class="text-gray-700 dark:text-gray-300">${activity.text}</span>
+                <span class="text-gray-700 dark:text-gray-300">${escapeHtml(activity.text)}</span>
             `;
                activityContainer.appendChild(activityEl);
           });
@@ -922,6 +931,13 @@ function updateRecentActivity() {
 
 async function checkAndCarryOverDailyTasks(todayId) {
      if (!userId) return;
+     
+     // Предотвращаем race condition при одновременных вызовах
+     if (isCarryingOverTasks) {
+          logger.warn('checkAndCarryOverDailyTasks already in progress, skipping');
+          return;
+     }
+     
      const today = new Date(`${todayId}T00:00:00`);
      const yesterday = new Date(today);
      yesterday.setDate(yesterday.getDate() - 1);
@@ -932,6 +948,9 @@ async function checkAndCarryOverDailyTasks(todayId) {
 
      // Only run once per day
      if (lastCheck === todayId) return;
+     
+     isCarryingOverTasks = true;
+     try {
 
      // Fetch not-done tasks that are from yesterday or earlier and not yet carried over
      const q = query(dailyTasksCol, where("status", "==", translations.ru.statusNotDone));
@@ -971,6 +990,9 @@ async function checkAndCarryOverDailyTasks(todayId) {
      }
 
      localStorage.setItem(lastCheckKey, todayId);
+     } finally {
+          isCarryingOverTasks = false;
+     }
 }
 
 async function checkAndCarryOverTasks() {
@@ -1025,12 +1047,18 @@ function setupEventListeners() {
 
      tabs.forEach(tab => tab.addEventListener('click', (e) => {
           e.preventDefault();
+          // Удаляем активный класс со всех вкладок
           tabs.forEach(t => t.classList.remove('tab-active'));
+          $$('.mobile-sidebar-item').forEach(item => item.classList.remove('tab-active'));
+          
+          // Добавляем активный класс к выбранной вкладке
           tab.classList.add('tab-active');
 
-          // Also update mobile tabs if present
-          const mobileTabs = $$('.tab-button[data-tab="' + tab.dataset.tab + '"]');
-          mobileTabs.forEach(mt => mt.classList.add('tab-active'));
+          // Обновляем мобильную боковую панель
+          const mobileSidebarItems = $$('.mobile-sidebar-item[data-tab="' + tab.dataset.tab + '"]');
+          mobileSidebarItems.forEach(item => {
+               item.classList.add('tab-active');
+          });
 
           $$('.page-content').forEach(p => p.classList.add('hidden'));
           const pageId = `${tab.dataset.tab}-page`;
@@ -1058,17 +1086,29 @@ function setupEventListeners() {
           }
      }));
 
-     // Month Selector
+     // Month Selector - с debouncing для предотвращения частых переключений
      const monthSelector = document.getElementById('month-selector');
      if (monthSelector) {
-          monthSelector.addEventListener('change', async (e) => {
-               selectedMonthId = e.target.value;
-               const [year, month] = selectedMonthId.split('-').map(Number);
-               calendarDate = new Date(year, month - 1, 1);
-               // await ensureRecurringTasksForMonth(selectedMonthId); // Implement if needed
-               updateMonthDisplay();
-               attachListeners();
-          });
+          const handleMonthChange = debounce(async (e) => {
+               // Предотвращаем race condition при быстром переключении месяцев
+               if (isMonthChanging) {
+                    logger.warn('Month change already in progress, skipping');
+                    return;
+               }
+               
+               isMonthChanging = true;
+               try {
+                    selectedMonthId = e.target.value;
+                    const [year, month] = selectedMonthId.split('-').map(Number);
+                    calendarDate = new Date(year, month - 1, 1);
+                    // await ensureRecurringTasksForMonth(selectedMonthId); // Implement if needed
+                    updateMonthDisplay();
+                    attachListeners();
+               } finally {
+                    isMonthChanging = false;
+               }
+          }, 200);
+          monthSelector.addEventListener('change', handleMonthChange);
      }
 
      // Calendar Navigation
@@ -1173,8 +1213,11 @@ function setupEventListeners() {
      });
 
      // Global Click Listener for dynamic elements
-     document.getElementById('app').addEventListener('click', handleGlobalClick);
-     document.getElementById('app').addEventListener('change', handleGlobalChange);
+     const appElement = document.getElementById('app');
+     if (appElement) {
+          appElement.addEventListener('click', handleGlobalClick);
+          appElement.addEventListener('change', handleGlobalChange);
+     }
 
      const dailyDateInput = document.getElementById('daily-date-filter');
      if (dailyDateInput) {
@@ -1203,49 +1246,9 @@ function setupEventListeners() {
      const themeBtn = document.getElementById('theme-toggle');
      if (themeBtn) themeBtn.addEventListener('click', toggleTheme);
 
-     const mobileMenuToggle = document.getElementById('mobile-menu-toggle');
-     const miniSidebar = document.getElementById('mini-sidebar');
-     if (mobileMenuToggle && miniSidebar) {
-          mobileMenuToggle.addEventListener('click', (e) => {
-               e.preventDefault();
-               e.stopPropagation();
-               miniSidebar.classList.toggle('hidden');
-          });
-     }
+     // Mobile menu toggle теперь управляется через responsive.js
 
-     const mobileTabsToggle = document.getElementById('mobile-tabs-toggle');
-     const mobileTabsMenu = document.getElementById('mobile-tabs-menu');
-     if (mobileTabsToggle && mobileTabsMenu) {
-          mobileTabsToggle.addEventListener('click', (e) => {
-               e.preventDefault();
-               e.stopPropagation();
-               const isHidden = mobileTabsMenu.classList.contains('hidden');
-               if (isHidden) {
-                    mobileTabsMenu.classList.remove('hidden');
-                    mobileTabsToggle.setAttribute('aria-expanded', 'true');
-               } else {
-                    mobileTabsMenu.classList.add('hidden');
-                    mobileTabsToggle.setAttribute('aria-expanded', 'false');
-               }
-          });
-
-          document.addEventListener('click', (e) => {
-               if (!mobileTabsMenu.classList.contains('hidden')) {
-                    const within = mobileTabsMenu.contains(e.target) || mobileTabsToggle.contains(e.target);
-                    if (!within) {
-                         mobileTabsMenu.classList.add('hidden');
-                         mobileTabsToggle.setAttribute('aria-expanded', 'false');
-                    }
-               }
-          });
-
-          mobileTabsMenu.querySelectorAll('.tab-button').forEach(btn => {
-               btn.addEventListener('click', () => {
-                    mobileTabsMenu.classList.add('hidden');
-                    mobileTabsToggle.setAttribute('aria-expanded', 'false');
-               });
-          });
-     }
+     // Старый код mobile-tabs-toggle удален - теперь используется мобильная боковая панель
 
      // Radio Player
      const radioBtn = document.getElementById('radio-play-pause-btn');
@@ -1454,13 +1457,17 @@ function setupEventListeners() {
           if (backBtn) backBtn.addEventListener('click', () => { expr = expr.slice(0, -1); setDisplay(); });
           if (eqBtn) eqBtn.addEventListener('click', () => {
                try {
-                    // sanitize expression: only digits, operators and dot
-                    const safe = expr.replace(/[^0-9+\-*/.]/g, '');
-                    const result = Function(`return (${safe || '0'})`)();
-                    expr = String(result);
-                    setDisplay();
+                    // Используем безопасный парсер вместо Function()
+                    const evaluation = safeEvaluateExpression(expr || '0');
+                    if (evaluation.valid && evaluation.result !== undefined) {
+                         expr = String(evaluation.result);
+                         setDisplay();
+                    } else {
+                         showToast(translations[currentLang]?.calcError || evaluation.error || 'Ошибка выражения', 'error');
+                    }
                } catch (e) {
-                    showToast('Ошибка выражения', 'error');
+                    logger.error('Calculator error:', e);
+                    showToast(translations[currentLang]?.calcError || 'Ошибка выражения', 'error');
                }
           });
           const calcCancel = calculatorModal.querySelector('.cancel-btn');
@@ -1489,10 +1496,10 @@ function setupEventListeners() {
                container.innerHTML = items.map((it, idx) => `
                 <div class="flex items-center justify-between p-2 bg-gray-50 dark:bg-gray-700 rounded">
                     <div class="flex items-center gap-3">
-                        <label class="flex items-center gap-2 text-sm"><input type="checkbox" class="shop-check" data-index="${idx}"/><span>Куплено</span></label>
-                        <span class="font-medium">${it.name}</span>
+                        <label class="flex items-center gap-2 text-sm"><input type="checkbox" class="shop-check" data-index="${escapeHtmlAttr(String(idx))}"/><span>Куплено</span></label>
+                        <span class="font-medium">${escapeHtml(it.name)}</span>
                         <span class="text-xs px-2 py-0.5 rounded bg-gray-200 dark:bg-gray-600 text-gray-700 dark:text-gray-200">Не куплено</span>
-                        <span class="text-sm text-gray-500">× ${it.qty}</span>
+                        <span class="text-sm text-gray-500">× ${escapeHtml(String(it.qty))}</span>
                     </div>
                     <button class="shop-del text-red-600" data-index="${idx}" title="Удалить">🗑️</button>
                 </div>
@@ -1538,11 +1545,6 @@ function setupEventListeners() {
           if (cancelBtn) cancelBtn.addEventListener('click', () => shoppingModal.close());
      }
 
-     // Payments inline open (removed in favor of direct links)
-     const paymentsWrapper = document.getElementById('payments-inline-wrapper');
-     if (paymentsWrapper) {
-          // Legacy cleanup if needed
-     }
 
      // Logout button
      const logoutBtn = document.getElementById('logout-btn');
@@ -1611,19 +1613,55 @@ async function handleFormSubmit(e) {
           if (modal) modal.close();
           showToast(translations[currentLang].toastSuccess);
      } catch (error) {
-          logger.error('Form submit error:', error);
-          showToast(translations[currentLang].toastError, 'error');
+          handleError(error, {
+               module: 'app',
+               action: `handleFormSubmit:${id}`,
+               showToUser: true,
+               userMessage: error.message || translations[currentLang]?.toastError || 'An error occurred'
+          });
      }
 }
 
 // Form Handlers (Simplified)
 async function handleDebtForm(form) {
      const id = form.querySelector('#debt-id').value;
+     
+     // Валидация имени
+     const nameValue = form.querySelector('#debt-name').value;
+     const nameValidation = validateString(nameValue, { minLength: 1, maxLength: 200, required: true });
+     if (!nameValidation.valid) {
+          showToast(translations[currentLang]?.validationDebtName || nameValidation.error || 'Invalid debt name', 'error');
+          throw new Error(nameValidation.error);
+     }
+     
+     // Валидация сумм
+     const totalAmountValue = form.querySelector('#debt-total').value;
+     const totalValidation = validateNumber(totalAmountValue, { min: 0.01, max: 999999999.99, required: true, allowZero: false });
+     if (!totalValidation.valid) {
+          showToast(translations[currentLang]?.validationDebtTotal || totalValidation.error || 'Invalid total amount', 'error');
+          throw new Error(totalValidation.error);
+     }
+     
+     const paidAmountValue = form.querySelector('#debt-paid').value;
+     const paidValidation = validateNumber(paidAmountValue, { min: 0, max: totalValidation.value, required: true, allowZero: true });
+     if (!paidValidation.valid) {
+          showToast(translations[currentLang]?.validationDebtPaid || paidValidation.error || 'Invalid paid amount', 'error');
+          throw new Error(paidValidation.error);
+     }
+     
+     // Валидация комментария
+     const commentValue = form.querySelector('#debt-comment').value || '';
+     const commentValidation = validateString(commentValue, { minLength: 0, maxLength: 500, required: false });
+     if (!commentValidation.valid) {
+          showToast(translations[currentLang]?.validationComment || commentValidation.error || 'Invalid comment', 'error');
+          throw new Error(commentValidation.error);
+     }
+     
      const data = {
-          name: form.querySelector('#debt-name').value,
-          totalAmount: parseFloat(form.querySelector('#debt-total').value),
-          paidAmount: parseFloat(form.querySelector('#debt-paid').value),
-          comment: form.querySelector('#debt-comment').value
+          name: nameValue.trim(),
+          totalAmount: totalValidation.value,
+          paidAmount: paidValidation.value,
+          comment: commentValue.trim()
      };
 
      if (id) await updateDoc(doc(debtsCol, id), data);
@@ -1635,11 +1673,46 @@ async function handleDebtForm(form) {
 
 async function handleExpenseForm(form) {
      const id = form.querySelector('#expense-id').value;
+     
+     // Валидация имени
+     const nameValue = form.querySelector('#expense-name').value;
+     const nameValidation = validateString(nameValue, { minLength: 1, maxLength: 200, required: true });
+     if (!nameValidation.valid) {
+          showToast(translations[currentLang]?.validationExpenseName || nameValidation.error || 'Invalid expense name', 'error');
+          throw new Error(nameValidation.error);
+     }
+     
+     // Валидация категории
+     const categoryValue = form.querySelector('#expense-category').value;
+     const categoryValidation = validateString(categoryValue, { minLength: 1, maxLength: 100, required: true });
+     if (!categoryValidation.valid) {
+          showToast(translations[currentLang]?.validationCategory || categoryValidation.error || 'Invalid category', 'error');
+          throw new Error(categoryValidation.error);
+     }
+     
+     // Валидация суммы
+     const amountValue = form.querySelector('#expense-amount').value;
+     const amountValidation = validateNumber(amountValue, { min: 0.01, max: 999999999.99, required: true, allowZero: false });
+     if (!amountValidation.valid) {
+          showToast(translations[currentLang]?.validationAmount || amountValidation.error || 'Invalid amount', 'error');
+          throw new Error(amountValidation.error);
+     }
+     
+     // Валидация даты
+     const dateValue = form.querySelector('#expense-date').value;
+     const maxDate = new Date();
+     maxDate.setFullYear(maxDate.getFullYear() + 1); // Разрешаем до года вперед
+     const dateValidation = validateDate(dateValue, { required: true, maxDate: maxDate });
+     if (!dateValidation.valid) {
+          showToast(translations[currentLang]?.validationDate || dateValidation.error || 'Invalid date', 'error');
+          throw new Error(dateValidation.error);
+     }
+     
      const data = {
-          name: form.querySelector('#expense-name').value,
-          category: form.querySelector('#expense-category').value,
-          amount: parseFloat(form.querySelector('#expense-amount').value),
-          date: form.querySelector('#expense-date').value
+          name: nameValue.trim(),
+          category: categoryValue.trim(),
+          amount: amountValidation.value,
+          date: dateValue
      };
 
      // Logic to handle month change for expense is omitted for brevity but should be here
@@ -1666,9 +1739,26 @@ async function handleDailyTaskForm(form) {
 
 async function handleMonthlyTaskForm(form) {
      const id = form.querySelector('#monthly-task-id').value;
+     
+     // Валидация имени задачи
+     const nameValue = form.querySelector('#monthly-task-name').value;
+     const nameValidation = validateString(nameValue, { minLength: 1, maxLength: 200, required: true });
+     if (!nameValidation.valid) {
+          showToast(translations[currentLang]?.validationTaskName || nameValidation.error || 'Invalid task name', 'error');
+          throw new Error(nameValidation.error);
+     }
+     
+     // Валидация дедлайна
+     const deadlineValue = form.querySelector('#monthly-task-deadline').value;
+     const deadlineValidation = validateDate(deadlineValue, { required: true });
+     if (!deadlineValidation.valid) {
+          showToast(translations[currentLang]?.validationDeadline || deadlineValidation.error || 'Invalid deadline', 'error');
+          throw new Error(deadlineValidation.error);
+     }
+     
      const data = {
-          name: form.querySelector('#monthly-task-name').value,
-          deadline: form.querySelector('#monthly-task-deadline').value,
+          name: nameValue.trim(),
+          deadline: deadlineValue,
           status: translations.ru.statusNotDone,
           month: selectedMonthId
      };
@@ -1679,10 +1769,35 @@ async function handleMonthlyTaskForm(form) {
 
 async function handleYearlyTaskForm(form) {
      const id = form.querySelector('#yearly-task-id').value;
+     
+     // Валидация имени задачи
+     const nameValue = form.querySelector('#yearly-task-name').value;
+     const nameValidation = validateString(nameValue, { minLength: 1, maxLength: 200, required: true });
+     if (!nameValidation.valid) {
+          showToast(translations[currentLang]?.validationTaskName || nameValidation.error || 'Invalid task name', 'error');
+          throw new Error(nameValidation.error);
+     }
+     
+     // Валидация дедлайна
+     const deadlineValue = form.querySelector('#yearly-task-deadline').value;
+     const deadlineValidation = validateDate(deadlineValue, { required: true });
+     if (!deadlineValidation.valid) {
+          showToast(translations[currentLang]?.validationDeadline || deadlineValidation.error || 'Invalid deadline', 'error');
+          throw new Error(deadlineValidation.error);
+     }
+     
+     // Валидация заметок
+     const notesValue = form.querySelector('#yearly-task-notes').value || '';
+     const notesValidation = validateString(notesValue, { minLength: 0, maxLength: 500, required: false });
+     if (!notesValidation.valid) {
+          showToast(translations[currentLang]?.validationNotes || notesValidation.error || 'Invalid notes', 'error');
+          throw new Error(notesValidation.error);
+     }
+     
      const data = {
-          name: form.querySelector('#yearly-task-name').value,
-          deadline: form.querySelector('#yearly-task-deadline').value,
-          notes: form.querySelector('#yearly-task-notes').value || '',
+          name: nameValue.trim(),
+          deadline: deadlineValue,
+          notes: notesValue.trim(),
           status: translations.ru.statusNotDone,
           year: calendarDate.getFullYear()
      };
@@ -1693,11 +1808,44 @@ async function handleYearlyTaskForm(form) {
 
 async function handleRecurringExpenseForm(form) {
      const id = form.querySelector('#recurring-expense-id').value;
+     
+     // Валидация имени
+     const nameValue = form.querySelector('#recurring-expense-name').value;
+     const nameValidation = validateString(nameValue, { minLength: 1, maxLength: 200, required: true });
+     if (!nameValidation.valid) {
+          showToast(translations[currentLang]?.validationRecurringName || nameValidation.error || 'Invalid name', 'error');
+          throw new Error(nameValidation.error);
+     }
+     
+     // Валидация суммы
+     const amountValue = form.querySelector('#recurring-expense-amount').value;
+     const amountValidation = validateNumber(amountValue, { min: 0.01, max: 999999999.99, required: true, allowZero: false });
+     if (!amountValidation.valid) {
+          showToast(translations[currentLang]?.validationAmount || amountValidation.error || 'Invalid amount', 'error');
+          throw new Error(amountValidation.error);
+     }
+     
+     // Валидация дня месяца
+     const dueDayValue = form.querySelector('#recurring-expense-due-day').value;
+     const dueDayValidation = validateDayOfMonth(dueDayValue);
+     if (!dueDayValidation.valid) {
+          showToast(translations[currentLang]?.validationDueDay || dueDayValidation.error || 'Invalid due day', 'error');
+          throw new Error(dueDayValidation.error);
+     }
+     
+     // Валидация деталей
+     const detailsValue = form.querySelector('#recurring-expense-details').value || '';
+     const detailsValidation = validateString(detailsValue, { minLength: 0, maxLength: 500, required: false });
+     if (!detailsValidation.valid) {
+          showToast(translations[currentLang]?.validationDetails || detailsValidation.error || 'Invalid details', 'error');
+          throw new Error(detailsValidation.error);
+     }
+     
      const data = {
-          name: form.querySelector('#recurring-expense-name').value,
-          amount: parseFloat(form.querySelector('#recurring-expense-amount').value),
-          dueDay: parseInt(form.querySelector('#recurring-expense-due-day').value),
-          details: form.querySelector('#recurring-expense-details').value || ''
+          name: nameValue.trim(),
+          amount: amountValidation.value,
+          dueDay: dueDayValidation.value,
+          details: detailsValue.trim()
      };
 
      if (id) await updateDoc(doc(recurringExpensesCol, id), data);
@@ -1707,21 +1855,89 @@ async function handleRecurringExpenseForm(form) {
 async function handleEventForm(form) {
      const id = form.querySelector('#event-id').value;
      const category = form.querySelector('#event-category').value;
+     
+     // Валидация категории
+     const validCategories = ['event', 'birthday', 'meeting', 'wedding'];
+     if (!validCategories.includes(category)) {
+          showToast(translations[currentLang]?.validationCategory || 'Invalid event category', 'error');
+          throw new Error('Invalid event category');
+     }
+     
+     // Валидация даты
      const eventDate = form.querySelector('#event-date').value;
+     const dateValidation = validateDate(eventDate, { required: true });
+     if (!dateValidation.valid) {
+          showToast(translations[currentLang]?.validationDate || dateValidation.error || 'Invalid date', 'error');
+          throw new Error(dateValidation.error);
+     }
+     
      let data = { date: eventDate, category };
 
      // Handle different event categories
      if (category === 'event') {
-          data.name = form.querySelector('#event-name-generic').value;
+          const nameValue = form.querySelector('#event-name-generic').value;
+          const nameValidation = validateString(nameValue, { minLength: 1, maxLength: 200, required: true });
+          if (!nameValidation.valid) {
+               showToast(translations[currentLang]?.validationEventName || nameValidation.error || 'Invalid event name', 'error');
+               throw new Error(nameValidation.error);
+          }
+          data.name = nameValue.trim();
      } else if (category === 'birthday') {
-          data.birthdayName = form.querySelector('#event-birthday-name').value;
-          data.birthYear = form.querySelector('#event-birthday-year').value || null;
+          const birthdayNameValue = form.querySelector('#event-birthday-name').value;
+          const nameValidation = validateString(birthdayNameValue, { minLength: 1, maxLength: 200, required: true });
+          if (!nameValidation.valid) {
+               showToast(translations[currentLang]?.validationBirthdayName || nameValidation.error || 'Invalid birthday name', 'error');
+               throw new Error(nameValidation.error);
+          }
+          data.birthdayName = birthdayNameValue.trim();
+          
+          const birthYearValue = form.querySelector('#event-birthday-year').value;
+          if (birthYearValue) {
+               const yearValidation = validateNumber(birthYearValue, { min: 1900, max: new Date().getFullYear(), required: false });
+               if (!yearValidation.valid) {
+                    showToast(translations[currentLang]?.validationBirthYear || yearValidation.error || 'Invalid birth year', 'error');
+                    throw new Error(yearValidation.error);
+               }
+               data.birthYear = Math.floor(yearValidation.value);
+          } else {
+               data.birthYear = null;
+          }
      } else if (category === 'meeting') {
-          data.meetingWith = form.querySelector('#event-meeting-with').value;
-          data.time = form.querySelector('#event-meeting-time').value || null;
-          data.place = form.querySelector('#event-meeting-place').value || null;
+          const meetingWithValue = form.querySelector('#event-meeting-with').value;
+          const nameValidation = validateString(meetingWithValue, { minLength: 1, maxLength: 200, required: true });
+          if (!nameValidation.valid) {
+               showToast(translations[currentLang]?.validationMeetingWith || nameValidation.error || 'Invalid meeting participant', 'error');
+               throw new Error(nameValidation.error);
+          }
+          data.meetingWith = meetingWithValue.trim();
+          
+          const timeValue = form.querySelector('#event-meeting-time').value || null;
+          if (timeValue) {
+               const timeValidation = validateString(timeValue, { minLength: 0, maxLength: 10, required: false });
+               if (!timeValidation.valid) {
+                    showToast(translations[currentLang]?.validationTime || timeValidation.error || 'Invalid time', 'error');
+                    throw new Error(timeValidation.error);
+               }
+          }
+          data.time = timeValue;
+          
+          const placeValue = form.querySelector('#event-meeting-place').value || null;
+          if (placeValue) {
+               const placeValidation = validateString(placeValue, { minLength: 0, maxLength: 200, required: false });
+               if (!placeValidation.valid) {
+                    showToast(translations[currentLang]?.validationPlace || placeValidation.error || 'Invalid place', 'error');
+                    throw new Error(placeValidation.error);
+               }
+          }
+          data.place = placeValue;
      } else if (category === 'wedding') {
-          data.weddingNames = form.querySelector('#event-wedding-names').value;
+          const weddingNamesValue = form.querySelector('#event-wedding-names').value;
+          const nameValidation = validateString(weddingNamesValue, { minLength: 1, maxLength: 200, required: true });
+          if (!nameValidation.valid) {
+               showToast(translations[currentLang]?.validationWeddingNames || nameValidation.error || 'Invalid wedding names', 'error');
+               throw new Error(nameValidation.error);
+          }
+          data.weddingNames = weddingNamesValue.trim();
      }
 
      if (id) await updateDoc(doc(calendarEventsCol, id), data);
@@ -1735,9 +1951,16 @@ async function handleEventForm(form) {
 }
 
 async function handleCategoryForm(form) {
-     const name = form.querySelector('#category-name').value;
-     if (!name) return;
-     await addDoc(categoriesCol, { name, lang: currentLang });
+     const nameValue = form.querySelector('#category-name').value;
+     
+     // Валидация имени категории
+     const nameValidation = validateString(nameValue, { minLength: 1, maxLength: 100, required: true });
+     if (!nameValidation.valid) {
+          showToast(translations[currentLang]?.validationCategoryName || nameValidation.error || 'Invalid category name', 'error');
+          throw new Error(nameValidation.error);
+     }
+     
+     await addDoc(categoriesCol, { name: nameValue.trim(), lang: currentLang });
      // Refresh categories list
      const snapshot = await getDocs(query(categoriesCol));
      renderCategories(snapshot.docs.map(d => ({ id: d.id, ...d.data() })));
@@ -1745,15 +1968,39 @@ async function handleCategoryForm(form) {
 
 async function handleDebtPaymentForm(form) {
      const debtId = form.querySelector('#debt-payment-id').value;
-     const amount = parseFloat(form.querySelector('#debt-payment-amount').value);
-     if (!debtId || !amount) return;
+     
+     if (!debtId) {
+          showToast(translations[currentLang]?.validationDebtId || 'Debt ID is required', 'error');
+          throw new Error('Debt ID is required');
+     }
+     
+     // Валидация суммы платежа
+     const amountValue = form.querySelector('#debt-payment-amount').value;
+     const amountValidation = validateNumber(amountValue, { min: 0.01, max: 999999999.99, required: true, allowZero: false });
+     if (!amountValidation.valid) {
+          showToast(translations[currentLang]?.validationPaymentAmount || amountValidation.error || 'Invalid payment amount', 'error');
+          throw new Error(amountValidation.error);
+     }
 
      const debtDoc = await getDoc(doc(debtsCol, debtId));
-     if (!debtDoc.exists()) return;
+     if (!debtDoc.exists()) {
+          showToast(translations[currentLang]?.debtNotFound || 'Debt not found', 'error');
+          throw new Error('Debt not found');
+     }
 
      const debt = debtDoc.data();
-     const newPaidAmount = (debt.paidAmount || 0) + amount;
-     await updateDoc(doc(debtsCol, debtId), { paidAmount: newPaidAmount });
+     const newPaidAmount = (debt.paidAmount || 0) + amountValidation.value;
+     
+     // Проверка, что платеж не превышает общую сумму долга
+     if (newPaidAmount > (debt.totalAmount || 0)) {
+          showToast(translations[currentLang]?.validationPaymentExceedsDebt || 'Payment amount exceeds total debt', 'error');
+          throw new Error('Payment amount exceeds total debt');
+     }
+     
+     await updateDoc(doc(debtsCol, debtId), { 
+          paidAmount: newPaidAmount,
+          lastPaymentDate: Timestamp.now()
+     });
 }
 
 // ... other handlers
@@ -1765,114 +2012,189 @@ async function handleGlobalClick(e) {
      // Delete Handlers
      if (target.closest('.delete-debt-btn')) {
           if (confirm(translations[currentLang].deleteConfirm)) {
-               await deleteDoc(doc(debtsCol, id));
-               showToast(translations[currentLang].toastDeleted);
+               try {
+                    await deleteDoc(doc(debtsCol, id));
+                    showToast(translations[currentLang].toastDeleted);
+               } catch (error) {
+                    handleError(error, { module: 'app', action: 'deleteDebt' });
+               }
           }
      } else if (target.closest('.delete-expense-btn')) {
           if (confirm(translations[currentLang].deleteConfirm)) {
-               await deleteDoc(doc(expensesCol, id));
-               showToast(translations[currentLang].toastDeleted);
+               try {
+                    await deleteDoc(doc(expensesCol, id));
+                    showToast(translations[currentLang].toastDeleted);
+               } catch (error) {
+                    handleError(error, { module: 'app', action: 'deleteExpense' });
+               }
           }
      } else if (target.closest('.delete-daily-task-btn')) {
           if (confirm(translations[currentLang].deleteConfirm)) {
-               await deleteDoc(doc(dailyTasksCol, id));
-               showToast(translations[currentLang].toastDeleted);
+               try {
+                    await deleteDoc(doc(dailyTasksCol, id));
+                    showToast(translations[currentLang].toastDeleted);
+               } catch (error) {
+                    handleError(error, { module: 'app', action: 'deleteDailyTask' });
+               }
           }
      } else if (target.closest('.delete-monthly-task-btn')) {
           if (confirm(translations[currentLang].deleteConfirm)) {
-               await deleteDoc(doc(monthlyTasksCol, id));
-               showToast(translations[currentLang].toastDeleted);
+               try {
+                    await deleteDoc(doc(monthlyTasksCol, id));
+                    showToast(translations[currentLang].toastDeleted);
+               } catch (error) {
+                    handleError(error, { module: 'app', action: 'deleteMonthlyTask' });
+               }
           }
      } else if (target.closest('.delete-yearly-task-btn')) {
           if (confirm(translations[currentLang].deleteConfirm)) {
-               await deleteDoc(doc(yearlyTasksCol, id));
-               showToast(translations[currentLang].toastDeleted);
+               try {
+                    await deleteDoc(doc(yearlyTasksCol, id));
+                    showToast(translations[currentLang].toastDeleted);
+               } catch (error) {
+                    handleError(error, { module: 'app', action: 'deleteYearlyTask' });
+               }
           }
      } else if (target.closest('.delete-recurring-expense-btn')) {
           if (confirm(translations[currentLang].deleteConfirm)) {
-               await deleteDoc(doc(recurringExpensesCol, id));
-               showToast(translations[currentLang].toastDeleted);
+               try {
+                    await deleteDoc(doc(recurringExpensesCol, id));
+                    showToast(translations[currentLang].toastDeleted);
+               } catch (error) {
+                    handleError(error, { module: 'app', action: 'deleteRecurringExpense' });
+               }
           }
      } else if (target.closest('.delete-category-btn')) {
           if (confirm(translations[currentLang].deleteConfirm)) {
-               await deleteDoc(doc(categoriesCol, id));
-               showToast(translations[currentLang].toastDeleted);
+               try {
+                    await deleteDoc(doc(categoriesCol, id));
+                    showToast(translations[currentLang].toastDeleted);
+               } catch (error) {
+                    handleError(error, { module: 'app', action: 'deleteCategory' });
+               }
           }
      }
 
      // Edit Handlers
      else if (target.closest('.edit-debt-btn')) {
-          const docSnap = await getDoc(doc(debtsCol, id));
-          if (docSnap.exists()) {
-               const data = docSnap.data();
-               const form = document.getElementById('debt-form');
-               form.querySelector('#debt-id').value = id;
-               form.querySelector('#debt-name').value = data.name;
-               form.querySelector('#debt-amount').value = data.amount;
-               form.querySelector('#debt-paid').value = data.paidAmount || 0;
-               form.querySelector('#debt-last-payment').value = data.lastPaymentDate || '';
-               form.querySelector('#debt-comments').value = data.comments || '';
-               document.getElementById('debt-modal-title').textContent = translations[currentLang].editDebt;
-               document.getElementById('debt-modal').showModal();
+          try {
+               const docSnap = await getDoc(doc(debtsCol, id));
+               if (docSnap.exists()) {
+                    const data = docSnap.data();
+                    const form = document.getElementById('debt-form');
+                    form.querySelector('#debt-id').value = id;
+                    form.querySelector('#debt-name').value = data.name;
+                    form.querySelector('#debt-total').value = data.totalAmount;
+                    form.querySelector('#debt-paid').value = data.paidAmount || 0;
+                    form.querySelector('#debt-comment').value = data.comment || '';
+                    document.getElementById('debt-modal-title').textContent = translations[currentLang].editDebt;
+                    document.getElementById('debt-modal').showModal();
+               }
+          } catch (error) {
+               handleError(error, { module: 'app', action: 'editDebt' });
           }
      } else if (target.closest('.edit-expense-btn')) {
-          const docSnap = await getDoc(doc(expensesCol, id));
-          if (docSnap.exists()) {
-               const data = docSnap.data();
-               const form = document.getElementById('expense-form');
-               form.querySelector('#expense-id').value = id;
-               form.querySelector('#expense-name').value = data.name;
-               form.querySelector('#expense-category').value = data.category;
-               form.querySelector('#expense-amount').value = data.amount;
-               form.querySelector('#expense-date').value = data.date;
-               document.getElementById('expense-modal-title').textContent = translations[currentLang].editExpense;
-               document.getElementById('expense-modal').showModal();
+          try {
+               const docSnap = await getDoc(doc(expensesCol, id));
+               if (docSnap.exists()) {
+                    const data = docSnap.data();
+                    const form = document.getElementById('expense-form');
+                    const modal = document.getElementById('expense-modal');
+                    const modalTitle = document.getElementById('expense-modal-title');
+                    if (form && modal && modalTitle) {
+                         const idInput = form.querySelector('#expense-id');
+                         const nameInput = form.querySelector('#expense-name');
+                         const categoryInput = form.querySelector('#expense-category');
+                         const amountInput = form.querySelector('#expense-amount');
+                         const dateInput = form.querySelector('#expense-date');
+                         if (idInput) idInput.value = id;
+                         if (nameInput) nameInput.value = data.name || '';
+                         if (categoryInput) categoryInput.value = data.category || '';
+                         if (amountInput) amountInput.value = data.amount || '';
+                         if (dateInput) dateInput.value = data.date || '';
+                         modalTitle.textContent = translations[currentLang].editExpense;
+                         modal.showModal();
+                    }
+               }
+          } catch (error) {
+               handleError(error, { module: 'app', action: 'editExpense' });
           }
      } else if (target.closest('.edit-daily-task-btn')) {
-          const docSnap = await getDoc(doc(dailyTasksCol, id));
-          if (docSnap.exists()) {
-               const data = docSnap.data();
-               const form = document.getElementById('daily-task-form');
-               form.querySelector('#daily-task-id').value = id;
-               form.querySelector('#daily-task-name').value = data.name;
-               form.querySelector('#daily-task-notes').value = data.notes || '';
-               document.getElementById('daily-task-modal-title').textContent = translations[currentLang].editTask;
-               document.getElementById('daily-task-modal').showModal();
+          try {
+               const docSnap = await getDoc(doc(dailyTasksCol, id));
+               if (docSnap.exists()) {
+                    const data = docSnap.data();
+                    const form = document.getElementById('daily-task-form');
+                    form.querySelector('#daily-task-id').value = id;
+                    form.querySelector('#daily-task-name').value = data.name;
+                    form.querySelector('#daily-task-notes').value = data.notes || '';
+                    document.getElementById('daily-task-modal-title').textContent = translations[currentLang].editTask;
+                    document.getElementById('daily-task-modal').showModal();
+               }
+          } catch (error) {
+               handleError(error, { module: 'app', action: 'editDailyTask' });
           }
      } else if (target.closest('.edit-monthly-task-btn')) {
-          const docSnap = await getDoc(doc(monthlyTasksCol, id));
-          if (docSnap.exists()) {
-               const data = docSnap.data();
-               const form = document.getElementById('monthly-task-form');
-               form.querySelector('#monthly-task-id').value = id;
-               form.querySelector('#monthly-task-name').value = data.name;
-               form.querySelector('#monthly-task-deadline').value = data.deadline || '';
-               document.getElementById('monthly-task-modal-title').textContent = translations[currentLang].editTask;
-               document.getElementById('monthly-task-modal').showModal();
+          try {
+               const docSnap = await getDoc(doc(monthlyTasksCol, id));
+               if (docSnap.exists()) {
+                    const data = docSnap.data();
+                    const form = document.getElementById('monthly-task-form');
+                    const modal = document.getElementById('monthly-task-modal');
+                    const modalTitle = document.getElementById('monthly-task-modal-title');
+                    if (form && modal && modalTitle) {
+                         const idInput = form.querySelector('#monthly-task-id');
+                         const nameInput = form.querySelector('#monthly-task-name');
+                         const deadlineInput = form.querySelector('#monthly-task-deadline');
+                         if (idInput) idInput.value = id;
+                         if (nameInput) nameInput.value = data.name || '';
+                         if (deadlineInput) deadlineInput.value = data.deadline || '';
+                         modalTitle.textContent = translations[currentLang].editTask;
+                         modal.showModal();
+                    }
+               }
+          } catch (error) {
+               handleError(error, { module: 'app', action: 'editMonthlyTask' });
           }
      } else if (target.closest('.edit-yearly-task-btn')) {
-          const docSnap = await getDoc(doc(yearlyTasksCol, id));
-          if (docSnap.exists()) {
-               const data = docSnap.data();
-               const form = document.getElementById('yearly-task-form');
-               form.querySelector('#yearly-task-id').value = id;
-               form.querySelector('#yearly-task-name').value = data.name;
-               form.querySelector('#yearly-task-deadline').value = data.deadline || '';
-               form.querySelector('#yearly-task-notes').value = data.notes || '';
-               document.getElementById('yearly-task-modal-title').textContent = translations[currentLang].editTask;
-               document.getElementById('yearly-task-modal').showModal();
+          try {
+               const docSnap = await getDoc(doc(yearlyTasksCol, id));
+               if (docSnap.exists()) {
+                    const data = docSnap.data();
+                    const form = document.getElementById('yearly-task-form');
+                    form.querySelector('#yearly-task-id').value = id;
+                    form.querySelector('#yearly-task-name').value = data.name;
+                    form.querySelector('#yearly-task-deadline').value = data.deadline || '';
+                    form.querySelector('#yearly-task-notes').value = data.notes || '';
+                    document.getElementById('yearly-task-modal-title').textContent = translations[currentLang].editTask;
+                    document.getElementById('yearly-task-modal').showModal();
+               }
+          } catch (error) {
+               handleError(error, { module: 'app', action: 'editYearlyTask' });
           }
      } else if (target.closest('.edit-recurring-expense-btn')) {
-          const docSnap = await getDoc(doc(recurringExpensesCol, id));
-          if (docSnap.exists()) {
-               const data = docSnap.data();
-               const form = document.getElementById('recurring-expense-form');
-               form.querySelector('#recurring-expense-id').value = id;
-               form.querySelector('#recurring-expense-name').value = data.name;
-               form.querySelector('#recurring-expense-amount').value = data.amount;
-               form.querySelector('#recurring-expense-day').value = data.day;
-               document.getElementById('recurring-expense-modal-title').textContent = translations[currentLang].editTemplate;
-               document.getElementById('recurring-expense-modal').showModal();
+          try {
+               const docSnap = await getDoc(doc(recurringExpensesCol, id));
+               if (docSnap.exists()) {
+                    const data = docSnap.data();
+                    const form = document.getElementById('recurring-expense-form');
+                    const modal = document.getElementById('recurring-expense-modal');
+                    const modalTitle = document.getElementById('recurring-expense-modal-title');
+                    if (form && modal && modalTitle) {
+                         const idInput = form.querySelector('#recurring-expense-id');
+                         const nameInput = form.querySelector('#recurring-expense-name');
+                         const amountInput = form.querySelector('#recurring-expense-amount');
+                         const dueDayInput = form.querySelector('#recurring-expense-due-day');
+                         if (idInput) idInput.value = id;
+                         if (nameInput) nameInput.value = data.name || '';
+                         if (amountInput) amountInput.value = data.amount || '';
+                         if (dueDayInput) dueDayInput.value = data.dueDay || '';
+                         modalTitle.textContent = translations[currentLang].editTemplate;
+                         modal.showModal();
+                    }
+               }
+          } catch (error) {
+               handleError(error, { module: 'app', action: 'editRecurringExpense' });
           }
      } else if (target.closest('.add-debt-payment-btn')) {
           const form = document.getElementById('debt-payment-form');
@@ -1887,13 +2209,17 @@ async function handleGlobalClick(e) {
           if (date) {
                // Open event modal for adding new event
                const form = document.getElementById('event-form');
-               form.reset();
-               form.querySelector('#event-id').value = '';
-               // Set date if possible, but event form might not have date field if it assumes selected date?
-               // Actually event form usually has a date field.
-               // Let's assume we can set it if it exists, or just open modal.
-               // Looking at previous code, event form structure isn't fully visible, but let's assume standard behavior.
-               document.getElementById('event-modal').showModal();
+               const modal = document.getElementById('event-modal');
+               if (form && modal) {
+                    form.reset();
+                    const idInput = form.querySelector('#event-id');
+                    if (idInput) idInput.value = '';
+                    // Set date if possible, but event form might not have date field if it assumes selected date?
+                    // Actually event form usually has a date field.
+                    // Let's assume we can set it if it exists, or just open modal.
+                    // Looking at previous code, event form structure isn't fully visible, but let's assume standard behavior.
+                    modal.showModal();
+               }
           }
      } else if (target.closest('.event-item')) {
           e.stopPropagation(); // Prevent bubbling to calendar-day
@@ -1902,10 +2228,15 @@ async function handleGlobalClick(e) {
           if (docSnap.exists()) {
                const data = docSnap.data();
                const form = document.getElementById('event-form');
-               form.querySelector('#event-id').value = eventId;
-               form.querySelector('#event-name').value = data.name;
-               // Populate other fields...
-               document.getElementById('event-modal').showModal();
+               const modal = document.getElementById('event-modal');
+               if (form && modal) {
+                    const idInput = form.querySelector('#event-id');
+                    const nameInput = form.querySelector('#event-name');
+                    if (idInput) idInput.value = eventId;
+                    if (nameInput) nameInput.value = data.name || '';
+                    // Populate other fields...
+                    modal.showModal();
+               }
           }
      }
 }
@@ -1935,7 +2266,26 @@ async function handleLogin(e) {
      try {
           await signInWithEmailAndPassword(auth, email, password);
      } catch (error) {
-          document.getElementById('auth-error').textContent = error.message;
+          handleError(error, {
+               module: 'app',
+               action: 'handleLogin',
+               showToUser: false // Показываем в форме, а не в toast
+          });
+          const errorEl = document.getElementById('auth-error');
+          if (errorEl) {
+               // Улучшенные сообщения об ошибках
+               let userMessage = error.message;
+               if (error.code === 'auth/user-not-found') {
+                    userMessage = translations[currentLang]?.authUserNotFound || 'User not found';
+               } else if (error.code === 'auth/wrong-password') {
+                    userMessage = translations[currentLang]?.authWrongPassword || 'Wrong password';
+               } else if (error.code === 'auth/invalid-email') {
+                    userMessage = translations[currentLang]?.authInvalidEmail || 'Invalid email';
+               } else if (error.code === 'auth/too-many-requests') {
+                    userMessage = translations[currentLang]?.authTooManyRequests || 'Too many attempts. Please try again later.';
+               }
+               errorEl.textContent = userMessage;
+          }
      }
 }
 
@@ -1947,7 +2297,23 @@ async function handleRegister(e) {
      try {
           await createUserWithEmailAndPassword(auth, email, password);
      } catch (error) {
-          document.getElementById('auth-error').textContent = error.message;
+          handleError(error, {
+               module: 'app',
+               action: 'handleRegister',
+               showToUser: false // Показываем в форме, а не в toast
+          });
+          const errorEl = document.getElementById('auth-error');
+          if (errorEl) {
+               let userMessage = error.message;
+               if (error.code === 'auth/email-already-in-use') {
+                    userMessage = translations[currentLang]?.authEmailInUse || 'Email already in use';
+               } else if (error.code === 'auth/invalid-email') {
+                    userMessage = translations[currentLang]?.authInvalidEmail || 'Invalid email';
+               } else if (error.code === 'auth/weak-password') {
+                    userMessage = translations[currentLang]?.authWeakPassword || 'Password is too weak';
+               }
+               errorEl.textContent = userMessage;
+          }
      }
 }
 
@@ -1956,7 +2322,21 @@ async function handleGoogleLogin(e) {
      try {
           await signInWithPopup(auth, new GoogleAuthProvider());
      } catch (error) {
-          document.getElementById('auth-error').textContent = error.message;
+          handleError(error, {
+               module: 'app',
+               action: 'handleGoogleLogin',
+               showToUser: false // Показываем в форме, а не в toast
+          });
+          const errorEl = document.getElementById('auth-error');
+          if (errorEl) {
+               let userMessage = error.message;
+               if (error.code === 'auth/popup-closed-by-user') {
+                    userMessage = translations[currentLang]?.authPopupClosed || 'Sign-in popup was closed';
+               } else if (error.code === 'auth/popup-blocked') {
+                    userMessage = translations[currentLang]?.authPopupBlocked || 'Popup was blocked. Please allow popups for this site.';
+               }
+               errorEl.textContent = userMessage;
+          }
      }
 }
 
@@ -2001,7 +2381,7 @@ function renderCategoryDatalist(docs) {
      const datalist = document.getElementById('expense-categories-list');
      if (datalist) {
           datalist.innerHTML = docs.filter(doc => doc.data().lang === currentLang)
-               .map(doc => `<option value="${doc.data().name}"></option>`).join('');
+               .map(doc => `<option value="${escapeHtmlAttr(doc.data().name)}"></option>`).join('');
      }
 }
 
@@ -2011,7 +2391,7 @@ function renderCategories(categories) {
      const langCategories = categories.filter(c => c.lang === currentLang);
      list.innerHTML = langCategories.map(cat => `
         <div class="flex justify-between items-center p-2 bg-gray-100 rounded-lg dark:bg-gray-700">
-            <span>${cat.name}</span>
+            <span>${escapeHtml(cat.name)}</span>
             <button data-id="${cat.id}" class="delete-category-btn text-red-500 hover:text-red-700">🗑️</button>
         </div>`).join('');
 }

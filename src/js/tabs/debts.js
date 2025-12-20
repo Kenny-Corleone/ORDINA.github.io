@@ -1,4 +1,4 @@
-import { logger } from '../utils.js';
+import { logger, escapeHtml, escapeHtmlAttr } from '../utils.js';
 import { translations, currentLang } from '../i18n.js';
 
 // Utility functions (will be passed from app.js)
@@ -35,18 +35,18 @@ export function renderDebts(docs, userId) {
 
                 return `
             <tr class="border-b hover:bg-gray-50 md:border-b-0 dark:hover:bg-gray-700 dark:border-gray-700">
-                <td data-label="${translations[currentLang]?.debtName || 'Debt Name'}" class="font-medium">${debt.name || '—'}</td>
-                <td data-label="${translations[currentLang]?.amount || 'Amount'}">${formatCurrency(debt.totalAmount)}</td>
-                <td data-label="${translations[currentLang]?.paid || 'Paid'}">${formatCurrency(debt.paidAmount)}</td>
-                <td data-label="${translations[currentLang]?.remaining || 'Remaining'}" class="font-bold ${colorClass}">${formatCurrency(remaining)}</td>
-                <td data-label="${translations[currentLang]?.lastPaymentDate || 'Last Payment'}">${lastPaymentDate}</td>
-                <td data-label="${translations[currentLang]?.comments || 'Comments'}">
-                    <input type="text" class="editable-debt-comment bg-transparent w-full p-1 border-b border-transparent focus:border-blue-500 outline-none" data-id="${id}" value="${debt.comment || ''}" placeholder="${translations[currentLang]?.placeholderComment || 'Comment'}">
+                <td data-label="${escapeHtmlAttr(translations[currentLang]?.debtName || 'Debt Name')}" class="font-medium">${escapeHtml(debt.name || '—')}</td>
+                <td data-label="${escapeHtmlAttr(translations[currentLang]?.amount || 'Amount')}">${formatCurrency(debt.totalAmount)}</td>
+                <td data-label="${escapeHtmlAttr(translations[currentLang]?.paid || 'Paid')}">${formatCurrency(debt.paidAmount)}</td>
+                <td data-label="${escapeHtmlAttr(translations[currentLang]?.remaining || 'Remaining')}" class="font-bold ${colorClass}">${formatCurrency(remaining)}</td>
+                <td data-label="${escapeHtmlAttr(translations[currentLang]?.lastPaymentDate || 'Last Payment')}">${escapeHtml(lastPaymentDate)}</td>
+                <td data-label="${escapeHtmlAttr(translations[currentLang]?.comments || 'Comments')}">
+                    <input type="text" class="editable-debt-comment bg-transparent w-full p-1 border-b border-transparent focus:border-blue-500 outline-none" data-id="${escapeHtmlAttr(id)}" value="${escapeHtmlAttr(debt.comment || '')}" placeholder="${escapeHtmlAttr(translations[currentLang]?.placeholderComment || 'Comment')}">
                 </td>
-                <td data-label="${translations[currentLang]?.actions || 'Actions'}" class="flex gap-2">
-                    <button data-id="${id}" class="add-debt-payment-btn text-green-600 hover:text-green-800" title="${translations[currentLang]?.addDebtPayment || 'Add Payment'}">➕</button>
-                    <button data-id="${id}" class="edit-debt-btn text-blue-600 hover:text-blue-800" title="${translations[currentLang]?.editDebt || 'Edit'}">✏️</button>
-                    <button data-id="${id}" class="delete-debt-btn text-red-600 hover:text-red-800" title="${translations[currentLang]?.delete || 'Delete'}">🗑️</button>
+                <td data-label="${escapeHtmlAttr(translations[currentLang]?.actions || 'Actions')}" class="flex gap-2">
+                    <button data-id="${escapeHtmlAttr(id)}" class="add-debt-payment-btn text-green-600 hover:text-green-800" title="${escapeHtmlAttr(translations[currentLang]?.addDebtPayment || 'Add Payment')}">➕</button>
+                    <button data-id="${escapeHtmlAttr(id)}" class="edit-debt-btn text-blue-600 hover:text-blue-800" title="${escapeHtmlAttr(translations[currentLang]?.editDebt || 'Edit')}">✏️</button>
+                    <button data-id="${escapeHtmlAttr(id)}" class="delete-debt-btn text-red-600 hover:text-red-800" title="${escapeHtmlAttr(translations[currentLang]?.delete || 'Delete')}">🗑️</button>
                 </td>
             </tr>`;
             }).join('');

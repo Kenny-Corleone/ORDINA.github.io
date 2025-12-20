@@ -1,4 +1,4 @@
-import { logger } from '../utils.js';
+import { logger, escapeHtml, escapeHtmlAttr } from '../utils.js';
 import { translations, currentLang } from '../i18n.js';
 
 // Utility functions (will be passed from app.js)
@@ -89,9 +89,9 @@ export function renderCalendar(calendarDate, calendarEvents) {
                 </div>
                 <div class="events space-y-1 overflow-y-auto custom-scrollbar flex-grow w-full">
                     ${dayEvents.map(e => `
-                        <div data-event-id="${e.id}" class="event-item px-1.5 py-0.5 rounded text-[10px] md:text-xs font-medium truncate w-full text-left" 
+                        <div data-event-id="${escapeHtmlAttr(e.id)}" class="event-item px-1.5 py-0.5 rounded text-[10px] md:text-xs font-medium truncate w-full text-left" 
                              style="background: ${getEventColor(e.category, true)}; color: ${getEventColor(e.category, false)}; border-left: 2px solid ${getEventColor(e.category, false)};">
-                            ${e.name || (e.category === 'birthday' ? (e.birthdayName || 'Birthday') : 'Event')}
+                            ${escapeHtml(e.name || (e.category === 'birthday' ? (e.birthdayName || 'Birthday') : 'Event'))}
                         </div>
                     `).join('')}
                 </div>

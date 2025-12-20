@@ -1,4 +1,5 @@
 import { translations, currentLang } from '../i18n.js';
+import { escapeHtml } from '../utils.js';
 
 // Utility functions (will be passed from app.js)
 let formatCurrency;
@@ -14,13 +15,13 @@ export function renderDashboardTasks(dailyTasks) {
     const activeTasks = dailyTasks.filter(t => t.status !== translations.ru.statusDone);
 
     if (activeTasks.length === 0) {
-        list.innerHTML = `<div class="text-gray-400 text-center py-1 text-[10px]">${translations[currentLang]?.noTasks || 'No tasks'}</div>`;
+        list.innerHTML = `<div class="text-gray-400 text-center py-1 text-[10px]">${escapeHtml(translations[currentLang]?.noTasks || 'No tasks')}</div>`;
         return;
     }
 
     list.innerHTML = activeTasks.slice(0, 5).map(t => `
        <div class="flex items-center justify-between p-1 bg-gray-50 dark:bg-gray-700/50 rounded hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors cursor-pointer" onclick="document.querySelector('[data-tab=\\'tasks\\']').click()">
-           <span class="truncate pr-2 text-xs">${t.name}</span>
+           <span class="truncate pr-2 text-xs">${escapeHtml(t.name)}</span>
            <span class="text-[9px] px-1 bg-blue-100 text-blue-800 rounded dark:bg-blue-900 dark:text-blue-200">Today</span>
        </div>
    `).join('');
