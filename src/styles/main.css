@@ -70,28 +70,29 @@
     --primary-color: var(--primary);
     --secondary-color: var(--secondary);
     --accent-color: var(--accent);
-    /* Мягкие, приглушенные цвета текста */
-    --text-primary: #2d3748;
-    --text-secondary: #718096;
-    /* Мягкие, приглушенные фоновые цвета - менее яркие */
-    --bg-primary: #f7fafc;
-    --bg-secondary: #edf2f7;
-    --bg-tertiary: #e2e8f0;
-    /* Мягкие границы */
-    --border-color: rgba(113, 128, 150, 0.15);
-    --border-hover: rgba(113, 128, 150, 0.25);
-    /* Мягкие тени */
-    --shadow: 0 2px 8px rgba(45, 55, 72, 0.06);
-    --shadow-hover: 0 4px 16px rgba(45, 55, 72, 0.08);
-    --shadow-gold: 0 4px 20px rgba(var(--primary-rgb), 0.15);
+    /* Premium Light Theme - Rich & Elegant Colors */
+    /* Текст - глубокий шоколадно-коричневый с легким золотым оттенком */
+    --text-primary: #2c2416;
+    --text-secondary: #6b5d47;
+    /* Фон - премиум кремово-бежевая палитра с золотыми акцентами */
+    --bg-primary: #faf8f3;
+    --bg-secondary: #f5f1e8;
+    --bg-tertiary: #ede8dc;
+    /* Premium границы с золотыми акцентами */
+    --border-color: rgba(212, 175, 55, 0.2);
+    --border-hover: rgba(212, 175, 55, 0.35);
+    /* Богатые тени с золотым оттенком */
+    --shadow: 0 4px 16px rgba(44, 36, 22, 0.1);
+    --shadow-hover: 0 6px 24px rgba(44, 36, 22, 0.15);
+    --shadow-gold: 0 6px 24px rgba(212, 175, 55, 0.25);
 
-    /* Unified Glassmorphism Tokens - более мягкие */
+    /* Unified Glassmorphism Tokens - Premium Light Theme */
     --glass-blur: blur(20px) saturate(120%);
-    --glass-bg-light: rgba(255, 255, 255, 0.85);
+    --glass-bg-light: rgba(250, 248, 243, 0.92);
     --glass-bg-dark: rgba(15, 23, 42, 0.4);
-    --glass-border-light: rgba(113, 128, 150, 0.12);
+    --glass-border-light: rgba(212, 175, 55, 0.18);
     --glass-border-dark: rgba(255, 255, 255, 0.1);
-    --glass-shadow-light: 0 2px 16px 0 rgba(45, 55, 72, 0.08);
+    --glass-shadow-light: 0 4px 20px 0 rgba(44, 36, 22, 0.12);
     --glass-shadow-dark: 0 8px 32px 0 rgba(0, 0, 0, 0.6);
 
     /* Gradients */
@@ -101,12 +102,12 @@
     --gradient-warm: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
     --gradient-cool: linear-gradient(135deg, #30cfd0 0%, #330867 100%);
 
-    /* Card Gradients - более мягкие и менее яркие */
-    --card-gradient-light: linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(247, 250, 252, 0.85) 100%);
+    /* Card Gradients - Premium Rich Light Theme */
+    --card-gradient-light: linear-gradient(135deg, rgba(250, 248, 243, 0.98) 0%, rgba(245, 241, 232, 0.95) 100%);
     --card-gradient-dark: linear-gradient(135deg, rgba(26, 41, 66, 0.95) 0%, rgba(10, 22, 40, 0.9) 100%);
-    --shadow-card-light: 0 2px 12px rgba(45, 55, 72, 0.05);
+    --shadow-card-light: 0 4px 20px rgba(44, 36, 22, 0.1);
     --shadow-card-dark: 0 4px 20px rgba(0, 0, 0, 0.4);
-    --border-gold: rgba(212, 175, 55, 0.2);
+    --border-gold: rgba(212, 175, 55, 0.25);
 
     /* Unified Border Radius */
     --card-radius-xl: 20px;
@@ -228,8 +229,8 @@
 
 .stat-card:hover {
     transform: translate3d(0, -4px, 0) scale(1.01);
-    box-shadow: 0 12px 40px rgba(var(--gold-rgb), 0.15);
-    border-color: rgba(var(--gold-rgb), 0.3);
+    box-shadow: var(--shadow-hover);
+    border-color: var(--border-hover);
 }
 
 .stat-card:hover::after {
@@ -386,7 +387,8 @@ img {
 
 body {
     font-family: 'Poppins', -apple-system, BlinkMacSystemFont, sans-serif;
-    background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 20%, #e2e8f0 40%, #edf2f7 60%, #f7fafc 80%, #f7fafc 100%);
+    /* Premium Rich Light Theme - кремово-бежевый градиент с золотыми акцентами */
+    background: linear-gradient(135deg, #faf8f3 0%, #f5f1e8 20%, #ede8dc 40%, #f5f1e8 60%, #faf8f3 80%, #faf8f3 100%);
     background-size: 400% 400%;
     animation: gradientShift 30s ease infinite;
     color: var(--text-primary);
@@ -438,7 +440,7 @@ body {
     pointer-events: none;
 }
 
-/* Animated gradient overlay for light theme */
+/* Animated gradient overlay for premium light theme - богатые золотые акценты */
 body::before {
     content: '';
     position: fixed;
@@ -447,9 +449,10 @@ body::before {
     width: 100%;
     height: 100%;
     background:
-        radial-gradient(circle at 20% 50%, rgba(212, 175, 55, 0.08) 0%, transparent 50%),
-        radial-gradient(circle at 80% 80%, rgba(212, 175, 55, 0.06) 0%, transparent 50%),
-        radial-gradient(circle at 40% 20%, rgba(212, 175, 55, 0.05) 0%, transparent 50%);
+        radial-gradient(circle at 20% 50%, rgba(212, 175, 55, 0.12) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(184, 134, 11, 0.08) 0%, transparent 50%),
+        radial-gradient(circle at 40% 20%, rgba(212, 175, 55, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 60% 70%, rgba(245, 158, 11, 0.06) 0%, transparent 50%);
     animation: floatingGradient 20s ease infinite;
     z-index: 0;
     pointer-events: none;
@@ -600,9 +603,9 @@ h6 {
 
 .premium-card:hover {
     transform: translateY(-4px) scale(1.01);
-    border-color: rgba(var(--gold-rgb), 0.2);
-    box-shadow: 0 8px 24px 0 rgba(45, 55, 72, 0.1),
-        0 0 0 1px rgba(var(--gold-rgb), 0.15) inset;
+    border-color: var(--border-hover);
+    box-shadow: var(--shadow-hover),
+        0 0 0 1px rgba(var(--gold-rgb), 0.2) inset;
 }
 
 .premium-card:hover::before {
@@ -1296,19 +1299,22 @@ dialog[open] {
     }
 }
 
-/* Premium Light Mode Surfaces */
+/* Premium Light Mode Surfaces - Rich Cream & Beige */
 .bg-white,
 .bg-gray-50,
 .bg-gray-100 {
     background: var(--bg-primary) !important;
+    /* Премиум кремовый фон */
 }
 
 .bg-gray-200 {
     background: var(--bg-secondary) !important;
+    /* Более теплый бежевый */
 }
 
 .bg-gray-300 {
     background: var(--bg-tertiary) !important;
+    /* Глубокий бежевый */
 }
 
 /* Premium Dark Mode - Luxury Edition */
@@ -3037,10 +3043,9 @@ textarea:focus {
     display: flex;
     flex-direction: column;
     gap: 0.75rem;
-    flex: 1 1 auto !important;
-    min-height: 0 !important;
-    max-height: none !important;
-    height: 100% !important;
+    max-height: 600px !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
 }
 
 .news-item {
@@ -3050,17 +3055,17 @@ textarea:focus {
     padding: clamp(0.75rem, 1.5vw, 0.875rem);
     background: var(--card-gradient-light);
     backdrop-filter: blur(10px);
-    border: 1px solid rgba(99, 102, 241, 0.15);
+    border: 1px solid var(--border-gold);
     border-radius: clamp(8px, 1.5vw, 12px);
     cursor: pointer;
     transition: var(--transition-base);
-    box-shadow: 0 2px 8px rgba(99, 102, 241, 0.06);
+    box-shadow: var(--shadow-card-light);
 }
 
 .news-item:hover {
     transform: translateX(4px);
-    box-shadow: 0 4px 16px rgba(99, 102, 241, 0.15);
-    border-color: rgba(99, 102, 241, 0.3);
+    box-shadow: var(--shadow-hover);
+    border-color: var(--border-hover);
 }
 
 .dark .news-item {
@@ -4222,17 +4227,10 @@ textarea:focus {
 }
 
 #news-results.news-list {
-    border: 1px solid #e0e0e0;
-    /* Убрано max-height: 300px - теперь растягивается на всю высоту виджета */
-    overflow-y: auto;
-    border-radius: 8px;
-    /* Растягиваем на всю доступную высоту */
-    flex: 1 1 auto !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    max-height: 600px !important;
     min-height: 0 !important;
-    max-height: none !important;
-    height: 100% !important;
-    display: flex !important;
-    flex-direction: column !important;
 }
 
 #news-show-more {
@@ -4463,8 +4461,8 @@ main.main-content {
     }
 }
 
-/* Дополнительные исправления для масштабирования (zoom) - гарантируем видимость */
-@media (min-width: 1px) {
+/* Дополнительные исправления для масштабирования (zoom) - гарантируем видимость ТОЛЬКО на desktop */
+@media (min-width: 1025px) {
     #fixed-header {
         /* Убеждаемся, что header всегда виден при любом масштабе */
         min-width: 0 !important;
@@ -4505,12 +4503,40 @@ main.main-content {
     }
 }
 
-/* News Feed - FULL HEIGHT STRETCH - ИСПРАВЛЕНО */
+/* На мобильных устройствах скрываем горизонтальную навигацию */
+@media (max-width: 768px) {
+    #header-nav {
+        display: none !important;
+        visibility: hidden !important;
+    }
+    
+    #header-nav.hidden,
+    #header-nav.device-desktop\:block.hidden {
+        display: none !important;
+        visibility: hidden !important;
+    }
+    
+    .header-tabs-container {
+        display: none !important;
+    }
+}
+
+/* Для устройств с классом device-mobile скрываем навигацию */
+.device-mobile #header-nav {
+    display: none !important;
+    visibility: hidden !important;
+}
+
+.device-mobile .header-tabs-container {
+    display: none !important;
+}
+
+/* News Feed - FIXED HEIGHT with proper scrolling */
 #news-widget {
     display: flex !important;
     flex-direction: column !important;
-    height: 100% !important;
-    /* Виджет растягивается на высоту левой колонки (активности) */
+    max-height: calc(100vh - 300px) !important;
+    min-height: 400px !important;
 }
 
 #news-results {
@@ -4518,22 +4544,13 @@ main.main-content {
     display: flex !important;
     flex-direction: column !important;
     overflow-y: auto !important;
-    /* Убираем ограничение высоты - растягиваемся на всю доступную высоту */
+    overflow-x: hidden !important;
     min-height: 0 !important;
-    max-height: none !important;
-    height: 100% !important;
+    max-height: 600px !important;
+    position: relative !important;
 }
 
-.news-list {
-    flex: 1 1 auto !important;
-    display: flex !important;
-    flex-direction: column !important;
-    min-height: 0 !important;
-    max-height: none !important;
-    height: 100% !important;
-    max-height: none !important;
-    height: 100% !important;
-}
+/* News list - duplicate removed, using main .news-list style */
 
 /* Background Animation - VISIBLE */
 #background-animation {
@@ -4681,34 +4698,7 @@ canvas#expense-chart {
 
 /* Static Header + Tabs - Fixed при скроллинге (дубликат удален) */
 
-/* News Feed - FULL HEIGHT STRETCH - ИСПРАВЛЕНО */
-#news-widget {
-    display: flex !important;
-    flex-direction: column !important;
-    height: 100% !important;
-    /* Виджет растягивается на высоту левой колонки (активности) */
-}
-
-#news-results {
-    flex: 1 1 auto !important;
-    display: flex !important;
-    flex-direction: column !important;
-    overflow-y: auto !important;
-    /* Убираем ограничение высоты - растягиваемся на всю доступную высоту */
-    min-height: 0 !important;
-    max-height: none !important;
-    height: 100% !important;
-}
-
-.news-list {
-    flex: 1 1 auto !important;
-    display: flex !important;
-    flex-direction: column !important;
-    min-height: 0 !important;
-    /* Растягиваемся на всю высоту родителя */
-    height: 100% !important;
-    max-height: none !important;
-}
+/* News Feed - FIXED HEIGHT (duplicate removed, see above) */
 
 /* Background Animation - VISIBLE */
 #background-animation {
@@ -4873,21 +4863,7 @@ canvas#expense-chart {
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
 }
-/* Fix for News Widget filling space */
-#news-widget {
-    min-height: 0;
-    height: 100% !important;
-    display: flex !important;
-    flex-direction: column !important;
-}
-#news-results {
-    flex: 1 1 auto !important;
-    flex-grow: 1 !important;
-    min-height: 250px;
-    max-height: none !important;
-    height: 100% !important;
-    overflow-y: auto !important;
-}
+/* News Widget - duplicate removed, see main news styles above */
 
 /* Reinforce Fixed Header */
 #fixed-header {

@@ -1246,9 +1246,13 @@ function setupEventListeners() {
      const themeBtn = document.getElementById('theme-toggle');
      if (themeBtn) themeBtn.addEventListener('click', toggleTheme);
 
-     // Mobile menu toggle теперь управляется через responsive.js
-
-     // Старый код mobile-tabs-toggle удален - теперь используется мобильная боковая панель
+     // Mobile menu toggle
+     const mobileMenuToggle = document.getElementById('mobile-menu-toggle');
+     if (mobileMenuToggle) {
+          mobileMenuToggle.addEventListener('click', () => {
+               toggleMobileSidebar();
+          });
+     }
 
      // Radio Player
      const radioBtn = document.getElementById('radio-play-pause-btn');

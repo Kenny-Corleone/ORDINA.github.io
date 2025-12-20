@@ -191,26 +191,49 @@
    UTILITY CLASSES
    ============================================================================ */
 
+/* Mobile utility classes - применяются только когда body имеет класс device-mobile */
+.device-mobile .device-mobile\:block {
+    display: block !important;
+}
+
+.device-mobile .device-mobile\:hidden {
+    display: none !important;
+}
+
+/* Tablet utility classes */
+.device-tablet .device-tablet\:block {
+    display: block !important;
+}
+
+.device-tablet .device-tablet\:hidden {
+    display: none !important;
+}
+
+/* Desktop utility classes */
+.device-desktop .device-desktop\:block {
+    display: block !important;
+}
+
+.device-desktop .device-desktop\:hidden {
+    display: none !important;
+}
+
+/* По умолчанию скрываем элементы с device-mobile:block если устройство не мобильное */
 .device-mobile\:block {
-    display: block;
+    display: none;
 }
 
-.device-tablet\:block {
-    display: block;
-}
-
-.device-desktop\:block {
-    display: block;
-}
-
+/* По умолчанию показываем элементы с device-mobile:hidden если устройство не мобильное */
 .device-mobile\:hidden {
+    display: block;
+}
+
+/* По умолчанию скрываем элементы с device-desktop:block если устройство не десктоп */
+.device-desktop\:block {
     display: none;
 }
 
-.device-tablet\:hidden {
-    display: none;
-}
-
+/* По умолчанию показываем элементы с device-desktop:hidden если устройство не десктоп */
 .device-desktop\:hidden {
-    display: none;
+    display: block;
 }

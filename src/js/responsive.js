@@ -157,7 +157,7 @@ function createMobileSidebar() {
     // Создаем структуру боковой панели
     sidebar = document.createElement('aside');
     sidebar.id = 'mobile-sidebar';
-    sidebar.className = 'mobile-sidebar';
+    sidebar.className = 'mobile-sidebar hidden';
     sidebar.setAttribute('aria-label', 'Navigation');
     
     // Кнопка закрытия
