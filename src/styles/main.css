@@ -70,14 +70,14 @@
     --primary-color: var(--primary);
     --secondary-color: var(--secondary);
     --accent-color: var(--accent);
-    /* Premium Light Theme - Rich & Elegant Colors */
+    /* Premium Light Theme - Rich & Elegant Colors - НЕ БЕЛЫЙ */
     /* Текст - глубокий шоколадно-коричневый с легким золотым оттенком */
     --text-primary: #2c2416;
     --text-secondary: #6b5d47;
-    /* Фон - премиум кремово-бежевая палитра с золотыми акцентами */
-    --bg-primary: #faf8f3;
-    --bg-secondary: #f5f1e8;
-    --bg-tertiary: #ede8dc;
+    /* Фон - темная премиум бежево-коричневая палитра (НЕ БЕЛАЯ) */
+    --bg-primary: #e8e0d4;
+    --bg-secondary: #ddd4c4;
+    --bg-tertiary: #d2c7b4;
     /* Premium границы с золотыми акцентами */
     --border-color: rgba(212, 175, 55, 0.2);
     --border-hover: rgba(212, 175, 55, 0.35);
@@ -86,13 +86,13 @@
     --shadow-hover: 0 6px 24px rgba(44, 36, 22, 0.15);
     --shadow-gold: 0 6px 24px rgba(212, 175, 55, 0.25);
 
-    /* Unified Glassmorphism Tokens - Premium Light Theme */
+    /* Unified Glassmorphism Tokens - Premium Light Theme - НЕ БЕЛЫЙ */
     --glass-blur: blur(20px) saturate(120%);
-    --glass-bg-light: rgba(250, 248, 243, 0.92);
+    --glass-bg-light: rgba(232, 224, 212, 0.95);
     --glass-bg-dark: rgba(15, 23, 42, 0.4);
-    --glass-border-light: rgba(212, 175, 55, 0.18);
+    --glass-border-light: rgba(212, 175, 55, 0.25);
     --glass-border-dark: rgba(255, 255, 255, 0.1);
-    --glass-shadow-light: 0 4px 20px 0 rgba(44, 36, 22, 0.12);
+    --glass-shadow-light: 0 4px 20px 0 rgba(44, 36, 22, 0.18);
     --glass-shadow-dark: 0 8px 32px 0 rgba(0, 0, 0, 0.6);
 
     /* Gradients */
@@ -102,12 +102,12 @@
     --gradient-warm: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
     --gradient-cool: linear-gradient(135deg, #30cfd0 0%, #330867 100%);
 
-    /* Card Gradients - Premium Rich Light Theme */
-    --card-gradient-light: linear-gradient(135deg, rgba(250, 248, 243, 0.98) 0%, rgba(245, 241, 232, 0.95) 100%);
+    /* Card Gradients - Premium Rich Light Theme - НЕ БЕЛЫЙ */
+    --card-gradient-light: linear-gradient(135deg, rgba(232, 224, 212, 0.98) 0%, rgba(221, 212, 196, 0.96) 100%);
     --card-gradient-dark: linear-gradient(135deg, rgba(26, 41, 66, 0.95) 0%, rgba(10, 22, 40, 0.9) 100%);
-    --shadow-card-light: 0 4px 20px rgba(44, 36, 22, 0.1);
+    --shadow-card-light: 0 4px 20px rgba(44, 36, 22, 0.15);
     --shadow-card-dark: 0 4px 20px rgba(0, 0, 0, 0.4);
-    --border-gold: rgba(212, 175, 55, 0.25);
+    --border-gold: rgba(212, 175, 55, 0.3);
 
     /* Unified Border Radius */
     --card-radius-xl: 20px;
@@ -387,8 +387,8 @@ img {
 
 body {
     font-family: 'Poppins', -apple-system, BlinkMacSystemFont, sans-serif;
-    /* Premium Rich Light Theme - кремово-бежевый градиент с золотыми акцентами */
-    background: linear-gradient(135deg, #faf8f3 0%, #f5f1e8 20%, #ede8dc 40%, #f5f1e8 60%, #faf8f3 80%, #faf8f3 100%);
+    /* Premium Rich Light Theme - темный бежево-коричневый градиент (НЕ БЕЛЫЙ) */
+    background: linear-gradient(135deg, #e8e0d4 0%, #ddd4c4 20%, #d2c7b4 40%, #ddd4c4 60%, #e8e0d4 80%, #e8e0d4 100%);
     background-size: 400% 400%;
     animation: gradientShift 30s ease infinite;
     color: var(--text-primary);
@@ -688,7 +688,7 @@ h6 {
     outline: none;
     border-color: rgba(var(--gold-rgb), 0.5);
     box-shadow: 0 0 0 4px rgba(var(--gold-rgb), 0.1), 0 4px 16px rgba(var(--gold-rgb), 0.15);
-    background: rgba(255, 255, 255, 1);
+    background: var(--bg-primary);
     transform: translateY(-2px);
 }
 
@@ -732,9 +732,13 @@ h6 {
 }
 
 dialog::backdrop {
-    background: rgba(10, 22, 40, 0.75);
+    background: rgba(44, 36, 22, 0.6);
     backdrop-filter: blur(12px) saturate(180%);
     -webkit-backdrop-filter: blur(12px) saturate(180%);
+}
+
+.dark dialog::backdrop {
+    background: rgba(10, 22, 40, 0.75);
 }
 
 /* Luxury Scrollbar */
@@ -828,7 +832,7 @@ dialog::backdrop {
     position: sticky;
     top: 0;
     z-index: 1000;
-    background: rgba(255, 255, 255, 0.8);
+    background: var(--glass-bg-light);
     backdrop-filter: var(--glass-blur);
     -webkit-backdrop-filter: var(--glass-blur);
     border-bottom: 1px solid rgba(var(--gold-rgb), 0.1);
@@ -857,7 +861,7 @@ dialog::backdrop {
     padding: 12px 48px 12px 48px;
     border-radius: var(--input-radius);
     border: 1px solid rgba(var(--gold-rgb), 0.2);
-    background: rgba(255, 255, 255, 0.9);
+    background: var(--bg-primary);
     font-size: 14px;
     transition: var(--transition-base);
 }
@@ -1179,7 +1183,7 @@ dialog[open] {
         border-radius: 14px;
         margin-bottom: 1rem;
         padding: 1rem;
-        background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(248, 249, 250, 0.9) 100%);
+        background: var(--card-gradient-light);
         backdrop-filter: blur(10px);
         box-shadow: 0 8px 24px rgba(10, 22, 40, 0.08);
         transition: all 0.3s ease;
@@ -1239,7 +1243,7 @@ dialog[open] {
         border-radius: 16px;
         margin-bottom: 1.25rem;
         padding: 1.25rem;
-        background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(248, 249, 250, 0.9) 100%);
+        background: var(--card-gradient-light);
         backdrop-filter: blur(10px);
         box-shadow: 0 10px 30px rgba(10, 22, 40, 0.1);
         transition: all 0.3s ease;
@@ -1299,22 +1303,32 @@ dialog[open] {
     }
 }
 
-/* Premium Light Mode Surfaces - Rich Cream & Beige */
+/* Premium Light Mode Surfaces - Rich Dark Beige (НЕ БЕЛЫЙ) */
 .bg-white,
 .bg-gray-50,
 .bg-gray-100 {
     background: var(--bg-primary) !important;
-    /* Премиум кремовый фон */
+    /* Темный бежевый фон - НЕ БЕЛЫЙ */
 }
 
 .bg-gray-200 {
     background: var(--bg-secondary) !important;
-    /* Более теплый бежевый */
+    /* Более темный бежевый */
 }
 
 .bg-gray-300 {
     background: var(--bg-tertiary) !important;
-    /* Глубокий бежевый */
+    /* Самый темный бежевый */
+}
+
+/* Dialog/Modal backgrounds for light theme - НЕ БЕЛЫЙ */
+dialog {
+    background: var(--bg-primary) !important;
+    color: var(--text-primary) !important;
+}
+
+dialog::backdrop {
+    background: rgba(44, 36, 22, 0.5) !important;
 }
 
 /* Premium Dark Mode - Luxury Edition */
@@ -1513,7 +1527,7 @@ dialog[open] {
     border: 2px solid rgba(212, 175, 55, 0.25);
     border-bottom: none;
     border-radius: 18px 18px 0 0;
-    background: linear-gradient(180deg, rgba(255, 255, 255, 0.95) 0%, rgba(248, 249, 250, 0.9) 100%);
+    background: var(--card-gradient-light);
     color: var(--text-primary);
     font-weight: 700;
     font-size: 0.95rem;
@@ -2911,7 +2925,7 @@ textarea:focus {
     justify-content: center;
     border: 1px solid rgba(99, 102, 241, 0.2);
     border-radius: 8px;
-    background: rgba(255, 255, 255, 0.9);
+    background: var(--bg-primary);
     color: var(--primary);
     cursor: pointer;
     transition: all 0.2s ease;
@@ -2949,7 +2963,7 @@ textarea:focus {
     align-items: center;
     gap: 0.75rem;
     padding: 0.75rem;
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(248, 250, 252, 0.9) 100%);
+    background: var(--card-gradient-light);
     backdrop-filter: blur(10px);
     border: 1px solid rgba(99, 102, 241, 0.15);
     border-radius: 12px;
