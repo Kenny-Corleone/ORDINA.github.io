@@ -6,7 +6,7 @@ import { logger, showToast } from './utils.js';
 // ============================================================================
 
 let newsData = [];
-let visibleNewsCount = 10;
+let visibleNewsCount = 50;
 let currentNewsCategory = 'all';
 let currentNewsSearch = '';
 
@@ -131,6 +131,41 @@ const RSS_SOURCES = {
             'https://www.rollingstone.com/rss/',
             'https://feeds.feedburner.com/oreilly/radar'
         ]
+    },
+    'it': {
+        'all': [
+            'https://www.ansa.it/sito/notizie/mondo/mondo_rss.xml',
+            'https://www.repubblica.it/rss/homepage/rss2.0.xml',
+            'https://www.corriere.it/rss/homepage.xml',
+            'https://www.ilsole24ore.com/rss/homepage.xml'
+        ],
+        'technology': [
+            'https://www.repubblica.it/rss/tecnologia/rss2.0.xml',
+            'https://www.corriere.it/rss/tecnologia.xml',
+            'https://www.ilsole24ore.com/rss/tecnologia.xml'
+        ],
+        'business': [
+            'https://www.ilsole24ore.com/rss/economia.xml',
+            'https://www.repubblica.it/rss/economia/rss2.0.xml',
+            'https://www.corriere.it/rss/economia.xml'
+        ],
+        'science': [
+            'https://www.ansa.it/sito/notizie/scienza/scienza_rss.xml',
+            'https://www.repubblica.it/rss/scienze/rss2.0.xml'
+        ],
+        'sports': [
+            'https://www.gazzetta.it/rss/home.xml',
+            'https://www.corriere.it/rss/sport.xml',
+            'https://www.repubblica.it/rss/sport/rss2.0.xml'
+        ],
+        'health': [
+            'https://www.ansa.it/sito/notizie/saluteebenessere/saluteebenessere_rss.xml',
+            'https://www.repubblica.it/rss/salute/rss2.0.xml'
+        ],
+        'entertainment': [
+            'https://www.repubblica.it/rss/spettacoli/rss2.0.xml',
+            'https://www.corriere.it/rss/spettacoli.xml'
+        ]
     }
 };
 
@@ -141,8 +176,7 @@ const getRSSSourcesForLanguage = (lang, category = 'all') => {
 
 const CORS_PROXIES = [
     (url) => `https://api.allorigins.win/get?url=${encodeURIComponent(url)}`,
-    (url) => `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(url)}`,
-    (url) => `https://r.jina.ai/http/${url.replace(/^https?:\/\//, '')}`
+    (url) => `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(url)}`
 ];
 
 const fetchWithTimeout = (url, timeout = 12000) => {
@@ -330,7 +364,7 @@ export async function fetchNews() {
             return dateB - dateA;
         });
         // full dataset kept; rendering controls number of visible items
-        visibleNewsCount = 10;
+        visibleNewsCount = 30;
 
         renderNews();
 
@@ -457,7 +491,12 @@ const renderNews = () => {
     }
 };
 
+let isNewsInitialized = false;
+
 export const initNews = () => {
+    if (isNewsInitialized) return;
+    isNewsInitialized = true;
+
     const categorySelect = document.getElementById('news-category');
     const searchInput = document.getElementById('news-search');
     const refreshBtn = document.getElementById('news-refresh');
