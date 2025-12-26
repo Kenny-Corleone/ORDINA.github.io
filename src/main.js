@@ -1,16 +1,59 @@
 import './styles/main.css';
 if (!Promise.allSettled) {
-  Promise.allSettled = function (promises) {
-    return Promise.all(promises.map(p => Promise.resolve(p)
-      .then(value => ({ status: 'fulfilled', value }))
-      .catch(reason => ({ status: 'rejected', reason }))));
-  };
+    Promise.allSettled = function (promises) {
+        return Promise.all(promises.map(p => Promise.resolve(p)
+            .then(value => ({ status: 'fulfilled', value }))
+            .catch(reason => ({ status: 'rejected', reason }))));
+    };
 }
 import { app, db, auth } from './js/firebase.js';
 import { logger, $, loadScriptSafely } from './js/utils.js';
-import { initApp } from './js/app.js'; // Import initApp function
+import { initApp } from './js/app.js?v=2.2.1'; // Import initApp function
 
-console.log('App initialized');
+
+
+// Open Browser Modal
+window.openBrowserModal = (url) => {
+    const modal = document.getElementById('browser-modal');
+    const iframe = document.getElementById('browser-modal-frame');
+    const loader = document.getElementById('browser-modal-loader');
+    const urlSpan = document.getElementById('browser-modal-url');
+    const externalLink = document.getElementById('browser-modal-external');
+
+    if (!modal || !iframe) return;
+
+    // Reset state
+    if (loader) loader.classList.remove('opacity-0', 'pointer-events-none');
+    iframe.src = 'about:blank'; // Clear previous content
+
+    // Set URL
+    if (urlSpan) urlSpan.textContent = url.replace(/^https?:\/\//, '');
+    if (externalLink) {
+        externalLink.href = url;
+        // Make sure external link works if iframe fails
+        externalLink.onclick = (e) => {
+            e.stopPropagation();
+            return true;
+        };
+    }
+
+    // Load URL
+    setTimeout(() => {
+        iframe.src = url;
+    }, 50);
+
+    iframe.onload = () => {
+        if (loader) loader.classList.add('opacity-0', 'pointer-events-none');
+    };
+
+    iframe.onerror = () => {
+        if (loader) loader.classList.add('opacity-0', 'pointer-events-none');
+        // Show error/fallback in iframe if possible, or toast
+        showToast('Не удалось загрузить страницу. Попробуйте открыть в новом окне.', 'warning');
+    };
+
+    modal.showModal();
+};
 
 // Initialize the application
 initApp().catch(error => {
@@ -107,32 +150,52 @@ async function loadExternalScripts() {
     }
 }
 
-// Implement lazy loading for images
+// Implement lazy loading for images with Intersection Observer
 function setupLazyLoading() {
     if ('IntersectionObserver' in window) {
         const imageObserver = new IntersectionObserver((entries, observer) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
                     const img = entry.target;
-                    if (img.dataset.src) {
+                    
+                    // Load image from data-src if available
+                    if (img.dataset.src && !img.src) {
                         img.src = img.dataset.src;
                     }
+                    
+                    // Load srcset if available
                     if (img.dataset.srcset) {
                         img.srcset = img.dataset.srcset;
                     }
+                    
+                    // Add blur-up effect
+                    img.classList.add('loaded');
                     img.classList.remove('lazy');
+                    
                     observer.unobserve(img);
                 }
             });
         }, {
-            rootMargin: '50px 0px',
+            rootMargin: '100px 0px', // Start loading 100px before image enters viewport
             threshold: 0.01
         });
 
-        // Observe all images with loading="lazy" attribute
-        document.querySelectorAll('img[loading="lazy"]').forEach(img => {
+        // Observe all images with loading="lazy" or news-image-lazy class
+        document.querySelectorAll('img[loading="lazy"], img.news-image-lazy').forEach(img => {
             imageObserver.observe(img);
         });
+        
+        // Re-observe when new content is added (for news)
+        const newsObserver = new MutationObserver(() => {
+            document.querySelectorAll('img.news-image-lazy:not(.loaded)').forEach(img => {
+                imageObserver.observe(img);
+            });
+        });
+        
+        const newsContainer = document.getElementById('news-results');
+        if (newsContainer) {
+            newsObserver.observe(newsContainer, { childList: true, subtree: true });
+        }
     }
 }
 
@@ -145,11 +208,11 @@ let deferredInstallPrompt = null;
 
 if ('serviceWorker' in navigator) {
     if (import.meta.env.PROD) {
-        navigator.serviceWorker.register('/sw.js').catch(err => console.log('SW register error', err));
+        navigator.serviceWorker.register('/sw.js').catch(err => logger.error('SW register error', err));
     } else {
-        navigator.serviceWorker.getRegistrations().then(regs => regs.forEach(r => r.unregister())).catch(() => {});
+        navigator.serviceWorker.getRegistrations().then(regs => regs.forEach(r => r.unregister())).catch(() => { });
         if ('caches' in window) {
-            caches.keys().then(keys => Promise.all(keys.map(k => caches.delete(k)))).catch(() => {});
+            caches.keys().then(keys => Promise.all(keys.map(k => caches.delete(k)))).catch(() => { });
         }
     }
 }
@@ -157,23 +220,23 @@ if ('serviceWorker' in navigator) {
 window.addEventListener('beforeinstallprompt', (e) => {
     e.preventDefault();
     deferredInstallPrompt = e;
-    const btn = document.getElementById('pwa-install-btn');
+    const btn = document.getElementById('pwa-install-btn-footer');
     if (btn) btn.classList.remove('hidden');
 });
 
 window.addEventListener('appinstalled', () => {
-    const btn = document.getElementById('pwa-install-btn');
+    const btn = document.getElementById('pwa-install-btn-footer');
     if (btn) btn.classList.add('hidden');
     deferredInstallPrompt = null;
 });
 
 document.addEventListener('click', (ev) => {
-    const target = ev.target.closest('#pwa-install-btn');
+    const target = ev.target.closest('#pwa-install-btn-footer');
     if (!target) return;
     if (deferredInstallPrompt) {
         deferredInstallPrompt.prompt();
         deferredInstallPrompt.userChoice.finally(() => {
-            const btn = document.getElementById('pwa-install-btn');
+            const btn = document.getElementById('pwa-install-btn-footer');
             if (btn) btn.classList.add('hidden');
             deferredInstallPrompt = null;
         });

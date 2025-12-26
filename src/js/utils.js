@@ -125,3 +125,77 @@ export const $ = (id) => document.getElementById(id);
 export const $$ = (sel) => document.querySelectorAll(sel);
 const $cache = {};
 export const getCached = (id) => $cache[id] || ($cache[id] = $(id));
+
+// ============================================================================
+// PERFORMANCE UTILITIES
+// ============================================================================
+
+/**
+ * Debounce function - delays execution until after wait time has passed
+ * @param {Function} func - Function to debounce
+ * @param {number} wait - Wait time in milliseconds
+ * @param {boolean} immediate - Execute immediately on first call
+ * @returns {Function} Debounced function
+ */
+export function debounce(func, wait = 300, immediate = false) {
+    let timeout;
+    return function executedFunction(...args) {
+        const later = () => {
+            timeout = null;
+            if (!immediate) func.apply(this, args);
+        };
+        const callNow = immediate && !timeout;
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+        if (callNow) func.apply(this, args);
+    };
+}
+
+/**
+ * Throttle function - limits execution to once per wait time
+ * @param {Function} func - Function to throttle
+ * @param {number} limit - Time limit in milliseconds
+ * @returns {Function} Throttled function
+ */
+export function throttle(func, limit = 300) {
+    let inThrottle;
+    return function executedFunction(...args) {
+        if (!inThrottle) {
+            func.apply(this, args);
+            inThrottle = true;
+            setTimeout(() => inThrottle = false, limit);
+        }
+    };
+}
+
+/**
+ * Memoize function - caches function results
+ * @param {Function} fn - Function to memoize
+ * @param {Function} keyGenerator - Optional key generator function
+ * @returns {Function} Memoized function
+ */
+export function memoize(fn, keyGenerator = null) {
+    const cache = new Map();
+    
+    return function memoizedFunction(...args) {
+        const key = keyGenerator ? keyGenerator(...args) : JSON.stringify(args);
+        
+        if (cache.has(key)) {
+            return cache.get(key);
+        }
+        
+        const result = fn.apply(this, args);
+        cache.set(key, result);
+        return result;
+    };
+}
+
+/**
+ * Clear memoization cache
+ * @param {Function} memoizedFn - Memoized function (if it exposes cache)
+ */
+export function clearMemoCache(memoizedFn) {
+    if (memoizedFn && memoizedFn.cache) {
+        memoizedFn.cache.clear();
+    }
+}

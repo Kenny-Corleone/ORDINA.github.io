@@ -18,6 +18,20 @@ self.addEventListener('activate', (event) => {
 self.addEventListener('fetch', (event) => {
   const req = event.request;
   if (req.method !== 'GET') return;
+  try {
+    const url = new URL(req.url);
+    const noCacheHosts = new Set([
+      'firestore.googleapis.com',
+      'securetoken.googleapis.com',
+      'www.googleapis.com',
+      'firebaseinstallations.googleapis.com',
+      'stream.zeno.fm'
+    ]);
+    if (noCacheHosts.has(url.hostname)) {
+      event.respondWith(fetch(req));
+      return;
+    }
+  } catch (_) {}
   event.respondWith(
     caches.match(req).then((cached) =>
       cached || fetch(req).then((res) => {
