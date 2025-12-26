@@ -1,0 +1,12 @@
+/* ============================================================================
+   DASHBOARD FIXES - COMMON
+   ============================================================================ */
+
+/* Общие стили для всех устройств - переопределяются в device-specific файлах */
+#dashboard-page > div.grid:first-child {
+    margin-bottom: 1rem !important;
+    gap: 1rem !important;
+    padding: 0.5rem 0 !important;
+    min-height: auto !important;
+}
+
