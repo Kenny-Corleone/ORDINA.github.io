@@ -13,7 +13,9 @@
 }
 
 @media (max-width: 480px) {
-    .header-nav { display: none; }
+    .header-nav {
+        display: none;
+    }
 }
 
 :root {
@@ -242,7 +244,7 @@
 
 /* Base: Mobile-First Fluid Typography */
 body {
-    font-size: clamp(13px, 3vw, 15px);
+    font-size: clamp(15px, 1vw, 18px);
 }
 
 h1 {
@@ -299,8 +301,8 @@ h3 {
 
 .responsive-table th,
 .responsive-table td {
-    padding: clamp(0.5rem, 1vw, 1rem);
-    font-size: clamp(0.8125rem, 1vw, 1rem);
+    padding: clamp(0.75rem, 1.25vw, 1.25rem);
+    font-size: clamp(0.9rem, 1vw, 1.1rem);
 }
 
 dialog {
@@ -615,6 +617,28 @@ h6 {
     color: white;
     box-shadow: 0 10px 30px rgba(var(--primary-rgb), 0.6);
     background: var(--gradient-primary);
+}
+
+.modern-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    border-radius: var(--btn-radius);
+    transition: var(--transition-smooth);
+    cursor: pointer;
+    border: none;
+    letter-spacing: 0.3px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.modern-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+.modern-btn:active {
+    transform: translateY(0);
 }
 
 .premium-btn::before {
@@ -1585,12 +1609,34 @@ textarea:focus {
     min-height: clamp(44px, 4.4vw, 52px);
 }
 
-.header-logo-wrapper { grid-area: logo; }
-#header-motto { grid-area: motto; }
-#ordina-weather-widget { grid-area: weather; }
-.header-radio-chip { grid-area: radio; }
-#header-datetime { grid-area: time; }
-.header-right-group { grid-area: right; }
+.header-logo-wrapper {
+    grid-area: logo;
+}
+
+#header-motto {
+    grid-area: motto;
+}
+
+#ordina-weather-widget {
+    grid-area: weather;
+}
+
+.premium-radio-widget {
+    grid-area: radio;
+}
+
+.header-radio-chip {
+    grid-area: radio;
+}
+
+/* Fallback for old class */
+#header-datetime {
+    grid-area: time;
+}
+
+.header-right-group {
+    grid-area: right;
+}
 
 /* Старые мобильные стили удалены - используем новую систему */
 
@@ -1631,7 +1677,9 @@ textarea:focus {
         row-gap: 6px;
     }
 
-    #header-motto { max-width: 100%; }
+    #header-motto {
+        max-width: 100%;
+    }
 }
 
 @media (max-width: 480px) {
@@ -1861,6 +1909,7 @@ textarea:focus {
     .radio-label-wrapper {
         display: block;
     }
+
     .radio-equalizer {
         display: flex;
     }
@@ -1931,6 +1980,7 @@ textarea:focus {
         font-size: clamp(0.95rem, 4vw, 1.05rem);
         padding-left: 6px;
     }
+
     .header-right-group {
         flex-wrap: wrap;
         max-width: 100%;
@@ -2984,12 +3034,19 @@ textarea:focus {
     border-radius: 10px;
     overflow: hidden;
     background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(139, 92, 246, 0.1) 100%);
+    position: relative;
 }
 
 .news-item-image img {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    display: block;
+    transition: transform 0.3s ease;
+}
+
+.news-item:hover .news-item-image img {
+    transform: scale(1.05);
 }
 
 .news-item-image-placeholder {
@@ -3149,8 +3206,13 @@ textarea:focus {
 
     .news-item-image,
     .news-item-image-placeholder {
-        width: 60px;
-        height: 60px;
+        width: 70px;
+        height: 70px;
+        border-radius: 8px;
+    }
+    
+    .news-item-image img {
+        border-radius: 8px;
     }
 }
 
@@ -3253,6 +3315,56 @@ textarea:focus {
 
 #mini-sidebar {
     height: calc(100vh - 64px);
+    position: sticky;
+    top: 64px;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+/* Vertical tabs on mobile */
+@media (max-width: 640px) {
+    #mini-sidebar {
+        height: calc(100vh - 64px);
+        max-height: calc(100vh - 64px);
+        padding: 0.5rem;
+        gap: 0.25rem;
+    }
+    
+    #mini-sidebar .tab-button {
+        width: 100%;
+        padding: 0.75rem 0.5rem;
+        font-size: 0.7rem;
+        line-height: 1.2;
+        text-align: center;
+        white-space: normal;
+        word-break: break-word;
+        border-radius: 8px;
+        background: transparent;
+        border: 1px solid transparent;
+        transition: all 0.2s ease;
+    }
+    
+    #mini-sidebar .tab-button:hover {
+        background: rgba(99, 102, 241, 0.1);
+        border-color: rgba(99, 102, 241, 0.2);
+    }
+    
+    #mini-sidebar .tab-button.tab-active {
+        background: linear-gradient(135deg, rgba(99, 102, 241, 0.15) 0%, rgba(139, 92, 246, 0.15) 100%);
+        border-color: rgba(99, 102, 241, 0.3);
+        color: var(--primary);
+        font-weight: 600;
+    }
+    
+    .dark #mini-sidebar .tab-button.tab-active {
+        background: linear-gradient(135deg, rgba(99, 102, 241, 0.25) 0%, rgba(139, 92, 246, 0.25) 100%);
+        border-color: rgba(99, 102, 241, 0.4);
+    }
+    
+    main.col-start-2 {
+        padding-left: 0.5rem;
+        min-width: 0;
+    }
 }
 
 /* Flexible gap system */
@@ -4006,23 +4118,6 @@ textarea:focus {
     gap: 6px;
     padding: 6px;
     margin-top: 6px;
-    border-radius: 10px;
-    background: var(--glass-bg-light);
-    border: 1px solid var(--glass-border-light);
-}
-
-.dark .mobile-tabs-menu {
-    background: var(--glass-bg-dark);
-    border-color: var(--glass-border-dark);
-}
-
-.pwa-install-btn {
-    position: fixed;
-    left: 50%;
-    transform: translateX(-50%);
-    bottom: 10px;
-    z-index: 10000;
-    width: 44px;
     height: 44px;
     display: inline-flex;
     align-items: center;
@@ -4042,30 +4137,397 @@ textarea:focus {
 }
 
 @media (min-width: 641px) {
-    .header-nav-mobile { display: none !important; }
+    .header-nav-mobile {
+        display: none !important;
+    }
 }
+
 /* Calculator Modal dark theme */
-.dark #calculator-modal .calc-btn { background: var(--bg-secondary); color: var(--white-pure); }
-.dark #calculator-modal .calc-op { background: var(--primary); color: var(--white-pure); }
-.dark #calculator-modal #calc-display { background: #0f172a; color: var(--white-pure); border-color: var(--glass-border-dark); }
+.dark #calculator-modal .calc-btn {
+    background: var(--bg-secondary);
+    color: var(--white-pure);
+}
+
+.dark #calculator-modal .calc-op {
+    background: var(--primary);
+    color: var(--white-pure);
+}
+
+.dark #calculator-modal #calc-display {
+    background: #0f172a;
+    color: var(--white-pure);
+    border-color: var(--glass-border-dark);
+}
 
 /* Shopping List Modal dark theme */
-.dark #shopping-list-modal input { background: #0f172a; color: var(--white-pure); border-color: var(--glass-border-dark); }
-.dark #shopping-list-modal .bg-gray-50 { background: #1f2937 !important; }
-.dark #shopping-list-modal .text-gray-500 { color: #cbd5e1 !important; }
-.dark #shopping-list-modal .text-red-600 { color: #f87171 !important; }
+.dark #shopping-list-modal input {
+    background: #0f172a;
+    color: var(--white-pure);
+    border-color: var(--glass-border-dark);
+}
+
+.dark #shopping-list-modal .bg-gray-50 {
+    background: #1f2937 !important;
+}
+
+.dark #shopping-list-modal .text-gray-500 {
+    color: #cbd5e1 !important;
+}
+
+.dark #shopping-list-modal .text-red-600 {
+    color: #f87171 !important;
+}
 
 /* Payments iframe wrapper */
-.dark #payments-inline-wrapper { border-color: var(--glass-border-dark); }
-.dark dialog { background: #0b1220; color: var(--white-pure); }
-.dark dialog h3 { color: var(--white-pure); }
-.dark dialog .cancel-btn { color: #cbd5e1; }
-.dark .modern-btn { color: var(--white-pure); box-shadow: 0 2px 8px rgba(0,0,0,0.35); }
-.dark input::placeholder { color: #94a3b8; }
-.dark input, .dark textarea, .dark select { background: #0f172a; color: var(--white-pure); border-color: var(--glass-border-dark); }
-.dark .text-gray-600 { color: #cbd5e1 !important; }
-.dark .text-gray-700 { color: #e2e8f0 !important; }
-.dark .bg-gray-200 { background: #334155 !important; }
-.dark .bg-gray-50 { background: #1f2937 !important; }
-#news-results.news-list { border: 1px solid #e0e0e0; max-height: 300px; overflow-y: auto; border-radius: 8px; }
-#news-show-more { margin-top: 8px; }
+.dark #payments-inline-wrapper {
+    border-color: var(--glass-border-dark);
+}
+
+.dark dialog {
+    background: #0b1220;
+    color: var(--white-pure);
+}
+
+.dark dialog h3 {
+    color: var(--white-pure);
+}
+
+.dark dialog .cancel-btn {
+    color: #cbd5e1;
+}
+
+.dark .modern-btn {
+    color: var(--white-pure);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
+}
+
+.dark input::placeholder {
+    color: #94a3b8;
+}
+
+.dark input,
+.dark textarea,
+.dark select {
+    background: #0f172a;
+    color: var(--white-pure);
+    border-color: var(--glass-border-dark);
+}
+
+.dark .text-gray-600 {
+    color: #cbd5e1 !important;
+}
+
+.dark .text-gray-700 {
+    color: #e2e8f0 !important;
+}
+
+.dark .bg-gray-200 {
+    background: #334155 !important;
+}
+
+.dark .bg-gray-50 {
+    background: #1f2937 !important;
+}
+
+#news-results.news-list {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+    border-radius: 8px;
+}
+
+#news-show-more {
+    margin-top: 8px;
+}
+
+/* Merged from header-fix.css */
+/* Horizontal scrolling for header tabs on small screens */
+.header-tabs-container {
+    display: inline-flex;
+    gap: 0.5rem;
+}
+
+.header-nav .header-tabs-container {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+.header-tabs-container .tab-button {
+    flex: 0 0 auto;
+    /* keep buttons from wrapping; enable horizontal scroll */
+}
+
+/* Ensure right-group icons are visible on small screens */
+.header-right-group {
+    display: flex !important;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+/* Hide mini-sidebar to avoid duplicate tab lists on mobile */
+#mini-sidebar {
+    display: none !important;
+}
+
+/* Force header nav to be visible on all sizes (override hidden sm:block) */
+.header-nav {
+    display: block !important;
+}
+
+/* Small equalizer bar tweak */
+.radio-equalizer .equalizer-bar {
+    width: 3px;
+    border-radius: 2px;
+    display: inline-block;
+    vertical-align: middle;
+    background: currentColor;
+}
+
+/* Improve focus outlines for accessible keyboard navigation */
+#fixed-header button:focus {
+    outline: 3px solid rgba(59, 130, 246, 0.25);
+    outline-offset: 2px;
+}
+
+/* Merged from final-fixes.css */
+/* ============================================
+   CRITICAL UI/UX FIXES
+   ============================================ */
+
+/* Dark Mode Text Visibility */
+.dark .text-gray-500 {
+    color: #94a3b8 !important;
+}
+
+.dark .text-gray-800 {
+    color: #f1f5f9 !important;
+}
+
+.dark .text-gray-900 {
+    color: #f8fafc !important;
+}
+
+.dark thead {
+    background: #1e293b !important;
+    color: #e2e8f0 !important;
+}
+
+.dark th {
+    color: #e2e8f0 !important;
+}
+
+.dark label {
+    color: #e2e8f0 !important;
+}
+
+/* Static Header + Tabs */
+.modern-header {
+    position: fixed !important;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+}
+
+.header-nav {
+    position: sticky !important;
+    top: 60px;
+    z-index: 999;
+    background: inherit;
+}
+
+main {
+    padding-top: 140px;
+}
+
+/* News Feed - FULL HEIGHT STRETCH */
+#news-widget {
+    display: flex !important;
+    flex-direction: column !important;
+    min-height: 800px !important;
+}
+
+#news-results {
+    flex: 1 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    overflow-y: auto !important;
+}
+
+.news-list {
+    flex: 1 !important;
+    display: flex !important;
+    flex-direction: column !important;
+}
+
+/* Background Animation - VISIBLE */
+#background-animation {
+    position: fixed !important;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    pointer-events: none;
+    z-index: 0 !important;
+}
+
+#background-animation::before,
+#background-animation::after {
+    content: '' !important;
+    position: absolute !important;
+    opacity: 0.35 !important;
+    animation: floatShape 25s ease-in-out infinite !important;
+    will-change: transform, opacity;
+}
+
+#background-animation::before {
+    width: 0;
+    height: 0;
+    border-left: 300px solid transparent;
+    border-right: 300px solid transparent;
+    border-bottom: 500px solid var(--primary);
+    top: 5%;
+    left: 3%;
+}
+
+#background-animation::after {
+    width: 400px;
+    height: 230px;
+    background: var(--gold-primary);
+    bottom: 10%;
+    right: 5%;
+    clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+    animation-delay: 12s;
+}
+
+@keyframes floatShape {
+
+    0%,
+    100% {
+        transform: translate(0, 0) rotate(0deg) scale(1);
+        opacity: 0.35;
+    }
+
+    25% {
+        transform: translate(60px, -70px) rotate(25deg) scale(1.2);
+        opacity: 0.4;
+    }
+
+    50% {
+        transform: translate(-50px, 60px) rotate(-20deg) scale(0.9);
+        opacity: 0.2;
+    }
+
+    75% {
+        transform: translate(70px, 40px) rotate(30deg) scale(1.15);
+        opacity: 0.38;
+    }
+}
+
+.dark #background-animation::before {
+    border-bottom-color: rgba(99, 102, 241, 0.4) !important;
+    opacity: 0.4 !important;
+}
+
+.dark #background-animation::after {
+    background: rgba(244, 196, 48, 0.4) !important;
+    opacity: 0.4 !important;
+}
+
+/* Compact Dashboard Chart */
+#expense-chart-container {
+    max-height: 450px !important;
+}
+
+canvas#expenses-chart {
+    max-height: 430px !important;
+}
+
+/* Motto Alignment */
+.header-motto {
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    padding-right: 12px;
+}
+
+@media (min-width: 769px) and (max-width: 1200px) {
+    .header-motto {
+        font-size: clamp(0.9rem, 1vw, 1.1rem);
+        max-width: 200px;
+    }
+}
+
+/* PWA Install Button - Footer Style */
+.pwa-install-btn-footer {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 18px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border: none;
+    color: white;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 4px 20px rgba(102, 126, 234, 0.4);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    margin-left: 12px;
+}
+
+.pwa-install-btn-footer:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 30px rgba(102, 126, 234, 0.6);
+}
+
+.pwa-install-btn-footer:active {
+    transform: translateY(0);
+}
+
+.dark .pwa-install-btn-footer {
+    background: linear-gradient(135deg, #818cf8 0%, #a855f7 100%);
+    box-shadow: 0 4px 20px rgba(129, 140, 248, 0.5);
+}
+
+/* Global Page Content Fix - Z-Index for visibility over particles */
+.page-content {
+    width: 100%;
+    min-height: 50vh;
+    position: relative;
+    z-index: 10;
+}
+
+/* Responsive Table Fix */
+.responsive-table {
+    display: block;
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+/* Fix for News Widget filling space */
+#news-widget {
+    min-height: 0;
+}
+
+#news-results {
+    flex: 1 1 auto;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Reinforce Sticky Header */
+#fixed-header {
+    position: sticky !important;
+    top: 0 !important;
+    z-index: 100 !important;
+}
+
+/* Ensure browser modal iframe fills space */
+#browser-modal-frame {
+    width: 100%;
+    height: 100%;
+}
