@@ -1,123 +1,58 @@
 <h1 align="center">
-  <img src="https://raw.githubusercontent.com/Kenny-Corleone/ORDINA.github.io/main/assets/logo%20ORDINA.png" width="200" alt="ORDINA Logo"/>
+  <img src="https://raw.githubusercontent.com/Kenny-Corleone/ORDINA.github.io/main/assets/logo%20ORDINA.png" width="300" alt="ORDINA Logo"/>
+  <br>
+  <span style="font-family: 'Poppins', sans-serif; font-weight: 300; font-size: 2em; letter-spacing: 0.1em; color: #6366f1;">Life Order Assistant</span>
 </h1>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/status-active-success.svg" alt="Status"/>
-  <img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="License"/>
-  <img src="https://img.shields.io/badge/version-1.0.0-6A5ACD.svg" alt="Version"/>
+  <a href="https://kenny-corleone.github.io/ORDINA.github.io/"><img src="https://img.shields.io/badge/status-online-success.svg?style=for-the-badge&logo=google-chrome&logoColor=white" alt="Status"/></a>
+  <img src="https://img.shields.io/badge/license-MIT-blue.svg?style=for-the-badge&logo=github" alt="License"/>
+  <img src="https://img.shields.io/badge/version-2.1.0-6A5ACD.svg?style=for-the-badge&logo=git" alt="Version"/>
 </p>
 
 <a id="en"></a>
 
-## Overview
-- Personal HQ that combines expenses, debts, tasks, calendar, analytics and daily info.
-- News, weather and internet radio for focus.
-- Full localization (EN/RU/AZ) and currency toggle (AZN/USD).
+## 🚀 Overview
+**ORDINA** is your personal headquarters for life management. It seamlessly combines financial tracking, debt management, task planning, and daily utilities into a single, beautiful interface. Designed with a premium glassmorphism aesthetic, it helps you stay organized and focused.
 
-## Quick Start
-1. Open `https://kenny-corleone.github.io/ORDINA.github.io/`
-2. Install PWA on first launch or via in‑app icon
-3. Sign up via email or Google
-4. Start with the dashboard and add the first expense
+## ✨ Features
+- **💰 Financial Control**: Track expenses, manage debts, and monitor recurring payments with detailed analytics and charts. Supports AZN/USD.
+- **✅ Productivity**: Smart calendar and task management (Daily, Monthly, Yearly) with priority tags and reminders.
+- **📰 Lifestyle Hub**: Curated news feed, local weather widget, and "AzerbaiJazz" internet radio with a visual equalizer.
+- **🎨 Premium UX**: Modern glassmorphism design, dark/light mode, fluid typography, and fully responsive layout.
 
-## Features
-- Finance: expense tracking, debts, recurring payments, charts, AZN/USD.
-- Productivity: smart calendar, tasks (daily/monthly/yearly), reminders.
-- Lifestyle: curated news, weather widget, AzerbaiJazz radio with equalizer.
-- UI/UX: glassmorphism, dark mode, responsive layout, fluid typography.
+## ⚡ Quick Start
+1. Open [ORDINA](https://kenny-corleone.github.io/ORDINA.github.io/)
+2. Install as PWA for the best experience.
+3. Sign in with Google or Email.
+4. Start organizing your life!
 
-## Installation
-1. No installation required — runs in browser
-2. Optional: install as PWA for native‑like experience
-3. Login via email or Google
+## 🛠️ Tech Stack
+- **Frontend**: HTML5, Vanilla JS (ES6+), Tailwind CSS
+- **Backend**: Firebase (Firestore, Auth)
+- **Build Tool**: Vite
+- **Design**: CSS Variables, Glassmorphism
 
-## Usage
-- Dashboard: overview of expenses, tasks and widgets
-- Expenses: add, categorize, analyze with charts
-- Debts: track who owes you and who you owe
-- Recurring: configure monthly payments and reminders
-- Tasks & Calendar: plan day/month/year with notifications
-- News & Weather: stay updated with curated feed and local weather
-- Radio: focus with AzerbaiJazz and equalizer
+## 📦 Installation
+No installation required! ORDINA runs directly in your browser. For a native-like experience, install it as a Progressive Web App (PWA).
 
-## Tech Stack
-- `HTML5`, `Vanilla JS (ES6+)`, `Tailwind CSS`, `CSS Variables`
-- `Firebase (Firestore, Auth)`, `Vite`, `SVG`
+## 🤝 Contributing
+Contributions are welcome!
+1. Fork the repository.
+2. Create a feature branch: `git checkout -b feature/NewFeature`
+3. Commit changes: `git commit -m "Add NewFeature"`
+4. Push to branch: `git push origin feature/NewFeature`
+5. Open a Pull Request.
 
-## Screenshots
+## 📄 License
+Distributed under the MIT License. See `LICENSE` for more information.
 
-<details>
-<summary>Dashboard & News</summary>
-
-<p>
-  <img src="assets/screenshots/news.png" alt="ORDINA Dashboard & News" width="100%" />
-</p>
-</details>
-
-<details>
-<summary>Expenses</summary>
-
-<p>
-  <img src="assets/screenshots/expenses.png" alt="ORDINA Expenses" width="100%" />
-</p>
-</details>
-
-<details>
-<summary>Debts</summary>
-
-<p>
-  <img src="assets/screenshots/debts.png" alt="ORDINA Debts" width="100%" />
-</p>
-</details>
-
-<details>
-<summary>Tasks</summary>
-
-<p>
-  <img src="assets/screenshots/tasks.png" alt="ORDINA Tasks" width="100%" />
-</p>
-</details>
-
-<details>
-<summary>Calendar</summary>
-
-<p>
-  <img src="assets/screenshots/calendar.png" alt="ORDINA Calendar" width="100%" />
-</p>
-</details>
-
-## Support
-If you like the project — support development.
-
-## Contributing
-- Fork the repository
-- Create branch: `git checkout -b feature/AmazingFeature`
-- Commit: `git commit -m "Add AmazingFeature"`
-- Push: `git push origin feature/AmazingFeature`
-- Open a Pull Request
-
-## License
-MIT. See `LICENSE`.
+---
 
 <p align="center">
-  Made with ❤️ by <a href="https://github.com/Kenny-Corleone">Kenny Corleone</a>
+  Made with ❤️ by <a href="https://github.com/Kenny-Corleone" style="text-decoration: none; font-weight: bold; color: #6366f1;">Kenny Corleone</a>
 </p>
 
 <p align="center">
-  <a href="https://www.buymeacoffee.com/Ancl"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy me a tea" height="50"/></a>
+<a href="https://www.buymeacoffee.com/Ancl"><img src="https://img.buymeacoffee.com/button-api/?text=Buy me a beer&emoji=🍺&slug=Ancl&button_colour=5F7FFF&font_colour=ffffff&font_family=Poppins&outline_colour=000000&coffee_colour=FFDD00" /></a>
 </p>
-
-## FAQ
-- How do I enable dark mode?
-  - Uses system preference; toggle in app settings
-- How to sync data across devices?
-  - Sign in with the same account; data stored in Firebase
-- Why `hesab.az` may not open inside?
-  - Some sites restrict embedding; app shows a fallback link
-
-## Contacts
-- Issues: `https://github.com/Kenny-Corleone/ORDINA.github.io/issues`
-- Author: `https://github.com/Kenny-Corleone`
-
-<!-- Single-language README: English only -->

@@ -6,7 +6,7 @@ import { logger, showToast } from './utils.js';
 // ============================================================================
 
 let newsData = [];
-let visibleNewsCount = 10;
+let visibleNewsCount = 50;
 let currentNewsCategory = 'all';
 let currentNewsSearch = '';
 
@@ -131,6 +131,41 @@ const RSS_SOURCES = {
             'https://www.rollingstone.com/rss/',
             'https://feeds.feedburner.com/oreilly/radar'
         ]
+    },
+    'it': {
+        'all': [
+            'https://www.ansa.it/sito/notizie/mondo/mondo_rss.xml',
+            'https://www.repubblica.it/rss/homepage/rss2.0.xml',
+            'https://www.corriere.it/rss/homepage.xml',
+            'https://www.ilsole24ore.com/rss/homepage.xml'
+        ],
+        'technology': [
+            'https://www.repubblica.it/rss/tecnologia/rss2.0.xml',
+            'https://www.corriere.it/rss/tecnologia.xml',
+            'https://www.ilsole24ore.com/rss/tecnologia.xml'
+        ],
+        'business': [
+            'https://www.ilsole24ore.com/rss/economia.xml',
+            'https://www.repubblica.it/rss/economia/rss2.0.xml',
+            'https://www.corriere.it/rss/economia.xml'
+        ],
+        'science': [
+            'https://www.ansa.it/sito/notizie/scienza/scienza_rss.xml',
+            'https://www.repubblica.it/rss/scienze/rss2.0.xml'
+        ],
+        'sports': [
+            'https://www.gazzetta.it/rss/home.xml',
+            'https://www.corriere.it/rss/sport.xml',
+            'https://www.repubblica.it/rss/sport/rss2.0.xml'
+        ],
+        'health': [
+            'https://www.ansa.it/sito/notizie/saluteebenessere/saluteebenessere_rss.xml',
+            'https://www.repubblica.it/rss/salute/rss2.0.xml'
+        ],
+        'entertainment': [
+            'https://www.repubblica.it/rss/spettacoli/rss2.0.xml',
+            'https://www.corriere.it/rss/spettacoli.xml'
+        ]
     }
 };
 
@@ -141,8 +176,7 @@ const getRSSSourcesForLanguage = (lang, category = 'all') => {
 
 const CORS_PROXIES = [
     (url) => `https://api.allorigins.win/get?url=${encodeURIComponent(url)}`,
-    (url) => `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(url)}`,
-    (url) => `https://r.jina.ai/http/${url.replace(/^https?:\/\//, '')}`
+    (url) => `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(url)}`
 ];
 
 const fetchWithTimeout = (url, timeout = 12000) => {
@@ -222,12 +256,139 @@ async function parseRSSFeed(url, retries = 2) {
                     const pubDate = item.querySelector('pubDate')?.textContent || '';
 
                     let image = '';
-                    const mediaContent = item.querySelector('media\\:content, content');
-                    if (mediaContent && mediaContent.getAttribute('url')) {
-                        image = mediaContent.getAttribute('url');
-                    } else {
-                        const imgMatch = desc.match(/<img[^>]+src="([^"]+)"/);
-                        if (imgMatch) image = imgMatch[1];
+                    // Try multiple sources for images with improved parsing
+                    
+                    // 1. Media namespace (media:content, media:thumbnail) - try different selectors
+                    const mediaSelectors = [
+                        'media\\:content',
+                        'content[type^="image"]',
+                        'media\\:thumbnail',
+                        '*[xmlns\\:media] content',
+                        '*[xmlns\\:media] thumbnail'
+                    ];
+                    
+                    for (const selector of mediaSelectors) {
+                        try {
+                            const mediaContent = item.querySelector(selector);
+                            if (mediaContent) {
+                                image = mediaContent.getAttribute('url') || 
+                                        mediaContent.getAttribute('href') || 
+                                        mediaContent.getAttribute('src') ||
+                                        mediaContent.textContent?.trim() || '';
+                                if (image) break;
+                            }
+                        } catch (e) {
+                            // Invalid selector, continue
+                        }
+                    }
+                    
+                    // 2. Enclosure tag
+                    if (!image) {
+                        const enclosure = item.querySelector('enclosure');
+                        if (enclosure) {
+                            const type = enclosure.getAttribute('type') || '';
+                            if (type.startsWith('image/')) {
+                                image = enclosure.getAttribute('url') || '';
+                            }
+                        }
+                    }
+                    
+                    // 3. Parse description HTML to find images
+                    if (!image && desc) {
+                        try {
+                            // Try to parse as HTML
+                            const descDoc = new DOMParser().parseFromString(desc, 'text/html');
+                            const imgTags = descDoc.querySelectorAll('img');
+                            if (imgTags.length > 0) {
+                                for (const img of imgTags) {
+                                    const src = img.getAttribute('src') || img.getAttribute('data-src');
+                                    if (src && (src.startsWith('http') || src.startsWith('//'))) {
+                                        image = src;
+                                        break;
+                                    }
+                                }
+                            }
+                        } catch (e) {
+                            // Fallback to regex if HTML parsing fails
+                        }
+                        
+                        // Regex fallback for image tags
+                        if (!image) {
+                            const imgMatches = desc.match(/<img[^>]+src=["']([^"']+)["']/gi);
+                            if (imgMatches) {
+                                for (const match of imgMatches) {
+                                    const srcMatch = match.match(/src=["']([^"']+)["']/i);
+                                    if (srcMatch && srcMatch[1]) {
+                                        const src = srcMatch[1];
+                                        if (src.startsWith('http') || src.startsWith('//') || src.startsWith('/')) {
+                                            image = src;
+                                            break;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        
+                        // Try to find image URLs in CDATA or plain text
+                        if (!image) {
+                            const urlMatches = desc.match(/(https?:\/\/[^\s<>"']+\.(jpg|jpeg|png|gif|webp|svg)(\?[^\s<>"']*)?)/gi);
+                            if (urlMatches && urlMatches.length > 0) {
+                                image = urlMatches[0];
+                            }
+                        }
+                    }
+                    
+                    // 4. Try Open Graph and Twitter Card meta tags (if description contains them)
+                    if (!image && desc) {
+                        const ogImageMatch = desc.match(/<meta[^>]+property=["']og:image["'][^>]+content=["']([^"']+)["']/i);
+                        if (ogImageMatch) {
+                            image = ogImageMatch[1];
+                        } else {
+                            const twitterImageMatch = desc.match(/<meta[^>]+name=["']twitter:image["'][^>]+content=["']([^"']+)["']/i);
+                            if (twitterImageMatch) {
+                                image = twitterImageMatch[1];
+                            }
+                        }
+                    }
+                    
+                    // Clean and validate image URL
+                    if (image) {
+                        // Remove HTML entities
+                        image = image.replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>');
+                        
+                        // Handle relative URLs
+                        if (image.startsWith('//')) {
+                            image = 'https:' + image;
+                        } else if (image.startsWith('/')) {
+                            try {
+                                const urlObj = new URL(url);
+                                image = urlObj.origin + image;
+                            } catch (e) {
+                                // Keep relative URL if base URL parsing fails
+                            }
+                        }
+                        
+                        // Remove only tracking parameters, keep essential ones
+                        if (image.includes('?')) {
+                            const [base, query] = image.split('?');
+                            const params = query.split('&').filter(p => {
+                                const param = p.split('=')[0].toLowerCase();
+                                // Remove tracking params but keep size, quality, etc.
+                                return !param.startsWith('utm_') && 
+                                       !param.startsWith('ref=') && 
+                                       !param.startsWith('fbclid') &&
+                                       !param.startsWith('gclid');
+                            });
+                            image = base + (params.length > 0 ? '?' + params.join('&') : '');
+                        }
+                        
+                        // Validate URL format
+                        try {
+                            new URL(image);
+                        } catch (e) {
+                            // Invalid URL, clear it
+                            image = '';
+                        }
                     }
 
                     articles.push({
@@ -330,7 +491,7 @@ export async function fetchNews() {
             return dateB - dateA;
         });
         // full dataset kept; rendering controls number of visible items
-        visibleNewsCount = 10;
+        visibleNewsCount = 30;
 
         renderNews();
 
@@ -417,7 +578,10 @@ const renderNews = () => {
                 ${news.image ? `
                     <div class="news-item-image">
                         <img src="${news.image}" alt="${cleanTitle}" loading="lazy"
-                             onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                             crossorigin="anonymous"
+                             referrerpolicy="no-referrer"
+                             onerror="this.onerror=null; this.style.display='none'; const placeholder = this.nextElementSibling; if(placeholder) placeholder.style.display='flex';"
+                             onload="this.style.opacity='1';">
                         <div class="news-item-image-placeholder" style="display:none;">
                             <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"/>
@@ -457,7 +621,12 @@ const renderNews = () => {
     }
 };
 
+let isNewsInitialized = false;
+
 export const initNews = () => {
+    if (isNewsInitialized) return;
+    isNewsInitialized = true;
+
     const categorySelect = document.getElementById('news-category');
     const searchInput = document.getElementById('news-search');
     const refreshBtn = document.getElementById('news-refresh');
