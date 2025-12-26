@@ -34,22 +34,6 @@ export default defineConfig(({ mode }) => ({
                 ],
             },
         }),
-        // Gzip compression - DISABLED due to path issues
-        // viteCompression({
-        //     verbose: true,
-        //     disable: false,
-        //     threshold: 10240,
-        //     algorithm: 'gzip',
-        //     ext: '.gz',
-        // }),
-        // Brotli compression - DISABLED due to path issues
-        // viteCompression({
-        //     verbose: true,
-        //     disable: false,
-        //     threshold: 10240,
-        //     algorithm: 'brotliCompress',
-        //     ext: '.br',
-        // }),
     ],
     resolve: {
         alias: {
@@ -78,29 +62,6 @@ export default defineConfig(({ mode }) => ({
                     // Separate Firebase into its own chunk
                     if (id.includes('node_modules/firebase') || id.includes('node_modules/@firebase')) {
                         return 'vendor-firebase';
-                    }
-                    // Separate Chart.js if used
-                    if (id.includes('node_modules/chart.js')) {
-                        return 'vendor-charts';
-                    }
-                    // Separate tabs into individual chunks
-                    if (id.includes('src/js/tabs/dashboard.js')) {
-                        return 'tab-dashboard';
-                    }
-                    if (id.includes('src/js/tabs/debts.js')) {
-                        return 'tab-debts';
-                    }
-                    if (id.includes('src/js/tabs/expenses.js')) {
-                        return 'tab-expenses';
-                    }
-                    if (id.includes('src/js/tabs/tasks.js')) {
-                        return 'tab-tasks';
-                    }
-                    if (id.includes('src/js/tabs/calendar.js')) {
-                        return 'tab-calendar';
-                    }
-                    if (id.includes('src/js/tabs/recurring-expenses.js')) {
-                        return 'tab-recurring';
                     }
                     // Separate other node_modules into vendor chunk
                     if (id.includes('node_modules')) {

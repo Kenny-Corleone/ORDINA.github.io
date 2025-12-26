@@ -1,7 +1,5 @@
 import { translations, currentLang } from './i18n.js';
-import { logger, showToast, debounce } from './utils.js';
-import { showSkeleton, hideSkeleton } from '../components/skeleton-loader.js';
-import { getCachedItem, setCachedItem } from './storage.js';
+import { logger, showToast } from './utils.js';
 
 // ============================================================================
 // STATE MANAGEMENT
@@ -11,8 +9,6 @@ let newsData = [];
 let visibleNewsCount = 50;
 let currentNewsCategory = 'all';
 let currentNewsSearch = '';
-let showFavoritesOnly = false;
-let favoriteNews = new Set();
 
 // ============================================================================
 // RSS FEED SOURCES
@@ -429,10 +425,7 @@ export async function fetchNews() {
     const newsResults = document.getElementById('news-results');
 
     if (newsLoading) newsLoading.classList.remove('hidden');
-    if (newsResults) {
-        // Show skeleton loader instead of empty
-        showSkeleton('news-results', 'news', { count: 5 });
-    }
+    if (newsResults) newsResults.innerHTML = '';
 
     try {
         const categoryKey = currentNewsCategory || 'all';
@@ -482,24 +475,15 @@ export async function fetchNews() {
             }
         }
 
-        // Apply search filter
-        let filteredArticles = allArticles;
         if (currentNewsSearch) {
             const searchLower = currentNewsSearch.toLowerCase();
-            filteredArticles = allArticles.filter(article =>
+            newsData = allArticles.filter(article =>
                 article.title.toLowerCase().includes(searchLower) ||
                 article.desc.toLowerCase().includes(searchLower)
             );
+        } else {
+            newsData = allArticles;
         }
-        
-        // Apply favorites filter
-        if (showFavoritesOnly) {
-            filteredArticles = filteredArticles.filter(article => 
-                favoriteNews.has(article.url)
-            );
-        }
-        
-        newsData = filteredArticles;
 
         newsData.sort((a, b) => {
             const dateA = new Date(a.publishedAt);
@@ -509,13 +493,6 @@ export async function fetchNews() {
         // full dataset kept; rendering controls number of visible items
         visibleNewsCount = 30;
 
-        // Cache the original articles (before search/favorites filter) for 30 minutes
-        if (allArticles.length > 0 && !currentNewsSearch && !showFavoritesOnly) {
-            setCachedItem(cacheKey, allArticles, 1000 * 60 * 30);
-        }
-        
-        // Hide skeleton and render news
-        hideSkeleton('news-results');
         renderNews();
 
         if (newsData.length === 0) {
@@ -536,17 +513,14 @@ export async function fetchNews() {
         }
     } catch (e) {
         logger.error('News fetch error:', e);
-        hideSkeleton('news-results');
-        if (newsResults) {
-            newsResults.innerHTML = `
-                <div class="news-empty">
-                    <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                    </svg>
-                    <p data-i18n="newsError">Ошибка загрузки новостей</p>
-                </div>
-            `;
-        }
+        newsResults.innerHTML = `
+            <div class="news-empty">
+                <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+                <p data-i18n="newsError">Ошибка загрузки новостей</p>
+            </div>
+        `;
         setTimeout(() => {
             const errorText = newsResults.querySelector('[data-i18n="newsError"]');
             if (errorText && translations[currentLang].newsError) {
@@ -603,14 +577,9 @@ const renderNews = () => {
             <article class="news-item" onclick="window.open('${news.url}', '_blank', 'noopener,noreferrer')">
                 ${news.image ? `
                     <div class="news-item-image">
-                        <img src="${news.image}" 
-                             alt="${cleanTitle}" 
-                             loading="lazy"
-                             decoding="async"
+                        <img src="${news.image}" alt="${cleanTitle}" loading="lazy"
                              crossorigin="anonymous"
                              referrerpolicy="no-referrer"
-                             data-src="${news.image}"
-                             class="news-image-lazy"
                              onerror="this.onerror=null; this.style.display='none'; const placeholder = this.nextElementSibling; if(placeholder) placeholder.style.display='flex';"
                              onload="this.style.opacity='1';">
                         <div class="news-item-image-placeholder" style="display:none;">
@@ -654,41 +623,6 @@ const renderNews = () => {
 
 let isNewsInitialized = false;
 
-// Load favorites from storage
-function loadFavorites() {
-    try {
-        const saved = localStorage.getItem('ordina_news_favorites');
-        if (saved) {
-            favoriteNews = new Set(JSON.parse(saved));
-        }
-    } catch (e) {
-        logger.error('Error loading favorites:', e);
-    }
-}
-
-// Save favorites to storage
-function saveFavorites() {
-    try {
-        localStorage.setItem('ordina_news_favorites', JSON.stringify(Array.from(favoriteNews)));
-    } catch (e) {
-        logger.error('Error saving favorites:', e);
-    }
-}
-
-// Toggle favorite status
-export function toggleNewsFavorite(url) {
-    if (favoriteNews.has(url)) {
-        favoriteNews.delete(url);
-    } else {
-        favoriteNews.add(url);
-    }
-    saveFavorites();
-    renderNews();
-}
-
-// Initialize favorites on load
-loadFavorites();
-
 export const initNews = () => {
     if (isNewsInitialized) return;
     isNewsInitialized = true;
@@ -705,37 +639,22 @@ export const initNews = () => {
     }
 
     if (searchInput) {
-        // Debounced search
-        const debouncedSearch = debounce((value) => {
-            currentNewsSearch = value.trim();
-            renderNews(); // Re-render with search filter
-        }, 300);
-        
+        let searchTimeout;
         searchInput.addEventListener('input', (e) => {
-            debouncedSearch(e.target.value);
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(() => {
+                currentNewsSearch = e.target.value.trim();
+                fetchNews();
+            }, 500);
         });
 
         searchInput.addEventListener('keypress', (e) => {
             if (e.key === 'Enter') {
                 currentNewsSearch = e.target.value.trim();
-                renderNews();
+                fetchNews();
             }
         });
     }
-    
-    // Favorites toggle button
-    const favoritesBtn = document.getElementById('news-favorites-toggle');
-    if (favoritesBtn) {
-        favoritesBtn.addEventListener('click', () => {
-            showFavoritesOnly = !showFavoritesOnly;
-            favoritesBtn.classList.toggle('active', showFavoritesOnly);
-            favoritesBtn.setAttribute('aria-pressed', showFavoritesOnly);
-            renderNews();
-        });
-    }
-    
-    // Make toggleNewsFavorite available globally
-    window.toggleNewsFavorite = toggleNewsFavorite;
 
     if (refreshBtn) {
         refreshBtn.addEventListener('click', () => {

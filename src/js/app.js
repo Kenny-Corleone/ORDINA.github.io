@@ -7,12 +7,10 @@ import {
      onAuthStateChanged, signInWithEmailAndPassword,
      createUserWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, signOut
 } from "firebase/auth";
-import { logger, safeGet, $, $$, getCached, showToast, debounce, throttle, memoize } from './utils.js';
+import { logger, safeGet, $, $$, getCached, showToast } from './utils.js';
 import { translations, currentLang, loadTranslations, setLanguage, applyDynamicTranslations } from './i18n.js';
 import { initWeatherNew } from './weather.js';
 import { initNews } from './news.js?v=2.2.1';
-import { initSwipeGestures, isTouchDevice } from './gestures.js';
-import { initKeyboardNavigation, trapFocus, restoreFocus } from './keyboard.js';
 
 // ============================================================================
 // STATE MANAGEMENT
@@ -48,20 +46,11 @@ let exchangeRate = 1.7;
 // ============================================================================
 // UTILITY FUNCTIONS
 // ============================================================================
-// Memoized currency formatter for better performance
-const formatCurrencyBase = (amount, currency, rate) => {
-     if (typeof amount !== 'number') amount = 0;
-     const value = currency === 'USD' ? amount / rate : amount;
-     const symbol = currency === 'USD' ? '$' : 'AZN';
-     return `${value.toFixed(2)} ${symbol}`;
-};
-
-const formatCurrencyMemoized = memoize(formatCurrencyBase, (amount, currency, rate) => 
-     `${currency}-${Math.round(amount * 100)}-${Math.round(rate * 100)}`
-);
-
 const formatCurrency = (amount) => {
-     return formatCurrencyMemoized(amount, currentCurrency, exchangeRate);
+     if (typeof amount !== 'number') amount = 0;
+     const value = currentCurrency === 'USD' ? amount / exchangeRate : amount;
+     const symbol = currentCurrency === 'USD' ? '$' : 'AZN';
+     return `${value.toFixed(2)} ${symbol}`;
 };
 
 const formatISODateForDisplay = (isoDate, options = {}) => {
@@ -211,17 +200,12 @@ export async function initApp() {
      // Start clock immediately
      updateDashboardClock();
      
-     // Sync news height on window resize (throttled)
-     window.addEventListener('resize', throttle(() => {
+     // Sync news height on window resize
+     window.addEventListener('resize', () => {
           if (document.getElementById('dashboard-content') && !document.getElementById('dashboard-content').classList.contains('hidden')) {
                syncNewsHeight();
           }
-     }, 250));
-     
-     // Initialize swipe gestures for mobile devices
-     if (isTouchDevice()) {
-          initSwipeGestures();
-     }
+     });
 }
 
 function scheduleMidnightRollover() {
@@ -1050,47 +1034,23 @@ function setupEventListeners() {
 
      tabs.forEach(tab => tab.addEventListener('click', (e) => {
           e.preventDefault();
-          
-          // Update ARIA attributes
-          tabs.forEach(t => {
-               t.classList.remove('tab-active');
-               t.setAttribute('aria-selected', 'false');
-          });
+          tabs.forEach(t => t.classList.remove('tab-active'));
           tab.classList.add('tab-active');
-          tab.setAttribute('aria-selected', 'true');
 
           // Also update mobile tabs if present
           const mobileTabs = $$('.tab-button[data-tab="' + tab.dataset.tab + '"]');
-          mobileTabs.forEach(mt => {
-               mt.classList.add('tab-active');
-               mt.setAttribute('aria-selected', 'true');
-          });
+          mobileTabs.forEach(mt => mt.classList.add('tab-active'));
 
-          // Animate page transitions
-          $$('.page-content').forEach(p => {
-               p.classList.add('hidden', 'page-fade-out');
-               setTimeout(() => {
-                    p.classList.remove('page-fade-out');
-               }, 200);
-          });
-          
+          $$('.page-content').forEach(p => p.classList.add('hidden'));
           const pageId = `${tab.dataset.tab}-page`;
           const page = document.getElementById(pageId);
           if (page) {
-               page.classList.add('page-fade-in');
-               setTimeout(() => {
-                    page.classList.remove('hidden', 'page-fade-in');
-               }, 50);
+               page.classList.remove('hidden');
           } else {
                logger.error(`Page not found for tab: ${tab.dataset.tab}`);
                // Fallback to dashboard if page missing
                const dashboard = document.getElementById('dashboard-page');
-               if (dashboard) {
-                    dashboard.classList.add('page-fade-in');
-                    setTimeout(() => {
-                         dashboard.classList.remove('hidden', 'page-fade-in');
-                    }, 50);
-               }
+               if (dashboard) dashboard.classList.remove('hidden');
           }
      }));
 
@@ -1628,22 +1588,10 @@ function setupModal(modalId, openBtnId, resetFn) {
      if (openBtn) openBtn.addEventListener('click', () => {
           if (resetFn) resetFn();
           modal.showModal();
-          // Trap focus in modal
-          trapFocus(modal);
      });
 
      const cancelBtn = modal.querySelector('.cancel-btn');
-     if (cancelBtn) {
-          cancelBtn.addEventListener('click', () => {
-               modal.close();
-               restoreFocus();
-          });
-     }
-     
-     // Handle modal close events
-     modal.addEventListener('close', () => {
-          restoreFocus();
-     });
+     if (cancelBtn) cancelBtn.addEventListener('click', () => modal.close());
 }
 
 async function handleFormSubmit(e) {
@@ -2020,42 +1968,19 @@ async function handleGoogleLogin(e) {
 // Theme
 function setupTheme() {
      const savedTheme = localStorage.getItem('theme');
-     const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-     
-     // Apply theme with smooth transition
-     if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
+     if (savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
           document.documentElement.classList.add('dark');
      } else {
           document.documentElement.classList.remove('dark');
      }
-     
-     // Add transition class for smooth theme switching
-     document.documentElement.style.transition = 'background-color 0.3s ease, color 0.3s ease';
-     
      updateThemeIcons();
 }
 
 function toggleTheme() {
-     // Add transition class temporarily
-     document.documentElement.classList.add('theme-transitioning');
-     
      document.documentElement.classList.toggle('dark');
      const isDark = document.documentElement.classList.contains('dark');
      localStorage.setItem('theme', isDark ? 'dark' : 'light');
-     
-     // Update button aria-label
-     const themeBtn = document.getElementById('theme-toggle');
-     if (themeBtn) {
-          themeBtn.setAttribute('aria-label', isDark ? 'Switch to light mode' : 'Switch to dark mode');
-          themeBtn.setAttribute('title', isDark ? 'Switch to light mode' : 'Switch to dark mode');
-     }
-     
      updateThemeIcons();
-     
-     // Remove transition class after animation
-     setTimeout(() => {
-          document.documentElement.classList.remove('theme-transitioning');
-     }, 300);
 }
 
 function updateThemeIcons() {
