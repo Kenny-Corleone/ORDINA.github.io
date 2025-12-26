@@ -34,22 +34,6 @@ export default defineConfig(({ mode }) => ({
                 ],
             },
         }),
-        // Gzip compression - DISABLED due to path issues
-        // viteCompression({
-        //     verbose: true,
-        //     disable: false,
-        //     threshold: 10240,
-        //     algorithm: 'gzip',
-        //     ext: '.gz',
-        // }),
-        // Brotli compression - DISABLED due to path issues
-        // viteCompression({
-        //     verbose: true,
-        //     disable: false,
-        //     threshold: 10240,
-        //     algorithm: 'brotliCompress',
-        //     ext: '.br',
-        // }),
     ],
     resolve: {
         alias: {
