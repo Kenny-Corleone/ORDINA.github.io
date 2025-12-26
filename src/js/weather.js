@@ -144,7 +144,12 @@ export async function updateWeatherNew(city = 'Baku') {
     }
 }
 
+let isWeatherInitialized = false;
+
 export const initWeatherNew = () => {
+    if (isWeatherInitialized) return;
+    isWeatherInitialized = true;
+
     const searchInput = document.getElementById('weather-search-input');
     const searchBtn = document.getElementById('weather-search-btn');
     const locationBtn = document.getElementById('weather-location-btn-new');
