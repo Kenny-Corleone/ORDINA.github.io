@@ -1,51 +1,37 @@
 {
-  "name": "ORDINA",
+  "name": "ORDINA — Personal Command Center",
   "short_name": "ORDINA",
-  "description": "Premium personal finance and life management suite",
   "start_url": "/ORDINA.github.io/",
+  "scope": "/ORDINA.github.io/",
   "display": "standalone",
-  "background_color": "#f5f3f0",
-  "theme_color": "#6366f1",
-  "orientation": "portrait-primary",
+  "background_color": "#0B0F1A",
+  "theme_color": "#0B0F1A",
   "icons": [
-    {
-      "src": "/ORDINA.github.io/assets/favicons/favicon-180.png",
-      "sizes": "180x180",
-      "type": "image/png",
-      "purpose": "any maskable"
-    },
-    {
-      "src": "/ORDINA.github.io/assets/favicons/favicon-32.png",
-      "sizes": "32x32",
-      "type": "image/png"
-    },
-    {
-      "src": "/ORDINA.github.io/assets/favicons/favicon-16.png",
-      "sizes": "16x16",
-      "type": "image/png"
-    }
+    { "src": "/ORDINA.github.io/assets/favicons/favicon-16.png", "sizes": "16x16", "type": "image/png" },
+    { "src": "/ORDINA.github.io/assets/favicons/favicon-32.png", "sizes": "32x32", "type": "image/png" },
+    { "src": "/ORDINA.github.io/assets/favicons/favicon-180.png", "sizes": "180x180", "type": "image/png", "purpose": "any maskable" }
   ],
   "shortcuts": [
     {
       "name": "Add Expense",
-      "short_name": "Add Expense",
+      "short_name": "Expense",
       "description": "Quickly add a new expense",
       "url": "/ORDINA.github.io/?action=add-expense",
-      "icons": [{ "src": "/ORDINA.github.io/assets/favicons/favicon-180.png", "sizes": "180x180" }]
+      "icons": [{ "src": "/ORDINA.github.io/assets/favicons/favicon-32.png", "sizes": "32x32" }]
     },
     {
       "name": "Add Task",
-      "short_name": "Add Task",
+      "short_name": "Task",
       "description": "Quickly add a new task",
       "url": "/ORDINA.github.io/?action=add-task",
-      "icons": [{ "src": "/ORDINA.github.io/assets/favicons/favicon-180.png", "sizes": "180x180" }]
+      "icons": [{ "src": "/ORDINA.github.io/assets/favicons/favicon-32.png", "sizes": "32x32" }]
     },
     {
       "name": "Dashboard",
       "short_name": "Dashboard",
-      "description": "View dashboard",
-      "url": "/ORDINA.github.io/?tab=dashboard",
-      "icons": [{ "src": "/ORDINA.github.io/assets/favicons/favicon-180.png", "sizes": "180x180" }]
+      "description": "Go to dashboard",
+      "url": "/ORDINA.github.io/?action=dashboard",
+      "icons": [{ "src": "/ORDINA.github.io/assets/favicons/favicon-32.png", "sizes": "32x32" }]
     }
   ]
 }

@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 220" fill="none">
+  <defs>
+    <radialGradient id="eyeGradient" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#4ade80"/>
+      <stop offset="40%" stop-color="#22c55e"/>
+      <stop offset="70%" stop-color="#16a34a"/>
+      <stop offset="100%" stop-color="#0f5323"/>
+    </radialGradient>
+    <radialGradient id="pupilGradient" cx="40%" cy="40%" r="50%">
+      <stop offset="0%" stop-color="#1a1a1a"/>
+      <stop offset="100%" stop-color="#000000"/>
+    </radialGradient>
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  
+  <!-- Compass body - main structural lines -->
+  <g stroke="rgba(255,255,255,0.85)" stroke-width="3" stroke-linecap="round">
+    <!-- Top handle/ring -->
+    <ellipse cx="100" cy="25" rx="12" ry="15" fill="none"/>
+    
+    <!-- Left leg -->
+    <line x1="88" y1="35" x2="50" y2="170"/>
+    <line x1="50" y1="170" x2="45" y2="180"/>
+    
+    <!-- Right leg -->
+    <line x1="112" y1="35" x2="150" y2="170"/>
+    <line x1="150" y1="170" x2="155" y2="180"/>
+    
+    <!-- Cross bar / hinge -->
+    <line x1="72" y1="100" x2="128" y2="100"/>
+    
+    <!-- Inner connecting lines -->
+    <line x1="88" y1="35" x2="100" y2="50"/>
+    <line x1="112" y1="35" x2="100" y2="50"/>
+  </g>
+  
+  <!-- Eye - outer circle -->
+  <circle cx="100" cy="50" r="22" fill="white" stroke="rgba(255,255,255,0.9)" stroke-width="2"/>
+  
+  <!-- Eye - iris -->
+  <circle cx="100" cy="50" r="18" fill="url(#eyeGradient)" filter="url(#glow)"/>
+  
+  <!-- Eye - pupil -->
+  <circle cx="100" cy="50" r="8" fill="url(#pupilGradient)"/>
+  
+  <!-- Eye - highlight -->
+  <circle cx="96" cy="45" r="3" fill="rgba(255,255,255,0.8)"/>
+  <circle cx="105" cy="53" r="1.5" fill="rgba(255,255,255,0.4)"/>
+  
+  <!-- NCL Text -->
+  <text x="100" y="210" text-anchor="middle" font-family="Arial, sans-serif" font-size="28" font-weight="300" fill="rgba(255,255,255,0.9)" letter-spacing="8">NCL</text>
+</svg>
