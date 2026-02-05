@@ -1,0 +1,387 @@
+/* ============================================================================
+   MOBILE DEVICE STYLES (0-768px)
+   ============================================================================ */
+
+/* Mobile-specific header height variables */
+.device-mobile {
+  --header-height: 100px;
+  --nav-height: 50px;
+  --header-total-height: 150px;
+  /* New mobile layout variables */
+  --mobile-header-height: 56px;
+  --mobile-bottom-nav-height: 64px;
+}
+
+/* Мобильная боковая панель */
+.device-mobile .mobile-sidebar:not(.hidden) {
+  transform: translateX(0);
+}
+
+.device-mobile .mobile-sidebar.hidden {
+  transform: translateX(-100%);
+}
+
+.device-mobile .mobile-sidebar {
+  position: fixed;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 280px;
+  max-width: 85vw;
+  background: var(--glass-bg-light);
+  -webkit-backdrop-filter: var(--glass-blur);
+  backdrop-filter: var(--glass-blur);
+  border-right: 1px solid var(--glass-border-light);
+  box-shadow: var(--glass-shadow-light);
+  z-index: 1000;
+  transform: translateX(-100%);
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.dark .device-mobile .mobile-sidebar {
+  background: var(--glass-bg-dark);
+  border-right-color: var(--glass-border-dark);
+  box-shadow: var(--glass-shadow-dark);
+}
+
+/* Layout для мобильных */
+.device-mobile #app {
+  padding: 0 0.5rem; /* ИСПРАВЛЕНО: только боковой padding */
+  padding-top: 0; /* Убираем верхний padding */
+}
+
+.device-mobile .main-content {
+  width: 100%;
+  max-width: 100%;
+  padding: 0;
+}
+
+.device-mobile .header-nav {
+  display: none !important;
+  top: var(--header-height);
+}
+
+/* Header оптимизация для мобильных */
+.device-mobile #fixed-header {
+  padding: 0.5rem 0.75rem;
+}
+
+.device-mobile .header-grid-container {
+  grid-template-columns: auto 1fr auto;
+  gap: 0.5rem;
+  padding-inline: 0.5rem;
+}
+
+.device-mobile .header-logo-wrapper {
+  max-width: 100px;
+}
+
+.device-mobile .header-logo-wrapper img {
+  max-height: 60px;
+}
+
+.device-mobile .header-motto {
+  font-size: 0.75rem;
+  white-space: normal;
+  line-height: 1.2;
+}
+
+.device-mobile .header-weather-chip {
+  padding-inline: 6px;
+  gap: 4px;
+}
+
+.device-mobile .weather-city-compact {
+  display: none;
+}
+
+.device-mobile .header-radio-chip {
+  max-width: 180px;
+  padding-inline: 6px;
+  gap: 6px;
+}
+
+.device-mobile .radio-info-container {
+  max-width: 100px;
+}
+
+/* Уменьшаем высоту dashboard header на мобильных */
+.device-mobile #dashboard-page > div.grid:first-child {
+  margin-bottom: 0.75rem !important;
+  gap: 0.75rem !important;
+  padding: 0.25rem 0 !important;
+  min-height: auto !important;
+}
+
+/* Увеличенные touch-таргеты для мобильных */
+.device-mobile button,
+.device-mobile a,
+.device-mobile input[type='checkbox'],
+.device-mobile input[type='radio'],
+.device-mobile select {
+  min-height: 44px;
+  min-width: 44px;
+}
+
+.device-mobile .tab-button {
+  min-height: 48px;
+  padding: 0.75rem 1rem;
+}
+
+/* Оптимизация форм для мобильных */
+.device-mobile input,
+.device-mobile textarea,
+.device-mobile select {
+  font-size: 16px; /* Предотвращает zoom на iOS */
+  padding: 0.875rem 1rem;
+}
+
+.device-mobile dialog {
+  max-width: 95vw;
+  margin: 1rem auto;
+  padding: 1.25rem;
+}
+
+/* Grid оптимизации для мобильных */
+.device-mobile .grid {
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+
+/* Spacing для мобильных */
+.device-mobile .premium-card {
+  padding: 1rem;
+  margin-bottom: 1rem;
+}
+
+/* Typography для мобильных */
+.device-mobile {
+  font-size: 14px;
+}
+
+/* ============================================================================
+   MOBILE CONTENT RESPONSIVE STYLES
+   ============================================================================ */
+
+/* Page titles and headers */
+.device-mobile h1 {
+  font-size: 1.25rem !important;
+  margin-bottom: 0.75rem !important;
+}
+
+.device-mobile h2 {
+  font-size: 1.125rem !important;
+  margin-bottom: 0.5rem !important;
+}
+
+.device-mobile h3 {
+  font-size: 1rem !important;
+}
+
+/* Summary cards on dashboard */
+.device-mobile .summary-card,
+.device-mobile [class*="summary"] {
+  padding: 0.75rem !important;
+  font-size: 0.875rem !important;
+}
+
+.device-mobile .summary-card h3,
+.device-mobile [class*="summary"] h3 {
+  font-size: 0.75rem !important;
+  margin-bottom: 0.25rem !important;
+}
+
+.device-mobile .summary-card .value,
+.device-mobile [class*="summary"] .text-2xl,
+.device-mobile [class*="summary"] .text-xl {
+  font-size: 1rem !important;
+}
+
+/* Premium cards */
+.device-mobile .premium-card {
+  padding: 0.75rem !important;
+  margin-bottom: 0.75rem !important;
+  border-radius: 0.75rem !important;
+}
+
+/* Tables */
+.device-mobile table {
+  font-size: 0.75rem !important;
+}
+
+.device-mobile th,
+.device-mobile td {
+  padding: 0.5rem 0.375rem !important;
+}
+
+.device-mobile th {
+  font-size: 0.625rem !important;
+  text-transform: uppercase;
+}
+
+/* Forms and inputs - more compact */
+.device-mobile input,
+.device-mobile textarea,
+.device-mobile select {
+  font-size: 16px; /* Prevents zoom on iOS */
+  padding: 0.625rem 0.75rem !important;
+  min-height: 40px !important;
+}
+
+.device-mobile label {
+  font-size: 0.75rem !important;
+  margin-bottom: 0.25rem !important;
+}
+
+/* Buttons - more compact but still touch-friendly */
+.device-mobile button {
+  min-height: 40px !important;
+  font-size: 0.875rem !important;
+  padding: 0.5rem 0.75rem !important;
+}
+
+.device-mobile button svg {
+  width: 18px !important;
+  height: 18px !important;
+}
+
+/* Action buttons in cards */
+.device-mobile .action-button,
+.device-mobile [class*="action"] button {
+  padding: 0.375rem 0.625rem !important;
+  font-size: 0.75rem !important;
+}
+
+/* Dashboard specific */
+.device-mobile #dashboard-page {
+  padding: 0.5rem 0 !important;
+}
+
+.device-mobile #dashboard-page > .grid {
+  gap: 0.75rem !important;
+}
+
+/* Expenses, Debts, Recurring tables - card layout on mobile */
+.device-mobile .expenses-table,
+.device-mobile .debts-table,
+.device-mobile .recurring-table {
+  display: block !important;
+}
+
+.device-mobile .expenses-table thead,
+.device-mobile .debts-table thead,
+.device-mobile .recurring-table thead {
+  display: none !important;
+}
+
+.device-mobile .expenses-table tbody,
+.device-mobile .debts-table tbody,
+.device-mobile .recurring-table tbody {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 0.5rem !important;
+}
+
+.device-mobile .expenses-table tr,
+.device-mobile .debts-table tr,
+.device-mobile .recurring-table tr {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  padding: 0.75rem !important;
+  background: rgba(255, 255, 255, 0.5) !important;
+  border-radius: 0.5rem !important;
+  border: 1px solid rgba(0, 0, 0, 0.05) !important;
+  gap: 0.5rem !important;
+}
+
+.dark .device-mobile .expenses-table tr,
+.dark .device-mobile .debts-table tr,
+.dark .device-mobile .recurring-table tr {
+  background: rgba(255, 255, 255, 0.05) !important;
+  border-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+.device-mobile .expenses-table td,
+.device-mobile .debts-table td,
+.device-mobile .recurring-table td {
+  padding: 0 !important;
+  border: none !important;
+}
+
+/* Tasks sections */
+.device-mobile .tasks-section {
+  padding: 0.5rem !important;
+}
+
+.device-mobile .task-item {
+  padding: 0.625rem !important;
+  font-size: 0.875rem !important;
+}
+
+/* Calendar */
+.device-mobile .calendar-grid {
+  font-size: 0.75rem !important;
+}
+
+.device-mobile .calendar-day {
+  min-height: 40px !important;
+  padding: 0.25rem !important;
+}
+
+/* Month selector */
+.device-mobile .month-selector {
+  font-size: 0.875rem !important;
+}
+
+.device-mobile .month-selector button {
+  min-width: 36px !important;
+  min-height: 36px !important;
+  padding: 0.25rem !important;
+}
+
+/* Empty states */
+.device-mobile .empty-state {
+  padding: 1.5rem 1rem !important;
+}
+
+.device-mobile .empty-state svg {
+  width: 48px !important;
+  height: 48px !important;
+}
+
+.device-mobile .empty-state p {
+  font-size: 0.875rem !important;
+}
+
+/* Modals on mobile - full width */
+.device-mobile .modal-content,
+.device-mobile dialog {
+  width: 100% !important;
+  max-width: 100% !important;
+  max-height: 90vh !important;
+  margin: 0 !important;
+  border-radius: 1rem 1rem 0 0 !important;
+  position: fixed !important;
+  bottom: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+}
+
+/* News widget on mobile */
+.device-mobile .news-widget {
+  max-height: 200px !important;
+}
+
+.device-mobile .news-item {
+  font-size: 0.75rem !important;
+  padding: 0.5rem !important;
+}
+
+/* Scrollable areas */
+.device-mobile .overflow-auto,
+.device-mobile .overflow-y-auto {
+  -webkit-overflow-scrolling: touch;
+}
+
