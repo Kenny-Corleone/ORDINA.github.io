@@ -1,4 +1,4 @@
-import { logger } from '../utils/logger';
+// Stocks service
 
 export interface StockQuote {
   symbol: string;
@@ -83,7 +83,6 @@ async function fetchCurrencies(): Promise<StockQuote[]> {
     if (!res.ok) return [];
     const data = await res.json();
     const rates = data.rates;
-    const base = 'USD';
     
     // We want pairs relative to USD as "stocks"
     const targets = ['EUR', 'RUB', 'AZN', 'TRY', 'GBP', 'CAD', 'JPY'];
@@ -147,7 +146,9 @@ function cacheStocks(quotes: StockQuote[]) {
       expiry: Date.now() + CACHE_TTL
     };
     localStorage.setItem(CACHE_KEY, JSON.stringify(cacheData));
-  } catch (error) {}
+  } catch (error) {
+    console.warn('LocalStorage error in cacheStocks:', error);
+  }
 }
 
 export function getCachedStocks(): StockQuote[] | null {

@@ -86,6 +86,7 @@ const CORS_PROXIES = [
 
 function getRSSSourcesForLanguage(lang: string, category: NewsCategory = 'all'): string[] {
   const langSources = RSS_SOURCES[lang] || RSS_SOURCES['en'];
+  if (!langSources) return [];
   const catSources = langSources[category] || langSources['all'] || [];
   return Array.isArray(catSources) ? catSources : [];
 }
@@ -141,6 +142,7 @@ async function parseRSSFeed(url: string, retries: number = 2): Promise<NewsArtic
 
   for (let proxyIndex = 0; proxyIndex < CORS_PROXIES.length; proxyIndex++) {
     const proxyFn = CORS_PROXIES[proxyIndex];
+    if (!proxyFn) continue;
     for (let attempt = 0; attempt < retries; attempt++) {
       try {
         const proxyUrl = proxyFn(url);
@@ -189,7 +191,7 @@ async function parseRSSFeed(url: string, retries: number = 2): Promise<NewsArtic
           }
           if (!image && descRaw) {
             const m = descRaw.match(/<img[^>]+src=["']([^"']+)["']/i);
-            if (m) image = m[1];
+            if (m && m[1]) image = m[1];
           }
           if (image) image = cleanImageUrl(image);
 
