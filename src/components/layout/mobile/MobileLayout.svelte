@@ -297,22 +297,4 @@
       transform: scale(0.9);
     }
   }
-
-  /* Global Mobile Table Fixes */
-  :global(.mobile-view table) {
-    font-size: 0.75rem !important;
-  }
-
-  :global(.mobile-view th),
-  :global(.mobile-view td) {
-    padding: 0.5rem 0.25rem !important;
-    white-space: nowrap; /* Prevent wrapping overlap somewhat */
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-
-  /* Allow name column to wrap if needed or truncate cleaner */
-  :global(.mobile-view td:first-child) {
-    max-width: 120px;
-  }
 </style>

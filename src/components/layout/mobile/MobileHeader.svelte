@@ -19,6 +19,15 @@
   // Radio state
   $: radio = $radioStore;
 
+  function getAnimClass(icon: string) {
+    if (!icon) return '';
+    if (icon === '01d') return 'anim-spin'; // Sun
+    if (icon.includes('02') || icon.includes('03') || icon.includes('04') || icon.includes('50'))
+      return 'anim-float'; // Clouds/Fog
+    if (icon.includes('09') || icon.includes('10') || icon.includes('11')) return 'anim-shake'; // Rain/Storm
+    return ''; // Others (Moon etc) static or add more logic
+  }
+
   function toggleRadio() {
     radioStore.toggle();
   }
@@ -46,7 +55,7 @@
         {:else if weather.loading}
           <div class="weather-loader"></div>
         {:else}
-          <div class="weather-icon-mini">
+          <div class="weather-icon-mini {getAnimClass(weather.icon)}">
             <svg viewBox="0 0 24 24">
               {@html weatherIcons[weather.icon] || weatherIcons['01d']}
             </svg>
@@ -115,9 +124,11 @@
     font-size: 0.75rem;
     font-weight: 600;
     color: #64748b;
-    line-height: 1.1;
-    max-width: 120px;
-    white-space: normal;
+    line-height: normal;
+    max-width: 50vw; /* Allow more space */
+    white-space: nowrap; /* Don't wrap unnecessarily */
+    overflow: hidden;
+    text-overflow: ellipsis;
     text-align: left;
   }
   :global(.dark) .mobile-motto {
@@ -131,6 +142,55 @@
     gap: 0.75rem;
     flex: 1;
     justify-content: center;
+  }
+
+  /* Weather Animations */
+  .anim-spin {
+    animation: spinIcon 12s linear infinite;
+    transform-origin: center;
+  }
+  .anim-float {
+    animation: floatIcon 3s ease-in-out infinite;
+  }
+  .anim-shake {
+    animation: shakeIcon 3s ease-in-out infinite;
+  }
+
+  @keyframes spinIcon {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  @keyframes floatIcon {
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-3px);
+    }
+  }
+  @keyframes shakeIcon {
+    0%,
+    100% {
+      transform: translateX(0);
+    }
+    10%,
+    30%,
+    50%,
+    70%,
+    90% {
+      transform: translateX(-1px);
+    }
+    20%,
+    40%,
+    60%,
+    80% {
+      transform: translateX(1px);
+    }
   }
 
   /* Time */

@@ -372,11 +372,11 @@
 
   /* 1. Brand Elements */
   .logo-img {
-    height: 38px; /* Reduced further from 50px */
+    height: 28px; /* Extremely compact */
     width: auto;
     object-fit: contain;
     position: relative;
-    top: 0; /* Remove top push as it's smaller now */
+    top: 0;
     filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.1));
     transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
   }
@@ -387,7 +387,7 @@
 
   .header-divider {
     width: 1px;
-    height: 24px; /* Smaller divider */
+    height: 20px; /* Smaller divider */
     background-color: #cbd5e1; /* Slate-300 */
   }
 
@@ -396,14 +396,13 @@
   }
 
   .header-motto {
-    font-size: 0.85rem; /* Smaller font to fit full text */
+    font-size: 0.85rem;
     font-weight: 500;
     color: #475569; /* Slate-600 */
     letter-spacing: 0;
-    white-space: normal; /* Allow text to wrap if needed */
-    line-height: 1.2;
-    overflow: visible; /* Show all text */
-    max-width: 300px; /* Restrict width so it doesn't stretch too far, inducing wrap */
+    white-space: nowrap; /* Keep on one line as requested */
+    overflow: visible;
+    /* Removed max-width to fill available space */
     /* Boundary check is handled by flex push */
   }
   :global(.dark) .header-motto {
