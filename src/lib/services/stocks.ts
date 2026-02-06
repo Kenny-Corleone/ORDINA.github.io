@@ -15,7 +15,14 @@ export interface StockQuote {
 const CACHE_KEY = 'stocks_data_cache';
 const CACHE_TTL = 5 * 60 * 1000; // 5 minutes
 
-export const DEFAULT_SYMBOLS = ['AAPL', 'TSLA', 'MSFT', 'NVDA', 'AMZN', 'BINANCE:BTCUSDT'];
+export const STOCK_CATEGORIES = {
+  STOCKS: ['AAPL', 'TSLA', 'MSFT', 'NVDA', 'AMZN', 'GOOGL', 'META'],
+  CRYPTO: ['BINANCE:BTCUSDT', 'BINANCE:ETHUSDT', 'BINANCE:SOLUSDT', 'BINANCE:BNBUSDT'],
+  FOREX: ['OANDA:EUR_USD', 'OANDA:GBP_USD', 'FX:USDTRY', 'FX:USDAZN'],
+  ETF: ['SPY', 'QQQ', 'VTI', 'ARKK']
+};
+
+export const DEFAULT_SYMBOLS = [...STOCK_CATEGORIES.STOCKS.slice(0, 3), ...STOCK_CATEGORIES.CRYPTO.slice(0, 1), ...STOCK_CATEGORIES.FOREX.slice(0, 2)];
 
 /**
  * Fetch stock quote for a single symbol

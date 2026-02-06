@@ -214,53 +214,67 @@
 </script>
 
 <!-- Dashboard Header: Title & Buttons -->
-<div class="flex items-center justify-between mb-4 gap-3">
+<div class="flex items-center justify-between mb-2 gap-3">
   <!-- Left: Title & Buttons -->
   <div class="flex items-center gap-3 justify-start">
-    <h2 class="text-xl sm:text-2xl md:text-3xl font-bold text-gray-800 dark:text-gray-200">
+    <h2 class="text-lg sm:text-xl md:text-2xl font-bold text-gray-800 dark:text-gray-200">
       {t($translations, 'dashboardTitle')}
     </h2>
-    <button
-      id="calculator-btn"
-      class="flex items-center justify-center w-9 h-9 rounded-xl bg-gradient-to-br from-blue-500 via-blue-600 to-cyan-500 text-white hover:from-blue-600 hover:via-blue-700 hover:to-cyan-600 transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105 active:scale-95"
-      title="Калькулятор"
-      on:click={openCalculator}
-    >
-      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
-        <path
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"
-        />
-      </svg>
-    </button>
-    <button
-      id="shopping-list-btn"
-      class="flex items-center justify-center w-9 h-9 rounded-xl bg-gradient-to-br from-green-500 via-emerald-600 to-teal-500 text-white hover:from-green-600 hover:via-emerald-700 hover:to-teal-600 transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105 active:scale-95"
-      title="Список покупок"
-      on:click={openShoppingList}
-    >
-      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
-        <path
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"
-        />
-      </svg>
-    </button>
+    <div class="flex gap-2">
+      <button
+        id="calculator-btn"
+        class="flex items-center justify-center w-8 h-8 rounded-lg bg-gradient-to-br from-blue-500 via-blue-600 to-cyan-500 text-white shadow hover:shadow-md transition-all active:scale-95"
+        title="Калькулятор"
+        on:click={openCalculator}
+      >
+        <svg
+          class="w-4 h-4"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+          stroke-width="2.5"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"
+          />
+        </svg>
+      </button>
+      <button
+        id="shopping-list-btn"
+        class="flex items-center justify-center w-8 h-8 rounded-lg bg-gradient-to-br from-green-500 via-emerald-600 to-teal-500 text-white shadow hover:shadow-md transition-all active:scale-95"
+        title="Список покупок"
+        on:click={openShoppingList}
+      >
+        <svg
+          class="w-4 h-4"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+          stroke-width="2.5"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"
+          />
+        </svg>
+      </button>
+    </div>
   </div>
 </div>
 
 <SummaryCards />
 
-<!-- Dashboard Lower Area (Ordina 1 structure) -->
-<div class="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-4 items-stretch mt-0">
+<!-- Dashboard Lower Area -->
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-3 mb-4 items-stretch mt-3">
   <!-- Left column: chart + quick actions + recent expenses -->
-  <div class="space-y-4 flex flex-col" id="dashboard-left-column" bind:this={leftColumnEl}>
+  <div class="space-y-3 flex flex-col" id="dashboard-left-column" bind:this={leftColumnEl}>
     <TasksPreview />
-    <div id="expense-chart-container" class="premium-card p-4 flex flex-col">
-      <div class="flex items-center justify-between mb-3">
-        <h3 class="text-lg font-semibold" style="color: var(--text-primary);">
+    <div id="expense-chart-container" class="premium-card p-3 flex flex-col">
+      <div class="flex items-center justify-between mb-2">
+        <h3 class="text-base font-semibold" style="color: var(--text-primary);">
           {t($translations, 'chartLabel', 'Расходы')}
         </h3>
         <div class="text-sm font-semibold" style="color: var(--accent-gold);">
@@ -271,39 +285,39 @@
           )}
         </div>
       </div>
-      <div class="h-48 lg:h-80 w-full">
+      <div class="h-40 lg:h-64 w-full">
         <canvas id="expenses-chart" bind:this={expensesChartCanvas}></canvas>
       </div>
     </div>
 
-    <div class="premium-card p-4">
-      <h3 class="text-lg font-semibold mb-3" style="color: var(--text-primary);">
+    <div class="premium-card p-3">
+      <h3 class="text-base font-semibold mb-2" style="color: var(--text-primary);">
         {t($translations, 'quickActionsTitle', 'Быстрые действия')}
       </h3>
       <div class="grid grid-cols-2 gap-2">
         <button
-          class="premium-btn bg-gradient-to-r from-blue-600 to-blue-700 text-white px-3 py-2 text-sm rounded-xl hover:shadow-lg transition-all flex items-center justify-center gap-2"
+          class="premium-btn bg-blue-600/90 text-white px-2 py-1.5 text-xs rounded-lg hover:shadow transition-all flex items-center justify-center gap-2"
           on:click={openExpenseModal}
           type="button"
         >
           {t($translations, 'addExpense')}
         </button>
         <button
-          class="premium-btn bg-gradient-to-r from-green-600 to-green-700 text-white px-3 py-2 text-sm rounded-xl hover:shadow-lg transition-all flex items-center justify-center gap-2"
+          class="premium-btn bg-green-600/90 text-white px-2 py-1.5 text-xs rounded-lg hover:shadow transition-all flex items-center justify-center gap-2"
           on:click={openTaskModal}
           type="button"
         >
           {t($translations, 'addTask')}
         </button>
         <button
-          class="premium-btn bg-gradient-to-r from-purple-600 to-purple-700 text-white px-3 py-2 text-sm rounded-xl hover:shadow-lg transition-all flex items-center justify-center gap-2"
+          class="premium-btn bg-purple-600/90 text-white px-2 py-1.5 text-xs rounded-lg hover:shadow transition-all flex items-center justify-center gap-2"
           on:click={openDebtModal}
           type="button"
         >
           {t($translations, 'addDebt')}
         </button>
         <button
-          class="premium-btn bg-gradient-to-r from-orange-600 to-orange-700 text-white px-3 py-2 text-sm rounded-xl hover:shadow-lg transition-all flex items-center justify-center gap-2"
+          class="premium-btn bg-orange-600/90 text-white px-2 py-1.5 text-xs rounded-lg hover:shadow transition-all flex items-center justify-center gap-2"
           on:click={openRecurringModal}
           type="button"
         >
@@ -312,27 +326,27 @@
       </div>
     </div>
 
-    <div id="recent-activity-container" class="premium-card p-4">
-      <h3 class="text-lg font-semibold mb-3" style="color: var(--text-primary);">
+    <div id="recent-activity-container" class="premium-card p-3">
+      <h3 class="text-base font-semibold mb-2" style="color: var(--text-primary);">
         {t($translations, 'lastActivity', 'Последняя активность')}
       </h3>
-      <div id="recent-activity" class="space-y-2">
+      <div id="recent-activity" class="space-y-1.5">
         {#if recentExpenses.length === 0}
-          <div class="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400">
-            <span>{t($translations, 'noRecentActivity', 'Нет недавней активности')}</span>
+          <div class="text-xs text-gray-500 italic">
+            {t($translations, 'noRecentActivity', 'Нет недавней активности')}
           </div>
         {:else}
           {#each recentExpenses as exp}
-            <div class="flex items-center justify-between gap-3">
+            <div
+              class="flex items-center justify-between gap-2 py-0.5 border-b border-white/5 last:border-0"
+            >
               <div class="min-w-0">
-                <div class="text-sm font-medium text-gray-800 dark:text-gray-200 truncate">
+                <div class="text-xs font-medium text-gray-800 dark:text-gray-200 truncate">
                   {exp.name}
                 </div>
-                <div class="text-xs text-gray-500 dark:text-gray-400">
-                  {exp.date}
-                </div>
+                <div class="text-[10px] text-gray-400">{exp.date}</div>
               </div>
-              <div class="text-sm font-semibold whitespace-nowrap" style="color: var(--gold-text);">
+              <div class="text-xs font-bold" style="color: var(--gold-text);">
                 {formatCurrency(exp.amount, currency, exchangeRate)}
               </div>
             </div>
@@ -342,9 +356,9 @@
     </div>
   </div>
 
-  <!-- Right column: News widget — высота ограничена высотой левой колонки -->
+  <!-- Right column -->
   <div
-    class="flex flex-col min-h-0 overflow-hidden gap-4"
+    class="flex flex-col min-h-0 overflow-hidden gap-3"
     id="dashboard-right-column"
     style={newsColumnMaxHeight ? `max-height: ${newsColumnMaxHeight}px; height: 100%` : ''}
   >

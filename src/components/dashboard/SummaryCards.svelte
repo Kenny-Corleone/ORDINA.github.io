@@ -33,8 +33,7 @@
 </script>
 
 <div class="summary-container">
-  <!-- Section 1: Financial Overview -->
-  <div class="summary-grid">
+  <div class="summary-grid main-grid">
     <!-- Recurring Paid -->
     <div class="summary-card glass-panel" style="--accent: #10b981;">
       <div class="card-icon">
@@ -45,7 +44,7 @@
       </div>
       <div class="card-content">
         <div class="card-label">{t($translations, 'dashRecurringPaid')}</div>
-        <div class="card-value text-emerald-500">
+        <div class="card-value text-emerald-500 text-sm md:text-base">
           {formatCurrency(recurringPaidTotal, currency, exchangeRate)}
         </div>
       </div>
@@ -62,7 +61,7 @@
       </div>
       <div class="card-content">
         <div class="card-label">{t($translations, 'dashRecurringRemaining')}</div>
-        <div class="card-value text-amber-500">
+        <div class="card-value text-amber-500 text-sm md:text-base">
           {formatCurrency(recurringRemainingTotal, currency, exchangeRate)}
         </div>
       </div>
@@ -78,7 +77,7 @@
       </div>
       <div class="card-content">
         <div class="card-label">{t($translations, 'dashMonthlyExpenses')}</div>
-        <div class="card-value text-red-500">
+        <div class="card-value text-red-500 text-sm md:text-base">
           {formatCurrency($totalExpenses, currency, exchangeRate)}
         </div>
       </div>
@@ -94,27 +93,28 @@
       </div>
       <div class="card-content">
         <div class="card-label">{t($translations, 'dashTotalDebt')}</div>
-        <div class="card-value text-violet-500">
+        <div class="card-value text-violet-500 text-sm md:text-base">
           {formatCurrency($remainingDebts, currency, exchangeRate)}
         </div>
       </div>
     </div>
-  </div>
 
-  <!-- Section 2: Tasks (Smaller grid) -->
-  <div class="summary-grid tasks-grid">
-    <!-- Tasks Month -->
-    <div class="summary-card glass-panel small-card" style="--accent: #3b82f6;">
-      <div class="card-content centered">
-        <div class="card-value-large text-blue-500">{tasksRemainingMonth}</div>
+    <!-- Tasks Month (Compact) -->
+    <div class="summary-card glass-panel" style="--accent: #3b82f6;">
+      <div class="card-icon">
+        <span class="text-xl font-black text-blue-500">{tasksRemainingMonth}</span>
+      </div>
+      <div class="card-content">
         <div class="card-label">{t($translations, 'dashTasksMonth')}</div>
       </div>
     </div>
 
-    <!-- Tasks Year -->
-    <div class="summary-card glass-panel small-card" style="--accent: #6366f1;">
-      <div class="card-content centered">
-        <div class="card-value-large text-indigo-500">{tasksRemainingYear}</div>
+    <!-- Tasks Year (Compact) -->
+    <div class="summary-card glass-panel" style="--accent: #6366f1;">
+      <div class="card-icon">
+        <span class="text-xl font-black text-indigo-500">{tasksRemainingYear}</span>
+      </div>
+      <div class="card-content">
         <div class="card-label">{t($translations, 'dashTasksYear')}</div>
       </div>
     </div>
@@ -123,59 +123,33 @@
 
 <style>
   .summary-container {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
     width: 100%;
-    margin-bottom: 0;
+    margin-bottom: 0.5rem;
   }
 
-  /* Grid Layouts */
   .summary-grid {
     display: grid;
-    grid-template-columns: repeat(1, 1fr);
-    gap: 0.75rem;
-  }
-
-  @media (min-width: 640px) {
-    .summary-grid {
-      grid-template-columns: repeat(2, 1fr);
-    }
-  }
-
-  @media (min-width: 1024px) {
-    .summary-grid {
-      grid-template-columns: repeat(4, 1fr);
-    }
-  }
-
-  /* Task specific grid - 2 cards */
-  .tasks-grid {
+    gap: 0.5rem;
     grid-template-columns: repeat(2, 1fr);
   }
+
   @media (min-width: 1024px) {
-    .tasks-grid {
-      grid-template-columns: repeat(4, 1fr); /* Align with top row boxes */
+    .summary-grid {
+      grid-template-columns: repeat(6, 1fr);
     }
   }
 
-  /* Card Styles */
   .summary-card {
-    background: rgba(255, 255, 255, 0.7);
+    background: rgba(255, 255, 255, 0.5);
     backdrop-filter: blur(12px);
-    border: 1px solid rgba(255, 255, 255, 0.4);
-    border-radius: 16px;
-    padding: 1rem;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 12px;
+    padding: 0.75rem;
     display: flex;
     align-items: center;
-    gap: 1rem;
-    box-shadow:
-      0 4px 6px -1px rgba(0, 0, 0, 0.05),
-      0 2px 4px -1px rgba(0, 0, 0, 0.03);
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    position: relative;
-    overflow: hidden;
-    min-height: 80px;
+    gap: 0.5rem;
+    transition: all 0.2s;
+    min-height: 60px;
   }
 
   :global(.dark) .summary-card {
