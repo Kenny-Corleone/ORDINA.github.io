@@ -24,11 +24,73 @@ export const STOCK_CATEGORIES = {
 export const LOCAL_SYMBOLS: Record<string, string[]> = {
   'ru': ['IMOEX', 'SBER', 'GAZP', 'LKOH', 'YNDX', 'ROSN', 'MGNT'], // Moscow Exchange
   'it': ['RACE', 'ENI', 'STLA', 'UCG', 'ISP', 'ENEL'], // Ferrari, Eni, Stellantis, Unicredit, Intesa, Enel
-  'az': ['BRENT OIL', 'GOLD', 'GAS', 'S&P 500'], // Relevant for Baku investors
+  'az': ['ABB', 'ABBNK', 'BRENT OIL', 'GOLD', 'GAS', 'S&P 500'], // Baku Stock Exchange + Macros
   'en': ['S&P 500', 'Nasdaq', 'AAPL', 'MSFT', 'NVDA', 'AMZN'],
 };
 
 export const DEFAULT_SYMBOLS = STOCK_CATEGORIES.CURRENCIES;
+
+/**
+ * BFB.az Scraper for Azerbaijan Market Data
+ */
+async function fetchBFB(ticker: string): Promise<StockQuote | null> {
+  try {
+    const proxies = [
+      'https://api.allorigins.win/get?url=',
+      'https://corsproxy.io/?'
+    ];
+    const proxy = proxies[Math.floor(Math.random() * proxies.length)];
+    const bfbUrl = 'https://www.bfb.az/en/market-watch';
+    
+    const targetUrl = proxy?.includes('allorigins') 
+      ? proxy + encodeURIComponent(bfbUrl)
+      : (proxy || '') + bfbUrl;
+
+    const res = await fetch(targetUrl);
+    if (!res.ok) return null;
+    
+    let html = '';
+    if (proxy?.includes('allorigins')) {
+      const json = await res.json();
+      html = json.contents;
+    } else {
+      html = await res.text();
+    }
+
+    if (!html) return null;
+
+    const doc = new DOMParser().parseFromString(html, 'text/html');
+    // BFB table structure: 1st column ticker, 3rd column price
+    const rows = Array.from(doc.querySelectorAll('table tbody tr'));
+    
+    for (const row of rows) {
+      const cells = row.querySelectorAll('td');
+      if (cells.length >= 3) {
+        const rowTicker = cells[0]?.textContent?.trim() || '';
+        if (rowTicker === ticker || (ticker === 'ABB' && rowTicker.includes('ABB'))) {
+          const price = parseFloat(cells[2]?.textContent?.trim() || '0');
+          if (isNaN(price) || price === 0) continue;
+          
+          return {
+            symbol: ticker,
+            price: price,
+            change: 0, // BFB doesn't always show clear daylight change in the simple table
+            percentChange: 0,
+            high: price,
+            low: price,
+            open: price,
+            prevClose: price,
+            timestamp: Date.now(),
+            provider: 'BFB'
+          };
+        }
+      }
+    }
+    return null;
+  } catch (e) {
+    return null;
+  }
+}
 
 /**
  * MOEX ISS API for Russian Stocks & Indices
@@ -36,7 +98,7 @@ export const DEFAULT_SYMBOLS = STOCK_CATEGORIES.CURRENCIES;
 async function fetchMoEx(ticker: string): Promise<StockQuote | null> {
   try {
     const isIndex = ticker === 'IMOEX';
-    const engine = isIndex ? 'stock' : 'stock';
+    const engine = 'stock';
     const market = isIndex ? 'index' : 'shares';
     const board = isIndex ? 'SNDX' : 'TQBR';
     
@@ -50,14 +112,10 @@ async function fetchMoEx(ticker: string): Promise<StockQuote | null> {
     
     if (!marketData || !securityData) return null;
 
-    // IMOEX index or Stock
-    const priceIdx = isIndex ? 12 : 12; // LAST value
-    const changeIdx = isIndex ? 25 : 25;
-    const pctChangeIdx = isIndex ? 26 : 26;
-
-    const last = marketData[priceIdx] || marketData[isIndex ? 50 : 50]; 
-    const change = marketData[changeIdx] || 0;
-    const pctChange = marketData[pctChangeIdx] || 0;
+    // MoEx Positional Map: LAST=12, CHANGE=25, PCTCHANGE=26
+    const last = marketData[12] || marketData[50]; 
+    const change = marketData[25] || 0;
+    const pctChange = marketData[26] || 0;
 
     return {
       symbol: ticker,
@@ -79,37 +137,44 @@ async function fetchMoEx(ticker: string): Promise<StockQuote | null> {
 /**
  * Alpha Vantage for Italian Stocks (Reliable with API Key)
  */
-async function fetchAlphaVantage(ticker: string, suffix: string = '.MI'): Promise<StockQuote | null> {
-  const apiKey = 'E2580VM00VDL0SH0'; // User provided
-  const symbol = `${ticker}${suffix}`;
-  try {
-    const url = `https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=${symbol}&apikey=${apiKey}`;
-    const response = await fetch(url);
-    if (!response.ok) return null;
-    const data = await response.json();
-    const quote = data['Global Quote'];
-    if (!quote || !quote['05. price']) return null;
+async function fetchAlphaVantage(ticker: string): Promise<StockQuote | null> {
+  const apiKey = 'E2580VM00VDL0SH0'; 
+  // Try .MI first, Alpha Vantage usually supports it for Milan
+  const symbolsToTry = [`${ticker}.MI`, `${ticker}.MIL`];
+  
+  for (const symbol of symbolsToTry) {
+    try {
+      const url = `https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=${symbol}&apikey=${apiKey}`;
+      const response = await fetch(url);
+      if (!response.ok) continue;
+      const data = await response.json();
+      const quote = data['Global Quote'];
+      if (!quote || !quote['05. price']) continue;
 
-    const price = parseFloat(quote['05. price']);
-    const prevClose = parseFloat(quote['08. previous close']);
-    const change = parseFloat(quote['09. change']);
-    const pctChange = parseFloat(quote['10. change percent'].replace('%', ''));
+      const price = parseFloat(quote['05. price']);
+      if (isNaN(price)) continue;
 
-    return {
-      symbol: ticker,
-      price,
-      change,
-      percentChange: pctChange,
-      high: parseFloat(quote['03. high']),
-      low: parseFloat(quote['04. low']),
-      open: parseFloat(quote['02. open']),
-      prevClose,
-      timestamp: Date.now(),
-      provider: 'AlphaV'
-    };
-  } catch (e) {
-    return null;
+      const change = parseFloat(quote['09. change']) || 0;
+      const pctChangeStr = (quote['10. change percent'] || '0%').replace('%', '');
+      const pctChange = parseFloat(pctChangeStr) || 0;
+
+      return {
+        symbol: ticker,
+        price,
+        change,
+        percentChange: pctChange,
+        high: parseFloat(quote['03. high']) || price,
+        low: parseFloat(quote['04. low']) || price,
+        open: parseFloat(quote['02. open']) || price,
+        prevClose: parseFloat(quote['08. previous close']) || price - change,
+        timestamp: Date.now(),
+        provider: 'AlphaV'
+      };
+    } catch (e) {
+      continue;
+    }
   }
+  return null;
 }
 
 /**
@@ -247,6 +312,8 @@ export async function fetchStocks(symbols: string[] = DEFAULT_SYMBOLS): Promise<
   }
 
   // 2. Specialized Fetchers
+  const azTickers = LOCAL_SYMBOLS['az'] || [];
+
   const promises = symbols.map(async (s) => {
     // Skip if already handled by currency
     if (results.find(r => r.symbol === s)) return null;
@@ -254,9 +321,14 @@ export async function fetchStocks(symbols: string[] = DEFAULT_SYMBOLS): Promise<
     // RU Stocks -> MoEx
     if (ruTickers && ruTickers.includes(s)) return fetchMoEx(s);
     
-    // IT Stocks -> Alpha Vantage first, then Yahoo fallback
+    // AZ Stocks -> BFB.az
+    if (azTickers && azTickers.includes(s) && !STOCK_CATEGORIES.OIL.includes(s) && s !== 'S&P 500') {
+      return fetchBFB(s);
+    }
+
+    // IT Stocks -> Alpha Vantage first
     if (itTickers && itTickers.includes(s)) {
-      const alpha = await fetchAlphaVantage(s, '.MI');
+      const alpha = await fetchAlphaVantage(s);
       if (alpha) return alpha;
       return fetchYahoo(s, '.MI');
     }
