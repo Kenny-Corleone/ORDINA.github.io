@@ -7,6 +7,7 @@
   import { onMount, onDestroy, tick } from 'svelte';
   import SummaryCards from '../dashboard/SummaryCards.svelte';
   import NewsWidget from '../dashboard/NewsWidget.svelte';
+  import StocksWidget from '../dashboard/StocksWidget.svelte';
   import type { SvelteComponentTyped } from 'svelte';
 
   // Subscribe to stores
@@ -341,10 +342,13 @@
 
   <!-- Right column: News widget — высота ограничена высотой левой колонки -->
   <div
-    class="flex flex-col min-h-0 overflow-hidden"
+    class="flex flex-col min-h-0 overflow-hidden gap-4"
     id="dashboard-right-column"
     style={newsColumnMaxHeight ? `max-height: ${newsColumnMaxHeight}px; height: 100%` : ''}
   >
-    <NewsWidget />
+    <StocksWidget />
+    <div class="flex-1 min-h-0">
+      <NewsWidget />
+    </div>
   </div>
 </div>

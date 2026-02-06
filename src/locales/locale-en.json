@@ -290,5 +290,7 @@
   "reloadApp": "Reload App",
   "newsLoadMore": "Load More",
   "installApp": "Install App",
-  "appInstalled": "App Installed"
+  "appInstalled": "App Installed",
+  "stocksTitle": "Markets",
+  "stocksError": "Failed to load stocks"
 }
