@@ -1,0 +1,384 @@
+/**
+ * Vendor Prefixes for Cross-Browser Compatibility
+ * 
+ * This file adds vendor prefixes for CSS properties that require them
+ * for cross-browser compatibility. While autoprefixer handles most cases,
+ * this file ensures critical properties have explicit prefixes.
+ * 
+ * Requirements: 15.2 - Add vendor prefixes for CSS properties
+ * 
+ * Supported browsers:
+ * - Chrome (latest 2 versions)
+ * - Firefox (latest 2 versions)
+ * - Safari (latest 2 versions)
+ * - Edge (latest 2 versions)
+ */
+
+/* ============================================
+   Backdrop Filter Support
+   ============================================
+   Safari requires -webkit- prefix for backdrop-filter
+   Requirements: 15.2
+*/
+
+/* Ensure all backdrop-filter instances have -webkit- prefix */
+.mobile-sidebar,
+.premium-card,
+.premium-input,
+dialog::backdrop,
+#fixed-header,
+.notification-toast,
+.weather-widget-new,
+.radio-widget,
+.currency-toggle,
+.month-selector-wrapper,
+.category-selector-wrapper,
+.task-card,
+[class*="backdrop-blur"] {
+  -webkit-backdrop-filter: var(--glass-blur);
+  backdrop-filter: var(--glass-blur);
+}
+
+/* Specific backdrop-filter values */
+.mobile-sidebar-overlay {
+  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
+}
+
+dialog::backdrop {
+  -webkit-backdrop-filter: blur(12px) saturate(180%);
+  backdrop-filter: blur(12px) saturate(180%);
+}
+
+.premium-input {
+  -webkit-backdrop-filter: blur(10px) saturate(180%);
+  backdrop-filter: blur(10px) saturate(180%);
+}
+
+/* ============================================
+   Appearance Property Support
+   ============================================
+   Remove default browser styling for form elements
+   Requirements: 15.2
+*/
+
+/* Remove default appearance for all form elements */
+input,
+select,
+textarea,
+button {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+}
+
+/* Specific appearance resets */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  appearance: none;
+  margin: 0;
+}
+
+input[type="search"]::-webkit-search-decoration,
+input[type="search"]::-webkit-search-cancel-button,
+input[type="search"]::-webkit-search-results-button,
+input[type="search"]::-webkit-search-results-decoration {
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+/* ============================================
+   User Select Support
+   ============================================
+   Control text selection behavior
+   Requirements: 15.2
+*/
+
+.no-select {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+/* ============================================
+   Transform Support
+   ============================================
+   Ensure transforms work across browsers
+   Requirements: 15.2
+*/
+
+.transform-gpu {
+  -webkit-transform: translateZ(0);
+  -moz-transform: translateZ(0);
+  -ms-transform: translateZ(0);
+  transform: translateZ(0);
+  
+  /* Force GPU acceleration */
+  -webkit-backface-visibility: hidden;
+  -moz-backface-visibility: hidden;
+  backface-visibility: hidden;
+  
+  -webkit-perspective: 1000px;
+  -moz-perspective: 1000px;
+  perspective: 1000px;
+}
+
+/* ============================================
+   Flexbox Support
+   ============================================
+   Ensure flexbox works in older browsers
+   Requirements: 15.2
+*/
+
+.flex-container {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+.flex-center {
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -moz-box-pack: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+  -moz-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+}
+
+/* ============================================
+   Sticky Positioning Support
+   ============================================
+   Ensure sticky positioning works across browsers
+   Requirements: 15.2
+*/
+
+.sticky-header {
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0;
+}
+
+/* ============================================
+   Smooth Scrolling Support
+   ============================================
+   Enable smooth scrolling where supported
+   Requirements: 15.2
+*/
+
+html {
+  -webkit-scroll-behavior: smooth;
+  -moz-scroll-behavior: smooth;
+  -ms-scroll-behavior: smooth;
+  scroll-behavior: smooth;
+}
+
+/* ============================================
+   Box Sizing Support
+   ============================================
+   Ensure consistent box model across browsers
+   Requirements: 15.2
+*/
+
+*,
+*::before,
+*::after {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+/* ============================================
+   Transition Support
+   ============================================
+   Ensure transitions work across browsers
+   Requirements: 15.2
+*/
+
+.transition-all {
+  -webkit-transition: all 0.3s ease;
+  -moz-transition: all 0.3s ease;
+  -ms-transition: all 0.3s ease;
+  -o-transition: all 0.3s ease;
+  transition: all 0.3s ease;
+}
+
+/* ============================================
+   Filter Support
+   ============================================
+   Ensure CSS filters work across browsers
+   Requirements: 15.2
+*/
+
+.filter-blur {
+  -webkit-filter: blur(10px);
+  -moz-filter: blur(10px);
+  -ms-filter: blur(10px);
+  filter: blur(10px);
+}
+
+/* ============================================
+   Gradient Support
+   ============================================
+   Ensure gradients work across browsers
+   Requirements: 15.2
+*/
+
+.gradient-bg {
+  background: -webkit-linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(248, 249, 250, 0.9) 100%);
+  background: -moz-linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(248, 249, 250, 0.9) 100%);
+  background: -ms-linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(248, 249, 250, 0.9) 100%);
+  background: -o-linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(248, 249, 250, 0.9) 100%);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(248, 249, 250, 0.9) 100%);
+}
+
+/* ============================================
+   Placeholder Support
+   ============================================
+   Style input placeholders across browsers
+   Requirements: 15.2
+*/
+
+input::-webkit-input-placeholder,
+textarea::-webkit-input-placeholder {
+  color: var(--text-secondary);
+  opacity: 0.6;
+}
+
+input::-moz-placeholder,
+textarea::-moz-placeholder {
+  color: var(--text-secondary);
+  opacity: 0.6;
+}
+
+input:-ms-input-placeholder,
+textarea:-ms-input-placeholder {
+  color: var(--text-secondary);
+  opacity: 0.6;
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: var(--text-secondary);
+  opacity: 0.6;
+}
+
+/* ============================================
+   Scrollbar Styling (Webkit browsers)
+   ============================================
+   Custom scrollbar styling for Chrome, Safari, Edge
+   Requirements: 15.2
+*/
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-secondary);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border-color);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-secondary);
+}
+
+/* Firefox scrollbar styling */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-color) var(--bg-secondary);
+}
+
+/* ============================================
+   Touch Action Support
+   ============================================
+   Control touch behavior on mobile devices
+   Requirements: 15.2
+*/
+
+.touch-pan-y {
+  -ms-touch-action: pan-y;
+  touch-action: pan-y;
+}
+
+.touch-pan-x {
+  -ms-touch-action: pan-x;
+  touch-action: pan-x;
+}
+
+.touch-none {
+  -ms-touch-action: none;
+  touch-action: none;
+}
+
+/* ============================================
+   Will Change Support
+   ============================================
+   Optimize animations by hinting browser
+   Requirements: 15.2
+*/
+
+.will-change-transform {
+  -webkit-will-change: transform;
+  will-change: transform;
+}
+
+.will-change-opacity {
+  -webkit-will-change: opacity;
+  will-change: opacity;
+}
+
+/* ============================================
+   Object Fit Support
+   ============================================
+   Control image/video sizing
+   Requirements: 15.2
+*/
+
+.object-cover {
+  -o-object-fit: cover;
+  object-fit: cover;
+}
+
+.object-contain {
+  -o-object-fit: contain;
+  object-fit: contain;
+}
+
+/* ============================================
+   Grid Support
+   ============================================
+   Ensure CSS Grid works across browsers
+   Requirements: 15.2
+*/
+
+.grid-container {
+  display: -ms-grid;
+  display: grid;
+}
+
+/* ============================================
+   Clip Path Support
+   ============================================
+   Ensure clip-path works across browsers
+   Requirements: 15.2
+*/
+
+.clip-path {
+  -webkit-clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+}

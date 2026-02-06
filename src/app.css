@@ -1,0 +1,13 @@
+/* Import all CSS files from styles directory */
+@import './styles/main.css';
+@import './styles/responsive.css';
+@import './styles/dashboard-fixes.css';
+@import './styles/device-mobile.css';
+@import './styles/device-tablet.css';
+@import './styles/device-desktop.css';
+@import './styles/accessibility.css';
+@import './styles/vendor-prefixes.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
