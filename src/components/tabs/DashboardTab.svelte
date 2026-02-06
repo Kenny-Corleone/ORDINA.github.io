@@ -262,7 +262,7 @@
 <SummaryCards />
 
 <!-- Dashboard Lower Area (Ordina 1 structure) -->
-<div class="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-4 items-stretch mt-4">
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-4 items-stretch mt-2">
   <!-- Left column: chart + quick actions + recent expenses -->
   <div class="space-y-4 flex flex-col" id="dashboard-left-column" bind:this={leftColumnEl}>
     <div id="expense-chart-container" class="premium-card p-4 flex flex-col">

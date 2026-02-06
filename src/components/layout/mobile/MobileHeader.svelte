@@ -37,12 +37,10 @@
 
 <header class="mobile-header">
   <div class="mobile-header-content">
-    <!-- Left: Logo + Motto -->
+    <!-- Left: Logo + Brand Name -->
     <div class="header-left-group">
       <img src="/ORDINA.github.io/assets/ordina.png" alt="Ordina" class="mobile-logo-mini" />
-      <div class="mobile-motto">
-        {t($translations, 'appSubtitle')}
-      </div>
+      <span class="mobile-brand-text">Ordina</span>
     </div>
 
     <!-- Center: Time + Weather -->
@@ -50,7 +48,6 @@
       <!-- Time -->
       <div class="mobile-time">
         <span class="time-value">{hours}:{minutes}</span>
-        <span class="date-value">{day}.{month}</span>
       </div>
 
       <!-- Weather Chip (compact) -->
@@ -66,7 +63,6 @@
             </svg>
           </div>
           <span class="weather-temp-mini">{Math.round(weather.temp)}°</span>
-          <span class="weather-city-mini">{weather.city}</span>
         {/if}
       </div>
     </div>
@@ -140,26 +136,20 @@
   }
 
   .mobile-logo-mini {
-    height: 38px; /* Increased from 20px - visually much larger */
+    height: 32px;
     width: auto;
     object-fit: contain;
     filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
   }
 
-  /* Motto (Left) */
-  .mobile-motto {
-    font-size: 0.75rem;
-    font-weight: 600;
-    color: #64748b;
-    line-height: normal;
-    max-width: 40vw; /* Increased width */
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    text-align: left;
+  .mobile-brand-text {
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: #1e293b;
+    letter-spacing: -0.02em;
   }
-  :global(.dark) .mobile-motto {
-    color: #94a3b8;
+  :global(.dark) .mobile-brand-text {
+    color: #f8fafc;
   }
 
   /* Center Group */
@@ -290,7 +280,7 @@
   .mobile-time {
     display: flex;
     align-items: baseline;
-    gap: 0.375rem;
+    gap: 0.25rem;
   }
 
   .time-value {

@@ -383,7 +383,7 @@
 
   /* 1. Brand Elements */
   .logo-img {
-    height: 34px; /* INCREASED from 20px */
+    height: 26px; /* Reduced to balance */
     width: auto;
     object-fit: contain;
     position: relative;
