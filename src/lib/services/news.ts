@@ -85,7 +85,8 @@ const CORS_PROXIES = [
 // ============================================================================
 
 function getRSSSourcesForLanguage(lang: string, category: NewsCategory = 'all'): string[] {
-  const langSources = RSS_SOURCES[lang] || RSS_SOURCES['en'];
+  const safeLang = RSS_SOURCES[lang] ? lang : 'en';
+  const langSources = RSS_SOURCES[safeLang];
   if (!langSources) return [];
   const catSources = langSources[category] || langSources['all'] || [];
   return Array.isArray(catSources) ? catSources : [];
@@ -297,15 +298,21 @@ export async function fetchNews(
 }
 
 /**
- * Get cached news if valid (e.g. for instant display before fetch).
+ * Get cached news if valid and matching the requested language
  */
-export function getCachedNews(): NewsArticle[] | null {
+export function getCachedNews(lang?: string): NewsArticle[] | null {
   if (typeof localStorage === 'undefined') return null;
   try {
     const raw = localStorage.getItem(CACHE_KEY);
     if (!raw) return null;
-    const { timestamp, data } = JSON.parse(raw);
+    const { timestamp, data, lang: cachedLang } = JSON.parse(raw);
+    
+    // Check expiry
     if (!Array.isArray(data) || Date.now() - timestamp > CACHE_EXPIRY_MS) return null;
+    
+    // Check language match if requested
+    if (lang && cachedLang !== lang) return null;
+    
     return data;
   } catch {
     return null;

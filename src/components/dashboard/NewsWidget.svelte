@@ -117,12 +117,13 @@
 
   onMount(() => {
     loadFavorites();
-    const cached = getCachedNews();
+    const cached = getCachedNews($uiStore.language);
     if (cached?.length) {
       articles = cached;
       loading = false;
+    } else {
+      loadNews();
     }
-    loadNews();
 
     const intervalId = setInterval(
       () => {
