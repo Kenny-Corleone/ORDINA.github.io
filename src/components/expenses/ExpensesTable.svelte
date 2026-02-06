@@ -51,27 +51,30 @@
     <table class="expenses-table expenses-table-body">
       <tbody>
         <tr class="expense-row">
-          <td class="col-date" data-label={currentTranslations['date'] || 'Date'}>
+          <td class="col-date" data-label={String(currentTranslations['date'] || 'Date')}>
             {formatISODateForDisplay(expense.date, language, monthsArray)}
           </td>
-          <td class="col-category" data-label={currentTranslations['category'] || 'Category'}>
+          <td
+            class="col-category"
+            data-label={String(currentTranslations['category'] || 'Category')}
+          >
             <span class="category-badge">{expense.category}</span>
           </td>
-          <td class="col-name" data-label={currentTranslations['name'] || 'Name'}>
+          <td class="col-name" data-label={String(currentTranslations['name'] || 'Name')}>
             {expense.name}
           </td>
-          <td class="col-amount" data-label={currentTranslations['amount'] || 'Amount'}>
+          <td class="col-amount" data-label={String(currentTranslations['amount'] || 'Amount')}>
             <span class="amount-value">
               {formatCurrency(expense.amount, currency, exchangeRate)}
             </span>
           </td>
-          <td class="col-actions" data-label={currentTranslations['actions'] || 'Actions'}>
+          <td class="col-actions" data-label={String(currentTranslations['actions'] || 'Actions')}>
             <div class="action-buttons">
               <button
                 class="btn-action btn-edit"
                 on:click={() => handleEdit(expense.id)}
-                aria-label={currentTranslations['edit'] || 'Edit'}
-                title={currentTranslations['edit'] || 'Edit'}
+                aria-label={String(currentTranslations['edit'] || 'Edit')}
+                title={String(currentTranslations['edit'] || 'Edit')}
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -87,8 +90,8 @@
               <button
                 class="btn-action btn-delete"
                 on:click={() => handleDelete(expense.id)}
-                aria-label={currentTranslations['delete'] || 'Delete'}
-                title={currentTranslations['delete'] || 'Delete'}
+                aria-label={String(currentTranslations['delete'] || 'Delete')}
+                title={String(currentTranslations['delete'] || 'Delete')}
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"

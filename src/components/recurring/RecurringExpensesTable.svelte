@@ -82,23 +82,23 @@
     <table class="recurring-table recurring-table-body">
       <tbody>
         <tr class="recurring-row" class:overdue={isOverdue(template)}>
-          <td class="col-name" data-label={currentTranslations['name'] || 'Name'}>
+          <td class="col-name" data-label={String(currentTranslations['name'] || 'Name')}>
             {template.name}
           </td>
-          <td class="col-amount" data-label={currentTranslations['amount'] || 'Amount'}>
+          <td class="col-amount" data-label={String(currentTranslations['amount'] || 'Amount')}>
             <span class="amount-value">
               {formatCurrency(template.amount, currency, exchangeRate)}
             </span>
           </td>
-          <td class="col-due-day" data-label={currentTranslations['due_day'] || 'Due Day'}>
+          <td class="col-due-day" data-label={String(currentTranslations['due_day'] || 'Due Day')}>
             <span class="due-day-badge">
               {template.dueDay}
             </span>
           </td>
-          <td class="col-details" data-label={currentTranslations['details'] || 'Details'}>
+          <td class="col-details" data-label={String(currentTranslations['details'] || 'Details')}>
             {template.details || '-'}
           </td>
-          <td class="col-status" data-label={currentTranslations['status'] || 'Status'}>
+          <td class="col-status" data-label={String(currentTranslations['status'] || 'Status')}>
             <select
               class="status-select status-{getStatusColor(getStatus(template.id))}"
               value={getStatus(template.id)}
@@ -110,13 +110,13 @@
               {/each}
             </select>
           </td>
-          <td class="col-actions" data-label={currentTranslations['actions'] || 'Actions'}>
+          <td class="col-actions" data-label={String(currentTranslations['actions'] || 'Actions')}>
             <div class="action-buttons">
               <button
                 class="btn-action btn-edit"
                 on:click={() => handleEdit(template.id)}
-                aria-label={currentTranslations['edit'] || 'Edit'}
-                title={currentTranslations['edit'] || 'Edit'}
+                aria-label={String(currentTranslations['edit'] || 'Edit')}
+                title={String(currentTranslations['edit'] || 'Edit')}
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -132,8 +132,8 @@
               <button
                 class="btn-action btn-delete"
                 on:click={() => handleDelete(template.id)}
-                aria-label={currentTranslations['delete'] || 'Delete'}
-                title={currentTranslations['delete'] || 'Delete'}
+                aria-label={String(currentTranslations['delete'] || 'Delete')}
+                title={String(currentTranslations['delete'] || 'Delete')}
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"

@@ -81,25 +81,31 @@
     <table class="debts-table debts-table-body">
       <tbody>
         <tr class="debt-row" class:paid={isPaid}>
-          <td class="col-name" data-label={currentTranslations['name'] || 'Name'}>
+          <td class="col-name" data-label={String(currentTranslations['name'] || 'Name')}>
             <span class="debt-name">{debt.name}</span>
           </td>
-          <td class="col-total" data-label={currentTranslations['total_amount'] || 'Total'}>
+          <td class="col-total" data-label={String(currentTranslations['total_amount'] || 'Total')}>
             <span class="amount-value">
               {formatCurrency(debt.totalAmount, currency, exchangeRate)}
             </span>
           </td>
-          <td class="col-paid" data-label={currentTranslations['paid_amount'] || 'Paid'}>
+          <td class="col-paid" data-label={String(currentTranslations['paid_amount'] || 'Paid')}>
             <span class="amount-value paid-amount">
               {formatCurrency(debt.paidAmount, currency, exchangeRate)}
             </span>
           </td>
-          <td class="col-remaining" data-label={currentTranslations['remaining'] || 'Remaining'}>
+          <td
+            class="col-remaining"
+            data-label={String(currentTranslations['remaining'] || 'Remaining')}
+          >
             <span class="amount-value remaining-amount" class:fully-paid={isPaid}>
               {formatCurrency(remaining, currency, exchangeRate)}
             </span>
           </td>
-          <td class="col-progress" data-label={currentTranslations['progress'] || 'Progress'}>
+          <td
+            class="col-progress"
+            data-label={String(currentTranslations['progress'] || 'Progress')}
+          >
             <div class="progress-container">
               <div class="progress-bar">
                 <div class="progress-fill" class:complete={isPaid} style="width: {progress}%"></div>
@@ -107,23 +113,23 @@
               <span class="progress-text">{progress.toFixed(0)}%</span>
             </div>
           </td>
-          <td class="col-comment" data-label={currentTranslations['comment'] || 'Comment'}>
+          <td class="col-comment" data-label={String(currentTranslations['comment'] || 'Comment')}>
             <input
               type="text"
               class="comment-input"
               value={editingComments[debt.id] || ''}
               on:input={(e) => handleCommentInput(debt.id, e.currentTarget.value)}
-              placeholder={currentTranslations['add_comment'] || 'Add comment...'}
-              aria-label={currentTranslations['comment'] || 'Comment'}
+              placeholder={String(currentTranslations['add_comment'] || 'Add comment...')}
+              aria-label={String(currentTranslations['comment'] || 'Comment')}
             />
           </td>
-          <td class="col-actions" data-label={currentTranslations['actions'] || 'Actions'}>
+          <td class="col-actions" data-label={String(currentTranslations['actions'] || 'Actions')}>
             <div class="action-buttons">
               <button
                 class="btn-action btn-payment"
                 on:click={() => handleAddPayment(debt.id)}
-                aria-label={currentTranslations['add_payment'] || 'Add Payment'}
-                title={currentTranslations['add_payment'] || 'Add Payment'}
+                aria-label={String(currentTranslations['add_payment'] || 'Add Payment')}
+                title={String(currentTranslations['add_payment'] || 'Add Payment')}
                 disabled={isPaid}
               >
                 <svg
@@ -140,8 +146,8 @@
               <button
                 class="btn-action btn-edit"
                 on:click={() => handleEdit(debt.id)}
-                aria-label={currentTranslations['edit'] || 'Edit'}
-                title={currentTranslations['edit'] || 'Edit'}
+                aria-label={String(currentTranslations['edit'] || 'Edit')}
+                title={String(currentTranslations['edit'] || 'Edit')}
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -157,8 +163,8 @@
               <button
                 class="btn-action btn-delete"
                 on:click={() => handleDelete(debt.id)}
-                aria-label={currentTranslations['delete'] || 'Delete'}
-                title={currentTranslations['delete'] || 'Delete'}
+                aria-label={String(currentTranslations['delete'] || 'Delete')}
+                title={String(currentTranslations['delete'] || 'Delete')}
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"

@@ -19,6 +19,9 @@ let db: Firestore;
 let auth: Auth;
 
 try {
+    if (!firebaseConfig.apiKey) {
+        console.warn("Firebase API key is missing. Check your .env file.");
+    }
     // Initialize Firebase app
     app = initializeApp(firebaseConfig);
     
@@ -34,7 +37,7 @@ try {
     logger.debug("Firebase initialized successfully");
 } catch (e) {
     logger.error("Firebase initialization error:", e);
-    throw e;
+    // Do not throw at top level to prevent breaking the whole app bundle
 }
 
 export { app, db, auth };

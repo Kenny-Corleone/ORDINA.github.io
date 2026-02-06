@@ -6,6 +6,7 @@
   import { translations, t } from '../../lib/i18n';
   import { onMount, onDestroy, tick } from 'svelte';
   import SummaryCards from '../dashboard/SummaryCards.svelte';
+  import NewsWidget from '../dashboard/NewsWidget.svelte';
   import type { SvelteComponentTyped } from 'svelte';
 
   // Subscribe to stores
@@ -32,9 +33,11 @@
 
   onMount(() => {
     setNewsHeight();
-    const ro = new ResizeObserver(setNewsHeight);
-    ro.observe(leftColumnEl);
-    return () => ro.disconnect();
+    if (leftColumnEl) {
+      const ro = new ResizeObserver(() => setNewsHeight());
+      ro.observe(leftColumnEl);
+      return () => ro.disconnect();
+    }
   });
 
   onDestroy(() => {
