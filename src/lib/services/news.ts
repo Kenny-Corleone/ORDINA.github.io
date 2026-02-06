@@ -124,9 +124,14 @@ export const CACHE_KEY = 'cached_news';
 const CACHE_EXPIRY_MS = 30 * 60 * 1000; // 30 minutes
 
 const CORS_PROXIES = [
+  // Direct fetch (some feeds allow it nowadays)
+  (url: string) => url,
+  // Primary Proxies
+  (url: string) => `https://api.allorigins.win/get?url=${encodeURIComponent(url)}`,
   (url: string) => `https://corsproxy.io/?${encodeURIComponent(url)}`,
-  (url: string) => `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`,
+  (url: string) => `https://thingproxy.freeboard.io/fetch/${url}`,
   (url: string) => `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(url)}`,
+  (url: string) => `https://proxy.cors.sh/${url}`, // Note: might require an API key in headers, but often works for small traffic
 ];
 
 // ============================================================================
@@ -198,13 +203,23 @@ async function parseRSSFeed(url: string, retries: number = 2): Promise<NewsArtic
         const proxyUrl = proxyFn(url);
         const res = await fetchWithTimeout(proxyUrl, 12000);
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        const contentType = res.headers.get('content-type') || '';
+        const contentType = (res.headers.get('content-type') || '').toLowerCase();
         let raw: string;
-        if (contentType.includes('application/json')) {
+        
+        if (contentType.includes('application/json') || proxyUrl.includes('allorigins')) {
           const json = await res.json();
+          // AllOrigins puts XML in 'contents'
           raw = typeof json.contents === 'string' ? json.contents : JSON.stringify(json);
         } else {
           raw = await res.text();
+        }
+
+        // Final fail-safe: if it's a JSON string but we expect XML
+        if (raw.trim().startsWith('{')) {
+          try {
+            const parsed = JSON.parse(raw);
+            if (parsed.contents) raw = parsed.contents;
+          } catch { /* not json */ }
         }
         if (!raw || !raw.trim()) throw new Error('Empty response');
 

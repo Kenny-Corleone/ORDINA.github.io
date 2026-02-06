@@ -77,26 +77,81 @@ async function fetchMoEx(ticker: string): Promise<StockQuote | null> {
 }
 
 /**
- * Yahoo Finance via CORS Proxy for International Stocks (IT, etc.)
+ * Alpha Vantage for Italian Stocks (Reliable with API Key)
+ */
+async function fetchAlphaVantage(ticker: string, suffix: string = '.MI'): Promise<StockQuote | null> {
+  const apiKey = 'E2580VM00VDL0SH0'; // User provided
+  const symbol = `${ticker}${suffix}`;
+  try {
+    const url = `https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=${symbol}&apikey=${apiKey}`;
+    const response = await fetch(url);
+    if (!response.ok) return null;
+    const data = await response.json();
+    const quote = data['Global Quote'];
+    if (!quote || !quote['05. price']) return null;
+
+    const price = parseFloat(quote['05. price']);
+    const prevClose = parseFloat(quote['08. previous close']);
+    const change = parseFloat(quote['09. change']);
+    const pctChange = parseFloat(quote['10. change percent'].replace('%', ''));
+
+    return {
+      symbol: ticker,
+      price,
+      change,
+      percentChange: pctChange,
+      high: parseFloat(quote['03. high']),
+      low: parseFloat(quote['04. low']),
+      open: parseFloat(quote['02. open']),
+      prevClose,
+      timestamp: Date.now(),
+      provider: 'AlphaV'
+    };
+  } catch (e) {
+    return null;
+  }
+}
+
+/**
+ * Yahoo Finance via CORS Proxy (Secondary Fallback)
  */
 async function fetchYahoo(ticker: string, suffix: string = ''): Promise<StockQuote | null> {
   const fullTicker = suffix ? `${ticker}${suffix}` : ticker;
   try {
-    const proxy = 'https://corsproxy.io/?';
+    // Rotating proxies to bypass blocks
+    const proxies = [
+      'https://api.allorigins.win/get?url=',
+      'https://corsproxy.io/?'
+    ];
+    const proxyIndex = Math.floor(Math.random() * proxies.length);
+    const proxy = proxies[proxyIndex];
+    if (!proxy) return null; // Safety check for TS
     const yahooUrl = `https://query1.finance.yahoo.com/v8/finance/chart/${fullTicker}?interval=1d&range=1d`;
-    const response = await fetch(proxy + encodeURIComponent(yahooUrl));
+    
+    const targetUrl = proxy === 'https://api.allorigins.win/get?url=' 
+      ? proxy + encodeURIComponent(yahooUrl)
+      : proxy + yahooUrl;
+
+    const response = await fetch(targetUrl);
     if (!response.ok) return null;
-    const data = await response.json();
+    
+    let data;
+    if (proxy.includes('allorigins')) {
+      const json = await response.json();
+      data = JSON.parse(json.contents);
+    } else {
+      data = await response.json();
+    }
     
     const meta = data.chart.result[0].meta;
     return {
       symbol: ticker,
       price: meta.regularMarketPrice,
       change: meta.regularMarketPrice - meta.previousClose,
-      percentChange: ((meta.regularMarketPrice - meta.previousClose) / meta.previousClose) * 100,
-      high: meta.dayHigh,
-      low: meta.dayLow,
-      open: meta.regularMarketOpen,
+      percentChange: ((meta.regularMarketPrice - meta.previousClose) / (meta.previousClose || 1)) * 100,
+      high: meta.dayHigh || meta.regularMarketPrice,
+      low: meta.dayLow || meta.regularMarketPrice,
+      open: meta.regularMarketOpen || meta.regularMarketPrice,
       prevClose: meta.previousClose,
       timestamp: meta.regularMarketTime * 1000,
       provider: 'Yahoo'
@@ -199,8 +254,12 @@ export async function fetchStocks(symbols: string[] = DEFAULT_SYMBOLS): Promise<
     // RU Stocks -> MoEx
     if (ruTickers && ruTickers.includes(s)) return fetchMoEx(s);
     
-    // IT Stocks -> Yahoo (.MI suffix)
-    if (itTickers && itTickers.includes(s)) return fetchYahoo(s, '.MI');
+    // IT Stocks -> Alpha Vantage first, then Yahoo fallback
+    if (itTickers && itTickers.includes(s)) {
+      const alpha = await fetchAlphaVantage(s, '.MI');
+      if (alpha) return alpha;
+      return fetchYahoo(s, '.MI');
+    }
     
     // Indices/Tech/Energy -> Finnhub
     return fetchFinnhub(s);
