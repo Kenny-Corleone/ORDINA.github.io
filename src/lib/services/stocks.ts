@@ -17,19 +17,18 @@ const CACHE_KEY = 'stocks_data_cache';
 const CACHE_TTL = 10 * 60 * 1000; // 10 minutes
 
 export const STOCK_CATEGORIES = {
-  CURRENCIES: ['USD', 'EUR', 'RUB', 'AZN', 'TRY', 'GBP', 'CAD', 'JPY'],
-  INDICES: ['S&P 500', 'Nasdaq', 'Dow Jones', 'FTSE 100', 'Nikkei 225'],
-  ENERGY: ['BRENT OIL', 'WTI OIL', 'GAS'],
+  CURRENCIES: ['USD', 'EUR', 'RUB', 'AZN', 'TRY', 'GBP'],
+  INDICES: ['S&P 500', 'Nasdaq', 'Dow Jones', 'DAX 40', 'FTSE 100'],
+  OIL: ['BRENT OIL', 'WTI OIL', 'GAS', 'GOLD'],
   TECH: ['AAPL', 'MSFT', 'NVDA', 'TSLA', 'AMZN', 'GOOGL', 'META'],
-  MARKETS: ['GOLD', 'BTC', 'ETH'],
 };
 
 // Map languages to specific local symbols
 export const LOCAL_SYMBOLS: Record<string, string[]> = {
-  'ru': ['SBER', 'GAZP', 'LKOH', 'YNDX', 'ROSN'], 
-  'en': ['AAPL', 'MSFT', 'NVDA', 'AMZN', 'TSLA'],
-  'az': ['USD/AZN', 'EUR/AZN', 'RUB/AZN', 'TRY/AZN'], 
-  'it': ['ENI', 'ENEL', 'RACE', 'STLA', 'UCG'], // Italian: Eni, Enel, Ferrari, Stellantis, Unicredit
+  'ru': ['USD/RUB', 'EUR/RUB', 'SBER', 'GAZP', 'LKOH'], 
+  'en': ['S&P 500', 'Nasdaq', 'Dow Jones', 'AAPL', 'MSFT'],
+  'az': ['USD/AZN', 'EUR/AZN', 'RUB/AZN', 'BRENT OIL'], 
+  'it': ['EWI', 'ENI', 'RACE', 'STLA', 'UCG'], // EWI is Italy ETF
 };
 
 export const DEFAULT_SYMBOLS = STOCK_CATEGORIES.CURRENCIES;
@@ -41,20 +40,27 @@ async function fetchFinnhub(symbol: string): Promise<StockQuote | null> {
   const apiKey = import.meta.env.VITE_FINNHUB_API_KEY;
   if (!apiKey) return null;
 
-  // Map user-friendly names to Finnhub symbols
+  // Map user-friendly names to Finnhub symbols for reliability
   const mapping: Record<string, string> = {
     'S&P 500': 'SPY',
     'Nasdaq': 'QQQ',
     'Dow Jones': 'DIA',
+    'DAX 40': 'EWG', // US-listed ETF for DAX
     'FTSE 100': 'EWU',
     'Nikkei 225': 'EWJ',
+    'EWI': 'EWI', // Italy ETF
     'BRENT OIL': 'OANDA:BCO_USD',
     'WTI OIL': 'OANDA:WTICO_USD',
     'GAS': 'OANDA:NATGAS_USD',
+    'GOLD': 'OANDA:XAU_USD',
     'BTC': 'BINANCE:BTCUSDT', 
     'ETH': 'BINANCE:ETHUSDT',
-    // Italian Stocks (Borsa Italiana)
-    'ENI': 'ENI.MI', 'ENEL': 'ENEL.MI', 'RACE': 'RACE.MI', 'STLA': 'STLA.MI', 'UCG': 'UCG.MI'
+    'ENI': 'E', // US-listed ADR for Eni
+    'RACE': 'RACE', // NYSE
+    'STLA': 'STLA', // NYSE
+    'SBER': 'SBERP.ME', 
+    'GAZP': 'GAZP.ME',
+    'LKOH': 'LKOH.ME'
   };
 
   const s = mapping[symbol] || symbol;
@@ -75,7 +81,7 @@ async function fetchFinnhub(symbol: string): Promise<StockQuote | null> {
       open: data.o,
       prevClose: data.pc,
       timestamp: data.t * 1000,
-      provider: 'Finnhub'
+      provider: 'Markets'
     };
   } catch (e) {
     return null;
@@ -97,10 +103,8 @@ async function fetchCurrencies(): Promise<StockQuote[]> {
     
     return targets.map(t => {
       const price = rates[t];
-      // Since this API doesn't give 24h change directly, we'll estimate or just show price
-      // For a real dashboard, we'd fetch yesterday's rate too, but let's keep it simple for now
       return {
-        symbol: t === 'AZN' ? 'USD/AZN' : t,
+        symbol: ['AZN', 'RUB'].includes(t) ? `USD/${t}` : t,
         price: price,
         change: 0,
         percentChange: 0,
@@ -109,7 +113,7 @@ async function fetchCurrencies(): Promise<StockQuote[]> {
         open: price,
         prevClose: price,
         timestamp: data.time_last_updated * 1000,
-        provider: 'ExRate'
+        provider: 'Forex'
       };
     });
   } catch (e) {
@@ -121,18 +125,30 @@ async function fetchCurrencies(): Promise<StockQuote[]> {
  * Public API
  */
 export async function fetchStocks(symbols: string[] = DEFAULT_SYMBOLS): Promise<StockQuote[]> {
-  const containsCurrency = symbols.some(s => STOCK_CATEGORIES.CURRENCIES.includes(s) || s.includes('AZN'));
+  const containsCurrency = symbols.some(s => 
+    STOCK_CATEGORIES.CURRENCIES.includes(s) || 
+    s.includes('/') || 
+    ['AZN', 'RUB'].includes(s)
+  );
   
   let results: StockQuote[] = [];
 
   // Special handling for currencies - much more reliable than Finnhub free
   if (containsCurrency) {
     const currs = await fetchCurrencies();
-    results.push(...currs.filter(c => symbols.includes(c.symbol.replace('USD/', '')) || symbols.includes(c.symbol)));
+    results.push(...currs.filter(c => 
+      symbols.includes(c.symbol.replace('USD/', '')) || 
+      symbols.includes(c.symbol) ||
+      (c.symbol === 'USD/AZN' && symbols.includes('AZN'))
+    ));
   }
 
   // Fetch others via Finnhub
-  const otherSymbols = symbols.filter(s => !STOCK_CATEGORIES.CURRENCIES.includes(s) && !s.includes('AZN'));
+  const otherSymbols = symbols.filter(s => 
+    !STOCK_CATEGORIES.CURRENCIES.includes(s) && 
+    !s.includes('/') && 
+    !['AZN', 'RUB'].includes(s)
+  );
   if (otherSymbols.length > 0) {
     const finnhubResults = await Promise.all(otherSymbols.map(s => fetchFinnhub(s)));
     results.push(...finnhubResults.filter((r): r is StockQuote => r !== null));

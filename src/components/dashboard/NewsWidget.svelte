@@ -158,6 +158,11 @@
 
   // Computed list to render based on showCount for simple pagination
   $: visibleArticles = filteredArticles.slice(0, showCount);
+
+  // Re-fetch news when language changes
+  $: if ($uiStore.language) {
+    loadNews();
+  }
 </script>
 
 <section
