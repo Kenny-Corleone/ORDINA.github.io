@@ -111,9 +111,9 @@
         />
       </button>
 
-      <div class="header-divider hidden xl:block"></div>
+      <div class="header-divider hidden md:block"></div>
 
-      <div class="header-motto hidden xl:block" aria-hidden="true">
+      <div class="header-motto hidden md:block" aria-hidden="true">
         {t($translations, 'appSubtitle')}
       </div>
     </div>
@@ -372,7 +372,7 @@
 
   /* 1. Brand Elements */
   .logo-img {
-    height: 100px; /* Much larger logo */
+    height: 60px; /* Reduced from 100px */
     width: auto;
     object-fit: contain;
     position: relative;
@@ -750,7 +750,7 @@
       --header-main-row-height: 72px;
     }
     .logo-img {
-      height: 80px;
+      height: 50px;
     }
     .header-divider {
       display: none;
@@ -809,7 +809,7 @@
       gap: 0.5rem;
     }
     .logo-img {
-      height: 60px;
+      height: 40px;
     }
 
     .radio-widget-v2 {

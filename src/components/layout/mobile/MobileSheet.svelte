@@ -505,10 +505,10 @@
   }
 
   .ancl-logo-mobile {
-    height: 24px;
+    height: 48px;
     width: auto;
-    opacity: 0.9;
-    border-radius: 4px;
-    mix-blend-mode: lighten;
+    opacity: 1;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
   }
 </style>

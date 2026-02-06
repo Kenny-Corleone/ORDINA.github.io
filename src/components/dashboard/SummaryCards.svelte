@@ -123,16 +123,15 @@
         {/if}
       </div>
     </div>
-  </div>
-
-  <div class="stat-card">
-    <h3
-      class="text-xs uppercase tracking-wider font-semibold mb-1.5 text-gray-500 dark:text-gray-400"
-    >
-      {t($translations, 'dashTasksYear')}
-    </h3>
-    <p class="text-xl font-bold" style="color: var(--gold-text);">
-      {tasksRemainingYear}
-    </p>
+    <div class="stat-card flex flex-col justify-center">
+      <h3
+        class="text-xs uppercase tracking-wider font-semibold mb-1.5 text-gray-500 dark:text-gray-400"
+      >
+        {t($translations, 'dashTasksYear')}
+      </h3>
+      <p class="text-xl font-bold" style="color: var(--gold-text);">
+        {tasksRemainingYear}
+      </p>
+    </div>
   </div>
 </div>

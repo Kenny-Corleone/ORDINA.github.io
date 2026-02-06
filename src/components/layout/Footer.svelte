@@ -231,12 +231,13 @@
   }
 
   .ancl-logo {
-    height: 32px;
+    height: 64px; /* Much larger */
     width: auto;
-    opacity: 0.9;
-    border-radius: 6px; /* Smooth corners for JPG */
+    opacity: 1; /* Full visibility */
+    border-radius: 12px;
     transition: all 0.3s ease;
-    mix-blend-mode: lighten; /* Attempt to blend if background is dark */
+    /* Removed blend mode for better visibility based on user request */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
   }
 
   .ancl-logo:hover {

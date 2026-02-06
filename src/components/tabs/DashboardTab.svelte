@@ -262,10 +262,10 @@
 <SummaryCards />
 
 <!-- Dashboard Lower Area (Ordina 1 structure) -->
-<div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-4 items-stretch mt-6">
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-4 items-stretch mt-4">
   <!-- Left column: chart + quick actions + recent expenses -->
-  <div class="space-y-6 flex flex-col" id="dashboard-left-column" bind:this={leftColumnEl}>
-    <div id="expense-chart-container" class="premium-card p-5 flex flex-col">
+  <div class="space-y-4 flex flex-col" id="dashboard-left-column" bind:this={leftColumnEl}>
+    <div id="expense-chart-container" class="premium-card p-4 flex flex-col">
       <div class="flex items-center justify-between mb-3">
         <h3 class="text-lg font-semibold" style="color: var(--text-primary);">
           {t($translations, 'chartLabel', 'Расходы')}
@@ -278,39 +278,39 @@
           )}
         </div>
       </div>
-      <div class="h-80 w-full">
+      <div class="h-48 lg:h-80 w-full">
         <canvas id="expenses-chart" bind:this={expensesChartCanvas}></canvas>
       </div>
     </div>
 
-    <div class="premium-card p-5">
-      <h3 class="text-lg font-semibold mb-4" style="color: var(--text-primary);">
+    <div class="premium-card p-4">
+      <h3 class="text-lg font-semibold mb-3" style="color: var(--text-primary);">
         {t($translations, 'quickActionsTitle', 'Быстрые действия')}
       </h3>
-      <div class="grid grid-cols-2 gap-3">
+      <div class="grid grid-cols-2 gap-2">
         <button
-          class="premium-btn bg-gradient-to-r from-blue-600 to-blue-700 text-white px-4 py-3 text-sm rounded-xl hover:shadow-lg transition-all flex items-center justify-center gap-2"
+          class="premium-btn bg-gradient-to-r from-blue-600 to-blue-700 text-white px-3 py-2 text-sm rounded-xl hover:shadow-lg transition-all flex items-center justify-center gap-2"
           on:click={openExpenseModal}
           type="button"
         >
           {t($translations, 'addExpense')}
         </button>
         <button
-          class="premium-btn bg-gradient-to-r from-green-600 to-green-700 text-white px-4 py-3 text-sm rounded-xl hover:shadow-lg transition-all flex items-center justify-center gap-2"
+          class="premium-btn bg-gradient-to-r from-green-600 to-green-700 text-white px-3 py-2 text-sm rounded-xl hover:shadow-lg transition-all flex items-center justify-center gap-2"
           on:click={openTaskModal}
           type="button"
         >
           {t($translations, 'addTask')}
         </button>
         <button
-          class="premium-btn bg-gradient-to-r from-purple-600 to-purple-700 text-white px-4 py-3 text-sm rounded-xl hover:shadow-lg transition-all flex items-center justify-center gap-2"
+          class="premium-btn bg-gradient-to-r from-purple-600 to-purple-700 text-white px-3 py-2 text-sm rounded-xl hover:shadow-lg transition-all flex items-center justify-center gap-2"
           on:click={openDebtModal}
           type="button"
         >
           {t($translations, 'addDebt')}
         </button>
         <button
-          class="premium-btn bg-gradient-to-r from-orange-600 to-orange-700 text-white px-4 py-3 text-sm rounded-xl hover:shadow-lg transition-all flex items-center justify-center gap-2"
+          class="premium-btn bg-gradient-to-r from-orange-600 to-orange-700 text-white px-3 py-2 text-sm rounded-xl hover:shadow-lg transition-all flex items-center justify-center gap-2"
           on:click={openRecurringModal}
           type="button"
         >
@@ -319,11 +319,11 @@
       </div>
     </div>
 
-    <div id="recent-activity-container" class="premium-card p-5">
-      <h3 class="text-lg font-semibold mb-4" style="color: var(--text-primary);">
+    <div id="recent-activity-container" class="premium-card p-4">
+      <h3 class="text-lg font-semibold mb-3" style="color: var(--text-primary);">
         {t($translations, 'lastActivity', 'Последняя активность')}
       </h3>
-      <div id="recent-activity" class="space-y-3">
+      <div id="recent-activity" class="space-y-2">
         {#if recentExpenses.length === 0}
           <div class="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400">
             <span>{t($translations, 'noRecentActivity', 'Нет недавней активности')}</span>
@@ -339,10 +339,7 @@
                   {exp.date}
                 </div>
               </div>
-              <div
-                class="text-sm font-semibold whitespace-nowrap"
-                style="color: var(--gold-text);"
-              >
+              <div class="text-sm font-semibold whitespace-nowrap" style="color: var(--gold-text);">
                 {formatCurrency(exp.amount, currency, exchangeRate)}
               </div>
             </div>
