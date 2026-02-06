@@ -312,11 +312,12 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    height: var(--header-main-row-height);
+    height: 80px; /* Increased from var */
     padding: 0 var(--header-main-row-padding-x);
     width: 100%;
     position: relative;
     gap: var(--header-main-row-gap);
+    z-index: 20;
   }
 
   /* --- SECTIONS --- */
@@ -370,14 +371,17 @@
   /* --- ELEMENT SIZES & TYPOGRAPHY SYSTEM --- */
 
   /* 1. Brand Elements */
-  .header-logo-img {
-    height: var(--header-logo-height); /* Slightly larger again per request */
+  .logo-img {
+    height: 100px; /* Much larger logo */
     width: auto;
     object-fit: contain;
+    position: relative;
+    top: 10px; /* Slight overlap push */
+    filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.1));
     transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
   }
 
-  .logo-btn:hover .header-logo-img {
+  .logo-btn:hover .logo-img {
     transform: scale(1.05); /* Gentle scale */
   }
 

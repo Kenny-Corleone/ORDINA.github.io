@@ -286,7 +286,7 @@
           <div class="sheet-footer">
             <span>by</span>
             <img
-              src="/ORDINA.github.io/assets/ancl-logo-new.png"
+              src="/ORDINA.github.io/assets/ancl-logo-new.jpg"
               alt="ANCL"
               class="ancl-logo-mobile"
             />
@@ -507,6 +507,8 @@
   .ancl-logo-mobile {
     height: 24px;
     width: auto;
-    opacity: 0.7;
+    opacity: 0.9;
+    border-radius: 4px;
+    mix-blend-mode: lighten;
   }
 </style>
