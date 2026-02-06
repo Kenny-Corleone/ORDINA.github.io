@@ -107,10 +107,10 @@ const RSS_SOURCES: Record<string, Record<string, string[]>> = {
       'https://www.ansa.it/sito/ansait_rss.xml',
       'https://www.corriere.it/rss/homepage.xml',
       'https://www.repubblica.it/rss/homepage/rss2.0.xml',
-      'https://www.lastampa.it/rss.xml',
+      'https://www.agi.it/cronaca/rss',
       'https://tg24.sky.it/rss/tg24.xml',
       'https://www.fanpage.it/feed/',
-      'https://www.open.online/feed/'
+      'https://www.adnkronos.com/rss'
     ],
     business: ['https://www.ilsole24ore.com/rss/homepage.xml', 'https://www.milanofinanza.it/rss'],
     technology: ['https://www.ansa.it/sito/notizie/tecnologia/tecnologia_rss.xml'],
