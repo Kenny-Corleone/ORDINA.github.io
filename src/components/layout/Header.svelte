@@ -372,7 +372,7 @@
 
   /* 1. Brand Elements */
   .logo-img {
-    height: 28px; /* Extremely compact */
+    height: 20px; /* Extremely compact */
     width: auto;
     object-fit: contain;
     position: relative;
@@ -686,6 +686,8 @@
     background: rgba(255, 255, 255, 0.3);
     backdrop-filter: blur(8px);
     width: 100%;
+    position: relative;
+    z-index: 50; /* Ensure clicks work */
   }
   :global(.dark) .header-tabs-row {
     border-color: rgba(255, 255, 255, 0.06);
@@ -753,7 +755,7 @@
       --header-main-row-height: 72px;
     }
     .logo-img {
-      height: 50px;
+      height: 20px;
     }
     .header-divider {
       display: none;

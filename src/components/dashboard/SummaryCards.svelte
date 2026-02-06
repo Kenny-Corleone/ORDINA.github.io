@@ -33,65 +33,77 @@
 </script>
 
 <div>
-  <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 mb-6 auto-rows-fr">
-    <div class="stat-card flex flex-col justify-center">
+  <div class="grid grid-cols-3 md:grid-cols-3 lg:grid-cols-6 gap-2 mb-6 auto-rows-fr">
+    <div class="stat-card flex flex-col justify-center items-center text-center aspect-square p-2">
+      <p class="text-lg md:text-xl font-bold" style="color: var(--gold-text);">
+        {formatCurrency(recurringPaidTotal, currency, exchangeRate)}
+      </p>
       <h3
-        class="text-xs uppercase tracking-wider font-semibold mb-1.5 text-gray-500 dark:text-gray-400"
+        class="text-[10px] uppercase tracking-wider font-semibold text-gray-500 dark:text-gray-400 mt-1"
       >
         {t($translations, 'dashRecurringPaid')}
       </h3>
-      <p class="text-xl font-bold" style="color: var(--gold-text);">
-        {formatCurrency(recurringPaidTotal, currency, exchangeRate)}
-      </p>
     </div>
 
-    <div class="stat-card flex flex-col justify-center">
+    <div class="stat-card flex flex-col justify-center items-center text-center aspect-square p-2">
+      <p class="text-lg md:text-xl font-bold" style="color: var(--gold-text);">
+        {formatCurrency(recurringRemainingTotal, currency, exchangeRate)}
+      </p>
       <h3
-        class="text-xs uppercase tracking-wider font-semibold mb-1.5 text-gray-500 dark:text-gray-400"
+        class="text-[10px] uppercase tracking-wider font-semibold text-gray-500 dark:text-gray-400 mt-1"
       >
         {t($translations, 'dashRecurringRemaining')}
       </h3>
-      <p class="text-xl font-bold" style="color: var(--gold-text);">
-        {formatCurrency(recurringRemainingTotal, currency, exchangeRate)}
-      </p>
     </div>
 
-    <div class="stat-card flex flex-col justify-center">
+    <div class="stat-card flex flex-col justify-center items-center text-center aspect-square p-2">
+      <p class="text-lg md:text-xl font-bold" style="color: var(--gold-text);">
+        {formatCurrency($totalExpenses, currency, exchangeRate)}
+      </p>
       <h3
-        class="text-xs uppercase tracking-wider font-semibold mb-1.5 text-gray-500 dark:text-gray-400"
+        class="text-[10px] uppercase tracking-wider font-semibold text-gray-500 dark:text-gray-400 mt-1"
       >
         {t($translations, 'dashMonthlyExpenses')}
       </h3>
-      <p class="text-xl font-bold" style="color: var(--gold-text);">
-        {formatCurrency($totalExpenses, currency, exchangeRate)}
-      </p>
     </div>
 
-    <div class="stat-card flex flex-col justify-center">
+    <div class="stat-card flex flex-col justify-center items-center text-center aspect-square p-2">
+      <p class="text-lg md:text-xl font-bold" style="color: var(--gold-text);">
+        {formatCurrency($remainingDebts, currency, exchangeRate)}
+      </p>
       <h3
-        class="text-xs uppercase tracking-wider font-semibold mb-1.5 text-gray-500 dark:text-gray-400"
+        class="text-[10px] uppercase tracking-wider font-semibold text-gray-500 dark:text-gray-400 mt-1"
       >
         {t($translations, 'dashTotalDebt')}
       </h3>
-      <p class="text-xl font-bold" style="color: var(--gold-text);">
-        {formatCurrency($remainingDebts, currency, exchangeRate)}
-      </p>
     </div>
 
-    <div class="stat-card flex flex-col justify-center">
+    <div class="stat-card flex flex-col justify-center items-center text-center aspect-square p-2">
+      <p class="text-lg md:text-xl font-bold" style="color: var(--gold-text);">
+        {tasksRemainingMonth}
+      </p>
       <h3
-        class="text-xs uppercase tracking-wider font-semibold mb-1.5 text-gray-500 dark:text-gray-400"
+        class="text-[10px] uppercase tracking-wider font-semibold text-gray-500 dark:text-gray-400 mt-1"
       >
         {t($translations, 'dashTasksMonth')}
       </h3>
-      <p class="text-xl font-bold" style="color: var(--gold-text);">
-        {tasksRemainingMonth}
-      </p>
     </div>
 
+    <div class="stat-card flex flex-col justify-center items-center text-center aspect-square p-2">
+      <p class="text-lg md:text-xl font-bold" style="color: var(--gold-text);">
+        {tasksRemainingYear}
+      </p>
+      <h3
+        class="text-[10px] uppercase tracking-wider font-semibold text-gray-500 dark:text-gray-400 mt-1"
+      >
+        {t($translations, 'dashTasksYear')}
+      </h3>
+    </div>
+
+    <!-- Wide Task List (Full Width on Mobile) -->
     <div
       id="dashboard-tasks-panel-top"
-      class="stat-card flex flex-col overflow-hidden relative group cursor-pointer hover:shadow-md transition-all"
+      class="stat-card col-span-3 md:col-span-3 lg:col-span-6 flex flex-col overflow-hidden relative group cursor-pointer hover:shadow-md transition-all p-3 min-h-[80px]"
       role="button"
       tabindex="0"
       on:click={() => uiStore.setActiveTab('tasks')}
@@ -118,20 +130,13 @@
           <div class="text-gray-400 text-center py-1 text-xs">Нет задач</div>
         {:else}
           {#each tasksPreview as task}
-            <div class="text-gray-700 dark:text-gray-300 truncate">{task.name}</div>
+            <div class="text-gray-700 dark:text-gray-300 truncate flex items-center gap-2">
+              <span class="w-1.5 h-1.5 rounded-full bg-blue-400 flex-shrink-0"></span>
+              {task.name}
+            </div>
           {/each}
         {/if}
       </div>
-    </div>
-    <div class="stat-card flex flex-col justify-center">
-      <h3
-        class="text-xs uppercase tracking-wider font-semibold mb-1.5 text-gray-500 dark:text-gray-400"
-      >
-        {t($translations, 'dashTasksYear')}
-      </h3>
-      <p class="text-xl font-bold" style="color: var(--gold-text);">
-        {tasksRemainingYear}
-      </p>
     </div>
   </div>
 </div>

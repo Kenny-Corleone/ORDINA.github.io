@@ -1,4 +1,4 @@
-const CACHE_VERSION = 'v7-final-fixes';
+const CACHE_VERSION = 'v8-dashboard-fix';
 const STATIC_CACHE = `ordina-static-${CACHE_VERSION}`;
 const DYNAMIC_CACHE = `ordina-dynamic-${CACHE_VERSION}`;
 const CORE_ASSETS = [

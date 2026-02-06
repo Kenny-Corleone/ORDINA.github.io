@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { onMount } from 'svelte';
+  import { slide } from 'svelte/transition';
   import { uiStore } from '../../../lib/stores/uiStore';
   import { weatherStore } from '../../../lib/stores/weatherStore';
   import { clockStore } from '../../../lib/stores/clockStore';
@@ -35,9 +37,12 @@
 
 <header class="mobile-header">
   <div class="mobile-header-content">
-    <!-- Left: Motto (replacing Logo) -->
-    <div class="mobile-motto">
-      {t($translations, 'appSubtitle')}
+    <!-- Left: Logo + Motto -->
+    <div class="header-left-group">
+      <img src="/ORDINA.github.io/assets/ordina.png" alt="Ordina" class="mobile-logo-mini" />
+      <div class="mobile-motto">
+        {t($translations, 'appSubtitle')}
+      </div>
     </div>
 
     <!-- Center: Time + Weather -->
@@ -66,28 +71,34 @@
       </div>
     </div>
 
-    <!-- Radio Button -->
+    <!-- Radio Button (Icon only) -->
     <button
       class="mobile-radio-btn"
       class:is-playing={radio.isPlaying}
       on:click={toggleRadio}
       aria-label={radio.isPlaying ? 'Pause Radio' : 'Play Radio'}
     >
-      {#if radio.isPlaying}
-        <div class="equalizer-icon">
-          <div class="eq-bar"></div>
-          <div class="eq-bar"></div>
-          <div class="eq-bar"></div>
-        </div>
-      {:else}
-        <svg viewBox="0 0 24 24" fill="currentColor" class="play-icon">
-          <path d="M8 5v14l11-7z" />
-        </svg>
-      {/if}
+      <svg viewBox="0 0 24 24" fill="currentColor" class="play-icon">
+        <path d={radio.isPlaying ? 'M6 19h4V5H6v14zm8-14v14h4V5h-4z' : 'M8 5v14l11-7z'} />
+      </svg>
     </button>
   </div>
 
-  <!-- Playing track info (shown when radio is playing) -->
+  <!-- Track Bar (Expandable) -->
+  {#if radio.isPlaying}
+    <div class="mobile-track-bar" transition:slide>
+      <div class="track-eq-mini">
+        <div class="bar"></div>
+        <div class="bar"></div>
+        <div class="bar"></div>
+      </div>
+      <div class="track-marquee">
+        <span class="marquee-text"
+          >{radio.trackTitle || 'Loading...'} • {radio.trackTitle || 'Loading...'}</span
+        >
+      </div>
+    </div>
+  {/if}
 </header>
 
 <style>
@@ -103,6 +114,7 @@
     z-index: 100;
     display: flex;
     flex-direction: column;
+    transition: height 0.3s ease;
   }
 
   :global(.dark) .mobile-header {
@@ -114,9 +126,23 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    height: var(--mobile-header-height, 56px);
+    height: 56px; /* Fixed height for top row */
     padding: 0 0.75rem;
     gap: 0.5rem;
+    width: 100%;
+  }
+
+  .header-left-group {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    min-width: 0; /* flex fix */
+  }
+
+  .mobile-logo-mini {
+    height: 20px;
+    width: auto;
+    object-fit: contain;
   }
 
   /* Motto (Left) */
@@ -125,8 +151,8 @@
     font-weight: 600;
     color: #64748b;
     line-height: normal;
-    max-width: 50vw; /* Allow more space */
-    white-space: nowrap; /* Don't wrap unnecessarily */
+    max-width: 30vw; /* Reduced to fit logo */
+    white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
     text-align: left;
@@ -142,6 +168,72 @@
     gap: 0.75rem;
     flex: 1;
     justify-content: center;
+  }
+
+  /* Track Bar */
+  .mobile-track-bar {
+    height: 30px;
+    background: rgba(79, 70, 229, 0.9); /* Indigo-600 */
+    color: white;
+    display: flex;
+    align-items: center;
+    padding: 0 1rem;
+    gap: 0.75rem;
+    overflow: hidden;
+    width: 100%;
+  }
+  :global(.dark) .mobile-track-bar {
+    background: rgba(99, 102, 241, 0.2); /* Indigo-500 alpha */
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+  }
+
+  .track-eq-mini {
+    display: flex;
+    align-items: flex-end;
+    gap: 2px;
+    height: 12px;
+  }
+  .track-eq-mini .bar {
+    width: 3px;
+    background: white;
+    animation: eqBounce 0.5s infinite alternate;
+  }
+  .track-eq-mini .bar:nth-child(2) {
+    animation-delay: 0.1s;
+  }
+  .track-eq-mini .bar:nth-child(3) {
+    animation-delay: 0.2s;
+  }
+
+  .track-marquee {
+    flex: 1;
+    overflow: hidden;
+    white-space: nowrap;
+    mask-image: linear-gradient(90deg, transparent 0%, black 5%, black 95%, transparent 100%);
+  }
+  .marquee-text {
+    display: inline-block;
+    padding-left: 100%;
+    animation: scrollMobile 10s linear infinite;
+    font-size: 0.8rem;
+    font-weight: 600;
+  }
+
+  @keyframes scrollMobile {
+    0% {
+      transform: translateX(0);
+    }
+    100% {
+      transform: translateX(-100%);
+    }
+  }
+  @keyframes eqBounce {
+    from {
+      height: 4px;
+    }
+    to {
+      height: 12px;
+    }
   }
 
   /* Weather Animations */

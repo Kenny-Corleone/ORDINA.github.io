@@ -127,28 +127,9 @@
   <MobileHeader />
 
   <!-- Main content area -->
-  <div class="mobile-content-wrapper" class:has-player={radio.isPlaying}>
+  <div class="mobile-content-wrapper" style:--player-offset={radio.isPlaying ? '30px' : '0px'}>
     <MainContent />
   </div>
-
-  <!-- Sticky Player Bar (Only when playing) -->
-  {#if radio.isPlaying}
-    <div class="mobile-player-bar" transition:slide>
-      <div class="player-icon-pulse">🎵</div>
-      <div class="player-track-info">
-        <div class="player-marquee">
-          <span>{radio.trackTitle || 'Loading...'}</span>
-          <!-- Duplicate for seamless scroll -->
-          <span aria-hidden="true">{radio.trackTitle || 'Loading...'}</span>
-        </div>
-      </div>
-      <button class="player-control-btn" on:click={() => radioStore.toggle()}>
-        <svg viewBox="0 0 24 24" fill="currentColor" width="24" height="24">
-          <rect x="6" y="6" width="12" height="12" rx="2" />
-        </svg>
-      </button>
-    </div>
-  {/if}
 
   <!-- Bottom Navigation -->
   <MobileBottomNav />
@@ -185,24 +166,15 @@
     overflow-x: hidden;
     position: relative;
     z-index: 1;
-    /* Account for header and bottom nav */
-    padding-top: var(--mobile-header-height, 56px);
-    padding-bottom: calc(
-      var(--mobile-bottom-nav-height, 64px) + env(safe-area-inset-bottom, 0px) + 1rem
-    ); /* +1rem safe buffer */
+    /* Account for header (dynamic with player) and bottom nav */
+    padding-top: calc(var(--mobile-header-height, 56px) + var(--player-offset, 0px));
+    padding-bottom: calc(var(--mobile-bottom-nav-height, 64px) + env(safe-area-inset-bottom, 0px));
     padding-left: 0.75rem;
     padding-right: 0.75rem;
     /* Hide scrollbar */
     scrollbar-width: none;
     -ms-overflow-style: none;
-    transition: padding-bottom 0.3s ease;
-  }
-
-  .mobile-content-wrapper.has-player {
-    /* Add extra padding when player is visible (player height ~48px) */
-    padding-bottom: calc(
-      var(--mobile-bottom-nav-height, 64px) + 48px + env(safe-area-inset-bottom, 0px) + 1rem
-    );
+    transition: padding-top 0.3s ease;
   }
 
   .mobile-content-wrapper::-webkit-scrollbar {
@@ -223,78 +195,5 @@
     align-items: center;
     justify-content: center;
     z-index: 150;
-  }
-
-  /* Player Bar */
-  .mobile-player-bar {
-    height: 48px;
-    background: rgba(30, 41, 59, 0.95);
-    backdrop-filter: blur(12px);
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
-    display: flex;
-    align-items: center;
-    padding: 0 1rem;
-    gap: 0.75rem;
-    color: white;
-    z-index: 90; /* Below MobileBottomNav if nav uses z-index 100? No, this is flex flow */
-    /* If flex flow, this sits ABOVE Nav visually in stack, so physically above it on screen? */
-    /* Yes, flex-direction column: Header -> Content -> Player -> Nav. Correct order. */
-    flex-shrink: 0;
-  }
-
-  :global(.dark) .mobile-player-bar {
-    background: rgba(15, 23, 42, 0.95);
-    border-top-color: rgba(255, 255, 255, 0.05);
-  }
-
-  .player-icon-pulse {
-    animation: pulse 2s infinite;
-    font-size: 1.25rem;
-  }
-
-  .player-track-info {
-    flex: 1;
-    overflow: hidden;
-    position: relative;
-    mask-image: linear-gradient(90deg, transparent 0%, black 5%, black 95%, transparent 100%);
-  }
-
-  .player-marquee {
-    display: flex;
-    gap: 2rem;
-    white-space: nowrap;
-    animation: marquee 15s linear infinite;
-  }
-
-  .player-control-btn {
-    background: none;
-    border: none;
-    color: white;
-    padding: 0.5rem;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  @keyframes marquee {
-    0% {
-      transform: translateX(0);
-    }
-    100% {
-      transform: translateX(-50%);
-    }
-  }
-
-  @keyframes pulse {
-    0%,
-    100% {
-      opacity: 1;
-      transform: scale(1);
-    }
-    50% {
-      opacity: 0.7;
-      transform: scale(0.9);
-    }
   }
 </style>
