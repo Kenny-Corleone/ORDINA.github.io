@@ -1,122 +1,214 @@
-## ORDINA Svelte – Life Order Assistant
+<div align="center">
 
-Premium personal finance and life‑management PWA, rebuilt with **Svelte + TypeScript** and kept in full feature parity with the vanilla **ORDINA 1 (MAIN)** application.
+# 🌟 ORDINA - Life Order Assistant
 
-This project is the Svelte/TypeScript implementation of the same product you see in the vanilla ORDINA MAIN: finances, debts, tasks, calendar, dashboard widgets, news, weather, and radio – all backed by the same Firebase project and Firestore data.
+### _Your Premium Personal Finance & Life Management Platform_
 
-### Features
+[![Live Demo](https://img.shields.io/badge/🚀_Live_Demo-Visit_Now-4CAF50?style=for-the-badge)](https://kenny-corleone.github.io/ORDINA.github.io/)
+[![PWA Ready](https://img.shields.io/badge/📱_PWA-Ready-blue?style=for-the-badge)](https://kenny-corleone.github.io/ORDINA.github.io/)
+[![Multi Language](https://img.shields.io/badge/🌍_Languages-EN_|_RU_|_AZ_|_IT-orange?style=for-the-badge)](#)
 
-- **Finance**: expenses, debts, recurring expenses, CSV export, AZN/USD with fixed rate.
-- **Productivity**: daily / monthly / yearly tasks, automatic carry‑over, calendar with typed events.
-- **Dashboard**: summary cards, clock, weather, news feed, radio player with equalizer.
-- **Internationalization**: EN / RU / AZ / IT, localized dates and labels.
-- **Theming & UX**: dark/light theme, responsive layout (mobile / tablet / desktop).
-- **PWA**: installable app, offline mode via service worker, manifest and icons aligned with ORDINA MAIN.
+<img src="public/assets/logo.svg" alt="ORDINA Logo" width="120" height="120">
 
-### Tech Stack
+---
 
-- **Framework**: Svelte 4
-- **Language**: TypeScript (strict)
-- **Build tool**: Vite 5
-- **Styling**: Tailwind CSS 3 + custom CSS
-- **Backend**: Firebase Authentication + Firestore (same schema as ORDINA 1)
-- **Testing**: Vitest, Playwright, fast‑check, visual regression and accessibility checks
-- **Node**: 20.x (see `.nvmrc`)
+### ✨ **[Launch ORDINA Now →](https://kenny-corleone.github.io/ORDINA.github.io/)**
 
-## Getting started
+_A modern, beautiful, and powerful Progressive Web App built with Svelte + TypeScript_
 
-### Prerequisites
+</div>
 
-- Node.js **20.x**
-- npm (or another Node package manager)
+---
 
-### Install and run
+## 🎯 What is ORDINA?
 
-```bash
-# install dependencies
-npm install
+ORDINA is your **all-in-one life management companion** that combines personal finance tracking, task management, calendar, news, weather, and entertainment in one sleek, responsive interface.
 
-# start dev server
-npm run dev
+<div align="center">
 
-# build for production
-npm run build
+### 🚀 **No Installation Required**
 
-# preview production build
-npm run preview
-```
+Just click the link and start using it instantly in your browser!
 
-The app will use the same Firebase project and data as ORDINA MAIN, so you can switch between versions without data migration.
+**[👉 Open ORDINA](https://kenny-corleone.github.io/ORDINA.github.io/)**
 
-## Firebase configuration
+</div>
 
-By default, the app can run against the existing Firebase project. For your own project or production deployment, configure environment variables:
+---
 
-1. Copy `.env.example` to `.env`.
-2. Put your Firebase credentials into the variables:
+## ⚡ Key Features
 
-```bash
-VITE_FIREBASE_API_KEY=your-api-key
-VITE_FIREBASE_AUTH_DOMAIN=your-auth-domain
-VITE_FIREBASE_PROJECT_ID=your-project-id
-VITE_FIREBASE_STORAGE_BUCKET=your-storage-bucket
-VITE_FIREBASE_MESSAGING_SENDER_ID=your-sender-id
-VITE_FIREBASE_APP_ID=your-app-id
-VITE_FIREBASE_MEASUREMENT_ID=your-measurement-id
-```
+<table>
+<tr>
+<td width="50%">
 
-The `.env` file is not committed to version control.
+### 💰 **Finance Management**
 
-## Testing
+- 📊 Track expenses & income
+- 💳 Debt management
+- 🔄 Recurring expenses
+- 📈 Visual analytics
+- 💱 Multi-currency (AZN/USD)
+- 📥 CSV export
 
-```bash
-# unit + integration tests (Vitest)
-npm run test
+</td>
+<td width="50%">
 
-# watch mode
-npm run test:watch
+### ✅ **Productivity Tools**
 
-# end‑to‑end tests (Playwright)
-npm run test:e2e
-```
+- 📝 Daily/Monthly/Yearly tasks
+- 📅 Smart calendar
+- ⏰ Automatic task carry-over
+- 🎯 Goal tracking
+- 🔔 Reminders
 
-Additional visual, accessibility, and property‑based tests are documented in `docs/VISUAL-REGRESSION-TESTING.md` and `MIGRATION.md`.
+</td>
+</tr>
+<tr>
+<td width="50%">
 
-## Project structure (high‑level)
+### 📰 **Information Hub**
 
-```text
-ORDINA-SVELTE/
-├─ src/
-│  ├─ components/        # UI components: layout, tabs, modals, widgets, tables
-│  ├─ lib/
-│  │  ├─ stores/         # Svelte stores (user, finance, tasks, calendar, ui)
-│  │  ├─ services/       # Firebase + external APIs (weather, news, radio, export)
-│  │  ├─ utils/          # Formatting, validation, performance, gestures, keyboard
-│  │  └─ types/          # TypeScript models and enums
-│  ├─ locales/           # i18n JSON files (EN/RU/AZ/IT)
-│  ├─ styles/            # Responsive CSS, dashboard fixes
-│  ├─ App.svelte         # Root authenticated/unauthenticated shell
-│  └─ main.ts            # Entry point
-├─ public/
-│  ├─ assets/            # favicons, logos, screenshots (mirrors ORDINA MAIN)
-│  ├─ manifest.webmanifest
-│  └─ sw.js              # PWA service worker
-├─ docs/                 # Architecture and deep‑dive technical docs
-├─ tests/                # Vitest + Playwright + property‑based tests
-├─ vite.config.ts        # Vite configuration
-└─ svelte.config.js      # Svelte configuration
-```
+- 🌍 Real-time news feed
+- ☀️ Weather forecasts
+- 📊 Stock market data
+- 🎵 Online radio player
+- 🎨 Customizable widgets
 
-## Architecture & relation to ORDINA MAIN
+</td>
+<td width="50%">
 
-- **High‑level architecture** is described in `ARCHITECTURE.md`.
-- **Migration details** from vanilla JS to Svelte + TypeScript are in `MIGRATION.md`.
-- **Component tree and responsibilities** are in `docs/COMPONENTS.md`.
-- **State management and stores** are in `docs/STORES.md`.
-- **Type system** is documented in `docs/TYPES.md`.
+### 🎨 **Premium Experience**
 
-ORDINA Svelte preserves the same Firebase collections, routes, and main screens as ORDINA 1 (Dashboard, Expenses, Debts, Recurring, Tasks, Calendar), so behavior and data are aligned while the implementation is fully modernized.
+- 🌓 Dark/Light themes
+- 📱 Fully responsive design
+- 🌐 4 languages (EN/RU/AZ/IT)
+- ⚡ Lightning-fast performance
+- 🔒 Secure Firebase backend
 
-## License
+</td>
+</tr>
+</table>
 
-This project follows the same licensing model as ORDINA MAIN (MIT). See `LICENSE` in the main repository for details.
+---
+
+## 🌈 Screenshots
+
+<div align="center">
+
+| Dashboard                                                                      | Finance                                                                    | Tasks                                                                  |
+| ------------------------------------------------------------------------------ | -------------------------------------------------------------------------- | ---------------------------------------------------------------------- |
+| ![Dashboard](https://via.placeholder.com/300x200/4CAF50/FFFFFF?text=Dashboard) | ![Finance](https://via.placeholder.com/300x200/2196F3/FFFFFF?text=Finance) | ![Tasks](https://via.placeholder.com/300x200/FF9800/FFFFFF?text=Tasks) |
+
+_Beautiful, intuitive interface designed for productivity_
+
+</div>
+
+---
+
+## 🚀 Getting Started
+
+### Option 1: Use Online (Recommended)
+
+Simply visit **[https://kenny-corleone.github.io/ORDINA.github.io/](https://kenny-corleone.github.io/ORDINA.github.io/)** in your browser!
+
+### Option 2: Install as PWA
+
+1. Visit the link above
+2. Click the "Install" button in your browser
+3. Enjoy ORDINA as a native app on your device!
+
+---
+
+## 💡 Why Choose ORDINA?
+
+<div align="center">
+
+| Feature          | ORDINA             | Others               |
+| ---------------- | ------------------ | -------------------- |
+| **Price**        | 🆓 Free            | 💰 Paid              |
+| **Installation** | ⚡ Instant         | 📦 Download Required |
+| **Offline Mode** | ✅ Yes             | ❌ No                |
+| **Multi-Device** | ✅ Sync Everywhere | ⚠️ Limited           |
+| **Privacy**      | 🔒 Your Data Only  | 📊 Tracked           |
+| **Updates**      | 🔄 Automatic       | 📥 Manual            |
+
+</div>
+
+---
+
+## 🛠️ Technology Stack
+
+<div align="center">
+
+![Svelte](https://img.shields.io/badge/Svelte-4-FF3E00?style=flat-square&logo=svelte)
+![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6?style=flat-square&logo=typescript)
+![Vite](https://img.shields.io/badge/Vite-5-646CFF?style=flat-square&logo=vite)
+![Firebase](https://img.shields.io/badge/Firebase-10-FFCA28?style=flat-square&logo=firebase)
+![Tailwind](https://img.shields.io/badge/Tailwind-3-38B2AC?style=flat-square&logo=tailwind-css)
+
+</div>
+
+Built with modern web technologies for maximum performance and reliability.
+
+---
+
+## 🌍 Supported Languages
+
+- 🇬🇧 **English**
+- 🇷🇺 **Русский** (Russian)
+- 🇦🇿 **Azərbaycan** (Azerbaijani)
+- 🇮🇹 **Italiano** (Italian)
+
+---
+
+## 📱 Device Compatibility
+
+<div align="center">
+
+| Device          | Support                          |
+| --------------- | -------------------------------- |
+| 💻 Desktop      | ✅ Full Support                  |
+| 📱 Mobile       | ✅ Optimized                     |
+| 📲 Tablet       | ✅ Responsive                    |
+| 🌐 All Browsers | ✅ Chrome, Firefox, Safari, Edge |
+
+</div>
+
+---
+
+## 🎯 Quick Start Guide
+
+1. **Visit** → [https://kenny-corleone.github.io/ORDINA.github.io/](https://kenny-corleone.github.io/ORDINA.github.io/)
+2. **Sign Up** → Create your free account
+3. **Explore** → Start managing your life better!
+
+---
+
+## 🤝 Contributing
+
+This is a personal project, but feedback and suggestions are always welcome!
+
+---
+
+## 📄 License
+
+MIT License - Feel free to use and learn from this project!
+
+---
+
+<div align="center">
+
+### 🌟 **Ready to Transform Your Life?**
+
+## **[Start Using ORDINA Now →](https://kenny-corleone.github.io/ORDINA.github.io/)**
+
+_No credit card required. No installation needed. Just click and go!_
+
+---
+
+Made with ❤️ using Svelte + TypeScript
+
+**[⭐ Star this repo](https://github.com/Kenny-Corleone/ORDINA.github.io)** if you find it useful!
+
+</div>

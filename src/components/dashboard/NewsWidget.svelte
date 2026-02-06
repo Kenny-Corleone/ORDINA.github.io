@@ -109,6 +109,8 @@
     } catch {
       // ignore
     }
+    lastRefreshTime = 0; // Reset to allow immediate refresh
+    loading = true; // Show loading indicator
     loadNews();
   }
 
