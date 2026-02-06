@@ -199,18 +199,20 @@ async function parseRSSFeed(url: string, retries: number = 2): Promise<NewsArtic
     }
   })();
 
-  for (let proxyIndex = 0; proxyIndex < CORS_PROXIES.length; proxyIndex++) {
-    const proxyFn = CORS_PROXIES[proxyIndex];
-    if (!proxyFn) continue;
+  // Shuffle proxies to avoid hitting a broken/blocked one every time first
+  const shuffledProxies = [...CORS_PROXIES].sort(() => Math.random() - 0.5);
+
+  for (const proxyFn of shuffledProxies) {
     for (let attempt = 0; attempt < retries; attempt++) {
       try {
         const proxyUrl = proxyFn(url);
-        const res = await fetchWithTimeout(proxyUrl, 12000);
+        const res = await fetchWithTimeout(proxyUrl, 10000);
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        const contentType = (res.headers.get('content-type') || '').toLowerCase();
-        let raw: string;
         
-        if (contentType.includes('application/json') || proxyUrl.includes('allorigins')) {
+        let raw: string;
+        const contentType = (res.headers.get('content-type') || '').toLowerCase();
+        
+        if (proxyUrl.includes('api.allorigins.win/get') || contentType.includes('application/json')) {
           const json = await res.json();
           // AllOrigins puts XML in 'contents'
           raw = typeof json.contents === 'string' ? json.contents : JSON.stringify(json);

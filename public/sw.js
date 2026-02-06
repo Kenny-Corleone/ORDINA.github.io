@@ -51,11 +51,22 @@ self.addEventListener('fetch', (event) => {
     'firebaseinstallations.googleapis.com',
     'stream.zeno.fm',
     'api.allorigins.win',
-    'corsproxy.io'
+    'corsproxy.io',
+    'thingproxy.freeboard.io',
+    'api.codetabs.com',
+    'api.scraper.id',
+    'proxy.cors.sh',
+    'www.bfb.az',
+    'tradingeconomics.com'
   ]);
   
   if (noCacheHosts.has(url.hostname)) {
-    event.respondWith(fetch(req));
+    event.respondWith(
+      fetch(req).catch(err => {
+        console.warn('SW fetch failed for proxy host:', url.hostname, err);
+        return new Response('Network error', { status: 408 });
+      })
+    );
     return;
   }
   

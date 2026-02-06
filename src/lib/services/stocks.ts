@@ -33,20 +33,21 @@ export const LOCAL_SYMBOLS: Record<string, string[]> = {
 export const DEFAULT_SYMBOLS = STOCK_CATEGORIES.CURRENCIES;
 
 const STOCKS_PROXIES = [
-  (url: string) => `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`,
-  (url: string) => `https://api.scraper.id?url=${encodeURIComponent(url)}`,
+  (url: string) => `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}&_t=${Date.now()}`,
   (url: string) => `https://corsproxy.io/?${encodeURIComponent(url)}`,
-  (url: string) => `https://thingproxy.freeboard.io/fetch/${url}`,
+  (url: string) => `https://api.allorigins.win/get?url=${encodeURIComponent(url)}&_t=${Date.now()}`,
   (url: string) => `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(url)}`,
+  (url: string) => `https://thingproxy.freeboard.io/fetch/${url}`,
 ];
 
 /**
  * BFB.az Scraper for Azerbaijan Market Data
  */
 async function fetchBFB(ticker: string): Promise<StockQuote | null> {
-  let lastError: any = null;
+  // Shuffle proxies
+  const shuffledProxies = [...STOCKS_PROXIES].sort(() => Math.random() - 0.5);
   
-  for (const proxyFn of STOCKS_PROXIES) {
+  for (const proxyFn of shuffledProxies) {
     try {
       const bfbUrl = 'https://www.bfb.az/en/market-watch';
       const targetUrl = proxyFn(bfbUrl);
@@ -54,8 +55,15 @@ async function fetchBFB(ticker: string): Promise<StockQuote | null> {
       const res = await fetch(targetUrl);
       if (!res.ok) continue;
       
-      const html = await res.text();
-      if (!html || html.length < 500) continue; // Basic check for real HTML content
+      let html = '';
+      if (targetUrl.includes('allorigins.win/get')) {
+        const json = await res.json();
+        html = json.contents;
+      } else {
+        html = await res.text();
+      }
+
+      if (!html || html.length < 500) continue; 
 
       const doc = new DOMParser().parseFromString(html, 'text/html');
       const table = doc.querySelector('.capitalisation_table table') || doc.querySelector('table');
@@ -99,7 +107,9 @@ async function fetchBFB(ticker: string): Promise<StockQuote | null> {
  * Trading Economics Scraper for Energy, Metals, Agricultural
  */
 async function fetchTradingEconomics(ticker: string): Promise<StockQuote | null> {
-  for (const proxyFn of STOCKS_PROXIES) {
+  const shuffledProxies = [...STOCKS_PROXIES].sort(() => Math.random() - 0.5);
+
+  for (const proxyFn of shuffledProxies) {
     try {
       const teUrl = 'https://tradingeconomics.com/commodities';
       const targetUrl = proxyFn(teUrl);
@@ -107,7 +117,14 @@ async function fetchTradingEconomics(ticker: string): Promise<StockQuote | null>
       const res = await fetch(targetUrl);
       if (!res.ok) continue;
       
-      const html = await res.text();
+      let html = '';
+      if (targetUrl.includes('allorigins.win/get')) {
+        const json = await res.json();
+        html = json.contents;
+      } else {
+        html = await res.text();
+      }
+
       if (!html || html.length < 1000) continue;
 
       const doc = new DOMParser().parseFromString(html, 'text/html');
@@ -237,48 +254,45 @@ async function fetchAlphaVantage(ticker: string): Promise<StockQuote | null> {
  */
 async function fetchYahoo(ticker: string, suffix: string = ''): Promise<StockQuote | null> {
   const fullTicker = suffix ? `${ticker}${suffix}` : ticker;
-  try {
-    // Rotating proxies to bypass blocks
-    const proxies = [
-      'https://api.allorigins.win/get?url=',
-      'https://corsproxy.io/?'
-    ];
-    const proxyIndex = Math.floor(Math.random() * proxies.length);
-    const proxy = proxies[proxyIndex];
-    if (!proxy) return null; // Safety check for TS
-    const yahooUrl = `https://query1.finance.yahoo.com/v8/finance/chart/${fullTicker}?interval=1d&range=1d`;
-    
-    const targetUrl = proxy === 'https://api.allorigins.win/get?url=' 
-      ? proxy + encodeURIComponent(yahooUrl)
-      : proxy + yahooUrl;
+  const yahooUrl = `https://query1.finance.yahoo.com/v8/finance/chart/${fullTicker}?interval=1d&range=1d`;
+  
+  const shuffledProxies = [...STOCKS_PROXIES].sort(() => Math.random() - 0.5);
 
-    const response = await fetch(targetUrl);
-    if (!response.ok) return null;
+  for (const proxyFn of shuffledProxies) {
+    try {
+      const targetUrl = proxyFn(yahooUrl);
+      const response = await fetch(targetUrl);
+      if (!response.ok) continue;
+      
+      let data;
+      if (targetUrl.includes('allorigins.win/get')) {
+        const json = await response.json();
+        data = JSON.parse(json.contents);
+      } else if (targetUrl.includes('allorigins.win/raw') || targetUrl.includes('corsproxy.io') || targetUrl.includes('codetabs')) {
+        data = await response.json();
+      } else {
+        const text = await response.text();
+        data = JSON.parse(text);
+      }
     
-    let data;
-    if (proxy.includes('allorigins')) {
-      const json = await response.json();
-      data = JSON.parse(json.contents);
-    } else {
-      data = await response.json();
+      const meta = data.chart.result[0].meta;
+      return {
+        symbol: ticker,
+        price: meta.regularMarketPrice,
+        change: meta.regularMarketPrice - meta.previousClose,
+        percentChange: ((meta.regularMarketPrice - meta.previousClose) / (meta.previousClose || 1)) * 100,
+        high: meta.dayHigh || meta.regularMarketPrice,
+        low: meta.dayLow || meta.regularMarketPrice,
+        open: meta.regularMarketOpen || meta.regularMarketPrice,
+        prevClose: meta.previousClose,
+        timestamp: meta.regularMarketTime * 1000,
+        provider: 'Yahoo'
+      };
+    } catch (e) {
+      continue;
     }
-    
-    const meta = data.chart.result[0].meta;
-    return {
-      symbol: ticker,
-      price: meta.regularMarketPrice,
-      change: meta.regularMarketPrice - meta.previousClose,
-      percentChange: ((meta.regularMarketPrice - meta.previousClose) / (meta.previousClose || 1)) * 100,
-      high: meta.dayHigh || meta.regularMarketPrice,
-      low: meta.dayLow || meta.regularMarketPrice,
-      open: meta.regularMarketOpen || meta.regularMarketPrice,
-      prevClose: meta.previousClose,
-      timestamp: meta.regularMarketTime * 1000,
-      provider: 'Yahoo'
-    };
-  } catch (e) {
-    return null;
   }
+  return null;
 }
 
 /**
