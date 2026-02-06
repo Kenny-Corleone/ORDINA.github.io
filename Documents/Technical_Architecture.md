@@ -2,15 +2,15 @@
 
 ## Стек
 
-| Слой | Технология |
-|------|------------|
-| UI | Svelte 4 |
-| Язык | TypeScript (strict) |
-| Сборка | Vite 5 |
-| Стили | Tailwind CSS 3 + кастомный CSS (`src/styles/`) |
-| Backend | Firebase (Auth + Firestore); внешние API: OpenWeatherMap, RSS, Zeno.FM |
-| Тесты | Vitest (unit/property), Playwright (e2e), axe-core (a11y), визуальные тесты |
-| Node | 20.x (см. `.nvmrc`) |
+| Слой    | Технология                                                                  |
+| ------- | --------------------------------------------------------------------------- |
+| UI      | Svelte 4                                                                    |
+| Язык    | TypeScript (strict)                                                         |
+| Сборка  | Vite 5                                                                      |
+| Стили   | Tailwind CSS 3 + кастомный CSS (`src/styles/`)                              |
+| Backend | Firebase (Auth + Firestore); внешние API: OpenWeatherMap, RSS, Zeno.FM      |
+| Тесты   | Vitest (unit/property), Playwright (e2e), axe-core (a11y), визуальные тесты |
+| Node    | 20.x (см. `.nvmrc`)                                                         |
 
 Примечание: проект на **Svelte + Vite**, не SvelteKit. Роутинг — только через вкладки (stores), без файловых маршрутов.
 
@@ -23,7 +23,8 @@ src/
 ├── app.css                 # Точка входа стилей (импорт в main.ts); импортирует styles/main.css и др. (responsive, device-*, accessibility и т.д.) + Tailwind
 ├── components/
 │   ├── auth/               # AuthContainer
-│   ├── layout/             # AppContainer, Header, Sidebar, MainContent
+│   ├── layout/             # AppContainer, Header, Footer, Sidebar, MainContent
+│   │   └── mobile/         # MobileLayout, MobileHeader, MobileBottomNav, MobileSheet
 │   ├── tabs/               # DashboardTab, ExpensesTab, DebtsTab, RecurringExpensesTab, TasksTab, CalendarTab
 │   ├── modals/             # ModalSystem, ModalBase, все модалки
 │   ├── dashboard/         # Виджеты: Clock, Weather, News, Radio, SummaryCards
@@ -32,7 +33,7 @@ src/
 ├── lib/
 │   ├── firebase.ts         # Инициализация Firebase (env: VITE_FIREBASE_*)
 │   ├── types/index.ts     # Все интерфейсы и enum
-│   ├── stores/            # userStore, financeStore, tasksStore, calendarStore, uiStore
+│   ├── stores/            # userStore, financeStore, tasksStore, calendarStore, uiStore, mobileStore, radioStore, clockStore, weatherStore
 │   ├── services/
 │   │   ├── firebase/       # auth, expenses, debts, recurring, categories, tasks, calendar, listeners
 │   │   └── *.ts            # carryOver, export, weather, news, radio

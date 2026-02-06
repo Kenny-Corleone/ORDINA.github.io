@@ -16,17 +16,17 @@
 
 ## 2. Ключевые подсистемы
 
-| Подсистема | Назначение | Где искать |
-|------------|------------|-------------|
-| **Auth** | Вход/регистрация (email, Google), состояние пользователя | `src/lib/services/firebase/auth.ts`, `src/lib/stores/userStore.ts`, `src/components/auth/` |
-| **Finance** | Расходы, долги, повторяющиеся расходы, категории, месяцы, валюта | `src/lib/stores/financeStore.ts`, `src/lib/services/firebase/{expenses,debts,recurring,categories}.ts`, табы Expenses/Debts/Recurring |
-| **Tasks** | Дневные/месячные/годовые задачи, перенос (carry-over) | `src/lib/stores/tasksStore.ts`, `src/lib/services/firebase/tasks.ts`, `src/lib/services/carryOver.ts`, таб Tasks |
-| **Calendar** | События календаря (типы: event, birthday, meeting, wedding) | `src/lib/stores/calendarStore.ts`, `src/lib/services/firebase/calendar.ts`, таб Calendar |
-| **UI state** | Активная вкладка, модалки, тема, язык, офлайн, сайдбар | `src/lib/stores/uiStore.ts`, `src/components/layout/`, `src/components/modals/` |
-| **Firebase listeners** | Real-time подписки Firestore → stores | `src/lib/services/firebase/listeners.ts`, инициализация в `App.svelte` |
-| **External APIs** | Погода, новости, радио, экспорт CSV | `src/lib/services/{weather,news,radio,export}.ts` |
-| **i18n** | Переводы EN/RU/AZ/IT | `src/lib/i18n/`, `src/locales/locale-*.json` |
-| **PWA** | Офлайн, установка, манифест, SW | `public/manifest.webmanifest`, `public/sw.js`, регистрация в `main.ts` |
+| Подсистема             | Назначение                                                       | Где искать                                                                                                                            |
+| ---------------------- | ---------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
+| **Auth**               | Вход/регистрация (email, Google), состояние пользователя         | `src/lib/services/firebase/auth.ts`, `src/lib/stores/userStore.ts`, `src/components/auth/`                                            |
+| **Finance**            | Расходы, долги, повторяющиеся расходы, категории, месяцы, валюта | `src/lib/stores/financeStore.ts`, `src/lib/services/firebase/{expenses,debts,recurring,categories}.ts`, табы Expenses/Debts/Recurring |
+| **Tasks**              | Дневные/месячные/годовые задачи, перенос (carry-over)            | `src/lib/stores/tasksStore.ts`, `src/lib/services/firebase/tasks.ts`, `src/lib/services/carryOver.ts`, таб Tasks                      |
+| **Calendar**           | События календаря (типы: event, birthday, meeting, wedding)      | `src/lib/stores/calendarStore.ts`, `src/lib/services/firebase/calendar.ts`, таб Calendar                                              |
+| **UI state**           | Активная вкладка, модалки, тема, язык, офлайн, сайдбар           | `src/lib/stores/uiStore.ts`, `src/components/layout/`, `src/components/modals/`                                                       |
+| **Firebase listeners** | Real-time подписки Firestore → stores                            | `src/lib/services/firebase/listeners.ts`, инициализация в `App.svelte`                                                                |
+| **External APIs**      | Погода, новости, радио, экспорт CSV                              | `src/lib/services/{weather,news,radio,export}.ts`                                                                                     |
+| **i18n**               | Переводы EN/RU/AZ/IT                                             | `src/lib/i18n/`, `src/locales/locale-*.json`                                                                                          |
+| **PWA**                | Офлайн, установка, манифест, SW                                  | `public/manifest.webmanifest`, `public/sw.js`, регистрация в `main.ts`                                                                |
 
 ---
 
@@ -54,6 +54,7 @@
 ## 5. Что AI может и не может менять
 
 **Можно:**
+
 - Исправлять баги в компонентах, stores, services, utils.
 - Добавлять типы в `src/lib/types/index.ts` при добавлении полей, согласованных с Firestore.
 - Добавлять ключи локализации в `src/locales/*.json` и использовать их.
@@ -61,6 +62,7 @@
 - Рефакторить код без изменения контрактов (сигнатуры store, сервисов, путей Firestore).
 
 **Нельзя без явного решения:**
+
 - Менять структуру коллекций/документов Firestore.
 - Менять список вкладок или идентификаторы модалок (риск поломать `uiStore` и навигацию).
 - Удалять или переименовывать stores или их основные поля.
@@ -71,48 +73,49 @@
 
 ## 6. Навигация по документации (все файлы в `/Documents`)
 
-| Документ | Содержание |
-|----------|------------|
-| **Skeleton.md** (этот файл) | Продукт, подсистемы, архитектура, правила, что можно/нельзя, навигация. |
-| **Product_Overview.md** | Описание продукта, фичи, целевая аудитория, границы продукта. |
-| **Product_Philosophy.md** | Принципы продукта, ценности, допущения. |
-| **User_Guide.md** | Как пользоваться: вход, вкладки, модалки, экспорт, офлайн, настройки. |
-| **UX_UI_Logic.md** | Логика интерфейса: вкладки, модалки, отзывчивость, темы, доступность. |
-| **Technical_Architecture.md** | Стек, структура папок, потоки данных, Firebase, сервисы, сборка. |
-| **Code_Standards.md** | Стиль кода, Svelte/TS практики, именование, тесты. |
-| **Quality_and_Maintenance.md** | Тесты (unit, e2e, visual, a11y), поддержка, исправление ошибок. |
-| **Security_and_Data.md** | Секреты, Firebase rules, персональные данные, офлайн-данные. |
-| **Roadmap.md** | Планы, допущения по будущему, приоритеты. |
+| Документ                       | Содержание                                                              |
+| ------------------------------ | ----------------------------------------------------------------------- |
+| **Skeleton.md** (этот файл)    | Продукт, подсистемы, архитектура, правила, что можно/нельзя, навигация. |
+| **Product_Overview.md**        | Описание продукта, фичи, целевая аудитория, границы продукта.           |
+| **Product_Philosophy.md**      | Принципы продукта, ценности, допущения.                                 |
+| **User_Guide.md**              | Как пользоваться: вход, вкладки, модалки, экспорт, офлайн, настройки.   |
+| **UX_UI_Logic.md**             | Логика интерфейса: вкладки, модалки, отзывчивость, темы, доступность.   |
+| **Technical_Architecture.md**  | Стек, структура папок, потоки данных, Firebase, сервисы, сборка.        |
+| **Code_Standards.md**          | Стиль кода, Svelte/TS практики, именование, тесты.                      |
+| **Quality_and_Maintenance.md** | Тесты (unit, e2e, visual, a11y), поддержка, исправление ошибок.         |
+| **Security_and_Data.md**       | Секреты, Firebase rules, персональные данные, офлайн-данные.            |
+| **Roadmap.md**                 | Планы, допущения по будущему, приоритеты.                               |
 
 ---
 
 ## 7. Навигация по проекту (файлы и папки)
 
-| Путь | Ответственность |
-|------|-----------------|
-| `index.html` | HTML-оболочка: `#svelte-root`, подключение `src/main.ts`; манифест, favicon, particles.js. |
-| `src/main.ts` | Точка входа: полифиллы, глобальный обработчик ошибок, a11y, i18n-валидация (dev), монтирование App, регистрация SW. |
-| `src/App.svelte` | Корень UI: auth state → AuthContainer или AppContainer; инициализация/отписка Firebase listeners, carry-over по месяцу/дню, PWA shortcuts. |
-| `src/components/auth/` | Экран входа/регистрации (AuthContainer). |
-| `src/components/layout/` | AppContainer, Header, Sidebar, MainContent. |
-| `src/components/tabs/` | DashboardTab, ExpensesTab, DebtsTab, RecurringExpensesTab, TasksTab, CalendarTab. |
-| `src/components/modals/` | ModalSystem + ModalBase, все модалки (expense, debt, debtPayment, recurring, category, dailyTask, monthlyTask, yearlyTask, calendarEvent, calculator, shoppingList, settings, profile). |
-| `src/components/dashboard/` | Виджеты: Clock, Weather, News, Radio, SummaryCards. |
-| `src/components/expenses/`, `debts/`, `recurring/`, `tasks/`, `calendar/` | Таблицы и секции по фичам (ExpensesTable, DebtsTable, RecurringExpensesTable, Daily/Monthly/YearlyTasksSection, CalendarGrid). |
-| `src/components/ui/` | MonthSelector, CurrencyToggle, ThemeToggle, LanguageSelector, VirtualList, EmptyState, ErrorBoundary, LoadingOverlay. |
-| `src/lib/stores/` | userStore, financeStore, tasksStore, calendarStore, uiStore. |
-| `src/lib/services/firebase/` | auth, expenses, debts, recurring, categories, tasks, calendar, listeners. |
-| `src/lib/services/` | carryOver, export, weather, news, radio (вне Firebase). |
-| `src/lib/types/index.ts` | Все интерфейсы и enum (Expense, Debt, Task, CalendarEvent, Store-типы и т.д.). |
-| `src/lib/i18n/` | Инициализация и валидация переводов. |
-| `src/lib/utils/` | formatting, validation, errorHandler, logger, accessibility, responsive, gestures, keyboard, performance, polyfills, themeValidator и др. |
-| `src/locales/` | locale-en.json, locale-ru.json, locale-az.json, locale-it.json. |
-| `src/styles/` | main.css, responsive, device-*, accessibility, dashboard-fixes, performance-optimizations. |
-| `src/lib/firebase.ts` | Инициализация Firebase App, Firestore, Auth (env: VITE_FIREBASE_*). |
-| `public/` | Статика: favicons, логотипы, скриншоты, manifest.webmanifest, sw.js. |
-| `tests/` | E2E (Playwright), визуальные и a11y-тесты; unit/интеграция — рядом с кодом (*.test.ts). |
-| `docs/` | Существующая техдокументация (ARCHITECTURE, COMPONENTS, PROGRESS и т.д.); не заменяет `/Documents`. |
-| `vite.config.ts`, `svelte.config.js`, `tailwind.config.js` | Сборка, алиасы, chunking, Tailwind. |
+| Путь                                                                      | Ответственность                                                                                                                                                                         |
+| ------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `index.html`                                                              | HTML-оболочка: `#svelte-root`, подключение `src/main.ts`; манифест, favicon, particles.js.                                                                                              |
+| `src/main.ts`                                                             | Точка входа: полифиллы, глобальный обработчик ошибок, a11y, i18n-валидация (dev), монтирование App, регистрация SW.                                                                     |
+| `src/App.svelte`                                                          | Корень UI: auth state → AuthContainer или AppContainer; инициализация/отписка Firebase listeners, carry-over по месяцу/дню, PWA shortcuts.                                              |
+| `src/components/auth/`                                                    | Экран входа/регистрации (AuthContainer).                                                                                                                                                |
+| `src/components/layout/`                                                  | AppContainer, Header, Footer, Sidebar, MainContent.                                                                                                                                     |
+| `src/components/layout/mobile/`                                           | Мобильная версия: MobileLayout, MobileHeader, MobileBottomNav, MobileSheet.                                                                                                             |
+| `src/components/tabs/`                                                    | DashboardTab, ExpensesTab, DebtsTab, RecurringExpensesTab, TasksTab, CalendarTab.                                                                                                       |
+| `src/components/modals/`                                                  | ModalSystem + ModalBase, все модалки (expense, debt, debtPayment, recurring, category, dailyTask, monthlyTask, yearlyTask, calendarEvent, calculator, shoppingList, settings, profile). |
+| `src/components/dashboard/`                                               | Виджеты: Clock, Weather, News, Radio, SummaryCards.                                                                                                                                     |
+| `src/components/expenses/`, `debts/`, `recurring/`, `tasks/`, `calendar/` | Таблицы и секции по фичам (ExpensesTable, DebtsTable, RecurringExpensesTable, Daily/Monthly/YearlyTasksSection, CalendarGrid).                                                          |
+| `src/components/ui/`                                                      | MonthSelector, CurrencyToggle, ThemeToggle, LanguageSelector, VirtualList, EmptyState, ErrorBoundary, LoadingOverlay.                                                                   |
+| `src/lib/stores/`                                                         | userStore, financeStore, tasksStore, calendarStore, uiStore, mobileStore, radioStore, clockStore, weatherStore.                                                                         |
+| `src/lib/services/firebase/`                                              | auth, expenses, debts, recurring, categories, tasks, calendar, listeners.                                                                                                               |
+| `src/lib/services/`                                                       | carryOver, export, weather, news, radio (вне Firebase).                                                                                                                                 |
+| `src/lib/types/index.ts`                                                  | Все интерфейсы и enum (Expense, Debt, Task, CalendarEvent, Store-типы и т.д.).                                                                                                          |
+| `src/lib/i18n/`                                                           | Инициализация и валидация переводов.                                                                                                                                                    |
+| `src/lib/utils/`                                                          | formatting, validation, errorHandler, logger, accessibility, responsive, gestures, keyboard, performance, polyfills, themeValidator и др.                                               |
+| `src/locales/`                                                            | locale-en.json, locale-ru.json, locale-az.json, locale-it.json.                                                                                                                         |
+| `src/styles/`                                                             | main.css, responsive, device-\*, accessibility, dashboard-fixes, performance-optimizations.                                                                                             |
+| `src/lib/firebase.ts`                                                     | Инициализация Firebase App, Firestore, Auth (env: VITE*FIREBASE*\*).                                                                                                                    |
+| `public/`                                                                 | Статика: favicons, логотипы, скриншоты, manifest.webmanifest, sw.js.                                                                                                                    |
+| `tests/`                                                                  | E2E (Playwright), визуальные и a11y-тесты; unit/интеграция — рядом с кодом (\*.test.ts).                                                                                                |
+| `docs/`                                                                   | Существующая техдокументация (ARCHITECTURE, COMPONENTS, PROGRESS и т.д.); не заменяет `/Documents`.                                                                                     |
+| `vite.config.ts`, `svelte.config.js`, `tailwind.config.js`                | Сборка, алиасы, chunking, Tailwind.                                                                                                                                                     |
 
 ---
 
@@ -122,15 +125,15 @@
 - **Ошибка отображения/вкладки/модалки:** `Documents/UX_UI_Logic.md`, `docs/COMPONENTS.md`, соответствующий компонент в `src/components/`.
 - **Ошибка аутентификации:** `src/lib/services/firebase/auth.ts`, `userStore`, `Documents/Security_and_Data.md`.
 - **Ошибка сборки/деплоя:** `vite.config.ts`, `Documents/Technical_Architecture.md`, base path и SW путь в `main.ts`.
-- **Ошибка теста:** `Documents/Quality_and_Maintenance.md`, `tests/e2e/README.md`, соответствующий *.spec.ts или *.test.ts.
+- **Ошибка теста:** `Documents/Quality_and_Maintenance.md`, `tests/e2e/README.md`, соответствующий _.spec.ts или _.test.ts.
 - **Что можно править без риска сломать контракты:** `Documents/Code_Standards.md`, раздел «Что AI может менять» выше.
 
 ---
 
 ## 9. Допущения при нехватке информации
 
-При отсутствии информации в коде или в других документах делать разумные допущения и **явно помечать их** (в комментарии в коде или в соответствующем документе в `/Documents`). Пример: «*Допущение: правила Firestore настраиваются в консоли Firebase; в репозитории не хранятся.*»
+При отсутствии информации в коде или в других документах делать разумные допущения и **явно помечать их** (в комментарии в коде или в соответствующем документе в `/Documents`). Пример: «_Допущение: правила Firestore настраиваются в консоли Firebase; в репозитории не хранятся._»
 
 ---
 
-*Документ создан как единая точка входа для AI. Обновлять при изменении структуры продукта или правил.*
+_Документ создан как единая точка входа для AI. Обновлять при изменении структуры продукта или правил._

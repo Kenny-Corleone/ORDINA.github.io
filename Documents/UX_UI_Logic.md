@@ -11,14 +11,14 @@
 
 Идентификаторы вкладок задаются в `uiStore` и Sidebar; отображение контента — в `MainContent.svelte` по `activeTab`:
 
-| Tab ID | Компонент | Содержимое |
-|--------|-----------|------------|
-| dashboard | DashboardTab | SummaryCards, ClockWidget, WeatherWidget, NewsWidget, RadioWidget |
-| expenses | ExpensesTab | MonthSelector, CurrencyToggle, ExpensesTable |
-| debts | DebtsTab | DebtsTable |
-| recurring | RecurringExpensesTab | RecurringExpensesTable (и при необходимости MonthSelector) |
-| tasks | TasksTab | DailyTasksSection, MonthlyTasksSection, YearlyTasksSection (дата/месяц из stores) |
-| calendar | CalendarTab | CalendarGrid |
+| Tab ID    | Компонент            | Содержимое                                                                        |
+| --------- | -------------------- | --------------------------------------------------------------------------------- |
+| dashboard | DashboardTab         | SummaryCards, ClockWidget, WeatherWidget, NewsWidget, RadioWidget                 |
+| expenses  | ExpensesTab          | MonthSelector, CurrencyToggle, ExpensesTable                                      |
+| debts     | DebtsTab             | DebtsTable                                                                        |
+| recurring | RecurringExpensesTab | RecurringExpensesTable (и при необходимости MonthSelector)                        |
+| tasks     | TasksTab             | DailyTasksSection, MonthlyTasksSection, YearlyTasksSection (дата/месяц из stores) |
+| calendar  | CalendarTab          | CalendarGrid                                                                      |
 
 Переключение вкладки — только через `uiStore.setActiveTab(id)`. На мобильных сайдбар может сворачиваться; состояние — `uiStore.isMobileSidebarOpen`.
 
@@ -26,11 +26,11 @@
 
 Список модалок и их идентификаторы в `ModalSystem.svelte` и `uiStore.openModal(id)`:
 
-- expense, debt, debtPayment, recurring, category  
-- dailyTask, monthlyTask, yearlyTask  
-- calendarEvent или calendar-event (оба принимаются)  
-- calculator, shoppingList  
-- settings, profile  
+- expense, debt, debtPayment, recurring, category
+- dailyTask, monthlyTask, yearlyTask
+- calendarEvent или calendar-event (оба принимаются)
+- calculator, shoppingList
+- settings, profile
 
 Открытие: вызов `uiStore.openModal('expense')`, `uiStore.openModal('recurring')` и т.д. Закрытие: `uiStore.closeModal()` (в коде используется именно он; эквивалентно `openModal(null)`). Модалка получает контекст через `uiStore.modalData` и пропсы (например, editId, debtId). Одна модалка активна в момент времени; закрытие по клику вне или по кнопке «Закрыть» вызывает `closeModal()`.
 
@@ -38,6 +38,23 @@
 
 - Breakpoints и стили устройств заданы в `src/styles/` (device-mobile, device-tablet, device-desktop, responsive.css). Инициализация responsive-системы — в `App.svelte` через `initResponsiveSystem()` из `src/lib/utils/responsive.ts`.
 - На мобильных сайдбар скрывается/показывается; таблицы и списки могут менять раскладку. VirtualList используется для длинных списков (производительность).
+
+## Мобильная версия
+
+На мобильных устройствах используется отдельный набор layout-компонентов из `src/components/layout/mobile/`:
+
+| Компонент                  | Назначение                                                                       |
+| -------------------------- | -------------------------------------------------------------------------------- |
+| **MobileLayout.svelte**    | Корневой wrapper для мобильной версии; управляет общей структурой и состоянием.  |
+| **MobileHeader.svelte**    | Компактный хедер с временем, датой и информацией о текущем треке радио.          |
+| **MobileBottomNav.svelte** | Нижняя навигационная панель для переключения между табами (заменяет Sidebar).    |
+| **MobileSheet.svelte**     | Bottom sheet для модальных взаимодействий; поддерживает анимации и жесты свайпа. |
+
+Состояние мобильной версии управляется через `mobileStore`:
+
+- `isMobile` — флаг мобильного устройства
+- `activeSheet` — текущий открытый sheet
+- `sheetData` — данные для sheet
 
 ## Темы и язык
 
