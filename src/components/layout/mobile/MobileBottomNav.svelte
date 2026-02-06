@@ -139,8 +139,8 @@
   }
 
   .nav-label {
-    font-size: 0.625rem;
-    font-weight: 500;
+    font-size: 0.55rem; /* Reduced to prevent overlap */
+    font-weight: 600;
     text-transform: capitalize;
     white-space: nowrap;
     overflow: hidden;

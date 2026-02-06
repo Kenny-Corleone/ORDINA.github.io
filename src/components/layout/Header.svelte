@@ -102,8 +102,8 @@
     3. Right: Radio + Actions (Theme | Lang | Curr | Logout)
   -->
   <div class="header-main-row">
-    <!-- SECTION 1: BRANDING (Left) -->
-    <div class="header-section section-left">
+    <!-- Left Group -->
+    <div class="brand-group">
       <button
         type="button"
         on:click={() => location.reload()}
@@ -381,9 +381,16 @@
 
   /* --- ELEMENT SIZES & TYPOGRAPHY SYSTEM --- */
 
-  /* 1. Brand Elements */
+  /* 1. Brand Group */
+  .brand-group {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex: 1;
+  }
+
   .logo-img {
-    height: 26px; /* Reduced to balance */
+    height: 20px; /* Reduced further to be compact */
     width: auto;
     object-fit: contain;
     position: relative;
@@ -407,10 +414,10 @@
   }
 
   .header-motto {
-    font-size: 0.85rem;
-    font-weight: 500;
+    font-size: 0.95rem; /* Increased */
+    font-weight: 600;
     color: #475569; /* Slate-600 */
-    letter-spacing: 0;
+    letter-spacing: -0.01em;
     white-space: nowrap; /* Keep on one line as requested */
     overflow: visible;
     /* Removed max-width to fill available space */
