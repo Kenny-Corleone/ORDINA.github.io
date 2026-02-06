@@ -169,7 +169,7 @@ function getRSSSourcesForLanguage(lang: string, category: NewsCategory = 'all'):
   return Array.isArray(catSources) ? catSources : [];
 }
 
-function fetchWithTimeout(url: string, timeoutMs: number = 5000): Promise<Response> {
+function fetchWithTimeout(url: string, timeoutMs: number = 8000): Promise<Response> {
   const controller = new AbortController();
   const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
   return fetch(url, { signal: controller.signal, cache: 'no-cache', mode: 'cors' }).finally(() =>
@@ -208,7 +208,7 @@ function cleanImageUrl(raw: string): string {
 /**
  * Parse one RSS feed URL via CORS proxies with retries. Returns articles or [].
  */
-async function parseRSSFeed(url: string, retries: number = 1): Promise<NewsArticle[]> {
+async function parseRSSFeed(url: string, retries: number = 2): Promise<NewsArticle[]> {
   let lastError: Error | null = null;
   const sourceName = (() => {
     try {
@@ -233,7 +233,7 @@ async function parseRSSFeed(url: string, retries: number = 1): Promise<NewsArtic
            targetUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(url)}&_t=${Date.now()}`;
         }
 
-        const res = await fetchWithTimeout(targetUrl, 5000);
+        const res = await fetchWithTimeout(targetUrl, 8000);
         
         // Blacklist proxy if it's overloaded or rate-limited
         if (res.status === 429 || res.status === 502 || res.status === 500) {
@@ -316,7 +316,7 @@ async function parseRSSFeed(url: string, retries: number = 1): Promise<NewsArtic
         if (articles.length) return articles;
       } catch (e) {
         lastError = e instanceof Error ? e : new Error(String(e));
-        await new Promise((r) => setTimeout(r, 100));
+        await new Promise((r) => setTimeout(r, 200));
       }
     }
   }
@@ -367,8 +367,8 @@ export async function fetchNews(
       ? category
       : 'all';
 
-    // Reduce urls count to avoid hitting rate limits too fast (max 5 sources)
-    let urls = getRSSSourcesForLanguage(safeLang, safeCat).slice(0, 5);
+    // Reduce urls count to avoid hitting rate limits too fast (max 3 sources for reliability)
+    let urls = getRSSSourcesForLanguage(safeLang, safeCat).slice(0, 3);
     const promises = urls.map((u) => parseRSSFeed(u, 1));
     const results = await Promise.allSettled(promises);
 
