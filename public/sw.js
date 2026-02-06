@@ -52,7 +52,6 @@ self.addEventListener('fetch', (event) => {
     'stream.zeno.fm',
     'api.allorigins.win',
     'corsproxy.io',
-    'thingproxy.freeboard.io',
     'api.codetabs.com',
     'proxy.cors.sh',
     'www.bfb.az',
@@ -60,13 +59,7 @@ self.addEventListener('fetch', (event) => {
   ]);
   
   if (noCacheHosts.has(url.hostname)) {
-    event.respondWith(
-      fetch(req).catch(err => {
-        console.warn('SW fetch failed for proxy host:', url.hostname, err);
-        return new Response('Network error', { status: 408 });
-      })
-    );
-    return;
+    return; // Pass through to network without interception
   }
   
   // Cache-first strategy for static assets

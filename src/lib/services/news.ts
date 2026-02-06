@@ -128,9 +128,9 @@ const CACHE_EXPIRY_MS = 30 * 60 * 1000; // 30 minutes
 const CORS_PROXIES = [
   // 1. Direct fetch (always try first)
   (url: string) => url,
-  // 2. AllOrigins (Raw mode - most reliable for XML/RSS)
+  // 2. AllOrigins (Raw mode - best for XML)
   (url: string) => `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`,
-  // 3. AllOrigins (JSON mode - fallback for difficult feeds)
+  // 3. AllOrigins (JSON mode - robust fallback)
   (url: string) => `https://api.allorigins.win/get?url=${encodeURIComponent(url)}`,
   // 4. CORSProxy.io
   (url: string) => `https://corsproxy.io/?${encodeURIComponent(url)}`,
@@ -206,13 +206,21 @@ async function parseRSSFeed(url: string, retries: number = 2): Promise<NewsArtic
     for (let attempt = 0; attempt < retries; attempt++) {
       try {
         const proxyUrl = proxyFn(url);
-        const res = await fetchWithTimeout(proxyUrl, 10000);
+        // Force the use of AllOrigins GET for tricky Russian news sites
+        const isTrickySite = url.includes('iz.ru') || url.includes('ria.ru') || url.includes('tass.ru') || url.includes('kommersant.ru');
+        
+        let targetUrl = proxyUrl;
+        if (isTrickySite && !proxyUrl.includes('allorigins.win/get') && attempt > 0) {
+           targetUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(url)}&_t=${Date.now()}`;
+        }
+
+        const res = await fetchWithTimeout(targetUrl, 12000);
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         
         let raw: string;
         const contentType = (res.headers.get('content-type') || '').toLowerCase();
         
-        if (proxyUrl.includes('api.allorigins.win/get') || contentType.includes('application/json')) {
+        if (targetUrl.includes('api.allorigins.win/get') || contentType.includes('application/json')) {
           const json = await res.json();
           // AllOrigins puts XML in 'contents'
           raw = typeof json.contents === 'string' ? json.contents : JSON.stringify(json);
