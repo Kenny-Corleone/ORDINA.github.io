@@ -33,10 +33,10 @@ export const LOCAL_SYMBOLS: Record<string, string[]> = {
 export const DEFAULT_SYMBOLS = STOCK_CATEGORIES.CURRENCIES;
 
 const STOCKS_PROXIES = [
-  (url: string) => `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}&_t=${Date.now()}`,
-  (url: string) => `https://api.allorigins.win/get?url=${encodeURIComponent(url)}&_t=${Date.now()}`,
   (url: string) => `https://corsproxy.io/?${encodeURIComponent(url)}`,
   (url: string) => `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(url)}`,
+  (url: string) => `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}&_t=${Date.now()}`,
+  (url: string) => `https://api.allorigins.win/get?url=${encodeURIComponent(url)}&_t=${Date.now()}`,
 ];
 
 /**

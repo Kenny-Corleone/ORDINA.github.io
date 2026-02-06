@@ -126,18 +126,18 @@ export const CACHE_KEY = 'cached_news';
 const CACHE_EXPIRY_MS = 30 * 60 * 1000; // 30 minutes
 
 const CORS_PROXIES = [
-  // 1. AllOrigins (Raw mode - best for XML)
-  (url: string) => `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`,
-  // 2. AllOrigins (JSON mode - robust fallback)
-  (url: string) => `https://api.allorigins.win/get?url=${encodeURIComponent(url)}`,
-  // 3. CORSProxy.io
+  // 1. CORSProxy.io (fast and reliable for most content)
   (url: string) => `https://corsproxy.io/?${encodeURIComponent(url)}`,
-  // 4. CodeTabs
+  // 2. CodeTabs (good for RSS/XML)
   (url: string) => `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(url)}`,
+  // 3. AllOrigins Raw (use sparingly due to rate limits)
+  (url: string) => `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`,
+  // 4. AllOrigins JSON (fallback for tricky sites)
+  (url: string) => `https://api.allorigins.win/get?url=${encodeURIComponent(url)}`,
 ];
 
-// Proxy health tracking to avoid 429/403 spam
-const PROXY_COOLDOWN_MS = 3 * 60 * 1000; // 3 minutes
+// Proxy health tracking to avoid 429/403/502/500 spam
+const PROXY_COOLDOWN_MS = 5 * 60 * 1000; // 5 minutes (increased from 3)
 const blacklistedProxies = new Map<number, number>(); // index -> timestamp
 
 function getAvailableProxies() {
@@ -235,9 +235,10 @@ async function parseRSSFeed(url: string, retries: number = 1): Promise<NewsArtic
 
         const res = await fetchWithTimeout(targetUrl, 5000);
         
-        if (res.status === 429) {
+        // Blacklist proxy if it's overloaded or rate-limited
+        if (res.status === 429 || res.status === 502 || res.status === 500) {
           blacklistProxy(proxyFn);
-          throw new Error('429 Too Many Requests');
+          throw new Error(`Proxy overloaded: ${res.status}`);
         }
         
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
