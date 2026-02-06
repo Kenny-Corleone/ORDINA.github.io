@@ -118,41 +118,6 @@
         <div class="card-label">{t($translations, 'dashTasksYear')}</div>
       </div>
     </div>
-
-    <!-- Tasks Preview (Wide) -->
-    <div
-      id="dashboard-tasks-panel-top"
-      class="summary-card glass-panel wide-card cursor-pointer hover-glow"
-      role="button"
-      tabindex="0"
-      on:click={() => uiStore.setActiveTab('tasks')}
-      on:keydown={(e) => e.key === 'Enter' && uiStore.setActiveTab('tasks')}
-    >
-      <div class="card-header">
-        <div class="card-label">{t($translations, 'tabTasks')}</div>
-        <svg
-          class="arrow-icon"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2"
-        >
-          <path d="M5 12h14M12 5l7 7-7 7" />
-        </svg>
-      </div>
-      <div class="tasks-list">
-        {#if tasksPreview.length === 0}
-          <div class="empty-msg">No pending tasks</div>
-        {:else}
-          {#each tasksPreview as task}
-            <div class="task-item">
-              <span class="dot"></span>
-              <span class="task-name">{task.name}</span>
-            </div>
-          {/each}
-        {/if}
-      </div>
-    </div>
   </div>
 </div>
 
@@ -184,13 +149,13 @@
     }
   }
 
-  /* Task specific grid - mixed sizes */
+  /* Task specific grid - 2 cards */
   .tasks-grid {
     grid-template-columns: repeat(2, 1fr);
   }
   @media (min-width: 1024px) {
     .tasks-grid {
-      grid-template-columns: 1fr 1fr 2fr; /* 2 small, 1 wide */
+      grid-template-columns: repeat(4, 1fr); /* Align with top row boxes */
     }
   }
 
@@ -302,69 +267,9 @@
     line-height: 1;
   }
 
-  /* Wide Card for Tasks */
-  .wide-card {
-    grid-column: span 2;
-    flex-direction: column;
-    align-items: flex-start;
-    padding: 1rem 1.25rem;
-  }
-
-  @media (max-width: 640px) {
-    .wide-card {
-      grid-column: span 1;
-    }
-  }
-
-  .card-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    width: 100%;
-    margin-bottom: 0.75rem;
-  }
-
-  .arrow-icon {
-    width: 16px;
-    height: 16px;
-    opacity: 0;
-    transform: translateX(-5px);
-    transition: all 0.2s;
-  }
-
-  .wide-card:hover .arrow-icon {
-    opacity: 1;
-    transform: translateX(0);
-  }
-
-  .tasks-list {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-    width: 100%;
-  }
-
-  .task-item {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    font-size: 0.85rem;
-    color: #334155;
-  }
-  :global(.dark) .task-item {
-    color: #e2e8f0;
-  }
-
-  .dot {
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background: #3b82f6;
-  }
-
-  .task-name {
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+  .card-value-large {
+    font-size: 2rem;
+    font-weight: 800;
+    line-height: 1;
   }
 </style>

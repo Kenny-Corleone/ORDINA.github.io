@@ -8,6 +8,7 @@
   import SummaryCards from '../dashboard/SummaryCards.svelte';
   import NewsWidget from '../dashboard/NewsWidget.svelte';
   import StocksWidget from '../dashboard/StocksWidget.svelte';
+  import TasksPreview from '../dashboard/TasksPreview.svelte';
   import type { SvelteComponentTyped } from 'svelte';
 
   // Subscribe to stores
@@ -256,6 +257,7 @@
 <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-4 items-stretch mt-0">
   <!-- Left column: chart + quick actions + recent expenses -->
   <div class="space-y-4 flex flex-col" id="dashboard-left-column" bind:this={leftColumnEl}>
+    <TasksPreview />
     <div id="expense-chart-container" class="premium-card p-4 flex flex-col">
       <div class="flex items-center justify-between mb-3">
         <h3 class="text-lg font-semibold" style="color: var(--text-primary);">

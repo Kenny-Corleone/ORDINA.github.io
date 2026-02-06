@@ -388,8 +388,9 @@
   }
 
   .logo-img {
-    height: 16px; /* Even smaller */
+    height: 28px;
     width: auto;
+    max-width: 120px;
     object-fit: contain;
     position: relative;
     top: 0;
