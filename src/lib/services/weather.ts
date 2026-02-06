@@ -28,7 +28,7 @@ export interface WeatherIconMap {
 // CONFIGURATION
 // ============================================================================
 
-const OPENWEATHER_API_KEY = import.meta.env.VITE_OPENWEATHER_API_KEY;
+const OPENWEATHER_API_KEY = "91b705287b193e8debf755a8ff4cb0c7";
 const DEFAULT_CITY = 'Baku';
 
 if (!OPENWEATHER_API_KEY && import.meta.env.DEV) {
