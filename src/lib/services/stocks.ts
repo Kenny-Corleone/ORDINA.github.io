@@ -34,24 +34,33 @@ export const DEFAULT_SYMBOLS = STOCK_CATEGORIES.CURRENCIES;
 
 const STOCKS_PROXIES = [
   (url: string) => `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}&_t=${Date.now()}`,
-  (url: string) => `https://corsproxy.io/?${encodeURIComponent(url)}`,
   (url: string) => `https://api.allorigins.win/get?url=${encodeURIComponent(url)}&_t=${Date.now()}`,
+  (url: string) => `https://corsproxy.io/?${encodeURIComponent(url)}`,
   (url: string) => `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(url)}`,
 ];
+
+/**
+ * Fetch with timeout to avoid hanging requests
+ */
+function fetchWithTimeout(url: string, timeoutMs: number = 4000): Promise<Response> {
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
+  return fetch(url, { signal: controller.signal }).finally(() => clearTimeout(timeoutId));
+}
 
 /**
  * BFB.az Scraper for Azerbaijan Market Data
  */
 async function fetchBFB(ticker: string): Promise<StockQuote | null> {
-  // Shuffle proxies
-  const shuffledProxies = [...STOCKS_PROXIES].sort(() => Math.random() - 0.5);
+  // Try only first 2 proxies for speed
+  const proxiesToTry = STOCKS_PROXIES.slice(0, 2);
   
-  for (const proxyFn of shuffledProxies) {
+  for (const proxyFn of proxiesToTry) {
     try {
       const bfbUrl = 'https://www.bfb.az/en/market-watch';
       const targetUrl = proxyFn(bfbUrl);
       
-      const res = await fetch(targetUrl);
+      const res = await fetchWithTimeout(targetUrl, 4000);
       if (!res.ok) continue;
       
       let html = '';
@@ -95,7 +104,6 @@ async function fetchBFB(ticker: string): Promise<StockQuote | null> {
         }
       }
     } catch (e) {
-      lastError = e;
       continue;
     }
   }
@@ -106,14 +114,15 @@ async function fetchBFB(ticker: string): Promise<StockQuote | null> {
  * Trading Economics Scraper for Energy, Metals, Agricultural
  */
 async function fetchTradingEconomics(ticker: string): Promise<StockQuote | null> {
-  const shuffledProxies = [...STOCKS_PROXIES].sort(() => Math.random() - 0.5);
+  // Try only first 2 proxies for speed
+  const proxiesToTry = STOCKS_PROXIES.slice(0, 2);
 
-  for (const proxyFn of shuffledProxies) {
+  for (const proxyFn of proxiesToTry) {
     try {
       const teUrl = 'https://tradingeconomics.com/commodities';
       const targetUrl = proxyFn(teUrl);
 
-      const res = await fetch(targetUrl);
+      const res = await fetchWithTimeout(targetUrl, 4000);
       if (!res.ok) continue;
       
       let html = '';

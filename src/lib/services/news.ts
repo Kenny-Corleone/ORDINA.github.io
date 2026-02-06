@@ -169,7 +169,7 @@ function getRSSSourcesForLanguage(lang: string, category: NewsCategory = 'all'):
   return Array.isArray(catSources) ? catSources : [];
 }
 
-function fetchWithTimeout(url: string, timeoutMs: number = 12000): Promise<Response> {
+function fetchWithTimeout(url: string, timeoutMs: number = 5000): Promise<Response> {
   const controller = new AbortController();
   const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
   return fetch(url, { signal: controller.signal, cache: 'no-cache', mode: 'cors' }).finally(() =>
@@ -208,7 +208,7 @@ function cleanImageUrl(raw: string): string {
 /**
  * Parse one RSS feed URL via CORS proxies with retries. Returns articles or [].
  */
-async function parseRSSFeed(url: string, retries: number = 2): Promise<NewsArticle[]> {
+async function parseRSSFeed(url: string, retries: number = 1): Promise<NewsArticle[]> {
   let lastError: Error | null = null;
   const sourceName = (() => {
     try {
@@ -218,12 +218,10 @@ async function parseRSSFeed(url: string, retries: number = 2): Promise<NewsArtic
     }
   })();
 
-  // Use only available proxies (not in cooldown)
-  const shuffledProxies = getAvailableProxies().sort(() => Math.random() - 0.5);
-  // Add direct fetch as a last resort or first try if it's healthy
-  shuffledProxies.unshift((u: string) => u);
-
-  for (const proxyFn of shuffledProxies) {
+  // Use only available proxies (not in cooldown) - fastest first
+  const availableProxies = getAvailableProxies();
+  
+  for (const proxyFn of availableProxies) {
     for (let attempt = 0; attempt < retries; attempt++) {
       try {
         const proxyUrl = proxyFn(url);
@@ -235,7 +233,7 @@ async function parseRSSFeed(url: string, retries: number = 2): Promise<NewsArtic
            targetUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(url)}&_t=${Date.now()}`;
         }
 
-        const res = await fetchWithTimeout(targetUrl, 12000);
+        const res = await fetchWithTimeout(targetUrl, 5000);
         
         if (res.status === 429) {
           blacklistProxy(proxyFn);
@@ -317,7 +315,7 @@ async function parseRSSFeed(url: string, retries: number = 2): Promise<NewsArtic
         if (articles.length) return articles;
       } catch (e) {
         lastError = e instanceof Error ? e : new Error(String(e));
-        await new Promise((r) => setTimeout(r, 300));
+        await new Promise((r) => setTimeout(r, 100));
       }
     }
   }
