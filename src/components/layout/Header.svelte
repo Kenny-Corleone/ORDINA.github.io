@@ -749,7 +749,7 @@
       --header-main-row-padding-x: 1.5rem;
       --header-main-row-height: 72px;
     }
-    .header-logo-img {
+    .logo-img {
       --header-logo-height: 50px;
     }
     .header-divider {
