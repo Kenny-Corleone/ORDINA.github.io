@@ -81,6 +81,17 @@
   function toggleRadio() {
     radioStore.toggle();
   }
+
+  // Weather Animation Helper
+  function getAnimClass(icon: string) {
+    if (!icon) return '';
+    if (icon === '01d' || icon === '01n') return 'anim-spin-slow';
+    if (icon.includes('02') || icon.includes('03') || icon.includes('04') || icon.includes('50'))
+      return 'anim-float';
+    if (icon.includes('09') || icon.includes('10') || icon.includes('11')) return 'anim-rain';
+    if (icon.includes('13')) return 'anim-shake';
+    return 'anim-pulse';
+  }
 </script>
 
 <header id="fixed-header" class="premium-card fixed-header-override">
@@ -144,7 +155,7 @@
         {:else if weather.loading}
           <div class="widget-loader"></div>
         {:else}
-          <div class="weather-icon fade-in">
+          <div class="weather-icon fade-in {getAnimClass(weather.icon)}">
             <svg viewBox="0 0 24 24">
               {@html weatherIcons[weather.icon] || weatherIcons['01d']}
             </svg>
@@ -372,7 +383,7 @@
 
   /* 1. Brand Elements */
   .logo-img {
-    height: 20px; /* Extremely compact */
+    height: 34px; /* INCREASED from 20px */
     width: auto;
     object-fit: contain;
     position: relative;
@@ -442,6 +453,62 @@
     height: clamp(18px, 2.6vw, 24px);
     color: #3b82f6;
   } /* Blue-500 accent */
+  /* Animations for Weather */
+  .anim-spin-slow {
+    animation: spin 8s linear infinite;
+    transform-origin: center;
+  }
+  .anim-float {
+    animation: float 4s ease-in-out infinite;
+  }
+  .anim-rain {
+    animation: shake 2s ease-in-out infinite;
+  }
+  .anim-shake {
+    animation: shake 1s ease-in-out infinite;
+  }
+  .anim-pulse {
+    animation: pulse 3s infinite;
+  }
+
+  @keyframes spin {
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+  @keyframes float {
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-4px);
+    }
+  }
+  @keyframes shake {
+    0%,
+    100% {
+      transform: translateX(0);
+    }
+    25% {
+      transform: translateX(-2px);
+    }
+    75% {
+      transform: translateX(2px);
+    }
+  }
+  @keyframes pulse {
+    0%,
+    100% {
+      opacity: 1;
+      transform: scale(1);
+    }
+    50% {
+      opacity: 0.8;
+      transform: scale(0.95);
+    }
+  }
+
   :global(.dark) .weather-icon svg {
     color: #60a5fa;
   }

@@ -140,9 +140,10 @@
   }
 
   .mobile-logo-mini {
-    height: 20px;
+    height: 38px; /* Increased from 20px - visually much larger */
     width: auto;
     object-fit: contain;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
   }
 
   /* Motto (Left) */
@@ -151,7 +152,7 @@
     font-weight: 600;
     color: #64748b;
     line-height: normal;
-    max-width: 30vw; /* Reduced to fit logo */
+    max-width: 40vw; /* Increased width */
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -262,7 +263,7 @@
       transform: translateY(0);
     }
     50% {
-      transform: translateY(-3px);
+      transform: translateY(-5px);
     }
   }
   @keyframes shakeIcon {

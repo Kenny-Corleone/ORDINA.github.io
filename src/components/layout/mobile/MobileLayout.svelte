@@ -167,7 +167,7 @@
     position: relative;
     z-index: 1;
     /* Account for header (dynamic with player) and bottom nav */
-    padding-top: calc(var(--mobile-header-height, 56px) + var(--player-offset, 0px));
+    padding-top: calc(var(--mobile-header-height, 62px) + var(--player-offset, 0px));
     padding-bottom: calc(var(--mobile-bottom-nav-height, 64px) + env(safe-area-inset-bottom, 0px));
     padding-left: 0.75rem;
     padding-right: 0.75rem;
