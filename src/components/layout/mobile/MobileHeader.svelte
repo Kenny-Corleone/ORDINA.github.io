@@ -42,27 +42,37 @@
 
     <!-- Center: Time + Weather -->
     <div class="mobile-center-group">
-      <!-- Time -->
-      <div class="mobile-time">
-        <span class="time-value">{hours}:{minutes}</span>
-        <span class="date-value">{day}.{month}</span>
-      </div>
-
-      <!-- Weather Chip (compact) -->
-      <div class="mobile-weather-chip" title={weather.city}>
-        {#if isOffline}
-          <span class="offline-dot"></span>
-        {:else if weather.loading}
-          <div class="weather-loader"></div>
-        {:else}
-          <div class="weather-icon-mini">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              {@html weatherIcons[weather.icon] || weatherIcons['01d']}
-            </svg>
+      {#if radio.isPlaying && radio.trackTitle}
+        <div class="mobile-track-container">
+          <span class="track-icon-pulse">🎵</span>
+          <div class="track-marquee-wrapper">
+            <span class="track-marquee-text">{radio.trackTitle}</span>
           </div>
-          <span class="weather-temp-mini">{Math.round(weather.temp)}°</span>
-        {/if}
-      </div>
+        </div>
+      {:else}
+        <!-- Time -->
+        <div class="mobile-time">
+          <span class="time-value">{hours}:{minutes}</span>
+          <span class="date-value">{day}.{month}</span>
+        </div>
+
+        <!-- Weather Chip (compact) -->
+        <div class="mobile-weather-chip" title={weather.city}>
+          {#if isOffline}
+            <span class="offline-dot"></span>
+          {:else if weather.loading}
+            <div class="weather-loader"></div>
+          {:else}
+            <div class="weather-icon-mini">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                {@html weatherIcons[weather.icon] || weatherIcons['01d']}
+              </svg>
+            </div>
+            <span class="weather-temp-mini">{Math.round(weather.temp)}°</span>
+            <span class="weather-city-mini">{weather.city}</span>
+          {/if}
+        </div>
+      {/if}
     </div>
 
     <!-- Radio Button -->
@@ -87,12 +97,6 @@
   </div>
 
   <!-- Playing track info (shown when radio is playing) -->
-  {#if radio.isPlaying && radio.trackTitle}
-    <div class="mobile-radio-track">
-      <span class="track-label">🎵</span>
-      <span class="track-title">{radio.trackTitle}</span>
-    </div>
-  {/if}
 </header>
 
 <style>
@@ -216,6 +220,19 @@
     color: #e2e8f0;
   }
 
+  .weather-city-mini {
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: #64748b;
+    max-width: 80px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  :global(.dark) .weather-city-mini {
+    color: #94a3b8;
+  }
+
   .offline-dot {
     width: 6px;
     height: 6px;
@@ -312,48 +329,59 @@
     }
   }
 
-  /* Radio Track Info */
-  .mobile-radio-track {
+  /* Radio Track Info (Center Header) */
+  .mobile-track-container {
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    padding: 0.375rem 0.75rem;
-    background: rgba(79, 70, 229, 0.1);
-    border-top: 1px solid rgba(79, 70, 229, 0.1);
     overflow: hidden;
-  }
-
-  :global(.dark) .mobile-radio-track {
-    background: rgba(79, 70, 229, 0.15);
-  }
-
-  .track-label {
-    font-size: 0.75rem;
-    flex-shrink: 0;
-  }
-
-  .track-title {
-    font-size: 0.75rem;
-    font-weight: 500;
+    max-width: 200px; /* Limit width */
     color: #4f46e5;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    animation: scrollTrack 15s linear infinite;
   }
-
-  :global(.dark) .track-title {
+  :global(.dark) .mobile-track-container {
     color: #818cf8;
   }
 
+  .track-icon-pulse {
+    font-size: 1rem;
+    animation: pulse 2s infinite;
+  }
+
+  .track-marquee-wrapper {
+    overflow: hidden;
+    white-space: nowrap;
+    mask-image: linear-gradient(90deg, transparent 0%, black 5%, black 95%, transparent 100%);
+  }
+
+  .track-marquee-text {
+    display: inline-block;
+    font-size: 0.9rem;
+    font-weight: 600;
+    padding-right: 20px;
+    animation: scrollTrack 10s linear infinite;
+  }
+
+  @keyframes pulse {
+    0% {
+      transform: scale(1);
+      opacity: 1;
+    }
+    50% {
+      transform: scale(1.1);
+      opacity: 0.8;
+    }
+    100% {
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
+
   @keyframes scrollTrack {
-    0%,
-    20% {
+    0% {
       transform: translateX(0);
     }
-    80%,
     100% {
-      transform: translateX(-50%);
+      transform: translateX(-100%);
     }
   }
 </style>

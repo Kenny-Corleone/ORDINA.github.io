@@ -372,7 +372,7 @@
 
   /* 1. Brand Elements */
   .logo-img {
-    height: 60px; /* Reduced from 100px */
+    height: 50px; /* Reduced from 60px */
     width: auto;
     object-fit: contain;
     position: relative;
@@ -782,9 +782,6 @@
       display: none;
     }
 
-    .weather-city {
-      display: none;
-    }
     .radio-widget-v2 {
       width: var(--header-widget-height);
       padding: 0;

@@ -46,7 +46,13 @@ export function detectTouchDevice(): boolean {
  * - 1024px: Common tablet landscape width, matches Tailwind's 'lg' breakpoint
  */
 export function getDeviceType(): DeviceType {
-  // Use visual viewport if available (for proper handling during zoom)
+  // 1. Force mobile layout for specific user agents (Phones)
+  const ua = navigator.userAgent.toLowerCase();
+  if (/android|webos|iphone|ipod|blackberry|iemobile|opera mini/i.test(ua) && !/ipad/i.test(ua)) {
+    return 'mobile';
+  }
+
+  // 2. Use visual viewport if available
   const width = window.visualViewport ? window.visualViewport.width : window.innerWidth;
   
   if (width < BREAKPOINTS.MOBILE) {
