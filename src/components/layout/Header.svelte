@@ -750,7 +750,7 @@
       --header-main-row-height: 72px;
     }
     .logo-img {
-      --header-logo-height: 50px;
+      height: 80px;
     }
     .header-divider {
       display: none;
@@ -808,8 +808,8 @@
     .section-left {
       gap: 0.5rem;
     }
-    .header-logo-img {
-      --header-logo-height: 40px;
+    .logo-img {
+      height: 60px;
     }
 
     .radio-widget-v2 {
