@@ -126,17 +126,36 @@ export const CACHE_KEY = 'cached_news';
 const CACHE_EXPIRY_MS = 30 * 60 * 1000; // 30 minutes
 
 const CORS_PROXIES = [
-  // 1. Direct fetch (always try first)
-  (url: string) => url,
-  // 2. AllOrigins (Raw mode - best for XML)
+  // 1. AllOrigins (Raw mode - best for XML)
   (url: string) => `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`,
-  // 3. AllOrigins (JSON mode - robust fallback)
+  // 2. AllOrigins (JSON mode - robust fallback)
   (url: string) => `https://api.allorigins.win/get?url=${encodeURIComponent(url)}`,
-  // 4. CORSProxy.io
+  // 3. CORSProxy.io
   (url: string) => `https://corsproxy.io/?${encodeURIComponent(url)}`,
-  // 5. CodeTabs
+  // 4. CodeTabs
   (url: string) => `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(url)}`,
 ];
+
+// Proxy health tracking to avoid 429/403 spam
+const PROXY_COOLDOWN_MS = 3 * 60 * 1000; // 3 minutes
+const blacklistedProxies = new Map<number, number>(); // index -> timestamp
+
+function getAvailableProxies() {
+  const now = Date.now();
+  return CORS_PROXIES.filter((_, index) => {
+    const cooldown = blacklistedProxies.get(index);
+    if (cooldown && now < cooldown) return false;
+    if (cooldown) blacklistedProxies.delete(index);
+    return true;
+  });
+}
+
+function blacklistProxy(proxyFn: any) {
+  const index = CORS_PROXIES.indexOf(proxyFn);
+  if (index !== -1) {
+    blacklistedProxies.set(index, Date.now() + PROXY_COOLDOWN_MS);
+  }
+}
 
 // ============================================================================
 // HELPERS
@@ -199,14 +218,16 @@ async function parseRSSFeed(url: string, retries: number = 2): Promise<NewsArtic
     }
   })();
 
-  // Shuffle proxies to avoid hitting a broken/blocked one every time first
-  const shuffledProxies = [...CORS_PROXIES].sort(() => Math.random() - 0.5);
+  // Use only available proxies (not in cooldown)
+  const shuffledProxies = getAvailableProxies().sort(() => Math.random() - 0.5);
+  // Add direct fetch as a last resort or first try if it's healthy
+  shuffledProxies.unshift((u: string) => u);
 
   for (const proxyFn of shuffledProxies) {
     for (let attempt = 0; attempt < retries; attempt++) {
       try {
         const proxyUrl = proxyFn(url);
-        // Force the use of AllOrigins GET for tricky Russian news sites
+        // Force AllOrigins JSON mode for tricky sites faster
         const isTrickySite = url.includes('iz.ru') || url.includes('ria.ru') || url.includes('tass.ru') || url.includes('kommersant.ru');
         
         let targetUrl = proxyUrl;
@@ -215,6 +236,12 @@ async function parseRSSFeed(url: string, retries: number = 2): Promise<NewsArtic
         }
 
         const res = await fetchWithTimeout(targetUrl, 12000);
+        
+        if (res.status === 429) {
+          blacklistProxy(proxyFn);
+          throw new Error('429 Too Many Requests');
+        }
+        
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         
         let raw: string;
@@ -320,59 +347,75 @@ function dedupeByUrl(articles: NewsArticle[]): NewsArticle[] {
  * fallback to English sources if current language returns no articles,
  * caches with CACHE_KEY, resilient to CORS and unstable sources.
  */
+let globalFetching = false;
+
+/**
+ * Fetch news: always attempts load, aggregates with dedup by URL,
+ * fallback to English sources if current language returns no articles,
+ * caches with CACHE_KEY, resilient to CORS and unstable sources.
+ */
 export async function fetchNews(
   lang: string = 'en',
   category: NewsCategory = 'all'
 ): Promise<NewsArticle[]> {
-  const safeLang = RSS_SOURCES[lang] ? lang : 'en';
-  const safeCat = (RSS_SOURCES[safeLang] && category in RSS_SOURCES[safeLang])
-    ? category
-    : 'all';
+  // Safety guard: prevent concurrent identical fetches
+  if (globalFetching) return [];
+  globalFetching = true;
 
-  let urls = getRSSSourcesForLanguage(safeLang, safeCat).slice(0, 8);
-  const promises = urls.map((u) => parseRSSFeed(u, 1));
-  const results = await Promise.allSettled(promises);
+  try {
+    const safeLang = RSS_SOURCES[lang] ? lang : 'en';
+    const safeCat = (RSS_SOURCES[safeLang] && category in RSS_SOURCES[safeLang])
+      ? category
+      : 'all';
 
-  const allArticles: NewsArticle[] = [];
-  results.forEach((r) => {
-    if (r.status === 'fulfilled' && r.value.length) allArticles.push(...r.value);
-  });
+    // Reduce urls count to avoid hitting rate limits too fast (max 5 sources)
+    let urls = getRSSSourcesForLanguage(safeLang, safeCat).slice(0, 5);
+    const promises = urls.map((u) => parseRSSFeed(u, 1));
+    const results = await Promise.allSettled(promises);
 
-  let filtered = dedupeByUrl(allArticles);
-  if (filtered.length === 0 && safeLang !== 'en') {
-    const enUrls = getRSSSourcesForLanguage('en', safeCat).slice(0, 8);
-    const enPromises = enUrls.map((u) => parseRSSFeed(u, 1));
-    const enResults = await Promise.allSettled(enPromises);
-    enResults.forEach((r) => {
+    const allArticles: NewsArticle[] = [];
+    results.forEach((r) => {
       if (r.status === 'fulfilled' && r.value.length) allArticles.push(...r.value);
     });
-    filtered = dedupeByUrl(allArticles);
-  }
 
-  filtered.sort((a, b) => {
-    const ta = new Date(a.publishedAt).getTime();
-    const tb = new Date(b.publishedAt).getTime();
-    return tb - ta;
-  });
-  const final = filtered.slice(0, 50);
-
-  if (typeof localStorage !== 'undefined' && final.length > 0) {
-    try {
-      localStorage.setItem(
-        CACHE_KEY,
-        JSON.stringify({
-          timestamp: Date.now(),
-          data: final,
-          lang: safeLang,
-          category: safeCat,
-        })
-      );
-    } catch {
-      // ignore
+    let filtered = dedupeByUrl(allArticles);
+    if (filtered.length === 0 && safeLang !== 'en') {
+      const enUrls = getRSSSourcesForLanguage('en', safeCat).slice(0, 4);
+      const enPromises = enUrls.map((u) => parseRSSFeed(u, 1));
+      const enResults = await Promise.allSettled(enPromises);
+      enResults.forEach((r) => {
+        if (r.status === 'fulfilled' && r.value.length) allArticles.push(...r.value);
+      });
+      filtered = dedupeByUrl(allArticles);
     }
-  }
 
-  return final;
+    filtered.sort((a, b) => {
+      const ta = new Date(a.publishedAt).getTime();
+      const tb = new Date(b.publishedAt).getTime();
+      return tb - ta;
+    });
+    const final = filtered.slice(0, 50);
+
+    if (typeof localStorage !== 'undefined' && final.length > 0) {
+      try {
+        localStorage.setItem(
+          CACHE_KEY,
+          JSON.stringify({
+            timestamp: Date.now(),
+            data: final,
+            lang: safeLang,
+            category: safeCat,
+          })
+        );
+      } catch {
+        // ignore
+      }
+    }
+
+    return final;
+  } finally {
+    globalFetching = false;
+  }
 }
 
 /**

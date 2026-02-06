@@ -78,11 +78,15 @@
     failedImageUrls = new Set(failedImageUrls);
   }
 
+  let lastRefreshTime = 0;
+  const REFRESH_THRESHOLD = 10 * 60 * 1000; // 10 minutes
+
   async function loadNews() {
     if (articles.length === 0) loading = true;
     error = null;
     try {
       articles = await fetchNews($uiStore.language, category);
+      lastRefreshTime = Date.now();
       if (articles.length === 0) {
         error = t($translations, 'newsNotFound', 'Новости не найдены');
       }
@@ -108,10 +112,10 @@
     loadNews();
   }
 
-  /** Refetch only when tab becomes visible (not on every focus — иначе поле поиска мерцает) */
+  /** Refetch only if enough time has passed since last refresh */
   function onVisibilityChange() {
-    if (!document.hidden) {
-      setTimeout(() => loadNews(), 0);
+    if (!document.hidden && Date.now() - lastRefreshTime > REFRESH_THRESHOLD) {
+      loadNews();
     }
   }
 
@@ -160,8 +164,12 @@
   // Computed list to render based on showCount for simple pagination
   $: visibleArticles = filteredArticles.slice(0, showCount);
 
+  // Track last fetched language to avoid redundant calls
+  let lastFetchedLang = '';
+
   // Re-fetch news when language changes
-  $: if ($uiStore.language) {
+  $: if ($uiStore.language && $uiStore.language !== lastFetchedLang) {
+    lastFetchedLang = $uiStore.language;
     loadNews();
   }
 </script>
