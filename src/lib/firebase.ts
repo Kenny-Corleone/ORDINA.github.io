@@ -5,13 +5,13 @@ import { logger } from "./utils/logger";
 
 // Firebase configuration using environment variables
 const firebaseConfig = {
-    apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
-    authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
-    projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
-    storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
-    messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
-    appId: import.meta.env.VITE_FIREBASE_APP_ID,
-    measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID
+    apiKey: "AIzaSyDi0cFirxRJ9eC6mvy1WEDpB9MPzDDac3g",
+    authDomain: "life-order-assistant.firebaseapp.com",
+    projectId: "life-order-assistant",
+    storageBucket: "life-order-assistant.appspot.com",
+    messagingSenderId: "284691407205",
+    appId: "1:284691407205:web:a6e935c498b280ce55c18c",
+    measurementId: "G-E1MWRNNKDM"
 };
 
 let app: FirebaseApp;
