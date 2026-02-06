@@ -268,7 +268,7 @@
 <SummaryCards />
 
 <!-- Dashboard Lower Area -->
-<div class="grid grid-cols-1 lg:grid-cols-2 gap-3 mb-4 items-stretch mt-3">
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-3 mb-4 items-stretch mt-1">
   <!-- Left column: chart + quick actions + recent expenses -->
   <div class="space-y-3 flex flex-col" id="dashboard-left-column" bind:this={leftColumnEl}>
     <TasksPreview />
