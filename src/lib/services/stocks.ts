@@ -32,142 +32,123 @@ export const LOCAL_SYMBOLS: Record<string, string[]> = {
 
 export const DEFAULT_SYMBOLS = STOCK_CATEGORIES.CURRENCIES;
 
+const STOCKS_PROXIES = [
+  (url: string) => `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`,
+  (url: string) => `https://api.scraper.id?url=${encodeURIComponent(url)}`,
+  (url: string) => `https://corsproxy.io/?${encodeURIComponent(url)}`,
+  (url: string) => `https://thingproxy.freeboard.io/fetch/${url}`,
+  (url: string) => `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(url)}`,
+];
+
 /**
  * BFB.az Scraper for Azerbaijan Market Data
  */
 async function fetchBFB(ticker: string): Promise<StockQuote | null> {
-  try {
-    const proxies = [
-      'https://api.allorigins.win/get?url=',
-      'https://corsproxy.io/?'
-    ];
-    const proxy = proxies[Math.floor(Math.random() * proxies.length)];
-    const bfbUrl = 'https://www.bfb.az/en/market-watch';
-    
-    const targetUrl = proxy?.includes('allorigins') 
-      ? proxy + encodeURIComponent(bfbUrl)
-      : (proxy || '') + bfbUrl;
+  let lastError: any = null;
+  
+  for (const proxyFn of STOCKS_PROXIES) {
+    try {
+      const bfbUrl = 'https://www.bfb.az/en/market-watch';
+      const targetUrl = proxyFn(bfbUrl);
+      
+      const res = await fetch(targetUrl);
+      if (!res.ok) continue;
+      
+      const html = await res.text();
+      if (!html || html.length < 500) continue; // Basic check for real HTML content
 
-    const res = await fetch(targetUrl);
-    if (!res.ok) return null;
-    
-    let html = '';
-    if (proxy?.includes('allorigins')) {
-      const json = await res.json();
-      html = json.contents;
-    } else {
-      html = await res.text();
-    }
+      const doc = new DOMParser().parseFromString(html, 'text/html');
+      const table = doc.querySelector('.capitalisation_table table') || doc.querySelector('table');
+      if (!table) continue;
 
-    if (!html) return null;
-
-    const doc = new DOMParser().parseFromString(html, 'text/html');
-    // BFB table structure: .capitalisation_table table
-    const table = doc.querySelector('.capitalisation_table table') || doc.querySelector('table');
-    if (!table) return null;
-
-    const rows = Array.from(table.querySelectorAll('tbody tr'));
-    
-    for (const row of rows) {
-      const cells = row.querySelectorAll('td');
-      if (cells.length >= 3) {
-        const rowTicker = cells[0]?.textContent?.trim() || '';
-        // Match ABB or specific ticker
-        if (rowTicker.includes(ticker) || (ticker === 'ABB' && rowTicker.includes('AİB'))) {
-          const priceStr = cells[2]?.textContent?.trim() || '0';
-          const price = parseFloat(priceStr.replace(',', '.'));
-          if (isNaN(price) || price === 0) continue;
-          
-          return {
-            symbol: ticker,
-            price: price,
-            change: 0,
-            percentChange: 0,
-            high: price,
-            low: price,
-            open: price,
-            prevClose: price,
-            timestamp: Date.now(),
-            provider: 'BFB'
-          };
+      const rows = Array.from(table.querySelectorAll('tbody tr'));
+      
+      for (const row of rows) {
+        const cells = row.querySelectorAll('td');
+        if (cells.length >= 3) {
+          const rowTicker = cells[0]?.textContent?.trim() || '';
+          if (rowTicker.includes(ticker) || (ticker === 'ABB' && rowTicker.includes('AİB'))) {
+            const priceStr = cells[2]?.textContent?.trim() || '0';
+            const price = parseFloat(priceStr.replace(',', '.'));
+            if (isNaN(price) || price === 0) continue;
+            
+            return {
+              symbol: ticker,
+              price: price,
+              change: 0,
+              percentChange: 0,
+              high: price,
+              low: price,
+              open: price,
+              prevClose: price,
+              timestamp: Date.now(),
+              provider: 'BFB'
+            };
+          }
         }
       }
+    } catch (e) {
+      lastError = e;
+      continue;
     }
-    return null;
-  } catch (e) {
-    return null;
   }
+  return null;
 }
 
 /**
  * Trading Economics Scraper for Energy, Metals, Agricultural
  */
 async function fetchTradingEconomics(ticker: string): Promise<StockQuote | null> {
-  try {
-    const proxies = [
-      'https://api.allorigins.win/get?url=',
-      'https://corsproxy.io/?'
-    ];
-    const proxy = proxies[Math.floor(Math.random() * proxies.length)];
-    const teUrl = 'https://tradingeconomics.com/commodities';
-    
-    const targetUrl = proxy?.includes('allorigins') 
-      ? proxy + encodeURIComponent(teUrl)
-      : (proxy || '') + teUrl;
+  for (const proxyFn of STOCKS_PROXIES) {
+    try {
+      const teUrl = 'https://tradingeconomics.com/commodities';
+      const targetUrl = proxyFn(teUrl);
 
-    const res = await fetch(targetUrl);
-    if (!res.ok) return null;
-    
-    let html = '';
-    if (proxy?.includes('allorigins')) {
-      const json = await res.json();
-      html = json.contents;
-    } else {
-      html = await res.text();
-    }
-
-    if (!html) return null;
-
-    const doc = new DOMParser().parseFromString(html, 'text/html');
-    // Using tr[data-symbol] or searching for Name (td:first-child b)
-    const rows = Array.from(doc.querySelectorAll('tr[data-symbol], table tbody tr'));
-    
-    for (const row of rows) {
-      const nameEl = row.querySelector('td:first-child b');
-      const name = nameEl?.textContent?.trim() || '';
+      const res = await fetch(targetUrl);
+      if (!res.ok) continue;
       
-      // Match by ticker (Crude Oil, Brent, Gold, etc.)
-      if (name.toLowerCase() === ticker.toLowerCase() || 
-          row.getAttribute('data-symbol')?.toLowerCase().includes(ticker.toLowerCase())) {
-        
-        const priceCell = row.querySelector('td:nth-child(2)');
-        const price = parseFloat(priceCell?.textContent?.trim().replace(/,/g, '') || '0');
-        if (isNaN(price)) continue;
-        
-        const changeCell = row.querySelector('td:nth-child(4)'); // Daily Change
-        const change = parseFloat(changeCell?.textContent?.trim() || '0');
-        
-        const pctCell = row.querySelector('td:nth-child(5)'); // Daily %
-        const pctChange = parseFloat(pctCell?.textContent?.trim().replace('%', '') || '0');
+      const html = await res.text();
+      if (!html || html.length < 1000) continue;
 
-        return {
-          symbol: ticker,
-          price: price,
-          change: change,
-          percentChange: pctChange,
-          high: price,
-          low: price,
-          open: price - change,
-          prevClose: price - change,
-          timestamp: Date.now(),
-          provider: 'TE'
-        };
+      const doc = new DOMParser().parseFromString(html, 'text/html');
+      const rows = Array.from(doc.querySelectorAll('tr[data-symbol], table tbody tr'));
+      
+      for (const row of rows) {
+        const nameEl = row.querySelector('td:first-child b');
+        const name = nameEl?.textContent?.trim() || '';
+        
+        if (name.toLowerCase() === ticker.toLowerCase() || 
+            row.getAttribute('data-symbol')?.toLowerCase().includes(ticker.toLowerCase())) {
+          
+          const priceCell = row.querySelector('td:nth-child(2)');
+          const price = parseFloat(priceCell?.textContent?.trim().replace(/,/g, '') || '0');
+          if (isNaN(price)) continue;
+          
+          const changeCell = row.querySelector('td:nth-child(4)');
+          const change = parseFloat(changeCell?.textContent?.trim() || '0');
+          
+          const pctCell = row.querySelector('td:nth-child(5)');
+          const pctChange = parseFloat(pctCell?.textContent?.trim().replace('%', '') || '0');
+
+          return {
+            symbol: ticker,
+            price: price,
+            change: change,
+            percentChange: pctChange,
+            high: price,
+            low: price,
+            open: price - change,
+            prevClose: price - change,
+            timestamp: Date.now(),
+            provider: 'TE'
+          };
+        }
       }
+    } catch (e) {
+      continue;
     }
-    return null;
-  } catch (e) {
-    return null;
   }
+  return null;
 }
 async function fetchMoEx(ticker: string): Promise<StockQuote | null> {
   try {

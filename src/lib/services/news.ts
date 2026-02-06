@@ -124,14 +124,18 @@ export const CACHE_KEY = 'cached_news';
 const CACHE_EXPIRY_MS = 30 * 60 * 1000; // 30 minutes
 
 const CORS_PROXIES = [
-  // Direct fetch (some feeds allow it nowadays)
+  // 1. Direct fetch (always try first)
   (url: string) => url,
-  // Primary Proxies
-  (url: string) => `https://api.allorigins.win/get?url=${encodeURIComponent(url)}`,
+  // 2. AllOrigins (Raw mode is faster and less likely to trigger CORS errors in the browser)
+  (url: string) => `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`,
+  // 3. Scraper.id Proxy (often less saturated)
+  (url: string) => `https://api.scraper.id?url=${encodeURIComponent(url)}`,
+  // 4. CORSProxy.io (Primary fallback)
   (url: string) => `https://corsproxy.io/?${encodeURIComponent(url)}`,
+  // 5. ThingProxy (Secondary fallback)
   (url: string) => `https://thingproxy.freeboard.io/fetch/${url}`,
+  // 6. CodeTabs (Good but selective)
   (url: string) => `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(url)}`,
-  (url: string) => `https://proxy.cors.sh/${url}`, // Note: might require an API key in headers, but often works for small traffic
 ];
 
 // ============================================================================
