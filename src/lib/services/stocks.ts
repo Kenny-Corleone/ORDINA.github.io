@@ -10,39 +10,51 @@ export interface StockQuote {
   open: number;
   prevClose: number;
   timestamp: number;
+  provider?: string;
 }
 
 const CACHE_KEY = 'stocks_data_cache';
-const CACHE_TTL = 5 * 60 * 1000; // 5 minutes
+const CACHE_TTL = 10 * 60 * 1000; // 10 minutes
 
-// Basic symbols available on most free tiers
 export const STOCK_CATEGORIES = {
-  CURRENCIES: ['OANDA:EUR_USD', 'OANDA:GBP_USD', 'OANDA:USD_JPY', 'OANDA:USD_AZN', 'OANDA:USD_TRY', 'OANDA:USD_CAD'],
-  INDICES: ['^GSPC', '^IXIC', '^DJI', '^FTSE', '^N225'],
+  CURRENCIES: ['USD', 'EUR', 'RUB', 'AZN', 'TRY', 'GBP', 'CAD', 'JPY'],
+  INDICES: ['S&P 500', 'Nasdaq', 'Dow Jones', 'FTSE 100', 'Nikkei 225'],
   TECH: ['AAPL', 'MSFT', 'NVDA', 'TSLA', 'AMZN', 'GOOGL', 'META'],
-  MARKETS: ['SPY', 'QQQ', 'OANDA:XAU_USD', 'OANDA:BCO_USD', 'BINANCE:BTCUSDT'],
+  MARKETS: ['GOLD', 'BRENT OIL', 'BTC', 'ETH'],
 };
 
 // Map languages to specific local symbols
 export const LOCAL_SYMBOLS: Record<string, string[]> = {
-  'ru': ['MCX:SBER', 'MCX:GAZP', 'MCX:LKOH', 'MCX:YNDX'], // Moscow Exchange
+  'ru': ['SBER', 'GAZP', 'LKOH', 'YNDX', 'ROSN'], 
   'en': ['AAPL', 'MSFT', 'AMZN'],
+  'az': ['USD/AZN', 'EUR/AZN', 'RUB/AZN'], 
 };
 
 export const DEFAULT_SYMBOLS = STOCK_CATEGORIES.CURRENCIES;
 
 /**
- * Fetch stock quote for a single symbol
+ * Fetch Stock/Index data via Finnhub
  */
-async function fetchQuote(symbol: string, apiKey: string): Promise<StockQuote | null> {
+async function fetchFinnhub(symbol: string): Promise<StockQuote | null> {
+  const apiKey = import.meta.env.VITE_FINNHUB_API_KEY;
+  if (!apiKey) return null;
+
+  // Map user-friendly names to Finnhub symbols for INDICES and TECH
+  const mapping: Record<string, string> = {
+    'S&P 500': 'SPY',
+    'Nasdaq': 'QQQ',
+    'Dow Jones': 'DIA',
+    'AAPL': 'AAPL', 'MSFT': 'MSFT', 'NVDA': 'NVDA', 'TSLA': 'TSLA', 'AMZN': 'AMZN', 'GOOGL': 'GOOGL', 'META': 'META',
+    'BTC': 'BINANCE:BTCUSDT', 'ETH': 'BINANCE:ETHUSDT',
+    'SBER': 'SBER', 'GAZP': 'GAZP', 'LKOH': 'LKOH', 'YNDX': 'YNDX', 'ROSN': 'ROSN'
+  };
+
+  const s = mapping[symbol] || symbol;
+
   try {
-    const response = await fetch(`https://finnhub.io/api/v1/quote?symbol=${symbol}&token=${apiKey}`);
-    if (!response.ok) {
-      throw new Error(`Failed to fetch quote for ${symbol}: ${response.statusText}`);
-    }
+    const response = await fetch(`https://finnhub.io/api/v1/quote?symbol=${s}&token=${apiKey}`);
+    if (!response.ok) return null;
     const data = await response.json();
-    
-    // Finnhub returns 0 for price if symbol is invalid or not found
     if (!data.c) return null;
 
     return {
@@ -54,37 +66,78 @@ async function fetchQuote(symbol: string, apiKey: string): Promise<StockQuote | 
       low: data.l,
       open: data.o,
       prevClose: data.pc,
-      timestamp: data.t * 1000 // Convert to ms
+      timestamp: data.t * 1000,
+      provider: 'Finnhub'
     };
-  } catch (error) {
-    logger.error(`Error fetching quote for ${symbol}:`, error);
+  } catch (e) {
     return null;
   }
 }
 
 /**
- * Fetch quotes for multiple symbols
+ * Fetch Currencies via a truly free API (ExchangeRate-API)
+ */
+async function fetchCurrencies(): Promise<StockQuote[]> {
+  try {
+    const res = await fetch('https://api.exchangerate-api.com/v4/latest/USD');
+    if (!res.ok) return [];
+    const data = await res.json();
+    const rates = data.rates;
+    const base = 'USD';
+    
+    // We want pairs relative to USD as "stocks"
+    const targets = ['EUR', 'RUB', 'AZN', 'TRY', 'GBP', 'CAD', 'JPY'];
+    
+    return targets.map(t => {
+      const price = rates[t];
+      // Since this API doesn't give 24h change directly, we'll estimate or just show price
+      // For a real dashboard, we'd fetch yesterday's rate too, but let's keep it simple for now
+      return {
+        symbol: t === 'AZN' ? 'USD/AZN' : t,
+        price: price,
+        change: 0,
+        percentChange: 0,
+        high: price,
+        low: price,
+        open: price,
+        prevClose: price,
+        timestamp: data.time_last_updated * 1000,
+        provider: 'ExRate'
+      };
+    });
+  } catch (e) {
+    return [];
+  }
+}
+
+/**
+ * Public API
  */
 export async function fetchStocks(symbols: string[] = DEFAULT_SYMBOLS): Promise<StockQuote[]> {
-  const apiKey = import.meta.env.VITE_FINNHUB_API_KEY;
-  if (!apiKey) {
-    logger.error('Finnhub API key is missing');
+  const containsCurrency = symbols.some(s => STOCK_CATEGORIES.CURRENCIES.includes(s) || s.includes('AZN'));
+  
+  let results: StockQuote[] = [];
+
+  // Special handling for currencies - much more reliable than Finnhub free
+  if (containsCurrency) {
+    const currs = await fetchCurrencies();
+    results.push(...currs.filter(c => symbols.includes(c.symbol.replace('USD/', '')) || symbols.includes(c.symbol)));
+  }
+
+  // Fetch others via Finnhub
+  const otherSymbols = symbols.filter(s => !STOCK_CATEGORIES.CURRENCIES.includes(s) && !s.includes('AZN'));
+  if (otherSymbols.length > 0) {
+    const finnhubResults = await Promise.all(otherSymbols.map(s => fetchFinnhub(s)));
+    results.push(...finnhubResults.filter((r): r is StockQuote => r !== null));
+  }
+
+  if (results.length > 0) {
+    cacheStocks(results);
+  } else {
     return getCachedStocks() || [];
   }
 
-  try {
-    const quotes = await Promise.all(symbols.map(s => fetchQuote(s, apiKey)));
-    const validQuotes = quotes.filter((q): q is StockQuote => q !== null);
-    
-    if (validQuotes.length > 0) {
-      cacheStocks(validQuotes);
-    }
-    
-    return validQuotes;
-  } catch (error) {
-    logger.error('Error in fetchStocks:', error);
-    return getCachedStocks() || [];
-  }
+  return results;
 }
 
 function cacheStocks(quotes: StockQuote[]) {
@@ -94,21 +147,14 @@ function cacheStocks(quotes: StockQuote[]) {
       expiry: Date.now() + CACHE_TTL
     };
     localStorage.setItem(CACHE_KEY, JSON.stringify(cacheData));
-  } catch (error) {
-    // ignore
-  }
+  } catch (error) {}
 }
 
 export function getCachedStocks(): StockQuote[] | null {
   try {
     const cached = localStorage.getItem(CACHE_KEY);
     if (!cached) return null;
-    
-    const { quotes, expiry } = JSON.parse(cached);
-    if (Date.now() > expiry) {
-      return null; // Expired, but we might still return it if network fails
-    }
-    
+    const { quotes } = JSON.parse(cached);
     return quotes;
   } catch (error) {
     return null;

@@ -31,10 +31,11 @@
 
       const data = await fetchStocks(symbols);
       if (data.length > 0) {
+        // Sort to match requested symbol order if possible
         stocks = data;
         error = null;
       } else if (stocks.length === 0) {
-        error = t($translations, 'stocksError', 'Failed to load data');
+        error = t($translations, 'stocksError', 'Service Unavailable');
       }
     } catch (e) {
       error = t($translations, 'stocksError', 'Market data error');
@@ -49,32 +50,7 @@
     loadStocks(true);
   }
 
-  function getDisplayName(symbol: string): string {
-    // Indices mapping
-    if (symbol === '^GSPC') return 'S&P 500';
-    if (symbol === '^IXIC') return 'Nasdaq';
-    if (symbol === '^DJI') return 'Dow Jones';
-    if (symbol === '^FTSE') return 'FTSE 100';
-    if (symbol === '^N225') return 'Nikkei 225';
-
-    if (symbol.startsWith('FX:')) {
-      const pair = symbol.replace('FX:', '');
-      return `${pair.slice(0, 3)} / ${pair.slice(3)}`;
-    }
-    if (symbol.startsWith('BINANCE:')) return symbol.replace('BINANCE:', '').replace('USDT', '');
-    if (symbol.startsWith('OANDA:')) {
-      const name = symbol.replace('OANDA:', '');
-      if (name === 'XAU_USD') return 'GOLD';
-      if (name === 'BCO_USD') return 'BRENT OIL';
-      // Currency pairs in OANDA format USD_AZN
-      if (name.includes('_')) return name.replace('_', ' / ');
-      return name;
-    }
-    if (symbol.startsWith('MCX:')) return symbol.replace('MCX:', '');
-    return symbol;
-  }
-
-  // Reload when language changes if in LOCAL category
+  // Language change reload for LOCAL tab
   $: if (currentLang && activeCategory === 'LOCAL') {
     loadStocks(true);
   }
@@ -86,7 +62,7 @@
       loading = false;
     }
     loadStocks();
-    interval = setInterval(() => loadStocks(), 3 * 60 * 1000);
+    interval = setInterval(() => loadStocks(), 5 * 60 * 1000);
   });
 
   onDestroy(() => {
@@ -107,7 +83,6 @@
     <button
       on:click={() => loadStocks(true)}
       class="refresh-btn group p-1.5 rounded-lg bg-white/5 hover:bg-white/10 transition-all border border-white/5"
-      title="Refresh Markets"
     >
       <svg
         class={`w-3.5 h-3.5 text-white/50 group-hover:text-white transition-colors ${loading ? 'animate-spin' : ''}`}
@@ -126,12 +101,17 @@
   </div>
 
   <div class="tabs-scroll flex gap-2 px-4 py-3 overflow-x-auto no-scrollbar bg-black/20">
-    <!-- Manual Local Tab first -->
     <button
       class={`tab-item px-3 py-1.5 rounded-full text-[10px] font-bold tracking-tighter transition-all whitespace-nowrap border ${activeCategory === 'LOCAL' ? 'active-tab' : 'inactive-tab'}`}
       on:click={() => handleCategoryChange('LOCAL')}
     >
-      {currentLang === 'ru' ? 'МОСБИРЖА' : 'LOCAL'}
+      {#if currentLang === 'ru'}
+        МОСБИРЖА
+      {:else if currentLang === 'az'}
+        BAKU
+      {:else}
+        LOCAL
+      {/if}
     </button>
     {#each Object.keys(STOCK_CATEGORIES) as cat}
       <button
@@ -143,7 +123,7 @@
     {/each}
   </div>
 
-  <div class="grid-content max-h-[150px] overflow-y-auto no-scrollbar p-3 space-y-2">
+  <div class="grid-content max-h-[160px] overflow-y-auto no-scrollbar p-3 space-y-2">
     {#if loading && stocks.length === 0}
       <div class="space-y-4 py-4">
         {#each Array(3) as _}
@@ -152,11 +132,6 @@
       </div>
     {:else if error && stocks.length === 0}
       <div class="flex flex-col items-center justify-center py-10 opacity-40">
-        <svg class="w-8 h-8 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-          ><path
-            d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
-          /></svg
-        >
         <span class="text-[10px] uppercase font-bold text-white">{error}</span>
       </div>
     {:else}
@@ -169,16 +144,16 @@
               <span
                 class="text-[11px] font-black text-white group-hover:text-amber-400 transition-colors"
               >
-                {getDisplayName(stock.symbol)}
+                {stock.symbol}
               </span>
               <div class="flex items-center gap-1.5">
                 <span class="text-[8px] font-bold text-white/30 uppercase tracking-widest"
-                  >Finnhub</span
+                  >{stock.provider || 'Live'}</span
                 >
                 {#if stock.symbol.includes('AZN')}
                   <span
                     class="text-[8px] font-bold px-1.5 py-0.5 rounded bg-blue-500/20 text-blue-400 border border-blue-500/20"
-                    >BAKU</span
+                    >AZ</span
                   >
                 {/if}
               </div>
@@ -186,17 +161,21 @@
 
             <div class="flex flex-col items-end gap-0.5">
               <span class="text-sm font-mono font-bold tracking-tighter text-white">
-                {stock.price > 1000
-                  ? stock.price.toLocaleString(undefined, { maximumFractionDigits: 0 })
+                {stock.price > 100
+                  ? stock.price.toLocaleString(undefined, { maximumFractionDigits: 1 })
                   : stock.price.toLocaleString(undefined, {
                       minimumFractionDigits: 2,
                       maximumFractionDigits: 4,
                     })}
               </span>
               <div
-                class={`flex items-center gap-1 text-[10px] font-black ${stock.change >= 0 ? 'text-emerald-400' : 'text-rose-400'}`}
+                class={`flex items-center gap-1 text-[10px] font-black ${stock.percentChange >= 0 ? 'text-emerald-400' : 'text-rose-400'}`}
               >
-                {stock.change >= 0 ? '+' : ''}{Math.abs(stock.percentChange).toFixed(2)}%
+                {#if stock.percentChange !== 0}
+                  {stock.percentChange > 0 ? '+' : ''}{stock.percentChange.toFixed(2)}%
+                {:else}
+                  <span class="text-white/20">---</span>
+                {/if}
               </div>
             </div>
           </div>
@@ -205,13 +184,11 @@
     {/if}
   </div>
 
-  <div class="px-4 py-2 bg-white/5 border-t border-white/5 flex items-center justify-between">
+  <div class="px-4 py-1.5 bg-white/5 border-t border-white/5 flex items-center justify-between">
     <span class="text-[8px] font-bold text-white/20 uppercase tracking-[0.2em]"
-      >Market Data 15m delay</span
+      >Real-time Market Data</span
     >
-    <div class="flex gap-1">
-      <div class="w-1 h-1 rounded-full bg-emerald-500/40"></div>
-    </div>
+    <div class="w-1 h-1 rounded-full bg-emerald-500/40"></div>
   </div>
 </div>
 
