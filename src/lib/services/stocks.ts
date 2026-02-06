@@ -22,44 +22,51 @@ export const STOCK_CATEGORIES = {
 };
 
 export const LOCAL_SYMBOLS: Record<string, string[]> = {
-  'ru': ['SBER', 'GAZP', 'LKOH', 'YNDX', 'ROSN'], // Moscow Exchange
-  'it': ['RACE', 'ENI', 'STLA', 'UCG', 'ISP'], // Ferrari, Eni, Stellantis, Unicredit, Intesa
-  'az': ['USD/AZN', 'EUR/AZN', 'RUB/AZN', 'BRENT OIL'],
-  'en': ['AAPL', 'MSFT', 'NVDA', 'AMZN', 'TSLA'],
+  'ru': ['IMOEX', 'SBER', 'GAZP', 'LKOH', 'YNDX', 'ROSN', 'MGNT'], // Moscow Exchange
+  'it': ['RACE', 'ENI', 'STLA', 'UCG', 'ISP', 'ENEL'], // Ferrari, Eni, Stellantis, Unicredit, Intesa, Enel
+  'az': ['BRENT OIL', 'GOLD', 'GAS', 'S&P 500'], // Relevant for Baku investors
+  'en': ['S&P 500', 'Nasdaq', 'AAPL', 'MSFT', 'NVDA', 'AMZN'],
 };
 
 export const DEFAULT_SYMBOLS = STOCK_CATEGORIES.CURRENCIES;
 
 /**
- * MOEX ISS API for Russian Stocks
+ * MOEX ISS API for Russian Stocks & Indices
  */
 async function fetchMoEx(ticker: string): Promise<StockQuote | null> {
   try {
-    const url = `https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/${ticker}.json?iss.meta=off&iss.only=marketdata,securities`;
+    const isIndex = ticker === 'IMOEX';
+    const engine = isIndex ? 'stock' : 'stock';
+    const market = isIndex ? 'index' : 'shares';
+    const board = isIndex ? 'SNDX' : 'TQBR';
+    
+    const url = `https://iss.moex.com/iss/engines/${engine}/markets/${market}/boards/${board}/securities/${ticker}.json?iss.meta=off&iss.only=marketdata,securities`;
     const response = await fetch(url);
     if (!response.ok) return null;
     const data = await response.json();
     
-    const market = data.marketdata.data[0];
-    const security = data.securities.data[0];
+    const marketData = data.marketdata.data[0];
+    const securityData = data.securities.data[0];
     
-    if (!market || !security) return null;
+    if (!marketData || !securityData) return null;
 
-    // Mapping MoEx indices (Column indexes can vary, but usually LAST=12, LASTCHANGE=25, etc.)
-    // We'll use more robust name-based lookup if possible, but ISS JSON is positional.
-    // Row 0: [SECID, BOARDID, BID, OFFER, LAST, ... ]
-    const last = market[12] || market[50]; // LAST or CURRENTVALUE
-    const change = market[25] || 0;
-    const pctChange = market[26] || 0;
+    // IMOEX index or Stock
+    const priceIdx = isIndex ? 12 : 12; // LAST value
+    const changeIdx = isIndex ? 25 : 25;
+    const pctChangeIdx = isIndex ? 26 : 26;
+
+    const last = marketData[priceIdx] || marketData[isIndex ? 50 : 50]; 
+    const change = marketData[changeIdx] || 0;
+    const pctChange = marketData[pctChangeIdx] || 0;
 
     return {
       symbol: ticker,
       price: last,
       change: change,
       percentChange: pctChange,
-      high: market[14] || last,
-      low: market[15] || last,
-      open: market[9] || last,
+      high: marketData[14] || last,
+      low: marketData[15] || last,
+      open: marketData[9] || last,
       prevClose: last - change,
       timestamp: Date.now(),
       provider: 'MoEx'
