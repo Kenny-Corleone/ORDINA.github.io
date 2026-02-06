@@ -141,23 +141,46 @@
   }
 
   .mobile-logo-mini {
-    height: 42px; /* Increased from 32px */
+    height: 50px; /* Significantly increased */
     width: auto;
     object-fit: contain;
     filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
   }
 
   .mobile-motto {
-    font-size: 0.85rem; /* Increased from 0.75rem */
+    font-size: 0.9rem;
     font-weight: 700;
-    color: #475569;
+    color: #334155;
     line-height: 1.1;
-    max-width: 35vw;
-    white-space: normal; /* Allow wrap for motto */
+    max-width: 38vw;
+    white-space: normal;
     text-align: left;
+    display: flex;
+    align-items: center;
   }
+
+  .weather-text-group {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    line-height: 1;
+  }
+
+  .weather-city-mini {
+    font-size: 0.65rem;
+    font-weight: 700;
+    color: #64748b;
+    max-width: 70px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
   :global(.dark) .mobile-motto {
-    color: #cbd5e1;
+    color: #e2e8f0;
+  }
+  :global(.dark) .weather-city-mini {
+    color: #94a3b8;
   }
 
   /* Center Group */
