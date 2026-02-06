@@ -62,11 +62,13 @@ const RSS_SOURCES: Record<string, Record<string, string[]>> = {
       'https://tass.ru/rss/v2.xml',
       'https://www.interfax.ru/rss.asp',
       'https://lenta.ru/rss',
-      'https://www.gazeta.ru/export/rss/lenta.xml',
+      'https://www.gazeta.ru/export/rss/social.xml',
       'https://iz.ru/xml/rss/all.xml',
       'https://rssexport.rbc.ru/rbcnews/news/30/full.rss',
       'https://www.kommersant.ru/RSS/main.xml',
-      'https://www.vedomosti.ru/rss/news'
+      'https://www.vedomosti.ru/rss/news',
+      'https://www.fontanka.ru/fontanka.rss',
+      'https://www.bfm.ru/news.rss'
     ],
     business: ['https://www.vedomosti.ru/rss/news', 'https://www.forbes.ru/newrss.xml', 'https://rssexport.rbc.ru/rbcnews/news/30/full.rss'],
     technology: ['https://3dnews.ru/news/rss/', 'https://habr.com/ru/rss/all/all/'],
@@ -126,15 +128,13 @@ const CACHE_EXPIRY_MS = 30 * 60 * 1000; // 30 minutes
 const CORS_PROXIES = [
   // 1. Direct fetch (always try first)
   (url: string) => url,
-  // 2. AllOrigins (Raw mode is faster and less likely to trigger CORS errors in the browser)
+  // 2. AllOrigins (Raw mode - most reliable for XML/RSS)
   (url: string) => `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`,
-  // 3. Scraper.id Proxy (often less saturated)
-  (url: string) => `https://api.scraper.id?url=${encodeURIComponent(url)}`,
-  // 4. CORSProxy.io (Primary fallback)
+  // 3. AllOrigins (JSON mode - fallback for difficult feeds)
+  (url: string) => `https://api.allorigins.win/get?url=${encodeURIComponent(url)}`,
+  // 4. CORSProxy.io
   (url: string) => `https://corsproxy.io/?${encodeURIComponent(url)}`,
-  // 5. ThingProxy (Secondary fallback)
-  (url: string) => `https://thingproxy.freeboard.io/fetch/${url}`,
-  // 6. CodeTabs (Good but selective)
+  // 5. CodeTabs
   (url: string) => `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(url)}`,
 ];
 

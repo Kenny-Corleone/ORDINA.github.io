@@ -54,7 +54,6 @@ self.addEventListener('fetch', (event) => {
     'corsproxy.io',
     'thingproxy.freeboard.io',
     'api.codetabs.com',
-    'api.scraper.id',
     'proxy.cors.sh',
     'www.bfb.az',
     'tradingeconomics.com'

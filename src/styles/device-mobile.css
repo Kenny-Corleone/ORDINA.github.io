@@ -182,20 +182,20 @@
 
 /* Summary cards on dashboard */
 .device-mobile .summary-card,
-.device-mobile [class*="summary"] {
+.device-mobile [class*='summary'] {
   padding: 0.75rem !important;
   font-size: 0.875rem !important;
 }
 
 .device-mobile .summary-card h3,
-.device-mobile [class*="summary"] h3 {
+.device-mobile [class*='summary'] h3 {
   font-size: 0.75rem !important;
   margin-bottom: 0.25rem !important;
 }
 
 .device-mobile .summary-card .value,
-.device-mobile [class*="summary"] .text-2xl,
-.device-mobile [class*="summary"] .text-xl {
+.device-mobile [class*='summary'] .text-2xl,
+.device-mobile [class*='summary'] .text-xl {
   font-size: 1rem !important;
 }
 
@@ -249,7 +249,7 @@
 
 /* Action buttons in cards */
 .device-mobile .action-button,
-.device-mobile [class*="action"] button {
+.device-mobile [class*='action'] button {
   padding: 0.375rem 0.625rem !important;
   font-size: 0.75rem !important;
 }
@@ -268,6 +268,7 @@
 .device-mobile .debts-table,
 .device-mobile .recurring-table {
   display: block !important;
+  width: 100% !important;
 }
 
 .device-mobile .expenses-table thead,
@@ -279,21 +280,19 @@
 .device-mobile .expenses-table tbody,
 .device-mobile .debts-table tbody,
 .device-mobile .recurring-table tbody {
-  display: flex !important;
-  flex-direction: column !important;
-  gap: 0.5rem !important;
+  display: block !important;
 }
 
 .device-mobile .expenses-table tr,
 .device-mobile .debts-table tr,
 .device-mobile .recurring-table tr {
-  display: flex !important;
-  flex-wrap: wrap !important;
-  padding: 0.75rem !important;
+  display: block !important;
+  padding: 1rem !important;
+  margin-bottom: 1rem !important;
   background: rgba(255, 255, 255, 0.5) !important;
-  border-radius: 0.5rem !important;
+  border-radius: 0.75rem !important;
   border: 1px solid rgba(0, 0, 0, 0.05) !important;
-  gap: 0.5rem !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05) !important;
 }
 
 .dark .device-mobile .expenses-table tr,
@@ -306,8 +305,38 @@
 .device-mobile .expenses-table td,
 .device-mobile .debts-table td,
 .device-mobile .recurring-table td {
-  padding: 0 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: flex-start !important;
+  padding: 0.5rem 0 !important;
   border: none !important;
+  width: 100% !important;
+  position: relative !important;
+}
+
+/* Fix for overlapping labels in tables */
+.device-mobile .expenses-table td::before,
+.device-mobile .debts-table td::before,
+.device-mobile .recurring-table td::before {
+  content: attr(data-label);
+  display: block !important;
+  font-weight: 700 !important;
+  font-size: 0.65rem !important;
+  color: #6366f1 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.1em !important;
+  margin-bottom: 0.25rem !important;
+}
+
+.dark .device-mobile .expenses-table td::before,
+.dark .device-mobile .debts-table td::before,
+.dark .device-mobile .recurring-table td::before {
+  color: #818cf8 !important;
+}
+
+/* Fix for Stocks tab items squashing */
+.device-mobile .tab-item {
+  flex-shrink: 0 !important;
 }
 
 /* Tasks sections */
@@ -384,4 +413,3 @@
 .device-mobile .overflow-y-auto {
   -webkit-overflow-scrolling: touch;
 }
-
