@@ -1,4 +1,4 @@
-const CACHE_VERSION = 'v5-icons-fix';
+const CACHE_VERSION = 'v6-layout-final';
 const STATIC_CACHE = `ordina-static-${CACHE_VERSION}`;
 const DYNAMIC_CACHE = `ordina-dynamic-${CACHE_VERSION}`;
 const CORE_ASSETS = [

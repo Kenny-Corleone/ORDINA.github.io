@@ -25,54 +25,35 @@
 
 <header class="mobile-header">
   <div class="mobile-header-content">
-    <!-- Logo -->
-    <button
-      type="button"
-      on:click={() => location.reload()}
-      class="mobile-logo-btn"
-      aria-label="Reload Application"
-    >
-      <img
-        src="/ORDINA.github.io/assets/ordina.png"
-        alt="Ordina logo"
-        class="mobile-logo-img"
-        loading="eager"
-      />
-    </button>
+    <!-- Left: Motto (replacing Logo) -->
+    <div class="mobile-motto">
+      {t($translations, 'appSubtitle')}
+    </div>
 
     <!-- Center: Time + Weather -->
     <div class="mobile-center-group">
-      {#if radio.isPlaying && radio.trackTitle}
-        <div class="mobile-track-container">
-          <span class="track-icon-pulse">🎵</span>
-          <div class="track-marquee-wrapper">
-            <span class="track-marquee-text">{radio.trackTitle}</span>
-          </div>
-        </div>
-      {:else}
-        <!-- Time -->
-        <div class="mobile-time">
-          <span class="time-value">{hours}:{minutes}</span>
-          <span class="date-value">{day}.{month}</span>
-        </div>
+      <!-- Time -->
+      <div class="mobile-time">
+        <span class="time-value">{hours}:{minutes}</span>
+        <span class="date-value">{day}.{month}</span>
+      </div>
 
-        <!-- Weather Chip (compact) -->
-        <div class="mobile-weather-chip" title={weather.city}>
-          {#if isOffline}
-            <span class="offline-dot"></span>
-          {:else if weather.loading}
-            <div class="weather-loader"></div>
-          {:else}
-            <div class="weather-icon-mini">
-              <svg viewBox="0 0 24 24">
-                {@html weatherIcons[weather.icon] || weatherIcons['01d']}
-              </svg>
-            </div>
-            <span class="weather-temp-mini">{Math.round(weather.temp)}°</span>
-            <span class="weather-city-mini">{weather.city}</span>
-          {/if}
-        </div>
-      {/if}
+      <!-- Weather Chip (compact) -->
+      <div class="mobile-weather-chip" title={weather.city}>
+        {#if isOffline}
+          <span class="offline-dot"></span>
+        {:else if weather.loading}
+          <div class="weather-loader"></div>
+        {:else}
+          <div class="weather-icon-mini">
+            <svg viewBox="0 0 24 24">
+              {@html weatherIcons[weather.icon] || weatherIcons['01d']}
+            </svg>
+          </div>
+          <span class="weather-temp-mini">{Math.round(weather.temp)}°</span>
+          <span class="weather-city-mini">{weather.city}</span>
+        {/if}
+      </div>
     </div>
 
     <!-- Radio Button -->
@@ -128,21 +109,18 @@
     gap: 0.5rem;
   }
 
-  /* Logo */
-  .mobile-logo-btn {
-    display: flex;
-    align-items: center;
-    background: none;
-    border: none;
-    padding: 0;
-    cursor: pointer;
-    flex-shrink: 0;
+  /* Motto (Left) */
+  .mobile-motto {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #64748b;
+    line-height: 1.1;
+    max-width: 120px;
+    white-space: normal;
+    text-align: left;
   }
-
-  .mobile-logo-img {
-    height: 24px;
-    width: auto;
-    object-fit: contain;
+  :global(.dark) .mobile-motto {
+    color: #94a3b8;
   }
 
   /* Center Group */

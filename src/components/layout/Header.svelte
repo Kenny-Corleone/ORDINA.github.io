@@ -400,8 +400,10 @@
     font-weight: 500;
     color: #475569; /* Slate-600 */
     letter-spacing: 0;
-    white-space: nowrap; /* Prevent wrapping/dots if possible */
+    white-space: normal; /* Allow text to wrap if needed */
+    line-height: 1.2;
     overflow: visible; /* Show all text */
+    max-width: 300px; /* Restrict width so it doesn't stretch too far, inducing wrap */
     /* Boundary check is handled by flex push */
   }
   :global(.dark) .header-motto {
