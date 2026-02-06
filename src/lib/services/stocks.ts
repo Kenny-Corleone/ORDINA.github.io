@@ -19,15 +19,17 @@ const CACHE_TTL = 10 * 60 * 1000; // 10 minutes
 export const STOCK_CATEGORIES = {
   CURRENCIES: ['USD', 'EUR', 'RUB', 'AZN', 'TRY', 'GBP', 'CAD', 'JPY'],
   INDICES: ['S&P 500', 'Nasdaq', 'Dow Jones', 'FTSE 100', 'Nikkei 225'],
+  ENERGY: ['BRENT OIL', 'WTI OIL', 'GAS'],
   TECH: ['AAPL', 'MSFT', 'NVDA', 'TSLA', 'AMZN', 'GOOGL', 'META'],
-  MARKETS: ['GOLD', 'BRENT OIL', 'BTC', 'ETH'],
+  MARKETS: ['GOLD', 'BTC', 'ETH'],
 };
 
 // Map languages to specific local symbols
 export const LOCAL_SYMBOLS: Record<string, string[]> = {
   'ru': ['SBER', 'GAZP', 'LKOH', 'YNDX', 'ROSN'], 
-  'en': ['AAPL', 'MSFT', 'AMZN'],
-  'az': ['USD/AZN', 'EUR/AZN', 'RUB/AZN'], 
+  'en': ['AAPL', 'MSFT', 'NVDA', 'AMZN', 'TSLA'],
+  'az': ['USD/AZN', 'EUR/AZN', 'RUB/AZN', 'TRY/AZN'], 
+  'it': ['ENI', 'ENEL', 'RACE', 'STLA', 'UCG'], // Italian: Eni, Enel, Ferrari, Stellantis, Unicredit
 };
 
 export const DEFAULT_SYMBOLS = STOCK_CATEGORIES.CURRENCIES;
@@ -39,14 +41,20 @@ async function fetchFinnhub(symbol: string): Promise<StockQuote | null> {
   const apiKey = import.meta.env.VITE_FINNHUB_API_KEY;
   if (!apiKey) return null;
 
-  // Map user-friendly names to Finnhub symbols for INDICES and TECH
+  // Map user-friendly names to Finnhub symbols
   const mapping: Record<string, string> = {
     'S&P 500': 'SPY',
     'Nasdaq': 'QQQ',
     'Dow Jones': 'DIA',
-    'AAPL': 'AAPL', 'MSFT': 'MSFT', 'NVDA': 'NVDA', 'TSLA': 'TSLA', 'AMZN': 'AMZN', 'GOOGL': 'GOOGL', 'META': 'META',
-    'BTC': 'BINANCE:BTCUSDT', 'ETH': 'BINANCE:ETHUSDT',
-    'SBER': 'SBER', 'GAZP': 'GAZP', 'LKOH': 'LKOH', 'YNDX': 'YNDX', 'ROSN': 'ROSN'
+    'FTSE 100': 'EWU',
+    'Nikkei 225': 'EWJ',
+    'BRENT OIL': 'OANDA:BCO_USD',
+    'WTI OIL': 'OANDA:WTICO_USD',
+    'GAS': 'OANDA:NATGAS_USD',
+    'BTC': 'BINANCE:BTCUSDT', 
+    'ETH': 'BINANCE:ETHUSDT',
+    // Italian Stocks (Borsa Italiana)
+    'ENI': 'ENI.MI', 'ENEL': 'ENEL.MI', 'RACE': 'RACE.MI', 'STLA': 'STLA.MI', 'UCG': 'UCG.MI'
   };
 
   const s = mapping[symbol] || symbol;

@@ -109,8 +109,10 @@
         МОСБИРЖА
       {:else if currentLang === 'az'}
         BAKU
+      {:else if currentLang === 'it'}
+        BORSA ITAL.
       {:else}
-        LOCAL
+        US MARKET
       {/if}
     </button>
     {#each Object.keys(STOCK_CATEGORIES) as cat}
