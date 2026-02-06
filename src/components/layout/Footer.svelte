@@ -121,7 +121,7 @@
     <!-- Copyright with ANCL Logo -->
     <div class="footer-section copyright-section">
       <span class="copyright-text">by</span>
-      <img src="/assets/ancl-logo.svg" alt="ANCL" class="ancl-logo" />
+      <img src="/ORDINA.github.io/assets/ancl-logo-new.png" alt="ANCL" class="ancl-logo" />
       <span class="copyright-text">2026</span>
     </div>
   </div>

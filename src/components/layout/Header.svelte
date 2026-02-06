@@ -101,12 +101,13 @@
         aria-label="Reload Application"
       >
         <img
-          src="/assets/ordina.png"
-          srcset="/assets/ordina.png 1x, /assets/ordina@2x.png 2x"
-          alt="Ordina logo"
-          class="header-logo-img"
+          src="/ORDINA.github.io/assets/ordina.png"
+          srcset="/ORDINA.github.io/assets/ordina.png 1x, /ORDINA.github.io/assets/ordina@2x.png 2x"
+          alt="ORDINA Logo"
+          class="logo-img"
+          width="130"
+          height="auto"
           loading="eager"
-          fetchpriority="high"
         />
       </button>
 

@@ -32,7 +32,12 @@
       class="mobile-logo-btn"
       aria-label="Reload Application"
     >
-      <img src="/assets/ordina.png" alt="Ordina logo" class="mobile-logo-img" loading="eager" />
+      <img
+        src="/ORDINA.github.io/assets/ordina.png"
+        alt="Ordina logo"
+        class="mobile-logo-img"
+        loading="eager"
+      />
     </button>
 
     <!-- Center: Time + Weather -->

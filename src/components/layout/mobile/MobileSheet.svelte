@@ -285,7 +285,11 @@
           <!-- Footer attribution -->
           <div class="sheet-footer">
             <span>by</span>
-            <img src="/assets/ancl-logo.svg" alt="ANCL" class="ancl-logo-mobile" />
+            <img
+              src="/ORDINA.github.io/assets/ancl-logo-new.png"
+              alt="ANCL"
+              class="ancl-logo-mobile"
+            />
             <span>2026</span>
           </div>
         {/if}
