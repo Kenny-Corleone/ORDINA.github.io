@@ -1,5 +1,6 @@
 <script lang="ts">
   import { onMount, onDestroy } from 'svelte';
+  import { slide } from 'svelte/transition';
   import { uiStore } from '../../../lib/stores/uiStore';
   import { weatherStore } from '../../../lib/stores/weatherStore';
   import { radioStore } from '../../../lib/stores/radioStore';

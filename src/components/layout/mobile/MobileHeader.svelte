@@ -4,6 +4,7 @@
   import { clockStore } from '../../../lib/stores/clockStore';
   import { radioStore } from '../../../lib/stores/radioStore';
   import { weatherIcons } from '../../../lib/services/weather';
+  import { t, translations } from '../../../lib/i18n';
 
   // Weather state
   $: weather = $weatherStore;
@@ -307,59 +308,5 @@
     }
   }
 
-  /* Radio Track Info (Center Header) */
-  .mobile-track-container {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    overflow: hidden;
-    max-width: 200px; /* Limit width */
-    color: #4f46e5;
-  }
-  :global(.dark) .mobile-track-container {
-    color: #818cf8;
-  }
-
-  .track-icon-pulse {
-    font-size: 1rem;
-    animation: pulse 2s infinite;
-  }
-
-  .track-marquee-wrapper {
-    overflow: hidden;
-    white-space: nowrap;
-    mask-image: linear-gradient(90deg, transparent 0%, black 5%, black 95%, transparent 100%);
-  }
-
-  .track-marquee-text {
-    display: inline-block;
-    font-size: 0.9rem;
-    font-weight: 600;
-    padding-right: 20px;
-    animation: scrollTrack 10s linear infinite;
-  }
-
-  @keyframes pulse {
-    0% {
-      transform: scale(1);
-      opacity: 1;
-    }
-    50% {
-      transform: scale(1.1);
-      opacity: 0.8;
-    }
-    100% {
-      transform: scale(1);
-      opacity: 1;
-    }
-  }
-
-  @keyframes scrollTrack {
-    0% {
-      transform: translateX(0);
-    }
-    100% {
-      transform: translateX(-100%);
-    }
-  }
+  /* Removed unused radio track styles */
 </style>
