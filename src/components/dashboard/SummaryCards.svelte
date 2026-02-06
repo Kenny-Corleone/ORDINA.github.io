@@ -209,11 +209,6 @@
     min-width: 0;
   }
 
-  .card-content.centered {
-    align-items: center;
-    text-align: center;
-  }
-
   .card-label {
     font-size: 0.75rem;
     text-transform: uppercase;
@@ -233,17 +228,5 @@
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-  }
-
-  .card-value-large {
-    font-size: 2rem;
-    font-weight: 800;
-    line-height: 1;
-  }
-
-  .card-value-large {
-    font-size: 2rem;
-    font-weight: 800;
-    line-height: 1;
   }
 </style>
