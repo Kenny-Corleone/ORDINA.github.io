@@ -15,10 +15,18 @@ export interface StockQuote {
 const CACHE_KEY = 'stocks_data_cache';
 const CACHE_TTL = 5 * 60 * 1000; // 5 minutes
 
+// Basic symbols available on most free tiers
 export const STOCK_CATEGORIES = {
-  CURRENCIES: ['FX:EURUSD', 'FX:GBPUSD', 'FX:USDJPY', 'FX:USDAZN', 'FX:USDTRY', 'FX:USDCAD', 'FX:USDAUD', 'FX:USDCHF'],
+  CURRENCIES: ['OANDA:EUR_USD', 'OANDA:GBP_USD', 'OANDA:USD_JPY', 'OANDA:USD_AZN', 'OANDA:USD_TRY', 'OANDA:USD_CAD'],
+  INDICES: ['^GSPC', '^IXIC', '^DJI', '^FTSE', '^N225'],
   TECH: ['AAPL', 'MSFT', 'NVDA', 'TSLA', 'AMZN', 'GOOGL', 'META'],
-  MARKETS: ['SPY', 'QQQ', 'OANDA:BCO_USD', 'OANDA:XAU_USD', 'BINANCE:BTCUSDT', 'BINANCE:ETHUSDT'],
+  MARKETS: ['SPY', 'QQQ', 'OANDA:XAU_USD', 'OANDA:BCO_USD', 'BINANCE:BTCUSDT'],
+};
+
+// Map languages to specific local symbols
+export const LOCAL_SYMBOLS: Record<string, string[]> = {
+  'ru': ['MCX:SBER', 'MCX:GAZP', 'MCX:LKOH', 'MCX:YNDX'], // Moscow Exchange
+  'en': ['AAPL', 'MSFT', 'AMZN'],
 };
 
 export const DEFAULT_SYMBOLS = STOCK_CATEGORIES.CURRENCIES;
