@@ -16,16 +16,18 @@ const CACHE_TTL = 15 * 60 * 1000; // 15 minutes
 
 export const STOCK_CATEGORIES = {
   CURRENCIES: ['USD', 'EUR', 'RUB', 'AZN', 'TRY', 'GBP'],
-  INDICES: ['S&P 500', 'Nasdaq', 'Dow Jones', 'FTSE 100', 'Nikkei 225'],
-  OIL: ['BRENT OIL', 'WTI OIL', 'GAS', 'GOLD'],
+  INDICES: ['S&P 500', 'Nasdaq', 'Dow Jones', 'FTSE 100', 'Nikkei 225', 'IMOEX'],
+  ENERGY: ['Crude Oil', 'Brent', 'Natural Gas', 'Gasoline', 'Heating Oil'],
+  METALS: ['Gold', 'Silver', 'Copper', 'Platinum', 'Palladium'],
+  AGRICULTURAL: ['Wheat', 'Corn', 'Soybeans', 'Rice', 'Sugar', 'Coffee'],
   TECH: ['AAPL', 'MSFT', 'NVDA', 'TSLA', 'AMZN', 'GOOGL', 'META'],
 };
 
 export const LOCAL_SYMBOLS: Record<string, string[]> = {
-  'ru': ['IMOEX', 'SBER', 'GAZP', 'LKOH', 'YNDX', 'ROSN', 'MGNT'], // Moscow Exchange
-  'it': ['RACE', 'ENI', 'STLA', 'UCG', 'ISP', 'ENEL'], // Ferrari, Eni, Stellantis, Unicredit, Intesa, Enel
-  'az': ['ABB', 'ABBNK', 'BRENT OIL', 'GOLD', 'GAS', 'S&P 500'], // Baku Stock Exchange + Macros
-  'en': ['S&P 500', 'Nasdaq', 'AAPL', 'MSFT', 'NVDA', 'AMZN'],
+  'ru': ['IMOEX', 'SBER', 'GAZP', 'LKOH', 'YNDX', 'ROSN', 'MGNT', 'MTSS', 'CHMF', 'GMKN'], // Moscow Exchange
+  'it': ['RACE', 'ENI', 'STLA', 'UCG', 'ISP', 'ENEL', 'PRY', 'G', 'TEN', 'MONC'], // Borsa Italiana (Ferrari, Eni, Stellantis, etc. from Investing.com list)
+  'az': ['ABB', 'ABBNK', 'Brent', 'Gold', 'Natural Gas', 'S&P 500'], // BFB + Energy/Metals
+  'en': ['S&P 500', 'Nasdaq', 'AAPL', 'MSFT', 'NVDA', 'AMZN', 'GOOGL', 'META'],
 };
 
 export const DEFAULT_SYMBOLS = STOCK_CATEGORIES.CURRENCIES;
@@ -60,21 +62,26 @@ async function fetchBFB(ticker: string): Promise<StockQuote | null> {
     if (!html) return null;
 
     const doc = new DOMParser().parseFromString(html, 'text/html');
-    // BFB table structure: 1st column ticker, 3rd column price
-    const rows = Array.from(doc.querySelectorAll('table tbody tr'));
+    // BFB table structure: .capitalisation_table table
+    const table = doc.querySelector('.capitalisation_table table') || doc.querySelector('table');
+    if (!table) return null;
+
+    const rows = Array.from(table.querySelectorAll('tbody tr'));
     
     for (const row of rows) {
       const cells = row.querySelectorAll('td');
       if (cells.length >= 3) {
         const rowTicker = cells[0]?.textContent?.trim() || '';
-        if (rowTicker === ticker || (ticker === 'ABB' && rowTicker.includes('ABB'))) {
-          const price = parseFloat(cells[2]?.textContent?.trim() || '0');
+        // Match ABB or specific ticker
+        if (rowTicker.includes(ticker) || (ticker === 'ABB' && rowTicker.includes('AİB'))) {
+          const priceStr = cells[2]?.textContent?.trim() || '0';
+          const price = parseFloat(priceStr.replace(',', '.'));
           if (isNaN(price) || price === 0) continue;
           
           return {
             symbol: ticker,
             price: price,
-            change: 0, // BFB doesn't always show clear daylight change in the simple table
+            change: 0,
             percentChange: 0,
             high: price,
             low: price,
@@ -93,8 +100,75 @@ async function fetchBFB(ticker: string): Promise<StockQuote | null> {
 }
 
 /**
- * MOEX ISS API for Russian Stocks & Indices
+ * Trading Economics Scraper for Energy, Metals, Agricultural
  */
+async function fetchTradingEconomics(ticker: string): Promise<StockQuote | null> {
+  try {
+    const proxies = [
+      'https://api.allorigins.win/get?url=',
+      'https://corsproxy.io/?'
+    ];
+    const proxy = proxies[Math.floor(Math.random() * proxies.length)];
+    const teUrl = 'https://tradingeconomics.com/commodities';
+    
+    const targetUrl = proxy?.includes('allorigins') 
+      ? proxy + encodeURIComponent(teUrl)
+      : (proxy || '') + teUrl;
+
+    const res = await fetch(targetUrl);
+    if (!res.ok) return null;
+    
+    let html = '';
+    if (proxy?.includes('allorigins')) {
+      const json = await res.json();
+      html = json.contents;
+    } else {
+      html = await res.text();
+    }
+
+    if (!html) return null;
+
+    const doc = new DOMParser().parseFromString(html, 'text/html');
+    // Using tr[data-symbol] or searching for Name (td:first-child b)
+    const rows = Array.from(doc.querySelectorAll('tr[data-symbol], table tbody tr'));
+    
+    for (const row of rows) {
+      const nameEl = row.querySelector('td:first-child b');
+      const name = nameEl?.textContent?.trim() || '';
+      
+      // Match by ticker (Crude Oil, Brent, Gold, etc.)
+      if (name.toLowerCase() === ticker.toLowerCase() || 
+          row.getAttribute('data-symbol')?.toLowerCase().includes(ticker.toLowerCase())) {
+        
+        const priceCell = row.querySelector('td:nth-child(2)');
+        const price = parseFloat(priceCell?.textContent?.trim().replace(/,/g, '') || '0');
+        if (isNaN(price)) continue;
+        
+        const changeCell = row.querySelector('td:nth-child(4)'); // Daily Change
+        const change = parseFloat(changeCell?.textContent?.trim() || '0');
+        
+        const pctCell = row.querySelector('td:nth-child(5)'); // Daily %
+        const pctChange = parseFloat(pctCell?.textContent?.trim().replace('%', '') || '0');
+
+        return {
+          symbol: ticker,
+          price: price,
+          change: change,
+          percentChange: pctChange,
+          high: price,
+          low: price,
+          open: price - change,
+          prevClose: price - change,
+          timestamp: Date.now(),
+          provider: 'TE'
+        };
+      }
+    }
+    return null;
+  } catch (e) {
+    return null;
+  }
+}
 async function fetchMoEx(ticker: string): Promise<StockQuote | null> {
   try {
     const isIndex = ticker === 'IMOEX';
@@ -313,6 +387,11 @@ export async function fetchStocks(symbols: string[] = DEFAULT_SYMBOLS): Promise<
 
   // 2. Specialized Fetchers
   const azTickers = LOCAL_SYMBOLS['az'] || [];
+  const commodityTickers = [
+    ...STOCK_CATEGORIES.ENERGY,
+    ...STOCK_CATEGORIES.METALS,
+    ...STOCK_CATEGORIES.AGRICULTURAL
+  ];
 
   const promises = symbols.map(async (s) => {
     // Skip if already handled by currency
@@ -321,9 +400,14 @@ export async function fetchStocks(symbols: string[] = DEFAULT_SYMBOLS): Promise<
     // RU Stocks -> MoEx
     if (ruTickers && ruTickers.includes(s)) return fetchMoEx(s);
     
-    // AZ Stocks -> BFB.az
-    if (azTickers && azTickers.includes(s) && !STOCK_CATEGORIES.OIL.includes(s) && s !== 'S&P 500') {
+    // AZ Stocks -> BFB.az (excluding macro commodities which go to TE)
+    if (azTickers && azTickers.includes(s) && !commodityTickers.includes(s) && s !== 'S&P 500') {
       return fetchBFB(s);
+    }
+    
+    // Commodities -> TradingEconomics
+    if (commodityTickers.includes(s)) {
+      return fetchTradingEconomics(s);
     }
 
     // IT Stocks -> Alpha Vantage first
@@ -333,7 +417,7 @@ export async function fetchStocks(symbols: string[] = DEFAULT_SYMBOLS): Promise<
       return fetchYahoo(s, '.MI');
     }
     
-    // Indices/Tech/Energy -> Finnhub
+    // Indices/Tech -> Finnhub
     return fetchFinnhub(s);
   });
 
