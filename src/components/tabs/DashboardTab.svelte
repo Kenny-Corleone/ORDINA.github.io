@@ -25,25 +25,12 @@
   // Ограничение высоты колонки новостей по высоте левой колонки (контейнер «Последняя активность»)
   let leftColumnEl: HTMLDivElement | null = null;
   let newsColumnMaxHeight = 0;
-  let NewsWidgetComponent: typeof SvelteComponentTyped | null = null;
-  let newsWidgetLoading = true;
+
+  function setNewsHeight() {
+    if (leftColumnEl) newsColumnMaxHeight = leftColumnEl.offsetHeight;
+  }
 
   onMount(() => {
-    import('../dashboard/NewsWidget.svelte')
-      .then((mod) => {
-        NewsWidgetComponent = mod.default as unknown as typeof SvelteComponentTyped;
-      })
-      .catch(() => {
-        NewsWidgetComponent = null;
-      })
-      .finally(() => {
-        newsWidgetLoading = false;
-      });
-
-    if (!leftColumnEl) return;
-    const setNewsHeight = () => {
-      if (leftColumnEl) newsColumnMaxHeight = leftColumnEl.offsetHeight;
-    };
     setNewsHeight();
     const ro = new ResizeObserver(setNewsHeight);
     ro.observe(leftColumnEl);
@@ -262,7 +249,7 @@
 <SummaryCards />
 
 <!-- Dashboard Lower Area (Ordina 1 structure) -->
-<div class="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-4 items-stretch mt-2">
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-4 items-stretch mt-0">
   <!-- Left column: chart + quick actions + recent expenses -->
   <div class="space-y-4 flex flex-col" id="dashboard-left-column" bind:this={leftColumnEl}>
     <div id="expense-chart-container" class="premium-card p-4 flex flex-col">
@@ -355,12 +342,6 @@
     id="dashboard-right-column"
     style={newsColumnMaxHeight ? `max-height: ${newsColumnMaxHeight}px; height: 100%` : ''}
   >
-    {#if newsWidgetLoading}
-      <div class="premium-card p-4 text-sm text-gray-500 dark:text-gray-400">Loading...</div>
-    {:else if NewsWidgetComponent}
-      <svelte:component this={NewsWidgetComponent} />
-    {:else}
-      <div class="premium-card p-4 text-sm text-red-500">News unavailable</div>
-    {/if}
+    <NewsWidget />
   </div>
 </div>

@@ -42,7 +42,7 @@
 
   <VirtualList
     items={expenses}
-    itemHeight={60}
+    itemHeight={typeof window !== 'undefined' && window.innerWidth < 768 ? 240 : 60}
     bufferSize={10}
     containerHeight="calc(100vh - 300px)"
     threshold={50}

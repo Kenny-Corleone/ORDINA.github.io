@@ -141,18 +141,18 @@
   }
 
   .mobile-logo-mini {
-    height: 50px; /* Significantly increased */
+    height: 60px; /* Even BIGGER */
     width: auto;
     object-fit: contain;
     filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
   }
 
   .mobile-motto {
-    font-size: 0.9rem;
-    font-weight: 700;
-    color: #334155;
+    font-size: 0.95rem; /* Slightly larger motto font */
+    font-weight: 800;
+    color: #1e293b;
     line-height: 1.1;
-    max-width: 38vw;
+    max-width: 45vw; /* Allow more space */
     white-space: normal;
     text-align: left;
     display: flex;

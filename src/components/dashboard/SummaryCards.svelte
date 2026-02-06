@@ -162,7 +162,7 @@
     flex-direction: column;
     gap: 1rem;
     width: 100%;
-    margin-bottom: 0.5rem;
+    margin-bottom: 0;
   }
 
   /* Grid Layouts */

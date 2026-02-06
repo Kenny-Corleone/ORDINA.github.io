@@ -116,7 +116,6 @@
           srcset="/ORDINA.github.io/assets/ordina.png 1x, /ORDINA.github.io/assets/ordina@2x.png 2x"
           alt="ORDINA Logo"
           class="logo-img"
-          width="130"
           height="auto"
           loading="eager"
         />
@@ -384,12 +383,12 @@
   .header-brand-container {
     display: flex;
     align-items: center;
-    gap: 0.75rem;
+    gap: 0.5rem; /* Reduced gap */
     flex: 1;
   }
 
   .logo-img {
-    height: 18px; /* Ultra compact as requested */
+    height: 16px; /* Even smaller */
     width: auto;
     object-fit: contain;
     position: relative;
