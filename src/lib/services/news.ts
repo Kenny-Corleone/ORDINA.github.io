@@ -32,42 +32,91 @@ export interface NewsArticle {
 // ============================================================================
 
 const RSS_SOURCES: Record<string, Record<string, string[]>> = {
+  az: {
+    all: [
+      'https://azertag.az/rss.xml',
+      'https://apa.az/az/rss',
+      'https://report.az/rss',
+      'https://oxu.az/rss',
+      'https://az.trend.az/rss',
+      'https://qafqazinfo.az/rss',
+      'https://www.milli.az/rss',
+      'https://lent.az/rss',
+      'https://publika.az/rss',
+      'https://turan.az/ext/news/rss.xml',
+      'https://www.azadliq.info/feed',
+      'https://www.bizimyol.info/rss',
+      'https://bakupost.az/rss',
+      'https://moderator.az/rss'
+    ],
+    business: ['https://fed.az/rss', 'https://marja.az/rss', 'https://banker.az/rss'],
+    sports: ['https://qol.az/rss', 'https://sportinfo.az/rss'],
+    entertainment: ['https://baku.ws/rss', 'https://big.az/rss', 'https://yenicag.az/rss', 'https://sfera.az/rss'],
+    technology: ['https://az.trend.az/rss/it/'],
+    science: ['https://azertag.az/rss.xml'],
+    health: ['https://apa.az/az/rss']
+  },
   ru: {
-    all: ['https://lenta.ru/rss', 'https://www.kommersant.ru/RSS/main.xml', 'https://www.rbc.ru/rss/rbcnews.rss'],
-    technology: ['https://3dnews.ru/news/rss/'],
-    business: ['https://www.rbc.ru/rss/rbcnews.rss'],
+    all: [
+      'https://ria.ru/export/rss2/archive/index.xml',
+      'https://tass.ru/rss/v2.xml',
+      'https://www.interfax.ru/rss.asp',
+      'https://lenta.ru/rss',
+      'https://www.gazeta.ru/export/rss/lenta.xml',
+      'https://iz.ru/xml/rss/all.xml',
+      'https://rssexport.rbc.ru/rbcnews/news/30/full.rss',
+      'https://www.kommersant.ru/RSS/main.xml',
+      'https://www.vedomosti.ru/rss/news'
+    ],
+    business: ['https://www.vedomosti.ru/rss/news', 'https://www.forbes.ru/newrss.xml', 'https://rssexport.rbc.ru/rbcnews/news/30/full.rss'],
+    technology: ['https://3dnews.ru/news/rss/', 'https://habr.com/ru/rss/all/all/'],
     science: ['https://nplus1.ru/rss'],
     sports: ['https://www.sports.ru/rss/all.xml'],
     health: ['https://rg.ru/rss/vlast/zdorove/index.xml'],
-    entertainment: ['https://www.afisha.ru/rss/news/'],
+    entertainment: ['https://www.afisha.ru/rss/news/']
   },
   en: {
-    all: ['https://feeds.bbci.co.uk/news/rss.xml', 'https://rss.nytimes.com/services/xml/rss/nyt/HomePage.xml'],
-    technology: ['https://rss.nytimes.com/services/xml/rss/nyt/Technology.xml'],
-    business: ['https://feeds.bbci.co.uk/news/business/rss.xml'],
+    all: [
+      'https://feeds.bbci.co.uk/news/world/rss.xml',
+      'https://feeds.bbci.co.uk/news/rss.xml',
+      'https://feeds.reuters.com/reuters/worldNews',
+      'https://feeds.reuters.com/reuters/topNews',
+      'https://apnews.com/rss',
+      'https://www.theguardian.com/world/rss',
+      'https://rss.nytimes.com/services/xml/rss/nyt/World.xml',
+      'https://feeds.washingtonpost.com/rss/world',
+      'https://www.aljazeera.com/xml/rss/all.xml',
+      'https://rss.dw.com/xml/rss-en-all'
+    ],
+    business: [
+      'https://feeds.bloomberg.com/markets/news.rss',
+      'https://www.ft.com/rss/home',
+      'https://www.cnbc.com/id/100003114/device/rss/rss.html',
+      'https://feeds.a.dj.com/rss/RSSWorldNews.xml'
+    ],
+    technology: ['https://rss.nytimes.com/services/xml/rss/nyt/Technology.xml', 'https://www.theverge.com/rss/index.xml'],
     science: ['https://www.sciencedaily.com/rss/all.xml'],
     sports: ['https://feeds.bbci.co.uk/sport/rss.xml'],
     health: ['https://www.medicalnewstoday.com/feed/rss'],
-    entertainment: ['https://feeds.bbci.co.uk/news/entertainment_and_arts/rss.xml'],
-  },
-  az: {
-    all: ['https://apa.az/az/rss', 'https://trend.az/rss/az/main'],
-    technology: ['https://trend.az/rss/az/it'],
-    business: ['https://trend.az/rss/az/business'],
-    science: ['https://apa.az/az/rss'],
-    sports: ['https://apa.az/az/idman/rss'],
-    health: ['https://apa.az/az/saglamliq/rss'],
-    entertainment: ['https://apa.az/az/sou-biznes/rss'],
+    entertainment: ['https://feeds.bbci.co.uk/news/entertainment_and_arts/rss.xml']
   },
   it: {
-    all: ['https://www.ansa.it/sito/ansait_rss.xml'],
+    all: [
+      'https://www.ansa.it/sito/ansait_rss.xml',
+      'https://www.corriere.it/rss/homepage.xml',
+      'https://www.repubblica.it/rss/homepage/rss2.0.xml',
+      'https://www.lastampa.it/rss.xml',
+      'https://tg24.sky.it/rss/tg24.xml',
+      'https://www.fanpage.it/feed/',
+      'https://www.open.online/feed/'
+    ],
+    business: ['https://www.ilsole24ore.com/rss/homepage.xml', 'https://www.milanofinanza.it/rss'],
     technology: ['https://www.ansa.it/sito/notizie/tecnologia/tecnologia_rss.xml'],
-    business: ['https://www.ansa.it/sito/notizie/economia/economia_rss.xml'],
     science: ['https://www.ansa.it/sito/notizie/scienza_tecnica/scienza_tecnica_rss.xml'],
     sports: ['https://www.ansa.it/sito/notizie/sport/sport_rss.xml'],
     health: ['https://www.ansa.it/sito/notizie/sanita/sanita_rss.xml'],
-    entertainment: ['https://www.ansa.it/sito/notizie/cultura/cultura_rss.xml'],
-  },
+    entertainment: ['https://www.ansa.it/sito/notizie/cultura/cultura_rss.xml']
+  }
 };
 
 /** Cache key for localStorage */
@@ -251,7 +300,7 @@ export async function fetchNews(
     ? category
     : 'all';
 
-  let urls = getRSSSourcesForLanguage(safeLang, safeCat).slice(0, 4);
+  let urls = getRSSSourcesForLanguage(safeLang, safeCat).slice(0, 8);
   const promises = urls.map((u) => parseRSSFeed(u, 1));
   const results = await Promise.allSettled(promises);
 
@@ -262,7 +311,7 @@ export async function fetchNews(
 
   let filtered = dedupeByUrl(allArticles);
   if (filtered.length === 0 && safeLang !== 'en') {
-    const enUrls = getRSSSourcesForLanguage('en', safeCat).slice(0, 4);
+    const enUrls = getRSSSourcesForLanguage('en', safeCat).slice(0, 8);
     const enPromises = enUrls.map((u) => parseRSSFeed(u, 1));
     const enResults = await Promise.allSettled(enPromises);
     enResults.forEach((r) => {
