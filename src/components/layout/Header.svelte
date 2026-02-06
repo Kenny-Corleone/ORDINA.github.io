@@ -145,7 +145,7 @@
           <div class="widget-loader"></div>
         {:else}
           <div class="weather-icon fade-in">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <svg viewBox="0 0 24 24">
               {@html weatherIcons[weather.icon] || weatherIcons['01d']}
             </svg>
           </div>
@@ -372,11 +372,11 @@
 
   /* 1. Brand Elements */
   .logo-img {
-    height: 50px; /* Reduced from 60px */
+    height: 38px; /* Reduced further from 50px */
     width: auto;
     object-fit: contain;
     position: relative;
-    top: 10px; /* Slight overlap push */
+    top: 0; /* Remove top push as it's smaller now */
     filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.1));
     transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
   }
@@ -387,7 +387,7 @@
 
   .header-divider {
     width: 1px;
-    height: 32px;
+    height: 24px; /* Smaller divider */
     background-color: #cbd5e1; /* Slate-300 */
   }
 
@@ -396,10 +396,12 @@
   }
 
   .header-motto {
-    font-size: 1.1rem; /* Slightly larger motto text */
+    font-size: 0.85rem; /* Smaller font to fit full text */
     font-weight: 500;
     color: #475569; /* Slate-600 */
-    letter-spacing: -0.01em;
+    letter-spacing: 0;
+    white-space: nowrap; /* Prevent wrapping/dots if possible */
+    overflow: visible; /* Show all text */
     /* Boundary check is handled by flex push */
   }
   :global(.dark) .header-motto {

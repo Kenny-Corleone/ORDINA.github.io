@@ -64,7 +64,7 @@
             <div class="weather-loader"></div>
           {:else}
             <div class="weather-icon-mini">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <svg viewBox="0 0 24 24">
                 {@html weatherIcons[weather.icon] || weatherIcons['01d']}
               </svg>
             </div>
@@ -140,7 +140,7 @@
   }
 
   .mobile-logo-img {
-    height: 32px;
+    height: 24px;
     width: auto;
     object-fit: contain;
   }
@@ -201,8 +201,8 @@
   }
 
   .weather-icon-mini svg {
-    width: 16px;
-    height: 16px;
+    width: 20px;
+    height: 20px;
     color: #3b82f6;
   }
 

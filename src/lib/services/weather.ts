@@ -40,24 +40,28 @@ if (!OPENWEATHER_API_KEY && import.meta.env.DEV) {
 // ============================================================================
 
 export const weatherIcons: WeatherIconMap = {
-  '01d': '<circle cx="12" cy="12" r="5" stroke-width="2"/><line x1="12" y1="1" x2="12" y2="3" stroke-width="2"/><line x1="12" y1="21" x2="12" y2="23" stroke-width="2"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64" stroke-width="2"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78" stroke-width="2"/><line x1="1" y1="12" x2="3" y2="12" stroke-width="2"/><line x1="21" y1="12" x2="23" y2="12" stroke-width="2"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36" stroke-width="2"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22" stroke-width="2"/>',
-  '01n': '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" stroke-width="2"/>',
-  '02d': '<circle cx="12" cy="12" r="4" stroke-width="2"/><path d="M20 20c-2-2-4-3-8-3s-6 1-8 3" stroke-width="2"/>',
-  '02n': '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" stroke-width="2"/><path d="M20 20c-2-2-4-3-8-3s-6 1-8 3" stroke-width="2"/>',
-  '03d': '<path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z" stroke-width="2"/>',
-  '03n': '<path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z" stroke-width="2"/>',
-  '04d': '<path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z" stroke-width="2"/><path d="M16 8a4 4 0 0 0-8 0" stroke-width="2"/>',
-  '04n': '<path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z" stroke-width="2"/><path d="M16 8a4 4 0 0 0-8 0" stroke-width="2"/>',
-  '09d': '<path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z" stroke-width="2"/><line x1="8" y1="19" x2="8" y2="21" stroke-width="2"/><line x1="12" y1="19" x2="12" y2="21" stroke-width="2"/><line x1="16" y1="19" x2="16" y2="21" stroke-width="2"/>',
-  '09n': '<path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z" stroke-width="2"/><line x1="8" y1="19" x2="8" y2="21" stroke-width="2"/><line x1="12" y1="19" x2="12" y2="21" stroke-width="2"/><line x1="16" y1="19" x2="16" y2="21" stroke-width="2"/>',
-  '10d': '<path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z" stroke-width="2"/><line x1="8" y1="19" x2="8" y2="21" stroke-width="2"/><line x1="12" y1="19" x2="12" y2="21" stroke-width="2"/>',
-  '10n': '<path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z" stroke-width="2"/><line x1="8" y1="19" x2="8" y2="21" stroke-width="2"/><line x1="12" y1="19" x2="12" y2="21" stroke-width="2"/>',
-  '11d': '<path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z" stroke-width="2"/><polyline points="13 13 11 16 13 16 11 19" stroke-width="2"/>',
-  '11n': '<path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z" stroke-width="2"/><polyline points="13 13 11 16 13 16 11 19" stroke-width="2"/>',
-  '13d': '<path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z" stroke-width="2"/><line x1="8" y1="19" x2="8.01" y2="19" stroke-width="3" stroke-linecap="round"/><line x1="12" y1="19" x2="12.01" y2="19" stroke-width="3" stroke-linecap="round"/><line x1="16" y1="19" x2="16.01" y2="19" stroke-width="3" stroke-linecap="round"/>',
-  '13n': '<path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z" stroke-width="2"/><line x1="8" y1="19" x2="8.01" y2="19" stroke-width="3" stroke-linecap="round"/><line x1="12" y1="19" x2="12.01" y2="19" stroke-width="3" stroke-linecap="round"/><line x1="16" y1="19" x2="16.01" y2="19" stroke-width="3" stroke-linecap="round"/>',
-  '50d': '<path d="M3 15h18M3 9h18M3 21h18" stroke-width="2" stroke-linecap="round"/>',
-  '50n': '<path d="M3 15h18M3 9h18M3 21h18" stroke-width="2" stroke-linecap="round"/>'
+  // Clear Day (Solid Sun)
+  '01d': '<path fill="currentColor" d="M12 2.25a.75.75 0 01.75.75v2.25a.75.75 0 01-1.5 0V3a.75.75 0 01.75-.75zM7.5 12a4.5 4.5 0 119 0 4.5 4.5 0 01-9 0zM18.894 6.166a.75.75 0 00-1.06-1.06l-1.591 1.59a.75.75 0 101.06 1.061l1.591-1.59zM21.75 12a.75.75 0 01-.75.75h-2.25a.75.75 0 010-1.5H21a.75.75 0 01.75.75zM17.834 18.894a.75.75 0 001.06-1.06l-1.59-1.591a.75.75 0 10-1.061 1.06l1.59 1.591zM12 18a.75.75 0 01.75.75V21a.75.75 0 01-1.5 0v-2.25A.75.75 0 0112 18zM7.758 17.303a.75.75 0 00-1.061-1.06l-1.591 1.59a.75.75 0 001.06 1.061l1.591-1.59zM6 12a.75.75 0 01-.75.75H3a.75.75 0 010-1.5h2.25A.75.75 0 016 12zM6.697 7.757a.75.75 0 001.06-1.06l-1.59-1.591a.75.75 0 00-1.061 1.06l1.59 1.591z" />',
+  // Clear Night (Solid Moon)
+  '01n': '<path fill="currentColor" fill-rule="evenodd" d="M9.528 1.718a.75.75 0 01.162.819A8.97 8.97 0 009 6a9 9 0 009 9 8.97 8.97 0 003.463-.69.75.75 0 01.981.98 10.503 10.503 0 01-9.694 6.46c-5.799 0-10.5-4.701-10.5-10.5 0-4.368 2.667-8.112 6.46-9.694a.75.75 0 01.818.162z" clip-rule="evenodd" />',
+  // Clouds (Solid Cloud)
+  '02d': '<path fill="currentColor" d="M15.75 19.5h-9a5.25 5.25 0 111.458-10.297A7.5 7.5 0 0121.043 12.09c.21.696.326 1.42.326 2.16a5.25 5.25 0 01-5.619 5.25z" />',
+  '02n': '<path fill="currentColor" d="M15.75 19.5h-9a5.25 5.25 0 111.458-10.297A7.5 7.5 0 0121.043 12.09c.21.696.326 1.42.326 2.16a5.25 5.25 0 01-5.619 5.25z" />',
+  '03d': '<path fill="currentColor" d="M15.75 19.5h-9a5.25 5.25 0 111.458-10.297A7.5 7.5 0 0121.043 12.09c.21.696.326 1.42.326 2.16a5.25 5.25 0 01-5.619 5.25z" />',
+  '03n': '<path fill="currentColor" d="M15.75 19.5h-9a5.25 5.25 0 111.458-10.297A7.5 7.5 0 0121.043 12.09c.21.696.326 1.42.326 2.16a5.25 5.25 0 01-5.619 5.25z" />',
+  '04d': '<path fill="currentColor" d="M15.75 19.5h-9a5.25 5.25 0 111.458-10.297A7.5 7.5 0 0121.043 12.09c.21.696.326 1.42.326 2.16a5.25 5.25 0 01-5.619 5.25z" />',
+  '04n': '<path fill="currentColor" d="M15.75 19.5h-9a5.25 5.25 0 111.458-10.297A7.5 7.5 0 0121.043 12.09c.21.696.326 1.42.326 2.16a5.25 5.25 0 01-5.619 5.25z" />',
+  // Rain
+  '09d': '<path fill="currentColor" d="M15.75 19.5h-9a5.25 5.25 0 111.458-10.297A7.5 7.5 0 0121.043 12.09c.21.696.326 1.42.326 2.16a5.25 5.25 0 01-5.619 5.25z M8 21v2 M12 21v2 M16 21v2" />',
+  '09n': '<path fill="currentColor" d="M15.75 19.5h-9a5.25 5.25 0 111.458-10.297A7.5 7.5 0 0121.043 12.09c.21.696.326 1.42.326 2.16a5.25 5.25 0 01-5.619 5.25z M8 21v2 M12 21v2 M16 21v2" />',
+  '10d': '<path fill="currentColor" d="M15.75 19.5h-9a5.25 5.25 0 111.458-10.297A7.5 7.5 0 0121.043 12.09c.21.696.326 1.42.326 2.16a5.25 5.25 0 01-5.619 5.25z M10 21l-2 3 M14 21l-2 3" />',
+  '10n': '<path fill="currentColor" d="M15.75 19.5h-9a5.25 5.25 0 111.458-10.297A7.5 7.5 0 0121.043 12.09c.21.696.326 1.42.326 2.16a5.25 5.25 0 01-5.619 5.25z M10 21l-2 3 M14 21l-2 3" />',
+  '11d': '<path fill="currentColor" d="M15.75 19.5h-9a5.25 5.25 0 111.458-10.297A7.5 7.5 0 0121.043 12.09c.21.696.326 1.42.326 2.16a5.25 5.25 0 01-5.619 5.25z M12 21l-2 2l2 0l-1 2" />',
+  '11n': '<path fill="currentColor" d="M15.75 19.5h-9a5.25 5.25 0 111.458-10.297A7.5 7.5 0 0121.043 12.09c.21.696.326 1.42.326 2.16a5.25 5.25 0 01-5.619 5.25z M12 21l-2 2l2 0l-1 2" />',
+  '13d': '<path fill="currentColor" d="M15.75 19.5h-9a5.25 5.25 0 111.458-10.297A7.5 7.5 0 0121.043 12.09c.21.696.326 1.42.326 2.16a5.25 5.25 0 01-5.619 5.25z M9 21h1 M12 21h1 M15 21h1" />',
+  '13n': '<path fill="currentColor" d="M15.75 19.5h-9a5.25 5.25 0 111.458-10.297A7.5 7.5 0 0121.043 12.09c.21.696.326 1.42.326 2.16a5.25 5.25 0 01-5.619 5.25z M9 21h1 M12 21h1 M15 21h1" />',
+  '50d': '<path fill="currentColor" d="M3 15h18M3 9h18M3 21h18" stroke-width="2" stroke-linecap="round" stroke="currentColor"/>',
+  '50n': '<path fill="currentColor" d="M3 15h18M3 9h18M3 21h18" stroke-width="2" stroke-linecap="round" stroke="currentColor"/>'
 };
 
 // ============================================================================
