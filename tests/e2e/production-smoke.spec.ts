@@ -42,7 +42,7 @@ async function signUp(page: Page): Promise<void> {
 
 test('authenticates against the emulator', async ({ page }) => {
   await signUp(page);
-  await expect(page.locator('[data-tab="expenses"]')).toBeVisible();
+  await expect(page.locator('#dashboard-page')).toBeVisible();
 });
 
 test('creates and deletes an expense', async ({ page }) => {
