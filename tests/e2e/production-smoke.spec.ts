@@ -6,7 +6,7 @@ test.describe.configure({ mode: 'serial' });
 async function signUp(page: Page): Promise<void> {
   const suffix = `${Date.now()}-${Math.random().toString(36).slice(2)}`;
   await page.goto('/');
-  await page.getByRole('button', { name: 'Register' }).click();
+  await page.locator('.auth-tabs').getByRole('button', { name: 'Register', exact: true }).click();
   await page.locator('input[type="email"]').fill(`smoke-${suffix}@example.test`);
   await page.locator('input[type="password"]').fill('smoke-password-123');
   await page.locator('form').getByRole('button', { name: 'Register' }).click();
