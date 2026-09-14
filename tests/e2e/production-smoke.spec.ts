@@ -47,7 +47,8 @@ test('authenticates against the emulator', async ({ page }) => {
 
 test('creates and deletes an expense', async ({ page }) => {
   await signUp(page);
-  await page.locator('[data-tab="expenses"]').click();
+  await page.getByRole('tab', { name: 'Expenses', exact: true }).click();
+  await expect(page.locator('#expenses-page')).toBeVisible();
   await page.getByRole('button', { name: 'Add Expense' }).click();
   await page.getByPlaceholder('Enter expense name').fill('Smoke expense');
   await page.getByPlaceholder('Enter or select category').fill('Smoke');
@@ -60,7 +61,8 @@ test('creates and deletes an expense', async ({ page }) => {
 
 test('records a debt payment', async ({ page }) => {
   await signUp(page);
-  await page.locator('[data-tab="debts"]').click();
+  await page.getByRole('tab', { name: 'Debts', exact: true }).click();
+  await expect(page.locator('#debts-page')).toBeVisible();
   await page.getByRole('button', { name: 'Add Debt' }).click();
   await page.getByPlaceholder('Enter debt name').fill('Smoke debt');
   await page.getByPlaceholder('0.00').first().fill('100');
@@ -75,7 +77,8 @@ test('records a debt payment', async ({ page }) => {
 
 test('updates recurring expense status', async ({ page }) => {
   await signUp(page);
-  await page.locator('[data-tab="recurring"]').click();
+  await page.getByRole('tab', { name: 'Recurring', exact: true }).click();
+  await expect(page.locator('#recurring-page')).toBeVisible();
   await page.getByRole('button', { name: /Add Recurring/ }).click();
   await page.getByPlaceholder('Enter recurring expense name').fill('Smoke recurring');
   await page.getByPlaceholder('0.00').fill('20');
