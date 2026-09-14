@@ -4,6 +4,7 @@ import {
   doc,
   addDoc,
   updateDoc,
+  setDoc,
   deleteDoc,
   Timestamp,
   type DocumentReference
@@ -75,5 +76,5 @@ export async function updateRecurringExpenseStatus(
 ): Promise<void> {
   const statusesCol = getRecurringExpenseStatusesCollection(userId, monthId);
   const statusRef = doc(statusesCol, templateId);
-  await updateDoc(statusRef, { status });
+  await setDoc(statusRef, { status }, { merge: true });
 }

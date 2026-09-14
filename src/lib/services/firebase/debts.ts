@@ -3,6 +3,7 @@ import {
   collection,
   doc,
   addDoc,
+  writeBatch,
   updateDoc,
   deleteDoc,
   getDoc,
@@ -10,7 +11,6 @@ import {
   type DocumentReference
 } from 'firebase/firestore';
 import type { Debt } from '../../types';
-import { addExpense } from './expenses';
 import { handleFirebaseError } from '../../utils/errorHandler';
 
 /**
@@ -108,23 +108,24 @@ export async function addDebtPayment(
       throw new Error('Debt not found');
     }
 
-    const debt = debtDoc.data() as Debt;
+    const debt = debtDoc.data() as Omit<Debt, 'id'>;
     const newPaidAmount = (debt.paidAmount || 0) + paymentAmount;
-
-    // Update debt's paidAmount and lastPaymentDate
-    await updateDoc(debtRef, {
+    const expensesCol = collection(db, 'users', userId, 'monthlyData', monthId, 'expenses');
+    const expenseRef = doc(expensesCol);
+    const batch = writeBatch(db);
+    batch.update(debtRef, {
       paidAmount: newPaidAmount,
       lastPaymentDate: Timestamp.now()
     });
-
-    // Create expense record for the payment
-    await addExpense(userId, monthId, {
+    batch.set(expenseRef, {
       name: `${debt.name} - Payment`,
       category: 'Debt Payment',
       amount: paymentAmount,
       date: paymentDate,
-      debtPaymentId: debtId
+      debtPaymentId: debtId,
+      createdAt: Timestamp.now()
     });
+    await batch.commit();
   } catch (error) {
     handleFirebaseError(error, {
       module: 'debts',

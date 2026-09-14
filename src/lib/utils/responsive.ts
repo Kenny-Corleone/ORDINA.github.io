@@ -6,7 +6,7 @@
  */
 
 export const BREAKPOINTS = {
-  MOBILE: 850,
+  MOBILE: 768,
   TABLET: 1024,
   DESKTOP: 1025
 } as const;

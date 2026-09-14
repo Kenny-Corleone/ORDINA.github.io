@@ -9,7 +9,7 @@
   import { auth } from '../../lib/firebase';
   import { Language, Theme, Currency } from '../../lib/types';
   import { translations, t } from '../../lib/i18n';
-  import { weatherIcons } from '../../lib/services/weather';
+  import { getTrustedWeatherIcon } from '../../lib/services/weather';
 
   // Reactive state from stores
   $: theme = $uiStore.theme;
@@ -156,7 +156,7 @@
         {:else}
           <div class="weather-icon fade-in {getAnimClass(weather.icon)}">
             <svg viewBox="0 0 24 24">
-              {@html weatherIcons[weather.icon] || weatherIcons['01d']}
+              {@html getTrustedWeatherIcon(weather.icon)}
             </svg>
           </div>
           <div class="weather-data fade-in">

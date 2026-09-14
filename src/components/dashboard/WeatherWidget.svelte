@@ -4,25 +4,27 @@
   import {
     fetchWeather,
     fetchWeatherByLocation,
-    weatherIcons,
     type WeatherData,
   } from '../../lib/services/weather';
   import WeatherIcon from './WeatherIcon.svelte';
+  import { logger } from '../../lib/utils/logger';
 
   let weather: WeatherData | null = null;
   let loading = true;
   let error: string | null = null;
+  let offline = false;
 
   async function loadWeather() {
     loading = true;
     error = null;
+    offline = !navigator.onLine;
 
     try {
       // Try by location first
       weather = await fetchWeatherByLocation($uiStore.language);
     } catch (err) {
       logger.error('Weather fetch error:', err);
-      error = 'Unable to load weather';
+      error = offline ? 'Weather is unavailable offline' : 'Unable to load weather';
     } finally {
       loading = false;
     }

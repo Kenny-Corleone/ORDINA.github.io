@@ -13,12 +13,20 @@ import {
 } from './index';
 import { TaskStatus, EventType } from '../../types';
 
+const batchCommit = vi.fn(async () => {});
 // Mock Firebase Firestore
 vi.mock('../../firebase', () => ({
   db: {},
   auth: {},
   app: {}
 }));
+
+describe('Atomic debt payments', () => {
+  it('commits the debt update and expense together', async () => {
+    await addDebtPayment('user', '2024-01', 'debt', 25, '2024-01-01');
+    expect(batchCommit).toHaveBeenCalledTimes(1);
+  });
+});
 
 vi.mock('firebase/firestore', async () => {
   const actual = await vi.importActual<typeof import('firebase/firestore')>('firebase/firestore');
@@ -32,6 +40,11 @@ vi.mock('firebase/firestore', async () => {
     getDoc: vi.fn(async () => ({
       exists: () => true,
       data: () => ({ name: 'Test Debt', totalAmount: 1000, paidAmount: 0 })
+    })),
+    writeBatch: vi.fn(() => ({
+      update: vi.fn(),
+      set: vi.fn(),
+      commit: batchCommit
     })),
     Timestamp: {
       now: () => ({ seconds: Date.now() / 1000, nanoseconds: 0 })

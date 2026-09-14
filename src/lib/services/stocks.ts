@@ -218,7 +218,8 @@ async function fetchMoEx(ticker: string): Promise<StockQuote | null> {
  * Alpha Vantage for Italian Stocks (Reliable with API Key)
  */
 async function fetchAlphaVantage(ticker: string): Promise<StockQuote | null> {
-  const apiKey = 'E2580VM00VDL0SH0'; 
+  const apiKey = import.meta.env.VITE_ALPHA_VANTAGE_API_KEY;
+  if (!apiKey) return null;
   // Try .MI first, Alpha Vantage usually supports it for Milan
   const symbolsToTry = [`${ticker}.MI`, `${ticker}.MIL`];
   
