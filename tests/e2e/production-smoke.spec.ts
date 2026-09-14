@@ -72,15 +72,27 @@ test('records a debt payment', async ({ page }) => {
   await debtDialog.locator('#debt-total-amount').fill('100');
   await debtDialog.locator('#debt-paid-amount').fill('0');
   await debtDialog.locator('button[type="submit"]').click();
+  const debtRow = page.locator('#debts-page .debt-row').filter({ hasText: 'Smoke debt' });
+  try {
+    await expect(debtRow).toBeVisible({ timeout: 15000 });
+  } catch (error) {
+    const submitError = await debtDialog.locator('p.text-red-600').textContent().catch(() => null);
+    throw new Error(
+      `Debt was not persisted to the list. Modal error: ${submitError ?? 'none'}`,
+      { cause: error },
+    );
+  }
+  if (await debtDialog.isVisible()) {
+    await debtDialog.getByRole('button', { name: 'Close modal' }).click();
+  }
   await expect(debtDialog).toBeHidden();
-  await expect(page.getByText('Smoke debt', { exact: true })).toBeVisible({ timeout: 15000 });
   await page.getByRole('button', { name: 'Add Payment' }).click();
   const paymentDialog = page.locator('#debt-payment-modal[role="dialog"]');
   await expect(paymentDialog).toBeVisible();
   await paymentDialog.locator('input[type="number"]').fill('10');
   await paymentDialog.locator('button[type="submit"]').click();
   await expect(paymentDialog).toBeHidden();
-  await expect(page.getByText('Smoke debt', { exact: true })).toBeVisible();
+  await expect(debtRow).toBeVisible();
 });
 
 test('updates recurring expense status', async ({ page }) => {
