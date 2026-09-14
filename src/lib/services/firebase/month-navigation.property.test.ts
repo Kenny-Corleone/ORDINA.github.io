@@ -13,6 +13,15 @@ import { get } from 'svelte/store';
 import { financeStore } from '../../stores/financeStore';
 import { ListenerManager } from './listeners';
 
+vi.mock('../../firebase', () => ({ db: {} }));
+vi.mock('firebase/firestore', () => ({
+  collection: vi.fn(() => ({})),
+  doc: vi.fn(() => ({})),
+  query: vi.fn(() => ({})),
+  where: vi.fn(() => ({})),
+  onSnapshot: vi.fn(() => vi.fn()),
+}));
+
 describe('Property-Based Tests: Month Navigation', () => {
   let listenerManager: ListenerManager;
 

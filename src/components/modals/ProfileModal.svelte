@@ -8,7 +8,8 @@
   
   // Get user data from store
   $: userProfile = $userStore.userProfile;
-  $: user = auth.currentUser;
+  // Firebase can be intentionally unavailable when VITE_* configuration is absent.
+  $: user = auth?.currentUser;
   
   // Form state for profile update
   let displayName = userProfile?.displayName || '';
