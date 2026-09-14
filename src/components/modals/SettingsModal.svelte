@@ -2,7 +2,17 @@
   import { createEventDispatcher } from 'svelte';
   import { uiStore } from '../../lib/stores/uiStore';
   import { financeStore } from '../../lib/stores/financeStore';
+  import { tasksStore } from '../../lib/stores/tasksStore';
+  import { calendarStore } from '../../lib/stores/calendarStore';
+  import { userStore } from '../../lib/stores/userStore';
   import { Theme, Language, Currency } from '../../lib/types';
+  import {
+    createUserDataBackup,
+    downloadUserDataBackup,
+    parseUserDataBackup,
+    restoreUserDataBackup
+  } from '../../lib/services/backup';
+  import { get } from 'svelte/store';
   
   const dispatch = createEventDispatcher();
   
@@ -16,6 +26,8 @@
   let editingExchangeRate = false;
   let newExchangeRate = String(exchangeRate);
   let exchangeRateError = '';
+  let backupError = '';
+  let isRestoring = false;
   
   // Handle theme change
   function handleThemeChange(newTheme: Theme) {
@@ -71,7 +83,7 @@
         localStorage.removeItem('exchangeRate');
         localStorage.removeItem('shoppingList');
       }
-      
+
       // Reset stores to defaults
       uiStore.setTheme(Theme.LIGHT);
       uiStore.setLanguage(Language.EN);
@@ -79,6 +91,48 @@
       financeStore.setExchangeRate(1.7);
       
       alert('Local settings have been cleared and reset to defaults.');
+    }
+
+  }
+
+  function handleExportBackup() {
+    backupError = '';
+    const finance = get(financeStore);
+    const tasks = get(tasksStore);
+    const calendar = get(calendarStore);
+    downloadUserDataBackup(createUserDataBackup({
+      monthId: finance.selectedMonthId,
+      debts: finance.debts,
+      expenses: finance.expenses,
+      recurringTemplates: finance.recurringTemplates,
+      recurringStatuses: finance.recurringStatuses,
+      categories: finance.categories,
+      dailyTasks: tasks.dailyTasks,
+      monthlyTasks: tasks.monthlyTasks,
+      yearlyTasks: tasks.yearlyTasks,
+      calendarEvents: calendar.calendarEvents
+    }));
+  }
+
+  async function handleImportBackup(event: Event) {
+    const file = (event.target as HTMLInputElement).files?.[0];
+    const userId = get(userStore).userId;
+    if (!file || !userId) return;
+
+    isRestoring = true;
+    backupError = '';
+    try {
+      const backup = parseUserDataBackup(await file.text());
+      if (!confirm(`Merge ${backup.monthId} data from this backup into your account? Existing records with matching IDs will be updated.`)) {
+        return;
+      }
+      await restoreUserDataBackup(userId, backup);
+      alert('Backup imported successfully.');
+    } catch (error) {
+      backupError = error instanceof Error ? error.message : 'Backup import failed.';
+    } finally {
+      isRestoring = false;
+      (event.target as HTMLInputElement).value = '';
     }
   }
   
@@ -251,8 +305,24 @@
     <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-3">Data Management</h3>
     <div class="p-4 bg-gray-50 dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700">
       <p class="text-sm text-gray-600 dark:text-gray-400 mb-3">
-        Clear all local settings and preferences stored in your browser. This will not affect your Firebase data (expenses, debts, tasks, etc.).
+        Download a JSON backup of the currently loaded user data, or merge a previous backup back into Firebase. Import never deletes records.
       </p>
+      <div class="flex flex-wrap gap-2 mb-3">
+        <button
+          type="button"
+          on:click={handleExportBackup}
+          class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors"
+        >
+          Export User Data
+        </button>
+        <label class="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition-colors cursor-pointer">
+          {isRestoring ? 'Importing…' : 'Import User Data'}
+          <input type="file" accept="application/json,.json" on:change={handleImportBackup} hidden disabled={isRestoring} />
+        </label>
+      </div>
+      {#if backupError}
+        <p class="text-sm text-red-600 dark:text-red-400 mb-3" role="alert">{backupError}</p>
+      {/if}
       <button
         type="button"
         on:click={handleClearData}

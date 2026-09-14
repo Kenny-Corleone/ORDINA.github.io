@@ -112,6 +112,19 @@ describe('Property: Recurring Expense Status Updates', () => {
  * Validates: Requirements 6.8
  */
 describe('Property: Recurring Expense Template CRUD', () => {
+  it('omits undefined optional details before writing to Firestore', async () => {
+    await addRecurringExpense('test-user-id', {
+      name: 'Recurring without details',
+      amount: 20,
+      dueDay: 1
+    });
+
+    expect(mockAddDoc).toHaveBeenLastCalledWith(
+      expect.anything(),
+      expect.not.objectContaining({ details: undefined })
+    );
+  });
+
   it('should create Firestore document for any valid recurring expense template', async () => {
     await fc.assert(
       fc.asyncProperty(

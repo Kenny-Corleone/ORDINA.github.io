@@ -33,6 +33,9 @@ export async function addDebt(
       ...debtData,
       createdAt: Timestamp.now()
     };
+    if (data.comment === undefined) {
+      delete data.comment;
+    }
     return await addDoc(debtsCol, data);
   } catch (error) {
     handleFirebaseError(error, {
