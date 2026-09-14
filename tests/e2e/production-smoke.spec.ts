@@ -68,17 +68,19 @@ test('records a debt payment', async ({ page }) => {
   await page.getByRole('button', { name: 'Add Debt' }).click();
   const debtDialog = page.locator('#debt-modal[role="dialog"]');
   await expect(debtDialog).toBeVisible();
-  await page.getByPlaceholder('Enter debt name').fill('Smoke debt');
-  await page.getByPlaceholder('0.00').first().fill('100');
-  await page.getByPlaceholder('0.00').nth(1).fill('0');
+  await debtDialog.locator('#debt-name').fill('Smoke debt');
+  await debtDialog.locator('#debt-total-amount').fill('100');
+  await debtDialog.locator('#debt-paid-amount').fill('0');
   await debtDialog.locator('button[type="submit"]').click();
-  await expect(page.getByText('Smoke debt')).toBeVisible();
+  await expect(debtDialog).toBeHidden();
+  await expect(page.getByText('Smoke debt', { exact: true })).toBeVisible({ timeout: 15000 });
   await page.getByRole('button', { name: 'Add Payment' }).click();
   const paymentDialog = page.locator('#debt-payment-modal[role="dialog"]');
   await expect(paymentDialog).toBeVisible();
-  await page.getByPlaceholder('0.00').fill('10');
+  await paymentDialog.locator('input[type="number"]').fill('10');
   await paymentDialog.locator('button[type="submit"]').click();
-  await expect(page.getByText(/10/)).toBeVisible();
+  await expect(paymentDialog).toBeHidden();
+  await expect(page.getByText('Smoke debt', { exact: true })).toBeVisible();
 });
 
 test('updates recurring expense status', async ({ page }) => {
