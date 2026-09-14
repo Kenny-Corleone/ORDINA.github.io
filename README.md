@@ -212,3 +212,18 @@ Made with ❤️ using Svelte + TypeScript
 **[⭐ Star this repo](https://github.com/Kenny-Corleone/ORDINA.github.io)** if you find it useful!
 
 </div>
+# Production operations
+
+## Firebase emulator smoke tests
+
+The emulator-backed Playwright suite uses real Firebase Auth and Firestore emulators; it does not mock persistence. Run it locally with Firebase CLI installed:
+
+```bash
+VITE_FIREBASE_API_KEY=emulator VITE_FIREBASE_AUTH_DOMAIN=localhost VITE_FIREBASE_PROJECT_ID=demo-ordina VITE_FIREBASE_STORAGE_BUCKET=demo-ordina.appspot.com VITE_FIREBASE_MESSAGING_SENDER_ID=emulator VITE_FIREBASE_APP_ID=emulator VITE_USE_FIREBASE_EMULATORS=true E2E_EMULATOR=true npx firebase-tools emulators:exec --only auth,firestore --project demo-ordina "npx playwright test tests/e2e/production-smoke.spec.ts"
+```
+
+## Backup and security
+
+Settings can export the currently loaded user data as a JSON backup and merge a validated backup into Firebase. Imports never delete records and are limited to the selected month plus the loaded collections.
+
+GitHub Pages cannot set response headers, so the app includes a compatible CSP and referrer policy as HTML metadata. If the site moves to a host that supports headers, enforce the same policy as HTTP response headers and add HSTS there.

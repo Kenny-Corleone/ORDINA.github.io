@@ -1,6 +1,6 @@
 import { initializeApp, type FirebaseApp } from "firebase/app";
-import { getAuth, type Auth } from "firebase/auth";
-import { initializeFirestore, type Firestore } from "firebase/firestore";
+import { connectAuthEmulator, getAuth, type Auth } from "firebase/auth";
+import { connectFirestoreEmulator, initializeFirestore, type Firestore } from "firebase/firestore";
 import { logger } from "./utils/logger";
 
 export interface FirebaseConfig {
@@ -42,6 +42,10 @@ try {
         experimentalAutoDetectLongPolling: true
     });
     auth = getAuth(app);
+    if (import.meta.env.VITE_USE_FIREBASE_EMULATORS === 'true' && typeof window !== 'undefined') {
+        connectAuthEmulator(auth, 'http://127.0.0.1:9099', { disableWarnings: true });
+        connectFirestoreEmulator(db, '127.0.0.1', 8080);
+    }
     firebaseStatus = { available: true };
     logger.debug("Firebase initialized successfully");
 } catch (e) {

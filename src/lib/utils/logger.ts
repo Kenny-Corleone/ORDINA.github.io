@@ -3,6 +3,8 @@
  * Provides structured logging with development/production modes
  */
 
+import { captureErrorTelemetry } from './telemetry';
+
 const isDev = import.meta.env.DEV;
 
 /**
@@ -163,16 +165,9 @@ export function handleError(
     }
   }
 
-  // Send to analytics in production
-  if (!isDev && typeof window !== 'undefined' && (window as any).gtag) {
-    try {
-      (window as any).gtag('event', 'exception', {
-        description: errorInfo.message,
-        fatal: false
-      });
-    } catch (e) {
-      // Ignore analytics errors
-    }
+  // Send only operational metadata; never send the error message or user data.
+  if (!isDev) {
+    captureErrorTelemetry(error, { module, action });
   }
 
   return errorInfo;
