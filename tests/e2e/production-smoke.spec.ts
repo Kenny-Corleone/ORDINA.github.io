@@ -5,11 +5,23 @@ test.describe.configure({ mode: 'serial' });
 
 async function signUp(page: Page): Promise<void> {
   const suffix = `${Date.now()}-${Math.random().toString(36).slice(2)}`;
+  await page.emulateMedia({ reducedMotion: 'reduce' });
   await page.goto('/');
+  await page.addStyleTag({
+    content: `
+      *, *::before, *::after {
+        animation-duration: 0s !important;
+        animation-delay: 0s !important;
+        transition-duration: 0s !important;
+      }
+    `
+  });
   await page.locator('.auth-tabs').getByRole('button', { name: 'Register', exact: true }).click();
   await page.locator('input[type="email"]').fill(`smoke-${suffix}@example.test`);
   await page.locator('input[type="password"]').fill('smoke-password-123');
-  await page.locator('form').getByRole('button', { name: 'Register' }).click();
+  const submitButton = page.locator('form.auth-form button[type="submit"]');
+  await expect(submitButton).toBeEnabled();
+  await submitButton.click({ force: true });
   await expect(page.locator('[data-tab="dashboard"]')).toBeVisible({ timeout: 10000 });
 }
 
