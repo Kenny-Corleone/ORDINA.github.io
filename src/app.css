@@ -106,5 +106,15 @@ input:focus, textarea:focus, select:focus { border-color: var(--accent); box-sha
 .shopping-add { display: flex; gap: 8px; margin: 18px 0; }
 .shopping-add input { flex: 1; }
 .toast { position: fixed; z-index: 30; right: 22px; bottom: 22px; border-radius: 10px; padding: 13px 17px; background: #222630; color: white; box-shadow: 0 10px 30px #0003; font-size: 13px; }
+.ambient { position: fixed; z-index: 0; inset: 0; overflow: hidden; pointer-events: none; opacity: .55; }
+.ambient span { position: absolute; width: 34vw; height: 34vw; border-radius: 50%; filter: blur(70px); background: #756bff33; animation: drift 18s ease-in-out infinite alternate; }
+.ambient span:nth-child(1) { top: -16%; left: 8%; }
+.ambient span:nth-child(2) { right: -12%; bottom: -18%; background: #28b6a533; animation-delay: -6s; }
+.ambient span:nth-child(3) { top: 42%; left: 45%; width: 18vw; height: 18vw; background: #ffb86c22; animation-delay: -11s; }
+.app > .topbar, .app > .layout { position: relative; z-index: 1; }
+@keyframes drift { from { transform: translate3d(-3%, -2%, 0) scale(1); } to { transform: translate3d(8%, 6%, 0) scale(1.18); } }
+.demo-note { margin: 18px 0 0; color: var(--muted); font-size: 12px; }
+.loading-overlay { padding: 20px; }
+@media (prefers-reduced-motion: reduce) { .ambient span { animation: none; } }
 @media (max-width: 900px) { .top-widgets { display: none; } .layout { grid-template-columns: 72px 1fr; } .sidebar button { justify-content: center; } .sidebar button span:not(.nav-icon), .nav-label, .sidebar-bottom span { display: none; } .stats-grid { grid-template-columns: repeat(2, 1fr); } }
 @media (max-width: 640px) { .topbar { height: 64px; padding: 0 14px; } .top-actions select { display: none; } .layout { display: block; } .sidebar { position: fixed; z-index: 10; right: 0; bottom: 0; left: 0; display: flex; flex-direction: row; justify-content: space-around; height: 66px; padding: 7px; border-top: 1px solid var(--line); border-right: 0; } .sidebar button { width: auto; padding: 6px 9px; } .sidebar-bottom { display: none; } .content { padding: 28px 14px 90px; } .page-heading { margin-bottom: 22px; } .dashboard-grid, .dashboard-grid.lower { grid-template-columns: 1fr; } .stats-grid { gap: 8px; } .stats-grid article { padding: 14px; } .stats-grid strong { font-size: 20px; } .auth-card { padding: 30px 22px; } }
