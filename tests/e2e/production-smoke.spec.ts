@@ -86,10 +86,11 @@ test('records a debt payment', async ({ page }) => {
     await debtDialog.getByRole('button', { name: 'Close modal' }).click();
   }
   await expect(debtDialog).toBeHidden();
-  await page.getByRole('button', { name: 'Add Payment' }).click();
+  await debtRow.getByRole('button', { name: 'Add Payment', exact: true }).click();
   const paymentDialog = page.locator('#debt-payment-modal[role="dialog"]');
   await expect(paymentDialog).toBeVisible();
-  await paymentDialog.locator('input[type="number"]').fill('10');
+  await paymentDialog.locator('#payment-amount').fill('10');
+  await expect(paymentDialog.locator('#payment-date')).toHaveValue(/\d{4}-\d{2}-\d{2}/);
   await paymentDialog.locator('button[type="submit"]').click();
   await expect(paymentDialog).toBeHidden();
   await expect(debtRow).toBeVisible();
