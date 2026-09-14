@@ -12,6 +12,7 @@ import {
   addCategory
 } from './index';
 import { TaskStatus, EventType } from '../../types';
+import { addDoc } from 'firebase/firestore';
 
 const batchCommit = vi.fn(async () => {});
 // Mock Firebase Firestore
@@ -162,6 +163,18 @@ describe('Property 4: Expense Deletion', () => {
  * Validates: Requirements 6.4
  */
 describe('Property 5: Debt CRUD Operations', () => {
+  it('omits an undefined optional comment before writing to Firestore', async () => {
+    await addDebt('test-user-id', {
+      name: 'Debt without comment',
+      totalAmount: 100,
+      paidAmount: 0
+    });
+
+    const [, writtenData] = vi.mocked(addDoc).mock.calls.at(-1) || [];
+    expect(writtenData).toBeDefined();
+    expect(writtenData).not.toHaveProperty('comment');
+  });
+
   it('should create Firestore document for any valid debt data', async () => {
     await fc.assert(
       fc.asyncProperty(
