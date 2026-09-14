@@ -37,6 +37,9 @@ export async function addRecurringExpense(
     ...recurringData,
     createdAt: Timestamp.now()
   };
+  if (data.details === undefined) {
+    delete data.details;
+  }
   return await addDoc(recurringCol, data);
 }
 
