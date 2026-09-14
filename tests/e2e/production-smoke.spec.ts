@@ -5,6 +5,12 @@ test.describe.configure({ mode: 'serial' });
 
 async function signUp(page: Page): Promise<void> {
   const suffix = `${Date.now()}-${Math.random().toString(36).slice(2)}`;
+  const diagnostics: string[] = [];
+  page.on('console', (message) => diagnostics.push(`console:${message.type()}:${message.text()}`));
+  page.on('pageerror', (error) => diagnostics.push(`pageerror:${error.message}`));
+  page.on('requestfailed', (request) => {
+    diagnostics.push(`requestfailed:${request.url()}:${request.failure()?.errorText ?? 'unknown'}`);
+  });
   await page.emulateMedia({ reducedMotion: 'reduce' });
   await page.goto('/');
   await page.addStyleTag({
@@ -22,7 +28,16 @@ async function signUp(page: Page): Promise<void> {
   const submitButton = page.locator('form.auth-form button[type="submit"]');
   await expect(submitButton).toBeEnabled();
   await submitButton.click({ force: true });
-  await expect(page.locator('[data-tab="dashboard"]')).toBeVisible({ timeout: 10000 });
+  try {
+    await expect(page.locator('#dashboard-page')).toBeVisible({ timeout: 15000 });
+  } catch (error) {
+    const authError = await page.locator('.auth-error').textContent().catch(() => null);
+    throw new Error(
+      `Registration did not reach the dashboard. Auth error: ${authError ?? 'none'}. ` +
+      `Diagnostics: ${diagnostics.join(' | ')}`,
+      { cause: error },
+    );
+  }
 }
 
 test('authenticates against the emulator', async ({ page }) => {
