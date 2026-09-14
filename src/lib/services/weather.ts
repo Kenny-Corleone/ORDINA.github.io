@@ -28,7 +28,7 @@ export interface WeatherIconMap {
 // CONFIGURATION
 // ============================================================================
 
-const OPENWEATHER_API_KEY = "91b705287b193e8debf755a8ff4cb0c7";
+const OPENWEATHER_API_KEY = import.meta.env.VITE_OPENWEATHER_API_KEY;
 const DEFAULT_CITY = 'Baku';
 
 if (!OPENWEATHER_API_KEY && import.meta.env.DEV) {
@@ -63,6 +63,11 @@ export const weatherIcons: WeatherIconMap = {
   '50d': '<path fill="currentColor" d="M3 15h18M3 9h18M3 21h18" stroke-width="2" stroke-linecap="round" stroke="currentColor"/>',
   '50n': '<path fill="currentColor" d="M3 15h18M3 9h18M3 21h18" stroke-width="2" stroke-linecap="round" stroke="currentColor"/>'
 };
+
+const TRUSTED_WEATHER_ICON_CODES = new Set(Object.keys(weatherIcons));
+export function getTrustedWeatherIcon(iconCode: string): string {
+  return TRUSTED_WEATHER_ICON_CODES.has(iconCode) ? weatherIcons[iconCode] : weatherIcons['01d'];
+}
 
 // ============================================================================
 // WEATHER DESCRIPTION TRANSLATIONS
@@ -112,17 +117,8 @@ export function translateWeatherDesc(desc: string, lang: string): string {
  * Fetch weather data from OpenWeatherMap API
  */
 export async function fetchWeather(city: string = DEFAULT_CITY, lang: string = 'en'): Promise<WeatherData> {
-  // If no API key, return placeholder data
   if (!OPENWEATHER_API_KEY) {
-    logger.warn('Weather API key not configured, returning placeholder data');
-    return {
-      temp: 20,
-      condition: 'Clear',
-      icon: '01d',
-      city: city,
-      timezone: 0,
-      timestamp: Date.now()
-    };
+    throw new Error('Weather service is unavailable: API key is not configured');
   }
 
   try {
@@ -146,15 +142,7 @@ export async function fetchWeather(city: string = DEFAULT_CITY, lang: string = '
     };
   } catch (error) {
     logger.error('Weather fetch error:', error);
-    // Return placeholder on error
-    return {
-      temp: 20,
-      condition: 'Clear',
-      icon: '01d',
-      city: city,
-      timezone: 0,
-      timestamp: Date.now()
-    };
+    throw error;
   }
 }
 
@@ -162,17 +150,8 @@ export async function fetchWeather(city: string = DEFAULT_CITY, lang: string = '
  * Get weather by geolocation
  */
 export async function fetchWeatherByLocation(lang: string = 'en'): Promise<WeatherData> {
-  // If no API key, return placeholder data
   if (!OPENWEATHER_API_KEY) {
-    logger.warn('Weather API key not configured, returning placeholder data');
-    return {
-      temp: 20,
-      condition: 'Clear',
-      icon: '01d',
-      city: DEFAULT_CITY,
-      timezone: 0,
-      timestamp: Date.now()
-    };
+    throw new Error('Weather service is unavailable: API key is not configured');
   }
 
   return new Promise((resolve, reject) => {

@@ -245,10 +245,9 @@ describe('Property 17: Weather Display Completeness', () => {
             iconSvg.includes('<line') ||
             iconSvg.includes('<polyline');
           
-          // Should have proper attributes
-          const hasStrokeWidth = iconSvg.includes('stroke-width');
-          
-          return hasSvgElements && hasStrokeWidth;
+          // Icons are trusted, static fragments inserted into an existing SVG.
+          const hasNoExecutableMarkup = !/<script|on[a-z]+\s*=/i.test(iconSvg);
+          return hasSvgElements && hasNoExecutableMarkup;
         }
       ),
       { numRuns: 100 }

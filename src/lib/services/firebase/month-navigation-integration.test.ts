@@ -5,6 +5,15 @@ import { tasksStore } from '../../stores/tasksStore';
 import { ListenerManager } from './listeners';
 import { getCurrentMonthId } from '../../utils/formatting';
 
+vi.mock('../../firebase', () => ({ db: {} }));
+vi.mock('firebase/firestore', () => ({
+  collection: vi.fn(() => ({})),
+  doc: vi.fn(() => ({})),
+  query: vi.fn(() => ({})),
+  where: vi.fn(() => ({})),
+  onSnapshot: vi.fn(() => vi.fn()),
+}));
+
 describe('Month Navigation Integration Tests', () => {
   let listenerManager: ListenerManager;
 

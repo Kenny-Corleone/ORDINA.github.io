@@ -60,10 +60,10 @@ describe('Property: Recurring Expense Status Updates', () => {
           // Call the function
           await updateRecurringExpenseStatus(userId, monthId, templateId, status);
           
-          // Verify that updateDoc was called
-          expect(mockUpdateDoc).toHaveBeenCalledWith(
+          expect(mockSetDoc).toHaveBeenCalledWith(
             expect.objectContaining({ _path: 'mocked-doc', id: templateId }),
-            { status }
+            { status },
+            { merge: true }
           );
           
           return true;
@@ -95,8 +95,7 @@ describe('Property: Recurring Expense Status Updates', () => {
             await updateRecurringExpenseStatus(userId, monthId, templateId, status);
           }
           
-          // Verify that updateDoc was called for each update
-          expect(mockUpdateDoc).toHaveBeenCalledTimes(updates.length);
+          expect(mockSetDoc).toHaveBeenCalledTimes(updates.length);
           
           return true;
         }

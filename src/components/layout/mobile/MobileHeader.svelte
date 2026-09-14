@@ -5,7 +5,7 @@
   import { weatherStore } from '../../../lib/stores/weatherStore';
   import { clockStore } from '../../../lib/stores/clockStore';
   import { radioStore } from '../../../lib/stores/radioStore';
-  import { weatherIcons } from '../../../lib/services/weather';
+  import { getTrustedWeatherIcon } from '../../../lib/services/weather';
   import { t, translations } from '../../../lib/i18n';
 
   // Weather state
@@ -61,7 +61,7 @@
         {:else}
           <div class="weather-icon-mini {getAnimClass(weather.icon)}">
             <svg viewBox="0 0 24 24">
-              {@html weatherIcons[weather.icon] || weatherIcons['01d']}
+              {@html getTrustedWeatherIcon(weather.icon)}
             </svg>
           </div>
           <div class="weather-text-group">
