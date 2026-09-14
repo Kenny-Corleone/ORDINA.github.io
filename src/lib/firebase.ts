@@ -4,7 +4,7 @@ import { initializeFirestore, type Firestore } from "firebase/firestore";
 import { logger } from "./utils/logger";
 
 // Firebase configuration using environment variables from .env
-const firebaseConfig = {
+export const firebaseConfig = {
     apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
     authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
     projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
@@ -14,14 +14,17 @@ const firebaseConfig = {
     measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID
 };
 
-let app: FirebaseApp;
-let db: Firestore;
-let auth: Auth;
+const requiredConfigKeys = ['apiKey', 'authDomain', 'projectId', 'messagingSenderId', 'appId'] as const;
+export const firebaseConfigError = requiredConfigKeys.some((key) => !firebaseConfig[key])
+    ? 'Firebase is not configured. Add the VITE_FIREBASE_* values to your deployment environment.'
+    : null;
 
-try {
-    if (!firebaseConfig.apiKey) {
-        console.warn("Firebase API key is missing. Check your .env file.");
-    }
+let app!: FirebaseApp;
+let db!: Firestore;
+let auth!: Auth;
+
+if (!firebaseConfigError) {
+  try {
     // Initialize Firebase app
     app = initializeApp(firebaseConfig);
     
@@ -35,9 +38,9 @@ try {
     
     // Log successful initialization in development
     logger.debug("Firebase initialized successfully");
-} catch (e) {
+  } catch (e) {
     logger.error("Firebase initialization error:", e);
-    // Do not throw at top level to prevent breaking the whole app bundle
+  }
 }
 
 export { app, db, auth };
