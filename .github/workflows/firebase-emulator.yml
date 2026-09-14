@@ -21,6 +21,8 @@ jobs:
           node-version: '20'
           cache: npm
       - run: npm ci
+      - name: Install Playwright Chromium
+        run: npx --no-install playwright install --with-deps chromium
       - name: Run emulator-backed Playwright smoke tests
         env:
           VITE_FIREBASE_API_KEY: emulator
